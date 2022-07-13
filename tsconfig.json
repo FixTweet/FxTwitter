@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "module": "commonjs",
+    "target": "es2022",
+    "lib": ["es2022"],
+    "alwaysStrict": true,
+    "strict": true,
+    "preserveConstEnums": true,
+    "moduleResolution": "node",
+    "allowJs": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "types": ["@cloudflare/workers-types", "@types/service-worker-mock"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "test"]
+}

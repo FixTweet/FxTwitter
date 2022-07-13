@@ -1,0 +1,30 @@
+{
+  "name": "pxtwitter",
+  "version": "1.0.0",
+  "description": "Cloudflare worker TypeScript template",
+  "main": "dist/worker.js",
+  "scripts": {
+    "build": "webpack",
+    "publish": "wrangler publish",
+    "log": "wrangler tail",
+    "reload": "wrangler publish && wrangler tail",
+    "register": "node src/register.js",
+    "prettier": "prettier --write ."
+  },
+  "author": "dangered wolf",
+  "license": "MIT",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^3.13.0",
+    "@types/service-worker-mock": "^2.0.1",
+    "prettier": "^2.7.1",
+    "service-worker-mock": "^2.0.5",
+    "ts-loader": "^9.3.1",
+    "typescript": "^4.7.4",
+    "webpack": "^5.73.0",
+    "webpack-cli": "^4.10.0",
+    "wrangler": "^2.0.15"
+  },
+  "dependencies": {
+    "itty-router": "^2.6.1"
+  }
+}
