@@ -25,7 +25,7 @@ export const handleStatus = async (handle: string, id: string, mediaNumber?: num
 
   // Try to deep link to mobile apps, just like Twitter does
   let headers: string[] = [
-    `<meta property="og:site_name" content="Twitter" />`,
+    `<meta property="og:site_name" content="Twitter"/>`,
     `<meta property="fb:app_id" content="2231777543"/>`,
     `<meta content="twitter://status?id=${id}" property="al:ios:url"/>`,
     `<meta content="333903271" property="al:ios:app_store_id"/>`,
@@ -85,7 +85,7 @@ export const handleStatus = async (handle: string, id: string, mediaNumber?: num
 
     headers.push(
       `<meta content="${colorOverride}" property="theme-color"/>`,
-      `<meta property="og:image" content="${user?.profile_image_url_https}"/>`,
+      `<meta property="og:image" content="${user?.profile_image_url_https.replace('_normal', '_200x200')}"/>`,
       `<meta name="twitter:card" content="tweet"/>`,
       `<meta name="twitter:title" content="${name} (@${screenName})"/>`,
       `<meta name="twitter:image" content="0"/>`,
@@ -132,14 +132,14 @@ export const handleStatus = async (handle: string, id: string, mediaNumber?: num
         headers.push(
           `<meta name="twitter:card" content="player"/>`,
           `<meta name="twitter:player:stream" content="${bestVariant?.url}"/>`,
-          `<meta name="twitter:player:stream:content_type" content="${bestVariant?.content_type}" />`,
+          `<meta name="twitter:player:stream:content_type" content="${bestVariant?.content_type}"/>`,
           `<meta name="twitter:player:height" content="${media.original_info.height}"/>`,
           `<meta name="twitter:player:width" content="${media.original_info.height}"/>`,
           `<meta name="og:video" content="${bestVariant?.url}"/>`,
           `<meta name="og:video:secure_url" content="${bestVariant?.url}"/>`,
           `<meta name="og:video:height" content="${media.original_info.height}"/>`,
           `<meta name="og:video:width" content="${media.original_info.height}"/>`,
-          `<meta name="og:video:type" content="${bestVariant?.content_type}" />`
+          `<meta name="og:video:type" content="${bestVariant?.content_type}"/>`
         );
       }
     }
