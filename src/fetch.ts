@@ -1,6 +1,6 @@
 import { Constants } from './constants';
 
-export const fetchUsingGuest = async (status: string): Promise<TweetPartial> => {
+export const fetchUsingGuest = async (status: string): Promise<TimelineBlobPartial> => {
   const csrfToken = crypto.randomUUID().replace(/-/g, ''); // Generate a random CSRF token, this doesn't matter, Twitter just cares that header and cookie match
 
   let headers: { [header: string]: string } = {
@@ -47,11 +47,5 @@ export const fetchUsingGuest = async (status: string): Promise<TweetPartial> => 
     )
   ).json()) as TimelineBlobPartial;
 
-  const tweet = conversation?.globalObjects?.tweets?.[status] || {};
-  /* With v2 conversation API we re-add the user object ot the tweet because
-     Twitter stores it separately in the conversation API. This is to consolidate
-     it in case a user appears multiple times in a thread. */
-  tweet.user = conversation?.globalObjects?.users?.[tweet.user_id_str] || {};
-
-  return tweet;
+  return conversation;
 };
