@@ -29,7 +29,7 @@ const statusRequest = async (request: any) => {
   const userAgent = request.headers.get('User-Agent');
 
   if (userAgent.match(/bot/gi) !== null) {
-    return new Response(await handleStatus(id, parseInt(mediaNumber || 1)), {
+    return new Response(await handleStatus(id, parseInt(mediaNumber || 1), userAgent), {
       headers: Constants.RESPONSE_HEADERS,
       status: 200
     });
@@ -49,6 +49,7 @@ router.get('/owoembed', async (request: any) => {
   console.log('oembed hit!');
   const { searchParams } = new URL(request.url);
 
+  /* Fallbacks */
   let text = searchParams.get('text') || 'Twitter';
   let author = searchParams.get('author') || 'dangeredwolf';
   let status = searchParams.get('status') || '1547514042146865153';

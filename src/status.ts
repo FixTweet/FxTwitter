@@ -8,7 +8,8 @@ import { handleQuote } from './quote';
 
 export const handleStatus = async (
   status: string,
-  mediaNumber?: number
+  mediaNumber?: number,
+  userAgent?: string
 ): Promise<string> => {
   const conversation = await fetchUsingGuest(status);
 
@@ -58,7 +59,7 @@ export const handleStatus = async (
   let authorText = 'Twitter';
 
   if (tweet.card) {
-    text += await renderPoll(tweet.card);
+    text += await renderPoll(tweet.card, userAgent);
   }
 
   text = linkFixer(tweet, text);

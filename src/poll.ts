@@ -1,4 +1,4 @@
-const barLength = 36;
+let barLength = 36;
 
 export const calculateTimeLeft = (date: Date) => {
   const now = new Date();
@@ -22,11 +22,16 @@ export const calculateTimeLeftString = (date: Date) => {
   return daysString || hoursString || minutesString || secondsString || 'Final results';
 };
 
-export const renderPoll = async (card: TweetCard): Promise<string> => {
+export const renderPoll = async (card: TweetCard, userAgent: string = ''): Promise<string> => {
   let str = '\n\n';
   const values = card.binding_values;
 
   console.log('rendering poll on ', card);
+
+  // Telegram's bars need to be a lot smaller to fit its bubbles
+  if (userAgent.indexOf('Telegram') > -1) {
+    barLength = 24;
+  }
 
   let choices: { [label: string]: number } = {};
   let totalVotes = 0;
@@ -37,6 +42,7 @@ export const renderPoll = async (card: TweetCard): Promise<string> => {
     timeLeft = calculateTimeLeftString(date);
   }
 
+  /* TODO: make this cleaner */
   if (
     typeof values !== 'undefined' &&
     typeof values.choice1_count !== 'undefined' &&
