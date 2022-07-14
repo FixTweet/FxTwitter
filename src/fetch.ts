@@ -32,10 +32,11 @@ export const fetchUsingGuest = async (status: string): Promise<TweetPartial> => 
     )
   ).json()) as TimelineBlobPartial;
 
-  console.log(conversation);
-
   const tweet = conversation?.globalObjects?.tweets?.[status] || {};
-
+  /*
+    With v2 conversation API we re-add the user object ot the tweet because
+    Twitter stores it separately in the conversation API.
+  */
   tweet.user = conversation?.globalObjects?.users?.[tweet.user_id_str] || {};
 
   return tweet;
