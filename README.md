@@ -4,7 +4,7 @@
 
 ## A TwitFix-like solution written in TypeScript for Cloudflare Workers. 
 
-### Embed videos, polls, and more on Discord, Telegram, and more!
+### Embed videos, polls, and more on Discord, Telegram, and more! Just add `px` before `twitter.com`.
 
 ![https://cdn.discordapp.com/attachments/165560751363325952/997256615365447680/pxtwitter.png](https://cdn.discordapp.com/attachments/165560751363325952/997256615365447680/pxtwitter.png)
 
@@ -18,7 +18,9 @@
 
 ✅ Creates media/pfp color-matching theme-color (looks great on Discord!)
 
-✅ Private, we don't save tweets requested
+✅ Private, we don't save tweets or their media
+
+Licensed under the permissive MIT license. Feel free to send a pull request!
 
 
 ### Things to tackle in the future
@@ -26,7 +28,7 @@
 * Embed profiles! (and maybe more from Twitter?)
 * Combining multiple images together (would be outside CF Worker)
 * Caching responses (I haven't done this yet as this is still being actively worked on!)
-* Caching guest token (So we don't have to run to Twitter for a new one every request)
+* Caching guest token (So we don't have to bother Twitter for one on every request)
 
 ### Bugs or issues?
 
