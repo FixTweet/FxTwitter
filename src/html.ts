@@ -15,5 +15,5 @@ export const Html = {
 ███   The best way to embed tweets.
 ███   A work in progress by @dangeredwolf
 -->
-<head>{headers}</head>`,
+<head>{headers}</head>`
 };

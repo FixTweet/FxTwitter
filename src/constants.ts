@@ -18,7 +18,7 @@ export const Constants = {
     'include_ext_media_color=true',
     'include_ext_media_availability=true',
     'include_ext_sensitive_media_warning=true',
-    'simple_quoted_tweet=true',
+    'simple_quoted_tweet=true'
   ].join('&'),
   BASE_HEADERS: {
     'sec-ch-ua': `".Not/A)Brand";v="99", "Google Chrome";v="${fakeChromeVersion}", "Chromium";v="${fakeChromeVersion}"`,
@@ -36,11 +36,11 @@ export const Constants = {
     'Sec-Fetch-Dest': `empty`,
     'Referer': `https://twitter.com/`,
     'Accept-Encoding': `gzip, deflate, br`,
-    'Accept-Language': `en`,
+    'Accept-Language': `en`
   },
   RESPONSE_HEADERS: {
     'content-type': 'text/html;charset=UTF-8',
-    "x-powered-by": 'Black Magic',
+    'x-powered-by': 'Black Magic'
     // 'cache-control': 'max-age=1'
   },
   DEFAULT_COLOR: '#10A3FF'

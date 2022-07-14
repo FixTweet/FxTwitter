@@ -5,7 +5,7 @@ type TimelineBlobPartial = {
     };
     users: {
       [userId: string]: UserPartial;
-    }
+    };
   };
 };
 
@@ -33,7 +33,7 @@ type TweetMedia = {
   display_url: string;
   expanded_url: string;
   ext_media_color?: {
-    palette?: MediaPlaceholderColor[]
+    palette?: MediaPlaceholderColor[];
   };
   id_str: string;
   indices: [number, number];
@@ -57,35 +57,35 @@ type TweetMedia = {
 };
 
 type CardValue = {
-  type: 'BOOLEAN' | 'STRING',
-  boolean_value: boolean,
-  string_value: string,
-}
+  type: 'BOOLEAN' | 'STRING';
+  boolean_value: boolean;
+  string_value: string;
+};
 
 type TweetCard = {
   binding_values: {
     card_url: CardValue;
-    choice1_count?: CardValue,
-    choice2_count?: CardValue,
-    choice3_count?: CardValue,
-    choice4_count?: CardValue,
-    choice1_label?: CardValue,
-    choice2_label?: CardValue,
-    choice3_label?: CardValue,
-    choice4_label?: CardValue,
-    counts_are_final?: CardValue,
-    duration_minutes?: CardValue,
-    end_datetime_utc?: CardValue,
-  },
-  name: string
-}
+    choice1_count?: CardValue;
+    choice2_count?: CardValue;
+    choice3_count?: CardValue;
+    choice4_count?: CardValue;
+    choice1_label?: CardValue;
+    choice2_label?: CardValue;
+    choice3_label?: CardValue;
+    choice4_label?: CardValue;
+    counts_are_final?: CardValue;
+    duration_minutes?: CardValue;
+    end_datetime_utc?: CardValue;
+  };
+  name: string;
+};
 
 type TweetPartial = {
   card?: TweetCard;
   conversation_id_str: string;
   created_at: string; // date string
   display_text_range: [number, number];
-  entities: { urls?: TcoExpansion[], media?: TweetMedia[] };
+  entities: { urls?: TcoExpansion[]; media?: TweetMedia[] };
   extended_entities: { media?: TweetMedia[] };
   favorite_count: number;
   in_reply_to_screen_name?: string;
@@ -110,14 +110,14 @@ type UserPartial = {
   screen_name: string;
   profile_image_url_https: string;
   profile_image_extensions_media_color?: {
-    palette?: MediaPlaceholderColor[]
+    palette?: MediaPlaceholderColor[];
   };
-}
+};
 
 type MediaPlaceholderColor = {
   rgb: {
     red: number;
     green: number;
     blue: number;
-  }
-}
+  };
+};

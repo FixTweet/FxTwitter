@@ -5,7 +5,7 @@ export const fetchUsingGuest = async (status: string): Promise<TimelineBlobParti
 
   let headers: { [header: string]: string } = {
     Authorization: Constants.GUEST_BEARER_TOKEN,
-    ...Constants.BASE_HEADERS,
+    ...Constants.BASE_HEADERS
   };
 
   /* If all goes according to plan, we have a guest token we can use to call API
@@ -16,7 +16,7 @@ export const fetchUsingGuest = async (status: string): Promise<TimelineBlobParti
   const activate = await fetch(`${Constants.TWITTER_API_ROOT}/1.1/guest/activate.json`, {
     method: 'POST',
     headers: headers,
-    body: '',
+    body: ''
   });
 
   /* Let's grab that guest_token so we can use it */
@@ -42,7 +42,7 @@ export const fetchUsingGuest = async (status: string): Promise<TimelineBlobParti
       `${Constants.TWITTER_ROOT}/i/api/2/timeline/conversation/${status}.json?${Constants.GUEST_FETCH_PARAMETERS}`,
       {
         method: 'GET',
-        headers: headers,
+        headers: headers
       }
     )
   ).json()) as TimelineBlobPartial;

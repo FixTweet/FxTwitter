@@ -2,20 +2,20 @@ const path = require('path');
 
 module.exports = {
   entry: {
-    worker: './src/server.ts',
+    worker: './src/server.ts'
   },
   output: {
     filename: '[name].js',
-    path: path.join(__dirname, 'dist'),
+    path: path.join(__dirname, 'dist')
   },
   mode: 'production',
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
-    fallback: { util: false },
+    fallback: { util: false }
   },
   plugins: [],
   optimization: {
-    mangleExports: 'size',
+    mangleExports: 'size'
   },
   module: {
     rules: [
@@ -23,9 +23,9 @@ module.exports = {
         test: /\.tsx?$/,
         loader: 'ts-loader',
         options: {
-          transpileOnly: true,
-        },
-      },
-    ],
-  },
+          transpileOnly: true
+        }
+      }
+    ]
+  }
 };

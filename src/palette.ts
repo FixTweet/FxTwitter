@@ -1,16 +1,13 @@
-
-
-import { Constants } from "./constants";
+import { Constants } from './constants';
 
 // https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
 const componentToHex = (component: number) => {
-    let hex = component.toString(16);
-    return hex.length === 1 ? "0" + hex : hex;
-  }
-    
-const rgbToHex = (r: number, g: number, b: number) => 
-`#${componentToHex(r)}${componentToHex(g)}${componentToHex(b)}`;
+  let hex = component.toString(16);
+  return hex.length === 1 ? '0' + hex : hex;
+};
 
+const rgbToHex = (r: number, g: number, b: number) =>
+  `#${componentToHex(r)}${componentToHex(g)}${componentToHex(b)}`;
 
 export const colorFromPalette = (palette: MediaPlaceholderColor[]) => {
   for (let i = 0; i < palette.length; i++) {
@@ -25,4 +22,4 @@ export const colorFromPalette = (palette: MediaPlaceholderColor[]) => {
   }
 
   return Constants.DEFAULT_COLOR;
-}
+};
