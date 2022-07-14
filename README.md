@@ -16,7 +16,7 @@
 
 ✅ Replace embedded t.co links with originals
 
-✅ Creates media/pfp color-matching theme-color (looks great on Discord!)
+✅ Creates media/profile picture color-matching theme-color (looks great on Discord!)
 
 ✅ Private, we don't save tweets or their media
 
