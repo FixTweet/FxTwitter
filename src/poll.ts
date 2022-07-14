@@ -1,5 +1,24 @@
 const barLength = 30;
 
+export const calculateTimeLeft = (date: Date) => {
+  const now = new Date();
+  const diff = date.getTime() - now.getTime();
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+  return { days, hours, minutes, seconds };
+}
+
+export const calculateTimeLeftString = (date: Date) => {
+  const { days, hours, minutes, seconds } = calculateTimeLeft(date);
+  const daysString = days > 0 ? `${days} ${days === 1 ? 'day left' : 'days left'}` : '';
+  const hoursString = hours > 0 ? `${hours} ${hours === 1 ? 'hour left' : 'hours left'}` : '';
+  const minutesString = minutes > 0 ? `${minutes} ${minutes === 1 ? 'minute left' : 'minutes left'}` : '';
+  const secondsString = seconds > 0 ? `${seconds} ${seconds === 1 ? 'second left' : 'seconds left'}` : '';
+  return daysString || hoursString || minutesString || secondsString || 'Final results';
+}
+
 export const renderPoll = async (card: TweetCard): Promise<string> => {
   let str = '\n\n';
   const values = card.binding_values;
@@ -8,6 +27,12 @@ export const renderPoll = async (card: TweetCard): Promise<string> => {
 
   let choices: { [label: string]: number } = {};
   let totalVotes = 0;
+  let timeLeft = '';
+
+  if (typeof values !== "undefined" && typeof values.end_datetime_utc !== "undefined") {
+    const date = new Date(values.end_datetime_utc.string_value);
+    timeLeft = calculateTimeLeftString(date);
+  }
 
   if (typeof values !== "undefined" && typeof values.choice1_count !== "undefined" && typeof values.choice2_count !== "undefined") {
     choices[values.choice1_label?.string_value || ''] = parseInt(values.choice1_count.string_value);
@@ -29,13 +54,13 @@ export const renderPoll = async (card: TweetCard): Promise<string> => {
 
   for (const [label, votes] of Object.entries(choices)) {
     // render bar
-    const bar = '█'.repeat(Math.floor(votes / totalVotes * barLength));
+    const bar = '█'.repeat(Math.floor((votes / totalVotes || 0) * barLength));
     str += `${bar}
-${label}  (${Math.floor(votes / totalVotes * 100)}%)
+${label}  (${Math.floor((votes / totalVotes || 0) * 100)}%)
 `;
   }
 
-  str += `\n${totalVotes} votes`;
+  str += `\n${totalVotes} votes · ${timeLeft}`;
 
   console.log(str);
   return str;
