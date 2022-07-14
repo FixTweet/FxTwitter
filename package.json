@@ -14,7 +14,7 @@
   "author": "dangered wolf",
   "license": "MIT",
   "devDependencies": {
-    "@cloudflare/workers-types": "^3.13.0",
+    "@cloudflare/workers-types": "^3.14.1",
     "@types/service-worker-mock": "^2.0.1",
     "prettier": "^2.7.1",
     "service-worker-mock": "^2.0.5",
