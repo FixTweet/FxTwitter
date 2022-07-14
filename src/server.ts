@@ -1,6 +1,5 @@
 import { Router } from 'itty-router';
 import { Constants } from './constants';
-import { fetchUsingGuest } from './drivers/guest';
 import { handleStatus } from './status';
 
 /*
@@ -53,13 +52,15 @@ router.get('/owoembed', async (request: any) => {
   const { searchParams } = new URL(request.url)
 
   let text = searchParams.get('text') || 'Twitter';
-
+  let author = searchParams.get('author') || 'dangeredwolf';
+  let status = searchParams.get('status') || '1547514042146865153';
+  
   const test = {
-    "author_name":text,
-    "author_url":"https://twitter.com/AquosTheWolf/status/1547447632284553216",
+    "author_name":decodeURIComponent(text),
+    "author_url":`https://twitter.com/${encodeURIComponent(author)}/status/${encodeURIComponent(status)}`,
     "provider_name":"pxTwitter",
     "provider_url":"https://github.com/dangeredwolf/pxtwitter",
-    "title":"test",
+    "title":"Twitter",
     "type":"link",
     "version":"1.0"
   }
@@ -72,7 +73,7 @@ router.get('/owoembed', async (request: any) => {
 })
 
 router.all('*', async request => {
-  return Response.redirect(Constants.REDIRECT_URL);
+  return Response.redirect(Constants.REDIRECT_URL, 307);
 });
 
 /*
