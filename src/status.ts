@@ -134,11 +134,11 @@ export const handleStatus = async (handle: string, id: string, mediaNumber?: num
           `<meta name="twitter:player:stream" content="${bestVariant?.url}"/>`,
           `<meta name="twitter:player:stream:content_type" content="${bestVariant?.content_type}"/>`,
           `<meta name="twitter:player:height" content="${media.original_info.height}"/>`,
-          `<meta name="twitter:player:width" content="${media.original_info.height}"/>`,
+          `<meta name="twitter:player:width" content="${media.original_info.width}"/>`,
           `<meta name="og:video" content="${bestVariant?.url}"/>`,
           `<meta name="og:video:secure_url" content="${bestVariant?.url}"/>`,
           `<meta name="og:video:height" content="${media.original_info.height}"/>`,
-          `<meta name="og:video:width" content="${media.original_info.height}"/>`,
+          `<meta name="og:video:width" content="${media.original_info.width}"/>`,
           `<meta name="og:video:type" content="${bestVariant?.content_type}"/>`
         );
       }
