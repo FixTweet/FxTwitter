@@ -69,7 +69,8 @@ export const handleStatus = async (
     conversation.globalObjects?.tweets?.[tweet.quoted_status_id_str || '0'] || null;
 
   if (quoteTweetMaybe) {
-    quoteTweetMaybe.user = conversation?.globalObjects?.users?.[quoteTweetMaybe.user_id_str] || {};
+    quoteTweetMaybe.user =
+      conversation?.globalObjects?.users?.[quoteTweetMaybe.user_id_str] || {};
     const quoteText = handleQuote(quoteTweetMaybe);
 
     console.log('quoteText', quoteText);
@@ -78,15 +79,18 @@ export const handleStatus = async (
       text += `\n${quoteText}`;
     }
 
-    if (mediaList.length === 0 && (quoteTweetMaybe.extended_entities?.media?.length || quoteTweetMaybe.entities?.media?.length || 0) > 0) {
+    if (
+      mediaList.length === 0 &&
+      (quoteTweetMaybe.extended_entities?.media?.length ||
+        quoteTweetMaybe.entities?.media?.length ||
+        0) > 0
+    ) {
       console.log('No media in main tweet, maybe we have some media in the quote tweet?');
       mediaList = Array.from(
-        quoteTweetMaybe.extended_entities?.media ||
-          quoteTweetMaybe.entities?.media ||
-          []
+        quoteTweetMaybe.extended_entities?.media || quoteTweetMaybe.entities?.media || []
       );
 
-      console.log('updated mediaList', mediaList)
+      console.log('updated mediaList', mediaList);
     }
   }
 

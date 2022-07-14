@@ -2,9 +2,10 @@
 
 [![Webpack](https://github.com/dangeredwolf/pxtwitter/actions/workflows/webpack.yml/badge.svg)](https://github.com/dangeredwolf/pxtwitter/actions/workflows/webpack.yml)
 
-## A TwitFix-like solution written in TypeScript for Cloudflare Workers. 
+## A TwitFix-like solution written in TypeScript for Cloudflare Workers.
 
 ### Embed videos, polls, and more on Discord, Telegram, and more!
+
 ### Just add `px` before `twitter.com`.
 
 ![https://cdn.discordapp.com/attachments/165560751363325952/997265440868946032/pxtwitter.png](https://cdn.discordapp.com/attachments/165560751363325952/997265440868946032/pxtwitter.png)
@@ -23,13 +24,12 @@
 
 Licensed under the permissive MIT license. Feel free to send a pull request!
 
-
 ### Things to tackle in the future
 
-* Embed profiles! (and maybe more from Twitter?)
-* Combining multiple images together (would be outside CF Worker)
-* Caching responses (I haven't done this yet as this is still being actively worked on!)
-* Caching guest token (So we don't have to bother Twitter for one on every request)
+- Embed profiles! (and maybe more from Twitter?)
+- Combining multiple images together (would be outside CF Worker)
+- Caching responses (I haven't done this yet as this is still being actively worked on!)
+- Caching guest token (So we don't have to bother Twitter for one on every request)
 
 ### Bugs or issues?
 

@@ -22,7 +22,11 @@ export const calculateTimeLeftString = (date: Date) => {
   return daysString || hoursString || minutesString || secondsString || 'Final results';
 };
 
-export const renderCard = async (card: TweetCard, headers: string[], userAgent: string = ''): Promise<string> => {
+export const renderCard = async (
+  card: TweetCard,
+  headers: string[],
+  userAgent: string = ''
+): Promise<string> => {
   let str = '\n\n';
   const values = card.binding_values;
 
@@ -39,8 +43,10 @@ export const renderCard = async (card: TweetCard, headers: string[], userAgent: 
 
   /* TODO: make poll code cleaner */
   if (typeof values !== 'undefined') {
-    if (typeof values.choice1_count !== 'undefined' &&
-      typeof values.choice2_count !== 'undefined') {
+    if (
+      typeof values.choice1_count !== 'undefined' &&
+      typeof values.choice2_count !== 'undefined'
+    ) {
       if (typeof values.end_datetime_utc !== 'undefined') {
         const date = new Date(values.end_datetime_utc.string_value);
         timeLeft = calculateTimeLeftString(date);
@@ -72,26 +78,33 @@ export const renderCard = async (card: TweetCard, headers: string[], userAgent: 
   ${label}  (${Math.round((votes / totalVotes || 0) * 100)}%)
       `;
         }
-      
+
         str += `\n${totalVotes} votes · ${timeLeft}`;
-      
+
         console.log(str);
       }
-    } else if (typeof values.player_url !== "undefined") {
+    } else if (typeof values.player_url !== 'undefined') {
       headers.push(
         `<meta name="twitter:player" content="${values.player_url.string_value}">`,
-        `<meta name="twitter:player:width" content="${values.player_width?.string_value || "1280"}">`,
-        `<meta name="twitter:player:height" content="${values.player_height?.string_value || "720"}">`,
+        `<meta name="twitter:player:width" content="${
+          values.player_width?.string_value || '1280'
+        }">`,
+        `<meta name="twitter:player:height" content="${
+          values.player_height?.string_value || '720'
+        }">`,
         `<meta property="og:type" content="video.other">`,
         `<meta property="og:video:url" content="${values.player_url.string_value}">`,
         `<meta property="og:video:secure_url" content="${values.player_url.string_value}">`,
         `<meta property="og:video:type" content="text/html">`,
-        `<meta property="og:video:width" content="${values.player_width?.string_value || "1280"}">`,
-        `<meta property="og:video:height" content="${values.player_height?.string_value || "720"}">`,
-      )
+        `<meta property="og:video:width" content="${
+          values.player_width?.string_value || '1280'
+        }">`,
+        `<meta property="og:video:height" content="${
+          values.player_height?.string_value || '720'
+        }">`
+      );
     }
   }
 
-  
   return str;
 };
