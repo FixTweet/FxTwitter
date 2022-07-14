@@ -1,29 +1,15 @@
 import { Constants } from "./constants";
 import { fetchUsingGuest } from "./fetch";
 import { Html } from "./html";
+import { colorFromPalette } from "./palette";
 import { renderPoll } from "./poll";
-import { rgbToHex } from "./utils";
-
-const colorFromPalette = (palette: MediaPlaceholderColor[]) => {
-  for (let i = 0; i < palette.length; i++) {
-    const rgb = palette[i].rgb;
-
-    // We need vibrant colors, grey backgrounds won't do!
-    if (rgb.red + rgb.green + rgb.blue < 120) {
-      continue;
-    }
-
-    return rgbToHex(rgb.red, rgb.green, rgb.blue);
-  }
-
-  return Constants.DEFAULT_COLOR;
-}
 
 export const handleStatus = async (handle: string, id: string, mediaNumber?: number): Promise<string> => {
   const tweet = await fetchUsingGuest(id);
   console.log(tweet);
 
-  // Try to deep link to mobile apps, just like Twitter does
+  /* Try to deep link to mobile apps, just like Twitter does.
+     No idea if this actually works.*/
   let headers: string[] = [
     `<meta property="og:site_name" content="Twitter"/>`,
     `<meta property="fb:app_id" content="2231777543"/>`,
@@ -53,6 +39,8 @@ export const handleStatus = async (handle: string, id: string, mediaNumber?: num
   const user = tweet.user;
   const screenName = user?.screen_name || '';
   const name = user?.name || '';
+
+  const mediaList = tweet.extended_entities?.media || tweet.entities?.media || [];
 
   let authorText = 'Twitter';
 
@@ -94,9 +82,7 @@ export const handleStatus = async (handle: string, id: string, mediaNumber?: num
       `<meta content="${text}" property="og:description"/>`
     );
   } else {
-    let media = tweet.extended_entities?.media || tweet.entities?.media || [];
-
-    let firstMedia = media[0];
+    let firstMedia = mediaList[0];
 
     let palette = firstMedia?.ext_media_color?.palette;
     let colorOverride: string = Constants.DEFAULT_COLOR;
@@ -145,13 +131,22 @@ export const handleStatus = async (handle: string, id: string, mediaNumber?: num
       }
     }
 
-    // You can specify a specific photo in the URL
-    if (typeof mediaNumber === "number" && media[mediaNumber]) {
-      processMedia(media[mediaNumber]);
+    let actualMediaNumber = 1;
+
+    /* You can specify a specific photo in the URL and we'll pull the correct one,
+       otherwise it falls back to first */
+    if (typeof mediaNumber === "number" && mediaList[mediaNumber]) {
+      actualMediaNumber = mediaNumber;
+      processMedia(mediaList[mediaNumber]);
     } else {
-      // I wish Telegram respected multiple photos in a tweet
+      /* I wish Telegram respected multiple photos in a tweet,
+         and that Discord could do the same for 3rd party providers like us */
       // media.forEach(media => processMedia(media));
       processMedia(firstMedia);
+    }
+
+    if (mediaList.length > 1) {
+      authorText = `Photo ${actualMediaNumber} of ${mediaList.length}`;
     }
 
     headers.push(
@@ -160,16 +155,22 @@ export const handleStatus = async (handle: string, id: string, mediaNumber?: num
     );
   }
 
+  /* */
   if (tweet.in_reply_to_screen_name) {
     authorText = `↪ Replying to @${tweet.in_reply_to_screen_name}`;
   }
 
+  /* The additional oembed is pulled by Discord to enable improved embeds.
+     Telegram does not use this. */
   headers.push(`<link rel="alternate" href="https://pxtwitter.com/owoembed?text=${encodeURIComponent(authorText)}&status=${encodeURIComponent(id)}&author=${encodeURIComponent(user?.screen_name || '')}" type="application/json+oembed" title="${name}">`)
 
   console.log(JSON.stringify(tweet))
 
+  /* When dealing with a Tweet of unknown lang, fall back to en  */
+  let lang = tweet.lang === 'unk' ? 'en' : tweet.lang || 'en';
+
   return Html.BASE_HTML.format({
-    lang: `lang="${tweet.lang || 'en'}"`,
+    lang: `lang="${lang}"`,
     headers: headers.join('')
   });
 };
