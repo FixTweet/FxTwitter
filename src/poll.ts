@@ -1,4 +1,4 @@
-const barLength = 30;
+const barLength = 36;
 
 export const calculateTimeLeft = (date: Date) => {
   const now = new Date();
