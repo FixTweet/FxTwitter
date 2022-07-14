@@ -4,9 +4,10 @@
 
 ## A TwitFix-like solution written in TypeScript for Cloudflare Workers. 
 
-### Embed videos, polls, and more on Discord, Telegram, and more! Just add `px` before `twitter.com`.
+### Embed videos, polls, and more on Discord, Telegram, and more!
+### Just add `px` before `twitter.com`.
 
-![https://cdn.discordapp.com/attachments/165560751363325952/997256615365447680/pxtwitter.png](https://cdn.discordapp.com/attachments/165560751363325952/997256615365447680/pxtwitter.png)
+![https://cdn.discordapp.com/attachments/165560751363325952/997265440868946032/pxtwitter.png](https://cdn.discordapp.com/attachments/165560751363325952/997265440868946032/pxtwitter.png)
 
 ✅ Embed Videos
 
