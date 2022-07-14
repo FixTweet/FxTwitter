@@ -3,7 +3,7 @@ import { fetchUsingGuest } from './fetch';
 import { Html } from './html';
 import { linkFixer } from './linkFixer';
 import { colorFromPalette } from './palette';
-import { renderPoll } from './poll';
+import { renderCard } from './card';
 import { handleQuote } from './quote';
 import { sanitizeText } from './utils';
 
@@ -60,7 +60,7 @@ export const handleStatus = async (
   let authorText = 'Twitter';
 
   if (tweet.card) {
-    text += await renderPoll(tweet.card, userAgent);
+    text += await renderCard(tweet.card, headers, userAgent);
   }
 
   text = linkFixer(tweet, text);
@@ -129,7 +129,19 @@ export const handleStatus = async (
 
     const processMedia = (media: TweetMedia) => {
       if (media.type === 'photo') {
-        headers.push(`<meta name="twitter:image" content="${media.media_url_https}"/>`);
+        headers.push(
+          `<meta name="twitter:image" content="${media.media_url_https}"/>`,
+          `<meta property="og:image" content="${media.media_url_https}"/>`
+        );
+
+        if (media.original_info?.width && media.original_info?.height) {
+          headers.push(
+            `<meta name="twitter:image:width" content="${media.original_info.width}"/>`,
+            `<meta name="twitter:image:height" content="${media.original_info.height}"/>`,
+            `<meta name="og:image:width" content="${media.original_info.width}"/>`,
+            `<meta name="og:image:height" content="${media.original_info.height}"/>`
+          );
+        }
 
         if (!pushedCardType) {
           headers.push(`<meta name="twitter:card" content="summary_large_image"/>`);

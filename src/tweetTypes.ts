@@ -76,6 +76,11 @@ type TweetCard = {
     counts_are_final?: CardValue;
     duration_minutes?: CardValue;
     end_datetime_utc?: CardValue;
+
+    player_url?: CardValue;
+    player_width?: CardValue;
+    player_height?: CardValue;
+    title?: CardValue;
   };
   name: string;
 };
