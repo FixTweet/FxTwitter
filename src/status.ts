@@ -5,6 +5,7 @@ import { linkFixer } from './linkFixer';
 import { colorFromPalette } from './palette';
 import { renderPoll } from './poll';
 import { handleQuote } from './quote';
+import { sanitizeText } from './utils';
 
 export const handleStatus = async (
   status: string,
@@ -109,7 +110,7 @@ export const handleStatus = async (
       `<meta name="twitter:title" content="${name} (@${screenName})"/>`,
       `<meta name="twitter:image" content="0"/>`,
       `<meta name="twitter:creator" content="@${name}"/>`,
-      `<meta content="${text}" property="og:description"/>`
+      `<meta content="${sanitizeText(text)}" property="og:description"/>`
     );
   } else {
     console.log('Media available');
@@ -194,7 +195,7 @@ export const handleStatus = async (
 
     headers.push(
       `<meta content="${name} (@${screenName})" property="og:title"/>`,
-      `<meta content="${text}" property="og:description"/>`
+      `<meta content="${sanitizeText(text)}" property="og:description"/>`
     );
   }
 
