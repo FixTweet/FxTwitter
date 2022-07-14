@@ -3,7 +3,7 @@ const fakeChromeVersion = '103';
 export const Constants = {
   BRANDING_NAME: `pxTwitter`,
   HOST_URL: `https://pxtwitter.com`,
-  REDIRECT_URL: 'https://twitter.com/dangeredwolf',
+  REDIRECT_URL: 'https://github.com/dangeredwolf/pxTwitter',
   TWITTER_ROOT: 'https://twitter.com',
   TWITTER_API_ROOT: 'https://api.twitter.com',
   /* We used to use Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA
