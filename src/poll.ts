@@ -49,14 +49,15 @@ export const renderPoll = async (card: TweetCard): Promise<string> => {
     }
   } else {
     console.log('no choices found', values);
+    return '';
   }
   console.log(choices);
 
   for (const [label, votes] of Object.entries(choices)) {
     // render bar
-    const bar = '█'.repeat(Math.floor((votes / totalVotes || 0) * barLength));
+    const bar = '█'.repeat(Math.round((votes / totalVotes || 0) * barLength));
     str += `${bar}
-${label}  (${Math.floor((votes / totalVotes || 0) * 100)}%)
+${label}  (${Math.round((votes / totalVotes || 0) * 100)}%)
 `;
   }
 
