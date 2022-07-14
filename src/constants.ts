@@ -1,6 +1,7 @@
 const fakeChromeVersion = '103';
 
 export const Constants = {
+  BRANDING_NAME: `pxTwitter`,
   REDIRECT_URL: 'https://twitter.com/dangeredwolf',
   TWITTER_ROOT: 'https://twitter.com',
   TWITTER_API_ROOT: 'https://api.twitter.com',

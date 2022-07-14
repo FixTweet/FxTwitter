@@ -29,7 +29,7 @@ const statusRequest = async (request: any) => {
   const userAgent = request.headers.get('User-Agent');
 
   if (userAgent.match(/bot/ig) !== null) {
-    return new Response(await handleStatus(handle, id, mediaNumber), {
+    return new Response(await handleStatus(handle, id, parseInt(mediaNumber || 1)), {
       headers: {
         'content-type': 'text/html;charset=UTF-8',
       },
@@ -56,13 +56,13 @@ router.get('/owoembed', async (request: any) => {
   let status = searchParams.get('status') || '1547514042146865153';
   
   const test = {
-    "author_name":decodeURIComponent(text),
-    "author_url":`https://twitter.com/${encodeURIComponent(author)}/status/${encodeURIComponent(status)}`,
-    "provider_name":"pxTwitter",
-    "provider_url":"https://github.com/dangeredwolf/pxtwitter",
-    "title":"Twitter",
-    "type":"link",
-    "version":"1.0"
+    "author_name": decodeURIComponent(text),
+    "author_url": `https://twitter.com/${encodeURIComponent(author)}/status/${encodeURIComponent(status)}`,
+    "provider_name": Constants.BRANDING_NAME,
+    "provider_url": Constants.REDIRECT_URL,
+    "title": "Twitter",
+    "type": "link",
+    "version": "1.0"
   }
   return new Response(JSON.stringify(test), {
     headers: {
