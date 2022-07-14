@@ -1,12 +1,12 @@
 import { Constants } from './constants';
 import { fetchUsingGuest } from './fetch';
 import { Html } from './html';
+import { linkFixer } from './linkFixer';
 import { colorFromPalette } from './palette';
 import { renderPoll } from './poll';
 import { handleQuote } from './quote';
 
 export const handleStatus = async (
-  handle: string,
   status: string,
   mediaNumber?: number
 ): Promise<string> => {
@@ -51,35 +51,45 @@ export const handleStatus = async (
   const screenName = user?.screen_name || '';
   const name = user?.name || '';
 
-  const mediaList = Array.from(
+  let mediaList = Array.from(
     tweet.extended_entities?.media || tweet.entities?.media || []
   );
 
   let authorText = 'Twitter';
 
-  // This is used to chop off the end if it's like pic.twitter.com or something
-  if (tweet.display_text_range) {
-    const [start, end] = tweet.display_text_range;
-    // We ignore start because it cuts off reply handles
-    // text = text.substring(0, end + 1);
-  }
-
   if (tweet.card) {
     text += await renderPoll(tweet.card);
   }
 
-  // Replace t.co links with their full counterparts
-  if (typeof tweet.entities?.urls !== 'undefined') {
-    tweet.entities?.urls.forEach((url: TcoExpansion) => {
-      text = text.replace(url.url, url.expanded_url);
-    });
-    text = text.replace(/ ?https\:\/\/t\.co\/\w{10}/, '');
+  text = linkFixer(tweet, text);
+
+  let quoteTweetMaybe =
+    conversation.globalObjects?.tweets?.[tweet.quoted_status_id_str || '0'] || null;
+
+  if (quoteTweetMaybe) {
+    quoteTweetMaybe.user = conversation?.globalObjects?.users?.[quoteTweetMaybe.user_id_str] || {};
+    const quoteText = handleQuote(quoteTweetMaybe);
+
+    console.log('quoteText', quoteText);
+
+    if (quoteText) {
+      text += `\n${quoteText}`;
+    }
+
+    if (mediaList.length === 0 && (quoteTweetMaybe.extended_entities?.media?.length || quoteTweetMaybe.entities?.media?.length || 0) > 0) {
+      console.log('No media in main tweet, maybe we have some media in the quote tweet?');
+      mediaList = Array.from(
+        quoteTweetMaybe.extended_entities?.media ||
+          quoteTweetMaybe.entities?.media ||
+          []
+      );
+
+      console.log('updated mediaList', mediaList)
+    }
   }
 
-  if (
-    typeof tweet.extended_entities?.media === 'undefined' &&
-    typeof tweet.entities?.media === 'undefined'
-  ) {
+  if (mediaList.length === 0) {
+    console.log('Media unavailable');
     let palette = user?.profile_image_extensions_media_color?.palette;
     let colorOverride: string = Constants.DEFAULT_COLOR;
 
@@ -101,6 +111,7 @@ export const handleStatus = async (
       `<meta content="${text}" property="og:description"/>`
     );
   } else {
+    console.log('Media available');
     let firstMedia = mediaList[0];
 
     let palette = firstMedia?.ext_media_color?.palette;
@@ -186,16 +197,6 @@ export const handleStatus = async (
     );
   }
 
-  let quoteTweetMaybe =
-    conversation.globalObjects?.tweets?.[tweet.quoted_status_id_str || '0'] || null;
-
-  if (quoteTweetMaybe) {
-    const quoteText = handleQuote(quoteTweetMaybe);
-
-    if (quoteText) {
-    }
-  }
-
   /* Special reply handling if authorText is not overriden */
   if (tweet.in_reply_to_screen_name && authorText === 'Twitter') {
     authorText = `↪ Replying to @${tweet.in_reply_to_screen_name}`;
@@ -204,7 +205,7 @@ export const handleStatus = async (
   /* The additional oembed is pulled by Discord to enable improved embeds.
      Telegram does not use this. */
   headers.push(
-    `<link rel="alternate" href="/owoembed?text=${encodeURIComponent(
+    `<link rel="alternate" href="${Constants.HOST_URL}/owoembed?text=${encodeURIComponent(
       authorText
     )}&status=${encodeURIComponent(status)}&author=${encodeURIComponent(
       user?.screen_name || ''
