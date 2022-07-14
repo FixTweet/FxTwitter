@@ -96,6 +96,7 @@ type TweetPartial = {
   possibly_sensitive_editable: boolean;
   retweet_count: number;
   quote_count: number;
+  quoted_status_id_str: string;
   reply_count: number;
   source: string;
   full_text: string;
