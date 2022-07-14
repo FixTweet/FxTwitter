@@ -3,20 +3,28 @@ import { fetchUsingGuest } from "./fetch";
 import { Html } from "./html";
 import { colorFromPalette } from "./palette";
 import { renderPoll } from "./poll";
+import { handleQuote } from "./quote";
 
-export const handleStatus = async (handle: string, id: string, mediaNumber?: number): Promise<string> => {
-  const tweet = await fetchUsingGuest(id);
+export const handleStatus = async (handle: string, status: string, mediaNumber?: number): Promise<string> => {
+  const conversation = await fetchUsingGuest(status);
+  
+
+  const tweet = conversation?.globalObjects?.tweets?.[status] || {};
+  /* With v2 conversation API we re-add the user object ot the tweet because
+     Twitter stores it separately in the conversation API. This is to consolidate
+     it in case a user appears multiple times in a thread. */
+  tweet.user = conversation?.globalObjects?.users?.[tweet.user_id_str] || {};
+
   console.log(tweet);
 
   /* Try to deep link to mobile apps, just like Twitter does.
      No idea if this actually works.*/
   let headers: string[] = [
-    `<meta property="og:site_name" content="Twitter"/>`,
     `<meta property="fb:app_id" content="2231777543"/>`,
-    `<meta content="twitter://status?id=${id}" property="al:ios:url"/>`,
+    `<meta content="twitter://status?id=${status}" property="al:ios:url"/>`,
     `<meta content="333903271" property="al:ios:app_store_id"/>`,
     `<meta content="Twitter" property="al:ios:app_name"/>`,
-    `<meta content="twitter://status?id=${id}" property="al:android:url"/>`,
+    `<meta content="twitter://status?id=${status}" property="al:android:url"/>`,
     `<meta content="com.twitter.android" property="al:android:package"/>`,
     `<meta content="Twitter" property="al:android:app_name"/>`,
   ];
@@ -40,7 +48,7 @@ export const handleStatus = async (handle: string, id: string, mediaNumber?: num
   const screenName = user?.screen_name || '';
   const name = user?.name || '';
 
-  const mediaList = tweet.extended_entities?.media || tweet.entities?.media || [];
+  const mediaList = Array.from(tweet.extended_entities?.media || tweet.entities?.media || []);
 
   let authorText = 'Twitter';
 
@@ -133,12 +141,17 @@ export const handleStatus = async (handle: string, id: string, mediaNumber?: num
 
     let actualMediaNumber = 1;
 
+    console.log('mediaNumber', mediaNumber)
+
+
     /* You can specify a specific photo in the URL and we'll pull the correct one,
        otherwise it falls back to first */
-    if (typeof mediaNumber === "number" && mediaList[mediaNumber]) {
-      actualMediaNumber = mediaNumber;
-      processMedia(mediaList[mediaNumber]);
+    if (typeof mediaNumber !== "undefined" && typeof mediaList[mediaNumber - 1] !== "undefined") {
+      console.log(`Media ${mediaNumber} found`)
+      actualMediaNumber = mediaNumber - 1;
+      processMedia(mediaList[actualMediaNumber]);
     } else {
+      console.log(`Media ${mediaNumber} not found, ${mediaList.length} total`)
       /* I wish Telegram respected multiple photos in a tweet,
          and that Discord could do the same for 3rd party providers like us */
       // media.forEach(media => processMedia(media));
@@ -146,7 +159,14 @@ export const handleStatus = async (handle: string, id: string, mediaNumber?: num
     }
 
     if (mediaList.length > 1) {
-      authorText = `Photo ${actualMediaNumber} of ${mediaList.length}`;
+      authorText = `Photo ${(actualMediaNumber + 1)} of ${mediaList.length}`;
+      headers.push(
+        `<meta property="og:site_name" content="${Constants.BRANDING_NAME} - Photo ${actualMediaNumber + 1} of ${mediaList.length}"/>`
+      )
+    } else {
+      headers.push(
+        `<meta property="og:site_name" content="${Constants.BRANDING_NAME}"/>`
+      )
     }
 
     headers.push(
@@ -155,14 +175,24 @@ export const handleStatus = async (handle: string, id: string, mediaNumber?: num
     );
   }
 
-  /* */
-  if (tweet.in_reply_to_screen_name) {
+  let quoteTweetMaybe = conversation.globalObjects?.tweets?.[tweet.quoted_status_id_str || '0'] || null;
+
+  if (quoteTweetMaybe) {
+    const quoteText = handleQuote(quoteTweetMaybe);
+
+    if (quoteText) {
+      
+    }
+  }
+
+  /* Special reply handling if authorText is not overriden */
+  if (tweet.in_reply_to_screen_name && authorText === 'Twitter') {
     authorText = `↪ Replying to @${tweet.in_reply_to_screen_name}`;
   }
 
   /* The additional oembed is pulled by Discord to enable improved embeds.
      Telegram does not use this. */
-  headers.push(`<link rel="alternate" href="https://pxtwitter.com/owoembed?text=${encodeURIComponent(authorText)}&status=${encodeURIComponent(id)}&author=${encodeURIComponent(user?.screen_name || '')}" type="application/json+oembed" title="${name}">`)
+  headers.push(`<link rel="alternate" href="/owoembed?text=${encodeURIComponent(authorText)}&status=${encodeURIComponent(status)}&author=${encodeURIComponent(user?.screen_name || '')}" type="application/json+oembed" title="${name}">`)
 
   console.log(JSON.stringify(tweet))
 
