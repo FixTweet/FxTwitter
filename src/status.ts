@@ -1,5 +1,5 @@
 import { Constants } from "./constants";
-import { fetchUsingGuest } from "./drivers/guest";
+import { fetchUsingGuest } from "./fetch";
 import { Html } from "./html";
 import { renderPoll } from "./poll";
 import { rgbToHex } from "./utils";
@@ -60,7 +60,7 @@ export const handleStatus = async (handle: string, id: string, mediaNumber?: num
   if (tweet.display_text_range) {
     const [start, end] = tweet.display_text_range;
     // We ignore start because it cuts off reply handles
-    text = text.substring(0, end + 1);
+    // text = text.substring(0, end + 1);
   }
 
   if (tweet.card) {
@@ -72,6 +72,7 @@ export const handleStatus = async (handle: string, id: string, mediaNumber?: num
     tweet.entities?.urls.forEach((url: TcoExpansion) => {
       text = text.replace(url.url, url.expanded_url);
     });
+    text = text.replace(/ ?https\:\/\/t\.co\/\w{10}/, '');
   }
 
   if (typeof tweet.extended_entities?.media === 'undefined' && typeof tweet.entities?.media === 'undefined') {
@@ -159,11 +160,11 @@ export const handleStatus = async (handle: string, id: string, mediaNumber?: num
     );
   }
 
-  if (typeof tweet.in_reply_to_screen_name !== "undefined") {
-    authorText = `↪️ @${tweet.in_reply_to_screen_name}`;
+  if (tweet.in_reply_to_screen_name) {
+    authorText = `↪ Replying to @${tweet.in_reply_to_screen_name}`;
   }
 
-  headers.push(`<link rel="alternate" href="https://pxtwitter.com/owoembed?text=${authorText}" type="application/json+oembed" title="${name}">`)
+  headers.push(`<link rel="alternate" href="https://pxtwitter.com/owoembed?text=${encodeURIComponent(authorText)}&status=${encodeURIComponent(id)}&author=${encodeURIComponent(user?.screen_name || '')}" type="application/json+oembed" title="${name}">`)
 
   console.log(JSON.stringify(tweet))
 
