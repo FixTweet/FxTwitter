@@ -8,7 +8,7 @@
 
 ### ... Or on Discord, send a normal Twitter link and type `s/e/p` to replace the domain with `twittpr.com`.
 
-![https://cdn.discordapp.com/attachments/165560751363325952/997309217444745236/pxtwitter.png](https://cdn.discordapp.com/attachments/165560751363325952/997309217444745236/pxtwitter.png)
+![https://cdn.discordapp.com/attachments/165560751363325952/997386462343462972/pxtwitter.png](https://cdn.discordapp.com/attachments/165560751363325952/997386462343462972/pxtwitter.png)
 
 ✅ Embed Videos (Twitter videos, and from links such as YouTube)
 
