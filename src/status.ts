@@ -163,15 +163,16 @@ export const handleStatus = async (
           headers.push(`<meta name="twitter:card" content="summary_large_image"/>`);
           pushedCardType = true;
         }
-      } else if (media.type === 'video') {
+      } else if (media.type === 'video' || media.type === 'animated_gif') {
         headers.push(`<meta name="twitter:image" content="${media.media_url_https}"/>`);
 
         authorText = encodeURIComponent(text);
 
         // Find the variant with the highest bitrate
         let bestVariant = media.video_info?.variants?.reduce?.((a, b) =>
-          (a.bitrate || 0) > (b.bitrate || 0) ? a : b
+          (a.bitrate ?? 0) > (b.bitrate ?? 0) ? a : b
         );
+
         headers.push(
           `<meta name="twitter:card" content="player"/>`,
           `<meta name="twitter:player:stream" content="${bestVariant?.url}"/>`,
