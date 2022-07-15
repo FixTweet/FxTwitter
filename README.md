@@ -10,17 +10,17 @@
 
 ![https://cdn.discordapp.com/attachments/165560751363325952/997386462343462972/pxtwitter.png](https://cdn.discordapp.com/attachments/165560751363325952/997386462343462972/pxtwitter.png)
 
-✅ Embed Videos (Twitter videos, and compatible external providers, such as YouTube)
+:heavy_check_mark: **Embed Videos** (Including Twitter videos and compatible external providers, such as YouTube)
 
-✅ Embed Poll results
+:heavy_check_mark: **Embed Poll results**
 
-✅ Embed Quote tweets (Including their media, if it doesn't conflict with the linked tweet)
+:heavy_check_mark: **Embed Quote Tweets** (Including their media, if it doesn't conflict with the linked tweet)
 
-✅ Replace embedded t.co links with originals
+:heavy_check_mark: **Replace embedded t.co shortener with original links**
 
-✅ Creates media/profile picture color-matching theme-color (looks great on Discord!)
+:heavy_check_mark: **Creates media/profile picture color-matching theme-color** (looks great on Discord!)
 
-✅ Private: We don't save tweets or their media (Outside of Cloudflare caching for speed)
+:heavy_check_mark: **Better privacy: We don't save tweets or their media** (Outside of temporary Cloudflare caching for speed)
 
 --------------------
 
