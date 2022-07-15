@@ -114,6 +114,7 @@ export const handleStatus = async (
 
     headers.push(
       `<meta content="${colorOverride}" property="theme-color"/>`,
+      `<meta property="og:site_name" content="${Constants.BRANDING_NAME}"/>`,
       `<meta property="og:image" content="${user?.profile_image_url_https.replace(
         '_normal',
         '_200x200'
@@ -165,6 +166,10 @@ export const handleStatus = async (
         }
       } else if (media.type === 'video' || media.type === 'animated_gif') {
         headers.push(`<meta name="twitter:image" content="${media.media_url_https}"/>`);
+
+        if (userAgent && userAgent?.indexOf?.('Discord') > -1) {
+          text = text.substr(0, 179);
+        }
 
         authorText = encodeURIComponent(text);
 
