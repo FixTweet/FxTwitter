@@ -10,7 +10,7 @@
 
 ![https://cdn.discordapp.com/attachments/165560751363325952/997386462343462972/pxtwitter.png](https://cdn.discordapp.com/attachments/165560751363325952/997386462343462972/pxtwitter.png)
 
-✅ Embed Videos (Twitter videos, and from links such as YouTube)
+✅ Embed Videos (Twitter videos, and compatible external providers, such as YouTube)
 
 ✅ Embed Poll results
 
