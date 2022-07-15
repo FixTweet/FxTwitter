@@ -23,22 +23,44 @@ String.prototype.format = function (options: any) {
 
 const router = Router();
 
-const statusRequest = async (request: any) => {
+const statusRequest = async (request: any, event: FetchEvent) => {
   const { id, mediaNumber } = request.params;
   const url = new URL(request.url);
   const userAgent = request.headers.get('User-Agent');
 
   if (userAgent.match(/bot/gi) !== null) {
-    return new Response(await handleStatus(id, parseInt(mediaNumber || 1), userAgent), {
+    // https://developers.cloudflare.com/workers/examples/cache-api/
+    const cacheUrl = new URL(request.url);
+    const cacheKey = new Request(cacheUrl.toString(), request);
+    const cache = caches.default;
+    
+    let response = await cache.match(cacheKey);
+
+    if (response) {
+      console.log('Cache hit');
+      return response;
+    }
+
+    console.log('Cache miss');
+
+    response = new Response(await handleStatus(id, parseInt(mediaNumber || 1), userAgent), {
       headers: Constants.RESPONSE_HEADERS,
       status: 200
     });
+
+    // Store the fetched response as cacheKey
+    // Use waitUntil so you can return the response without blocking on
+    // writing to cache
+    event.waitUntil(cache.put(cacheKey, response.clone()));
+
+    return response;
+
   } else {
     return Response.redirect(`${Constants.TWITTER_ROOT}${url.pathname}`, 302);
   }
 };
 
-const profileRequest = async (request: any) => {
+const profileRequest = async (request: any, _event: FetchEvent) => {
   const { handle } = request.params;
   const url = new URL(request.url);
 
@@ -92,5 +114,5 @@ router.all('*', async request => {
   Event to receive web requests on Cloudflare Worker
 */
 addEventListener('fetch', (event: FetchEvent) => {
-  event.respondWith(router.handle(event.request));
+  event.respondWith(router.handle(event.request, event));
 });

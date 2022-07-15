@@ -41,8 +41,8 @@ export const Constants = {
   },
   RESPONSE_HEADERS: {
     'content-type': 'text/html;charset=UTF-8',
-    'x-powered-by': '🏳️‍⚧️ Trans Rights'
-    // 'cache-control': 'max-age=1'
+    'x-powered-by': '🏳️‍⚧️ Trans Rights',
+    'cache-control': 'max-age=86400'
   },
   DEFAULT_COLOR: '#10A3FF'
 };
