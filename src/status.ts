@@ -20,8 +20,6 @@ export const handleStatus = async (
      it in case a user appears multiple times in a thread. */
   tweet.user = conversation?.globalObjects?.users?.[tweet.user_id_str] || {};
 
-  // console.log(tweet);
-
   /* Try to deep link to mobile apps, just like Twitter does.
      No idea if this actually works.*/
   let headers: string[] = [
@@ -34,7 +32,7 @@ export const handleStatus = async (
     `<meta content="Twitter" property="al:android:app_name"/>`
   ];
 
-  // Fallback for if Tweet did not load
+  /* Fallback for if Tweet did not load */
   if (typeof tweet.full_text === 'undefined') {
     headers.push(
       `<meta content="Twitter" property="og:title"/>`,
@@ -61,6 +59,7 @@ export const handleStatus = async (
 
   text = linkFixer(tweet, text);
 
+  /* Cards are used by polls and non-Twitter video embeds */
   if (tweet.card) {
     let cardRender = await renderCard(tweet.card, headers, userAgent);
 
@@ -71,6 +70,7 @@ export const handleStatus = async (
     }
   }
 
+  /* Trying to uncover a quote tweet referenced by this tweet */
   let quoteTweetMaybe =
     conversation.globalObjects?.tweets?.[tweet.quoted_status_id_str || '0'] || null;
 
@@ -100,8 +100,10 @@ export const handleStatus = async (
     }
   }
 
+  /* No media was found, but that's OK because we can still enrichen the Tweet
+     with a profile picture and color-matched embed in Discord! */
   if (mediaList.length === 0) {
-    console.log('Media unavailable');
+    console.log('No media');
     let palette = user?.profile_image_extensions_media_color?.palette;
     let colorOverride: string = Constants.DEFAULT_COLOR;
 
@@ -126,17 +128,21 @@ export const handleStatus = async (
     console.log('Media available');
     let firstMedia = mediaList[0];
 
+    /* Try grabbing media color palette */
     let palette = firstMedia?.ext_media_color?.palette;
     let colorOverride: string = Constants.DEFAULT_COLOR;
     let pushedCardType = false;
 
-    // for loop for palettes
     if (palette) {
       colorOverride = colorFromPalette(palette);
     }
 
+    /* theme-color is used by discord to style the embed.
+
+       We take full advantage of that!*/
     headers.push(`<meta content="${colorOverride}" property="theme-color"/>`);
 
+    /* Inline helper function for handling media */
     const processMedia = (media: TweetMedia) => {
       if (media.type === 'photo') {
         headers.push(
@@ -236,7 +242,7 @@ export const handleStatus = async (
     )}" type="application/json+oembed" title="${name}">`
   );
 
-  // console.log(JSON.stringify(tweet));
+  console.log(JSON.stringify(tweet));
 
   /* When dealing with a Tweet of unknown lang, fall back to en  */
   let lang = tweet.lang === 'unk' ? 'en' : tweet.lang || 'en';
