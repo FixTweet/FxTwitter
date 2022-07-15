@@ -31,8 +31,8 @@ export const Strings = {
 ███ ▐██▌  ▐█▌▐█▌  ███  ▐██▌ ███ ▐██▌ ███ ▐██▌   ▐██▌  ▐█▌      ███
 █████▌   ███  ███ ███   ▐█████████▌  ███  ▐████   ▐███  ▐████  ███
 ███
-███   The best way to embed tweets.
-███   A work in progress by @dangeredwolf
+███   A better Tweet embedder service
+███   by @dangeredwolf, et al.
 -->
 <head>{headers}</head>`
 };
