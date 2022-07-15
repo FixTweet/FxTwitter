@@ -22,6 +22,22 @@
 
 ✅ Private: We don't save tweets or their media (Outside of Cloudflare caching for speed)
 
+Here's a little chart comparing features to Twitter default embeds and other embedding services
+
+|                                     | pxTwitter          | Twitter default    | vxTwitter                        | Twxtter                           |
+|-------------------------------------|:------------------:|:------------------:|:--------------------------------:|:---------------------------------:|
+| Embed Tweets / Photos               | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:               | :heavy_check_mark:                |
+| Embed Videos                        | :heavy_check_mark: | :x:¹               | :heavy_check_mark:               | :heavy_check_mark:                |
+| Embed Poll results                  | :heavy_check_mark: | :x:                | :x:                              | :x:                               |
+| Embed Quote Tweets                  | :heavy_check_mark: | :x:                | :heavy_minus_sign: Without Media | :heavy_minus_sign: Without Media  |
+| Embed Multiple Images               | :x:                | On Discord         | With c.vxtwitter.com             | :x:                               |
+| Publicly accessible embed index     | :x:²               | N/A                | :x:²                             | :heavy_check_mark:                |
+| Replace t.co with original links    | :heavy_check_mark: | :x:                | :x:                              | :x:                               |
+| Media-based embed colors on Discord | :heavy_check_mark: | :x:                | :x:                              | :x:                               |
+
+¹ Discord will attempt to embed Twitter's video player, but it is unreliable
+² pxTwitter and vxTwitter both ensure link privacy from the public. vxTwitter still stores all responses in a database / JSON file controled by the owner. pxTwitter by contrast relies on Cloudflare caching of responses: there is no link store accessible to the owner
+
 Licensed under the permissive MIT license. Feel free to send a pull request!
 
 ### Things to tackle in the future
