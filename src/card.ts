@@ -83,7 +83,7 @@ export const renderCard = async (
 
         console.log(str);
       }
-    /* Oh good, a non-Twitter video URL! This enables YouTube embeds*/
+      /* Oh good, a non-Twitter video URL! This enables YouTube embeds and stuff to just work */
     } else if (typeof values.player_url !== 'undefined') {
       headers.push(
         `<meta name="twitter:player" content="${values.player_url.string_value}">`,
@@ -103,7 +103,7 @@ export const renderCard = async (
           values.player_height?.string_value || '720'
         }">`
       );
-      
+
       /* A control sequence I made up to tell status.ts that external media is being embedded */
       str = 'EMBED_CARD';
     }
