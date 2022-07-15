@@ -1,23 +1,23 @@
 import { Constants } from './constants';
 
 export const fetchUsingGuest = async (status: string): Promise<TimelineBlobPartial> => {
-  const csrfToken = crypto.randomUUID().replace(/-/g, ''); // Generate a random CSRF token, this doesn't matter, Twitter just cares that header and cookie match
-
-  let headers: { [header: string]: string } = {
-    Authorization: Constants.GUEST_BEARER_TOKEN,
-    ...Constants.BASE_HEADERS
-  };
-
   let apiAttempts = 0;
 
-  /* If all goes according to plan, we have a guest token we can use to call API
-     AFAIK there is no limit to how many guest tokens you can request.
-
-     This can effectively mean virtually unlimited (read) access to Twitter's API,
-     which is very funny. */
   while (apiAttempts < 10) {
+    const csrfToken = crypto.randomUUID().replace(/-/g, ''); // Generate a random CSRF token, this doesn't matter, Twitter just cares that header and cookie match
+
+    let headers: { [header: string]: string } = {
+      Authorization: Constants.GUEST_BEARER_TOKEN,
+      ...Constants.BASE_HEADERS
+    };
+
     apiAttempts++;
 
+    /* If all goes according to plan, we have a guest token we can use to call API
+      AFAIK there is no limit to how many guest tokens you can request.
+
+      This can effectively mean virtually unlimited (read) access to Twitter's API,
+      which is very funny. */
     const activate = await fetch(
       `${Constants.TWITTER_API_ROOT}/1.1/guest/activate.json`,
       {
