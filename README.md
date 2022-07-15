@@ -8,7 +8,7 @@
 
 ### Just add `px` before `twitter.com`.
 
-![https://cdn.discordapp.com/attachments/165560751363325952/997265440868946032/pxtwitter.png](https://cdn.discordapp.com/attachments/165560751363325952/997265440868946032/pxtwitter.png)
+![https://cdn.discordapp.com/attachments/165560751363325952/997309217444745236/pxtwitter.png](https://cdn.discordapp.com/attachments/165560751363325952/997309217444745236/pxtwitter.png)
 
 ✅ Embed Videos (Twitter videos, and from links such as YouTube)
 
