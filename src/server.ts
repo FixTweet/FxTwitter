@@ -10,7 +10,7 @@ const statusRequest = async (request: any, event: FetchEvent) => {
   const url = new URL(request.url);
   const userAgent = request.headers.get('User-Agent');
 
-  if (userAgent.match(/bot/gi) !== null) {
+  if (userAgent.match(/bot|facebook/gi) !== null) {
     // https://developers.cloudflare.com/workers/examples/cache-api/
     const cacheUrl = new URL(request.url);
     const cacheKey = new Request(cacheUrl.toString(), request);
