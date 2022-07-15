@@ -24,7 +24,7 @@
 
 Here's a little chart comparing features to Twitter default embeds and other embedding services
 
-|                                     | pxTwitter          | Twitter default    | vxTwitter                        | Twxtter                           |
+|                                     | pxTwitter          | Twitter default    | vxTwitter (BetterTwitFix)        | Twxtter (sixFix)                  |
 |-------------------------------------|:------------------:|:------------------:|:--------------------------------:|:---------------------------------:|
 | Embed Tweets / Photos               | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:               | :heavy_check_mark:                |
 | Embed Videos                        | :heavy_check_mark: | :x:¹               | :heavy_check_mark:               | :heavy_check_mark:                |
@@ -43,6 +43,7 @@ Licensed under the permissive MIT license. Feel free to send a pull request!
 
 ### Things to tackle in the future
 
+- A subdomain to directly embed images and videos, without embeds (thanks @TheAppleFreak!)
 - Combining multiple images together (would be outside CF Worker)
 - Caching guest token (So we don't have to bother Twitter for one on every request)
 
