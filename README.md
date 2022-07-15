@@ -39,13 +39,13 @@ Here's a little chart comparing features to Twitter default embeds and other emb
 
 ¹ Discord will attempt to embed Twitter's video player, but it is unreliable
 
-² pxTwitter and vxTwitter both ensure link privacy from the public. vxTwitter still stores all responses in a database / JSON file controlled by the owner. pxTwitter by contrast relies on Cloudflare caching of responses: there is no link store accessible to the owner
+² Neither pxTwitter or vxTwitter have a public embed ledger, for privacy reasons. vxTwitter still stores all responses in a database / JSON file controlled by the owner. pxTwitter by contrast relies on Cloudflare caching of responses: there is no link store accessible to the owner.
 
 --------------------
 
 ## Why pxTwitter is better to develop for and deploy
 
-TwitFix and derivatives have quite a few dependencies you need to rely on. You need to set up a server somewhere, install Python all its dependencies, then either set up `youtube-dl` (resource intensive, relatively) or [beg Twitter for API access](https://twitter.com/dangeredwolf/status/1438983606135832581), and optionally set up a database, otherwise it uses the file system to cache.
+TwitFix and derivatives have quite a few dependencies you need to rely on. You need to set up a server somewhere, install Python, all its dependencies, then either set up `youtube-dl` (more resource intensive) or [beg Twitter for API access](https://twitter.com/dangeredwolf/status/1438983606135832581), and optionally set up a database, otherwise it uses the file system to cache.
 
 pxTwitter was written from the start as a lightweight, TypeScript-based Cloudflare Worker. Cloudflare Workers are completely free for up to 100,000 requests per day, per account. Cloudflare Workers are [fast to set up](https://developers.cloudflare.com/workers/get-started/guide/) and your script is distributed in their datacenters around the world for lower latency.
 
@@ -55,13 +55,13 @@ pxTwitter does not need a database nor a Twitter API key: It takes a similar app
 
 Clone the repo, install [Node.js](https://nodejs.org/) and run `npm install` in the repo directory. Copy `wrangler.example.toml` to `wrangler.toml` and add your [Cloudflare account ID](https://developers.cloudflare.com/fundamentals/get-started/basic-tasks/find-account-and-zone-ids/), and change the name of your worker if you need to. Authenticate with Cloudflare with `npx wrangler login`, then do `npx wrangler publish` (or `npm run publish`).
 
-[Check Cloudflare's guide for additional info about getting started with workers](https://developers.cloudflare.com/workers/get-started/guide/).
+[If you have more questions about setting up Cloudflare Workers, check out their Getting Started guide](https://developers.cloudflare.com/workers/get-started/guide/).
 
 Once you're set up with your worker on `*.workers.dev`, [add your worker to your custom domain](https://developers.cloudflare.com/workers/platform/routing/custom-domains/).
 
 --------------------
 
-Licensed under the permissive MIT license. Feel free to send a pull request!
+**Licensed under the permissive MIT license. Feel free to send a pull request!**
 
 ### Things to tackle in the future
 
