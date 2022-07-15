@@ -18,18 +18,21 @@ export const fetchUsingGuest = async (status: string): Promise<TimelineBlobParti
   while (apiAttempts < 5) {
     apiAttempts++;
 
-    const activate = await fetch(`${Constants.TWITTER_API_ROOT}/1.1/guest/activate.json`, {
-      method: 'POST',
-      headers: headers,
-      body: ''
-    });
+    const activate = await fetch(
+      `${Constants.TWITTER_API_ROOT}/1.1/guest/activate.json`,
+      {
+        method: 'POST',
+        headers: headers,
+        body: ''
+      }
+    );
 
     /* Let's grab that guest_token so we can use it */
     let activateJson: { guest_token: string };
 
     try {
-      activateJson = (await activate.json()) as { guest_token: string }
-    } catch(e: any) {
+      activateJson = (await activate.json()) as { guest_token: string };
+    } catch (e: any) {
       continue;
     }
 
@@ -62,7 +65,10 @@ export const fetchUsingGuest = async (status: string): Promise<TimelineBlobParti
       )
     ).json()) as TimelineBlobPartial;
 
-    if (typeof conversation.globalObjects === 'undefined' && typeof conversation.errors === 'undefined') {
+    if (
+      typeof conversation.globalObjects === 'undefined' &&
+      typeof conversation.errors === 'undefined'
+    ) {
       console.log('Failed to fetch conversation, got', conversation);
       continue;
     }
@@ -71,5 +77,5 @@ export const fetchUsingGuest = async (status: string): Promise<TimelineBlobParti
   }
 
   // @ts-ignore - This is only returned if we completely failed to fetch the conversation
-  return { };
+  return {};
 };

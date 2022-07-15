@@ -10,26 +10,26 @@ type TimelineContent = {
         timestoneInfo: {
           richText: {
             text: string;
-          }
-        }
-      }
-    }
-  }
-}
+          };
+        };
+      };
+    };
+  };
+};
 
 type TimelineInstruction = {
   addEntries?: {
     entries: {
-      content: TimelineContent,
-      entryId: string
-    }[]
-  }
-}
+      content: TimelineContent;
+      entryId: string;
+    }[];
+  };
+};
 
 type TwitterAPIError = {
   code: number;
   message: string;
-}
+};
 
 type TimelineBlobPartial = {
   globalObjects: {
@@ -41,9 +41,9 @@ type TimelineBlobPartial = {
     };
   };
   timeline: {
-    instructions: TimelineInstruction[]
-  },
-  errors?: TwitterAPIError[]
+    instructions: TimelineInstruction[];
+  };
+  errors?: TwitterAPIError[];
 };
 
 type TweetMediaSize = {

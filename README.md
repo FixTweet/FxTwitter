@@ -22,26 +22,26 @@
 
 :heavy_check_mark: **Better privacy: We don't save tweets or their media** (Outside of temporary Cloudflare caching for speed)
 
---------------------
+---
 
 Here's a little chart comparing features to Twitter default embeds and other embedding services
 
-|                                     | pxTwitter          | Twitter default    | vxTwitter (BetterTwitFix)        | Twxtter (sixFix)                  |
-|-------------------------------------|:------------------:|:------------------:|:--------------------------------:|:---------------------------------:|
-| Embed Tweets / Photos               | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:               | :heavy_check_mark:                |
-| Embed Videos                        | :heavy_check_mark: | :x:¹               | :heavy_check_mark:               | :heavy_check_mark:                |
-| Embed Poll results                  | :heavy_check_mark: | :x:                | :x:                              | :x:                               |
-| Embed Quote Tweets                  | :heavy_check_mark: | :x:                | :heavy_minus_sign: Without Media | :heavy_minus_sign: Without Media  |
-| Embed Multiple Images               | :x:                | On Discord         | With c.vxtwitter.com             | :x:                               |
-| Publicly accessible embed index     | :x:²               | N/A                | :x:²                             | :heavy_check_mark:                |
-| Replace t.co with original links    | :heavy_check_mark: | :x:                | :x:                              | :x:                               |
-| Media-based embed colors on Discord | :heavy_check_mark: | :x:                | :x:                              | :x:                               |
+|                                     |     pxTwitter      |  Twitter default   |    vxTwitter (BetterTwitFix)     |         Twxtter (sixFix)         |
+| ----------------------------------- | :----------------: | :----------------: | :------------------------------: | :------------------------------: |
+| Embed Tweets / Photos               | :heavy_check_mark: | :heavy_check_mark: |        :heavy_check_mark:        |        :heavy_check_mark:        |
+| Embed Videos                        | :heavy_check_mark: |        :x:¹        |        :heavy_check_mark:        |        :heavy_check_mark:        |
+| Embed Poll results                  | :heavy_check_mark: |        :x:         |               :x:                |               :x:                |
+| Embed Quote Tweets                  | :heavy_check_mark: |        :x:         | :heavy_minus_sign: Without Media | :heavy_minus_sign: Without Media |
+| Embed Multiple Images               |        :x:         |     On Discord     |       With c.vxtwitter.com       |               :x:                |
+| Publicly accessible embed index     |        :x:²        |        N/A         |               :x:²               |        :heavy_check_mark:        |
+| Replace t.co with original links    | :heavy_check_mark: |        :x:         |               :x:                |               :x:                |
+| Media-based embed colors on Discord | :heavy_check_mark: |        :x:         |               :x:                |               :x:                |
 
 ¹ Discord will attempt to embed Twitter's video player, but it is unreliable
 
 ² Neither pxTwitter or vxTwitter have a public embed ledger, for privacy reasons. vxTwitter still stores all responses in a database / JSON file controlled by the owner. pxTwitter by contrast relies on Cloudflare caching of responses: there is no link store accessible to the owner.
 
---------------------
+---
 
 ## Why pxTwitter is better to develop for and deploy
 
@@ -59,7 +59,7 @@ Clone the repo, install [Node.js](https://nodejs.org/) and run `npm install` in 
 
 Once you're set up with your worker on `*.workers.dev`, [add your worker to your custom domain](https://developers.cloudflare.com/workers/platform/routing/custom-domains/).
 
---------------------
+---
 
 **Licensed under the permissive MIT license. Feel free to send a pull request!**
 

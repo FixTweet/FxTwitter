@@ -15,7 +15,7 @@ export const returnError = (error: string) => {
       `<meta content="${error}" property="og:description"/>`
     ].join('')
   });
-}
+};
 
 export const handleStatus = async (
   status: string,
@@ -62,7 +62,7 @@ export const handleStatus = async (
     if (typeof conversation?.globalObjects?.tweets === 'undefined') {
       return returnError(Strings.ERROR_API_FAIL);
     }
-    
+
     /* If we have no idea what happened then just return API error */
     return returnError(Strings.ERROR_API_FAIL);
   }
@@ -136,7 +136,7 @@ export const handleStatus = async (
     headers.push(
       `<meta content="${colorOverride}" property="theme-color"/>`,
       `<meta property="og:site_name" content="${Constants.BRANDING_NAME}"/>`,
-       // Use a slightly higher resolution image for profile pics
+      // Use a slightly higher resolution image for profile pics
       `<meta property="og:image" content="${user?.profile_image_url_https.replace(
         '_normal',
         '_200x200'
