@@ -65,7 +65,11 @@ export const fetchUsingGuest = async (status: string): Promise<TimelineBlobParti
       )
     ).json()) as TimelineBlobPartial;
 
-    if (typeof conversation.globalObjects === 'undefined' || conversation.errors?.[0]?.code === 239) {
+    if (
+      typeof conversation.globalObjects === 'undefined' &&
+      (typeof conversation.errors === 'undefined' ||
+        conversation.errors?.[0]?.code === 239)
+    ) {
       console.log('Failed to fetch conversation, got', conversation);
       continue;
     }
