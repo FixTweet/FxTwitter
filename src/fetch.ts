@@ -15,7 +15,7 @@ export const fetchUsingGuest = async (status: string): Promise<TimelineBlobParti
 
      This can effectively mean virtually unlimited (read) access to Twitter's API,
      which is very funny. */
-  while (apiAttempts < 8) {
+  while (apiAttempts < 10) {
     apiAttempts++;
 
     const activate = await fetch(
