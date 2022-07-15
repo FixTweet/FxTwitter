@@ -15,7 +15,7 @@ export const fetchUsingGuest = async (status: string): Promise<TimelineBlobParti
 
      This can effectively mean virtually unlimited (read) access to Twitter's API,
      which is very funny. */
-  while (apiAttempts < 3) {
+  while (apiAttempts < 5) {
     apiAttempts++;
 
     const activate = await fetch(`${Constants.TWITTER_API_ROOT}/1.1/guest/activate.json`, {
@@ -25,7 +25,14 @@ export const fetchUsingGuest = async (status: string): Promise<TimelineBlobParti
     });
 
     /* Let's grab that guest_token so we can use it */
-    const activateJson = (await activate.json()) as { guest_token: string };
+    let activateJson: { guest_token: string };
+
+    try {
+      activateJson = (await activate.json()) as { guest_token: string }
+    } catch(e: any) {
+      continue;
+    }
+
     const guestToken = activateJson.guest_token;
 
     console.log('Activated guest:', activateJson);
