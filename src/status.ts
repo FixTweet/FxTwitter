@@ -1,11 +1,11 @@
 import { Constants } from './constants';
 import { fetchUsingGuest } from './fetch';
-import { Html } from './html';
 import { linkFixer } from './linkFixer';
 import { colorFromPalette } from './palette';
 import { renderCard } from './card';
 import { handleQuote } from './quote';
 import { sanitizeText } from './utils';
+import { Strings } from './strings';
 
 export const handleStatus = async (
   status: string,
@@ -39,7 +39,7 @@ export const handleStatus = async (
       `<meta content="Tweet failed to load :(" property="og:description"/>`
     );
 
-    return Html.BASE_HTML.format({
+    return Strings.BASE_HTML.format({
       lang: '',
       headers: headers.join(''),
       tweet: JSON.stringify(tweet)
@@ -247,7 +247,7 @@ export const handleStatus = async (
   /* When dealing with a Tweet of unknown lang, fall back to en  */
   let lang = tweet.lang === 'unk' ? 'en' : tweet.lang || 'en';
 
-  return Html.BASE_HTML.format({
+  return Strings.BASE_HTML.format({
     lang: `lang="${lang}"`,
     headers: headers.join('')
   });

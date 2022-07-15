@@ -55,6 +55,7 @@ const profileRequest = async (request: any, _event: FetchEvent) => {
   }
 };
 
+/* Handlers for Twitter statuses */
 router.get('/:handle/status/:id', statusRequest);
 router.get('/:handle/status/:id/photo/:mediaNumber', statusRequest);
 router.get('/:handle/status/:id/video/:mediaNumber', statusRequest);

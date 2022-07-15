@@ -41,8 +41,8 @@ export const renderCard = async (
   let totalVotes = 0;
   let timeLeft = '';
 
-  /* TODO: make poll code cleaner */
   if (typeof values !== 'undefined') {
+    /* TODO: make poll code cleaner */
     if (
       typeof values.choice1_count !== 'undefined' &&
       typeof values.choice2_count !== 'undefined'
@@ -83,6 +83,7 @@ export const renderCard = async (
 
         console.log(str);
       }
+    /* Oh good, a non-Twitter video URL! This enables YouTube embeds*/
     } else if (typeof values.player_url !== 'undefined') {
       headers.push(
         `<meta name="twitter:player" content="${values.player_url.string_value}">`,
@@ -102,7 +103,8 @@ export const renderCard = async (
           values.player_height?.string_value || '720'
         }">`
       );
-
+      
+      /* A control sequence I made up to tell status.ts that external media is being embedded */
       str = 'EMBED_CARD';
     }
   }

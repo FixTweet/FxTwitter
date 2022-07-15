@@ -1,3 +1,8 @@
+/*
+  Types for various objects.
+  Note that a lot of these are not actually complete types. Many unused values may be missing.
+*/
+
 type TimelineBlobPartial = {
   globalObjects: {
     tweets: {

@@ -17,6 +17,22 @@ String.prototype.format = function (options: any) {
   });
 };
 
+/* Maybe we should, but pxTwitter doesn't use strings as much as pronouns bot did */
 export const Strings = {
-  TWITTER: 'Twitter'
+  TWITTER: 'Twitter',
+  BASE_HTML: `<!DOCTYPE html>
+<html {lang}>
+<!--          ███████████            ▐█▌ ███    ███
+                  ███                 █  ███    ███
+                  ███                    ███    ███
+█████▌   ███  ███ ███  ███  ███  ███ ███ ██████ ██████ ▐████▌  ███▐███
+███  ██▌  ▐█▌▐█▌  ███  ███  ███  ███ ███ ███    ███   ▐█▌  ▐█▌ ███▌
+███  ███   ▐██▌   ███  ███  ███  ███ ███ ███    ███   ████████ ███
+███ ▐██▌  ▐█▌▐█▌  ███  ▐██▌ ███ ▐██▌ ███ ▐██▌   ▐██▌  ▐█▌      ███
+█████▌   ███  ███ ███   ▐█████████▌  ███  ▐████   ▐███  ▐████  ███
+███
+███   The best way to embed tweets.
+███   A work in progress by @dangeredwolf
+-->
+<head>{headers}</head>`
 };
