@@ -46,8 +46,6 @@ export const handleStatus = async (
   if (typeof tweet.full_text === 'undefined') {
     console.log('Invalid status, got tweet ', tweet, ' conversation ', conversation);
 
-    console.log('instructions', conversation.timeline?.instructions.length);
-
     /* We've got timeline instructions, so the Tweet is probably private */
     if (conversation.timeline?.instructions?.length > 0) {
       return returnError(Strings.ERROR_PRIVATE);
