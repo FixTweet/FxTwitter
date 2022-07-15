@@ -55,7 +55,7 @@ pxTwitter does not need a database nor a Twitter API key: It takes a similar app
 
 Clone the repo, install [Node.js](https://nodejs.org/) and run `npm install` in the repo directory. Copy `wrangler.example.toml` to `wrangler.toml` and add your [Cloudflare account ID](https://developers.cloudflare.com/fundamentals/get-started/basic-tasks/find-account-and-zone-ids/), and change the name of your worker if you need to. Authenticate with Cloudflare with `npx wrangler login`, then do `npx wrangler publish` (or `npm run publish`).
 
-[Check Cloudflare's guide for additional info](https://developers.cloudflare.com/workers/get-started/guide/).
+[Check Cloudflare's guide for additional info about getting started with workers](https://developers.cloudflare.com/workers/get-started/guide/).
 
 Once you're set up with your worker on `*.workers.dev`, [add your worker to your custom domain](https://developers.cloudflare.com/workers/platform/routing/custom-domains/).
 
