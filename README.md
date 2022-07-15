@@ -26,7 +26,6 @@ Licensed under the permissive MIT license. Feel free to send a pull request!
 
 ### Things to tackle in the future
 
-- Embed profiles! (and maybe more from Twitter?)
 - Combining multiple images together (would be outside CF Worker)
 - Caching responses (I haven't done this yet as this is still being actively worked on!)
 - Caching guest token (So we don't have to bother Twitter for one on every request)

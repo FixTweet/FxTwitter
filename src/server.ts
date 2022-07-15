@@ -38,12 +38,26 @@ const statusRequest = async (request: any) => {
   }
 };
 
+// TODO: Create richer embeds for profiles
+const profileRequest = async (request: any) => {
+  const { handle } = request.params;
+  const url = new URL(request.url);
+
+  if (handle.match(/[a-z0-9_]{1,15}/gi) !== handle) {
+    return Response.redirect(Constants.REDIRECT_URL, 302);
+  } else {
+    return Response.redirect(`${Constants.TWITTER_ROOT}${url.pathname}`, 302);
+  }
+};
+
 router.get('/:handle/status/:id', statusRequest);
 router.get('/:handle/status/:id/photo/:mediaNumber', statusRequest);
 router.get('/:handle/status/:id/video/:mediaNumber', statusRequest);
 router.get('/:handle/statuses/:id', statusRequest);
 router.get('/:handle/statuses/:id/photo/:mediaNumber', statusRequest);
 router.get('/:handle/statuses/:id/video/:mediaNumber', statusRequest);
+router.get('/:handle', profileRequest);
+router.get('/:handle/', profileRequest);
 
 router.get('/owoembed', async (request: any) => {
   console.log('oembed hit!');
