@@ -11,7 +11,7 @@ export const fetchUsingGuest = async (status: string): Promise<TimelineBlobParti
   /* If all goes according to plan, we have a guest token we can use to call API
      AFAIK there is no limit to how many guest tokens you can request.
 
-     This can effectively mean virtually unlimited (read) access to Twitter' API,
+     This can effectively mean virtually unlimited (read) access to Twitter's API,
      which is very funny. */
   const activate = await fetch(`${Constants.TWITTER_API_ROOT}/1.1/guest/activate.json`, {
     method: 'POST',
