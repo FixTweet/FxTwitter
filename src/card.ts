@@ -95,7 +95,6 @@ export const renderCard = async (
         `<meta property="og:type" content="video.other">`,
         `<meta property="og:video:url" content="${values.player_url.string_value}">`,
         `<meta property="og:video:secure_url" content="${values.player_url.string_value}">`,
-        `<meta property="og:video:type" content="text/html">`,
         `<meta property="og:video:width" content="${
           values.player_width?.string_value || '1280'
         }">`,
@@ -103,6 +102,8 @@ export const renderCard = async (
           values.player_height?.string_value || '720'
         }">`
       );
+
+      str = 'EMBED_CARD';
     }
   }
 

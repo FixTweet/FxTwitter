@@ -59,11 +59,17 @@ export const handleStatus = async (
 
   let authorText = 'Twitter';
 
-  if (tweet.card) {
-    text += await renderCard(tweet.card, headers, userAgent);
-  }
-
   text = linkFixer(tweet, text);
+
+  if (tweet.card) {
+    let cardRender = await renderCard(tweet.card, headers, userAgent);
+
+    if (cardRender === 'EMBED_CARD') {
+      authorText = encodeURIComponent(text);
+    } else {
+      text += cardRender;
+    }
+  }
 
   let quoteTweetMaybe =
     conversation.globalObjects?.tweets?.[tweet.quoted_status_id_str || '0'] || null;
