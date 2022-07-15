@@ -7,6 +7,16 @@ import { handleQuote } from './quote';
 import { sanitizeText } from './utils';
 import { Strings } from './strings';
 
+export const returnError = (error: string) => {
+  return Strings.BASE_HTML.format({
+    lang: '',
+    headers: [
+      `<meta content="${Constants.BRANDING_NAME}" property="og:title"/>`,
+      `<meta content="${error}" property="og:description"/>`
+    ].join('')
+  });
+}
+
 export const handleStatus = async (
   status: string,
   mediaNumber?: number,
@@ -34,18 +44,27 @@ export const handleStatus = async (
 
   /* Fallback for if Tweet did not load */
   if (typeof tweet.full_text === 'undefined') {
-    headers.push(
-      `<meta content="Twitter" property="og:title"/>`,
-      `<meta content="Tweet failed to load :(" property="og:description"/>`
-    );
-
     console.log('Invalid status, got tweet ', tweet, ' conversation ', conversation);
 
-    return Strings.BASE_HTML.format({
-      lang: '',
-      headers: headers.join(''),
-      tweet: JSON.stringify(tweet)
-    });
+    console.log('instructions', conversation.timeline?.instructions.length);
+
+    /* We've got timeline instructions, so the Tweet is probably private */
+    if (conversation.timeline?.instructions?.length > 0) {
+      return returnError(Strings.ERROR_PRIVATE);
+    }
+
+    /* {"errors":[{"code":34,"message":"Sorry, that page does not exist."}]} */
+    if (conversation.errors?.[0]?.code === 34) {
+      return returnError(Strings.ERROR_TWEET_NOT_FOUND);
+    }
+
+    /* Tweets object is completely missing, smells like API failure */
+    if (typeof conversation?.globalObjects?.tweets === 'undefined') {
+      return returnError(Strings.ERROR_API_FAIL);
+    }
+    
+    /* If we have no idea what happened then just return API error */
+    return returnError(Strings.ERROR_API_FAIL);
   }
 
   let text = tweet.full_text;
@@ -57,7 +76,7 @@ export const handleStatus = async (
     tweet.extended_entities?.media || tweet.entities?.media || []
   );
 
-  let authorText = 'Twitter';
+  let authorText = Strings.DEFAULT_AUTHOR_TEXT;
 
   text = linkFixer(tweet, text);
 
@@ -117,6 +136,7 @@ export const handleStatus = async (
     headers.push(
       `<meta content="${colorOverride}" property="theme-color"/>`,
       `<meta property="og:site_name" content="${Constants.BRANDING_NAME}"/>`,
+       // Use a slightly higher resolution image for profile pics
       `<meta property="og:image" content="${user?.profile_image_url_https.replace(
         '_normal',
         '_200x200'

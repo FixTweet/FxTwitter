@@ -3,6 +3,34 @@
   Note that a lot of these are not actually complete types. Many unused values may be missing.
 */
 
+type TimelineContent = {
+  item?: {
+    content?: {
+      tombstone?: {
+        timestoneInfo: {
+          richText: {
+            text: string;
+          }
+        }
+      }
+    }
+  }
+}
+
+type TimelineInstruction = {
+  addEntries?: {
+    entries: {
+      content: TimelineContent,
+      entryId: string
+    }[]
+  }
+}
+
+type TwitterAPIError = {
+  code: number;
+  message: string;
+}
+
 type TimelineBlobPartial = {
   globalObjects: {
     tweets: {
@@ -12,6 +40,10 @@ type TimelineBlobPartial = {
       [userId: string]: UserPartial;
     };
   };
+  timeline: {
+    instructions: TimelineInstruction[]
+  },
+  errors?: TwitterAPIError[]
 };
 
 type TweetMediaSize = {
