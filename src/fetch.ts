@@ -15,7 +15,7 @@ export const fetchUsingGuest = async (status: string): Promise<TimelineBlobParti
 
      This can effectively mean virtually unlimited (read) access to Twitter's API,
      which is very funny. */
-  while (apiAttempts < 5) {
+  while (apiAttempts < 8) {
     apiAttempts++;
 
     const activate = await fetch(
@@ -65,10 +65,7 @@ export const fetchUsingGuest = async (status: string): Promise<TimelineBlobParti
       )
     ).json()) as TimelineBlobPartial;
 
-    if (
-      typeof conversation.globalObjects === 'undefined' &&
-      typeof conversation.errors === 'undefined'
-    ) {
+    if (typeof conversation.globalObjects === 'undefined' || conversation.errors?.[0]?.code === 239) {
       console.log('Failed to fetch conversation, got', conversation);
       continue;
     }
