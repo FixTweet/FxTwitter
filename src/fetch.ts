@@ -55,15 +55,24 @@ export const fetchUsingGuest = async (status: string): Promise<TimelineBlobParti
 
     /* We pretend to be the Twitter Web App as closely as possible,
       so we use twitter.com/i/api/2 instead of api.twitter.com/2 */
-    const conversation = (await (
-      await fetch(
+    let conversation: TimelineBlobPartial;
+    let apiRequest;
+    
+    try {
+      apiRequest = await fetch(
         `${Constants.TWITTER_ROOT}/i/api/2/timeline/conversation/${status}.json?${Constants.GUEST_FETCH_PARAMETERS}`,
         {
           method: 'GET',
           headers: headers
         }
       )
-    ).json()) as TimelineBlobPartial;
+      conversation = (await apiRequest.json());
+    } catch(e: any) {
+      /* We'll usually only hit this if we get an invalid response from Twitter.
+         It's rare, but it happens */
+      console.error('Unknown error while fetching conversation from API');
+      continue;
+    }
 
     if (
       typeof conversation.globalObjects === 'undefined' &&
