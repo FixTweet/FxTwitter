@@ -1,7 +1,7 @@
 {
   "name": "pxtwitter",
   "version": "1.0.0",
-  "description": "Cloudflare worker TypeScript template",
+  "description": "Embed Twitter videos, polls, and more on Discord and Telegram",
   "main": "dist/worker.js",
   "scripts": {
     "build": "webpack",
