@@ -81,7 +81,6 @@ ${label}  (${Math.round((votes / totalVotes || 0) * 100)}%)
       }
 
       str += `\n${totalVotes} votes · ${timeLeft}`;
-      console.log(str);
       /* Oh good, a non-Twitter video URL! This enables YouTube embeds and stuff to just work */
     } else if (typeof values.player_url !== 'undefined') {
       headers.push(

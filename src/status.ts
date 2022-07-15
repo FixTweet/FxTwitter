@@ -248,8 +248,6 @@ export const handleStatus = async (
     )}" type="application/json+oembed" title="${name}">`
   );
 
-  console.log(JSON.stringify(tweet));
-
   /* When dealing with a Tweet of unknown lang, fall back to en  */
   let lang = tweet.lang === 'unk' ? 'en' : tweet.lang || 'en';
 
