@@ -20,7 +20,7 @@
 
 ✅ Creates media/profile picture color-matching theme-color (looks great on Discord!)
 
-✅ Private, we don't save tweets or their media
+✅ Private: We don't save tweets or their media (Outside of Cloudflare caching for speed)
 
 Licensed under the permissive MIT license. Feel free to send a pull request!
 
