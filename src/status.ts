@@ -39,6 +39,8 @@ export const handleStatus = async (
       `<meta content="Tweet failed to load :(" property="og:description"/>`
     );
 
+    console.log('Invalid status, got tweet ', tweet, ' conversation ', conversation);
+
     return Strings.BASE_HTML.format({
       lang: '',
       headers: headers.join(''),
