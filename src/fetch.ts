@@ -8,44 +8,61 @@ export const fetchUsingGuest = async (status: string): Promise<TimelineBlobParti
     ...Constants.BASE_HEADERS
   };
 
+  let apiAttempts = 0;
+
   /* If all goes according to plan, we have a guest token we can use to call API
      AFAIK there is no limit to how many guest tokens you can request.
 
      This can effectively mean virtually unlimited (read) access to Twitter's API,
      which is very funny. */
-  const activate = await fetch(`${Constants.TWITTER_API_ROOT}/1.1/guest/activate.json`, {
-    method: 'POST',
-    headers: headers,
-    body: ''
-  });
+  while (apiAttempts < 3) {
+    apiAttempts++;
 
-  /* Let's grab that guest_token so we can use it */
-  const activateJson = (await activate.json()) as { guest_token: string };
-  const guestToken = activateJson.guest_token;
+    const activate = await fetch(`${Constants.TWITTER_API_ROOT}/1.1/guest/activate.json`, {
+      method: 'POST',
+      headers: headers,
+      body: ''
+    });
 
-  /* Just some cookies to mimick what the Twitter Web App would send */
-  headers['Cookie'] = [
-    `guest_id_ads=v1%3A${guestToken}`,
-    `guest_id_marketing=v1%3A${guestToken}`,
-    `guest_id=v1%3A${guestToken}`,
-    `ct0=${csrfToken};`
-  ].join('; ');
+    /* Let's grab that guest_token so we can use it */
+    const activateJson = (await activate.json()) as { guest_token: string };
+    const guestToken = activateJson.guest_token;
 
-  headers['x-csrf-token'] = csrfToken;
-  headers['x-twitter-active-user'] = 'yes';
-  headers['x-guest-token'] = guestToken;
+    console.log('Activated guest:', activateJson);
+    console.log('Guest token:', guestToken);
 
-  /* We pretend to be the Twitter Web App as closely as possible,
-     so we use twitter.com/i/api/2 instead of api.twitter.com/2 */
-  const conversation = (await (
-    await fetch(
-      `${Constants.TWITTER_ROOT}/i/api/2/timeline/conversation/${status}.json?${Constants.GUEST_FETCH_PARAMETERS}`,
-      {
-        method: 'GET',
-        headers: headers
-      }
-    )
-  ).json()) as TimelineBlobPartial;
+    /* Just some cookies to mimick what the Twitter Web App would send */
+    headers['Cookie'] = [
+      `guest_id_ads=v1%3A${guestToken}`,
+      `guest_id_marketing=v1%3A${guestToken}`,
+      `guest_id=v1%3A${guestToken}`,
+      `ct0=${csrfToken};`
+    ].join('; ');
 
-  return conversation;
+    headers['x-csrf-token'] = csrfToken;
+    headers['x-twitter-active-user'] = 'yes';
+    headers['x-guest-token'] = guestToken;
+
+    /* We pretend to be the Twitter Web App as closely as possible,
+      so we use twitter.com/i/api/2 instead of api.twitter.com/2 */
+    const conversation = (await (
+      await fetch(
+        `${Constants.TWITTER_ROOT}/i/api/2/timeline/conversation/${status}.json?${Constants.GUEST_FETCH_PARAMETERS}`,
+        {
+          method: 'GET',
+          headers: headers
+        }
+      )
+    ).json()) as TimelineBlobPartial;
+
+    if (typeof conversation.globalObjects === 'undefined') {
+      console.log('Failed to fetch conversation, got', conversation);
+      continue;
+    }
+
+    return conversation;
+  }
+
+  // @ts-ignore - This is only returned if we completely failed to fetch the conversation
+  return { };
 };
