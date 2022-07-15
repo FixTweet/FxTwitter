@@ -38,7 +38,6 @@ const statusRequest = async (request: any) => {
   }
 };
 
-// TODO: Create richer embeds for profiles
 const profileRequest = async (request: any) => {
   const { handle } = request.params;
   const url = new URL(request.url);
