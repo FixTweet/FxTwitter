@@ -1,6 +1,7 @@
 import { Router } from 'itty-router';
 import { Constants } from './constants';
 import { handleStatus } from './status';
+import { Strings } from './strings';
 
 const router = Router();
 
@@ -60,8 +61,6 @@ router.get('/:handle/status/:id/video/:mediaNumber', statusRequest);
 router.get('/:handle/statuses/:id', statusRequest);
 router.get('/:handle/statuses/:id/photo/:mediaNumber', statusRequest);
 router.get('/:handle/statuses/:id/video/:mediaNumber', statusRequest);
-router.get('/:handle', profileRequest);
-router.get('/:handle/', profileRequest);
 
 router.get('/owoembed', async (request: any) => {
   console.log('oembed hit!');
@@ -79,7 +78,7 @@ router.get('/owoembed', async (request: any) => {
     )}/status/${encodeURIComponent(status)}`,
     provider_name: Constants.BRANDING_NAME,
     provider_url: Constants.REDIRECT_URL,
-    title: 'Twitter',
+    title: Strings.TWITTER,
     type: 'link',
     version: '1.0'
   };
@@ -88,6 +87,9 @@ router.get('/owoembed', async (request: any) => {
     status: 200
   });
 });
+
+router.get('/:handle', profileRequest);
+router.get('/:handle/', profileRequest);
 
 router.all('*', async request => {
   return Response.redirect(Constants.REDIRECT_URL, 307);

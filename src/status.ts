@@ -20,7 +20,7 @@ export const handleStatus = async (
      it in case a user appears multiple times in a thread. */
   tweet.user = conversation?.globalObjects?.users?.[tweet.user_id_str] || {};
 
-  console.log(tweet);
+  // console.log(tweet);
 
   /* Try to deep link to mobile apps, just like Twitter does.
      No idea if this actually works.*/
@@ -236,7 +236,7 @@ export const handleStatus = async (
     )}" type="application/json+oembed" title="${name}">`
   );
 
-  console.log(JSON.stringify(tweet));
+  // console.log(JSON.stringify(tweet));
 
   /* When dealing with a Tweet of unknown lang, fall back to en  */
   let lang = tweet.lang === 'unk' ? 'en' : tweet.lang || 'en';

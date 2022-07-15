@@ -17,4 +17,6 @@ String.prototype.format = function (options: any) {
   });
 };
 
-export const Strings = {};
+export const Strings = {
+  TWITTER: 'Twitter'
+};
