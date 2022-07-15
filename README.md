@@ -36,6 +36,7 @@ Here's a little chart comparing features to Twitter default embeds and other emb
 | Media-based embed colors on Discord | :heavy_check_mark: | :x:                | :x:                              | :x:                               |
 
 ¹ Discord will attempt to embed Twitter's video player, but it is unreliable
+
 ² pxTwitter and vxTwitter both ensure link privacy from the public. vxTwitter still stores all responses in a database / JSON file controled by the owner. pxTwitter by contrast relies on Cloudflare caching of responses: there is no link store accessible to the owner
 
 Licensed under the permissive MIT license. Feel free to send a pull request!
