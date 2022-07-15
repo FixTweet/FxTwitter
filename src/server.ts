@@ -33,7 +33,7 @@ const statusRequest = async (request: any, event: FetchEvent) => {
     const cacheUrl = new URL(request.url);
     const cacheKey = new Request(cacheUrl.toString(), request);
     const cache = caches.default;
-    
+
     let response = await cache.match(cacheKey);
 
     if (response) {
@@ -43,10 +43,13 @@ const statusRequest = async (request: any, event: FetchEvent) => {
 
     console.log('Cache miss');
 
-    response = new Response(await handleStatus(id, parseInt(mediaNumber || 1), userAgent), {
-      headers: Constants.RESPONSE_HEADERS,
-      status: 200
-    });
+    response = new Response(
+      await handleStatus(id, parseInt(mediaNumber || 1), userAgent),
+      {
+        headers: Constants.RESPONSE_HEADERS,
+        status: 200
+      }
+    );
 
     // Store the fetched response as cacheKey
     // Use waitUntil so you can return the response without blocking on
@@ -54,7 +57,6 @@ const statusRequest = async (request: any, event: FetchEvent) => {
     event.waitUntil(cache.put(cacheKey, response.clone()));
 
     return response;
-
   } else {
     return Response.redirect(`${Constants.TWITTER_ROOT}${url.pathname}`, 302);
   }
