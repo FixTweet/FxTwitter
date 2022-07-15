@@ -4,7 +4,7 @@
 
 ## A TwitFix-like solution written in TypeScript for Cloudflare Workers.
 
-### Embed videos, polls, and more on Discord, Telegram, and more! Just add `px` before `twitter.com`
+### Embed videos, polls, and more on Discord, Telegram, and more! Just add `px` before `twitter` to make `pxtwitter.com`
 
 ### ... Or on Discord, send a normal Twitter link and type `s/e/p` to replace the domain with `twittpr.com`.
 
