@@ -30,7 +30,8 @@ In many ways, pxTwitter has richer embeds and does more. Here's a table comparin
 
 |                                       |     pxTwitter      |         Twitter default          |       vxTwitter (BetterTwitFix)       |           Twxtter (sixFix)            |
 | ------------------------------------- | :----------------: | :------------------------------: | :-----------------------------------: | :-----------------------------------: |
-| Embed Tweets / Photos                 | :heavy_check_mark: |        :heavy_check_mark:        |          :heavy_check_mark:           |          :heavy_check_mark:           |
+| Embed Tweets / Images                 | :heavy_check_mark: |        :heavy_check_mark:        |          :heavy_check_mark:           |          :heavy_check_mark:           |
+| Embed profile pictures on text Tweets | :heavy_check_mark: |               :x:                |          :heavy_check_mark:           |          :heavy_check_mark:           |
 | Embed Twitter Videos                  | :heavy_check_mark: |               :x:¹               |          :heavy_check_mark:           |          :heavy_check_mark:           |
 | Embed External Videos (YouTube, etc.) | :heavy_check_mark: |               :x:                |                 :x:⁴                  |                  :x:                  |
 | Embed Poll results                    | :heavy_check_mark: |               :x:                |                  :x:                  |                  :x:                  |
