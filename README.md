@@ -37,7 +37,7 @@ Want to link directly to a Tweet's media without the embed? You can do that with
 There's a few supported ways to do this:
 
 - Add `d.` or `dl.` before the domain (so, `d.twittpr.com` or `dl.pxtwitter.com`)
-- Add `.mp4` to the end of videos or `.jpg` to the end of photos, after the tweet ID
+- Add `.mp4` to the end of videos or `.jpg` to the end of images, after the tweet ID
 - Add `/dl` or `/dir` between the domain and the username
 
 Examples from above:
@@ -46,7 +46,7 @@ Examples from above:
 - `https://pxtwitter.com/dangeredwolf/status/1548117889437208581.jpg`
 - `https://pxtwitter.com/dl/dangeredwolf/status/1548117889437208581`
 
-Tweets with multiple imgaes are supported, so you can do something like this and it will pick the correct image:
+Tweets with multiple images are supported, so you can do something like this and it will pick the correct one:
 
 `https://d.twittpr.com/dangeredwolf/status/1547514042146865153/photo/3`
 
