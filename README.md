@@ -68,7 +68,6 @@ Once you're set up with your worker on `*.workers.dev`, [add your worker to your
 
 ### Things to tackle in the future
 
-- A subdomain to directly link to a tweet's image/video, without embeds (thanks @TheAppleFreak!)
 - Combining multiple images together (would be outside CF Worker)
 - Caching guest token (So we don't have to bother Twitter for one on every request)
 
