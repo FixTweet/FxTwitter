@@ -64,7 +64,7 @@ const profileRequest = async (request: any, _event: FetchEvent) => {
   const { handle } = request.params;
   const url = new URL(request.url);
 
-  if (handle.match(/[a-z0-9_]{1,15}/gi) !== handle) {
+  if (handle.match(/[a-z0-9_]{1,15}/gi)[0] !== handle) {
     return Response.redirect(Constants.REDIRECT_URL, 302);
   } else {
     return Response.redirect(`${Constants.TWITTER_ROOT}${url.pathname}`, 302);
