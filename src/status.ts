@@ -6,6 +6,7 @@ import { renderCard } from './card';
 import { handleQuote } from './quote';
 import { sanitizeText } from './utils';
 import { Strings } from './strings';
+import { Flags } from './types';
 
 export const returnError = (error: string) => {
   return Strings.BASE_HTML.format({
@@ -20,8 +21,10 @@ export const returnError = (error: string) => {
 export const handleStatus = async (
   status: string,
   mediaNumber?: number,
-  userAgent?: string
-): Promise<string> => {
+  userAgent?: string,
+  flags?: Flags
+): Promise<string | Response> => {
+  console.log('Direct?', flags?.direct);
   const conversation = await fetchUsingGuest(status);
 
   const tweet = conversation?.globalObjects?.tweets?.[status] || {};
@@ -41,6 +44,8 @@ export const handleStatus = async (
     `<meta content="com.twitter.android" property="al:android:package"/>`,
     `<meta content="Twitter" property="al:android:app_name"/>`
   ];
+
+  let redirectMedia = '';
 
   /* Fallback for if Tweet did not load */
   if (typeof tweet.full_text === 'undefined') {
@@ -166,6 +171,11 @@ export const handleStatus = async (
     /* Inline helper function for handling media */
     const processMedia = (media: TweetMedia) => {
       if (media.type === 'photo') {
+        if (flags?.direct && typeof media.media_url_https === 'string') {
+          redirectMedia = media.media_url_https;
+          return;
+        }
+
         headers.push(
           `<meta name="twitter:image" content="${media.media_url_https}"/>`,
           `<meta property="og:image" content="${media.media_url_https}"/>`
@@ -185,6 +195,18 @@ export const handleStatus = async (
           pushedCardType = true;
         }
       } else if (media.type === 'video' || media.type === 'animated_gif') {
+
+        // Find the variant with the highest bitrate
+        let bestVariant = media.video_info?.variants?.reduce?.((a, b) =>
+          (a.bitrate ?? 0) > (b.bitrate ?? 0) ? a : b
+        );
+        
+        if (flags?.direct && bestVariant?.url) {
+          console.log(`Redirecting to ${bestVariant.url}`);
+          redirectMedia = bestVariant.url;
+          return;
+        }
+
         headers.push(`<meta name="twitter:image" content="${media.media_url_https}"/>`);
 
         if (userAgent && userAgent?.indexOf?.('Discord') > -1) {
@@ -192,11 +214,6 @@ export const handleStatus = async (
         }
 
         authorText = encodeURIComponent(text);
-
-        // Find the variant with the highest bitrate
-        let bestVariant = media.video_info?.variants?.reduce?.((a, b) =>
-          (a.bitrate ?? 0) > (b.bitrate ?? 0) ? a : b
-        );
 
         headers.push(
           `<meta name="twitter:card" content="player"/>`,
@@ -232,6 +249,12 @@ export const handleStatus = async (
          and that Discord could do the same for 3rd party providers like us */
       // media.forEach(media => processMedia(media));
       processMedia(firstMedia);
+    }
+
+    if (flags?.direct && redirectMedia) {
+      let response = Response.redirect(redirectMedia, 302)
+      console.log(response);
+      return response;
     }
 
     if (mediaList.length > 1) {

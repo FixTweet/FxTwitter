@@ -2,6 +2,12 @@ const fakeChromeVersion = '103';
 
 export const Constants = {
   BRANDING_NAME: `pxTwitter`,
+  DIRECT_MEDIA_DOMAINS: [
+    'd.pxtwitter.com',
+    'd.twittpr.com',
+    'dl.pxtwitter.com',
+    'dl.twittpr.com'
+  ],
   HOST_URL: `https://pxtwitter.com`,
   REDIRECT_URL: 'https://github.com/dangeredwolf/pxTwitter',
   TWITTER_ROOT: 'https://twitter.com',

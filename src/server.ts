@@ -2,15 +2,27 @@ import { Router } from 'itty-router';
 import { Constants } from './constants';
 import { handleStatus } from './status';
 import { Strings } from './strings';
+import { Flags } from './types';
 
 const router = Router();
 
-const statusRequest = async (request: any, event: FetchEvent) => {
-  const { id, mediaNumber } = request.params;
+const statusRequest = async (request: any, event: FetchEvent, flags: Flags = {}) => {
+  const { handle, id, mediaNumber } = request.params;
   const url = new URL(request.url);
   const userAgent = request.headers.get('User-Agent');
 
-  if (userAgent.match(/bot|facebook/gi) !== null) {
+  let isBotUA = userAgent.match(/bot|facebook/gi) !== null;
+
+  if (
+    url.pathname.match(/\/status(es)?\/\d+\.(mp4|png|jpg)/g) !== null ||
+    Constants.DIRECT_MEDIA_DOMAINS.includes(url.hostname)
+  ) {
+    console.log('Direct media request by extension');
+    flags.direct = true;
+  }
+
+  if (isBotUA || flags.direct) {
+    console.log('Matched bot UA');
     // https://developers.cloudflare.com/workers/examples/cache-api/
     const cacheUrl = new URL(request.url);
     const cacheKey = new Request(cacheUrl.toString(), request);
@@ -25,13 +37,26 @@ const statusRequest = async (request: any, event: FetchEvent) => {
 
     console.log('Cache miss');
 
-    response = new Response(
-      await handleStatus(id, parseInt(mediaNumber || 1), userAgent),
-      {
-        headers: Constants.RESPONSE_HEADERS,
-        status: 200
+    let status = await handleStatus(id.match(/\d{2,20}/)?.[0], parseInt(mediaNumber || 1), userAgent, flags);
+
+    if (status instanceof Response) {
+      console.log('handleStatus sent response');
+      response = status;
+    } else {
+      /* Fallback if a person browses to a direct media link with a Tweet without media */
+      if (!isBotUA) {
+        return Response.redirect(`${Constants.TWITTER_ROOT}/${handle}/status/${id}`, 302);
       }
-    );
+      console.log('handleStatus sent embed');
+
+      response = new Response(
+        status,
+        {
+          headers: Constants.RESPONSE_HEADERS,
+          status: 200
+        }
+      );
+    }
 
     // Store the fetched response as cacheKey
     // Use waitUntil so you can return the response without blocking on
@@ -40,8 +65,13 @@ const statusRequest = async (request: any, event: FetchEvent) => {
 
     return response;
   } else {
-    return Response.redirect(`${Constants.TWITTER_ROOT}${url.pathname}`, 302);
+    console.log('Matched human UA');
+    return Response.redirect(`${Constants.TWITTER_ROOT}/${handle}/status/${id}`, 302);
   }
+};
+
+const statusDirectMediaRequest = async (request: any, event: FetchEvent) => {
+  return await statusRequest(request, event, { direct: true });
 };
 
 const profileRequest = async (request: any, _event: FetchEvent) => {
@@ -54,6 +84,21 @@ const profileRequest = async (request: any, _event: FetchEvent) => {
     return Response.redirect(`${Constants.TWITTER_ROOT}${url.pathname}`, 302);
   }
 };
+
+/* Direct media handlers */
+router.get('/dl/:handle/status/:id', statusDirectMediaRequest);
+router.get('/dl/:handle/status/:id/photo/:mediaNumber', statusDirectMediaRequest);
+router.get('/dl/:handle/status/:id/video/:mediaNumber', statusDirectMediaRequest);
+router.get('/dl/:handle/statuses/:id', statusDirectMediaRequest);
+router.get('/dl/:handle/statuses/:id/photo/:mediaNumber', statusDirectMediaRequest);
+router.get('/dl/:handle/statuses/:id/video/:mediaNumber', statusDirectMediaRequest);
+
+router.get('/dir/:handle/status/:id', statusDirectMediaRequest);
+router.get('/dir/:handle/status/:id/photo/:mediaNumber', statusDirectMediaRequest);
+router.get('/dir/:handle/status/:id/video/:mediaNumber', statusDirectMediaRequest);
+router.get('/dir/:handle/statuses/:id', statusDirectMediaRequest);
+router.get('/dir/:handle/statuses/:id/photo/:mediaNumber', statusDirectMediaRequest);
+router.get('/dir/:handle/statuses/:id/video/:mediaNumber', statusDirectMediaRequest);
 
 /* Handlers for Twitter statuses */
 router.get('/:handle/status/:id', statusRequest);
