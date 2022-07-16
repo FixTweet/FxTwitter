@@ -23,19 +23,8 @@ const statusRequest = async (request: any, event: FetchEvent, flags: Flags = {})
 
   if (isBotUA || flags.direct) {
     console.log('Matched bot UA');
-    // https://developers.cloudflare.com/workers/examples/cache-api/
-    const cacheUrl = new URL(request.url);
-    const cacheKey = new Request(cacheUrl.toString(), request);
-    const cache = caches.default;
 
-    let response = await cache.match(cacheKey);
-
-    if (response) {
-      console.log('Cache hit');
-      return response;
-    }
-
-    console.log('Cache miss');
+    let response: Response;
 
     let status = await handleStatus(
       id.match(/\d{2,20}/)?.[0],
@@ -59,11 +48,6 @@ const statusRequest = async (request: any, event: FetchEvent, flags: Flags = {})
         status: 200
       });
     }
-
-    // Store the fetched response as cacheKey
-    // Use waitUntil so you can return the response without blocking on
-    // writing to cache
-    event.waitUntil(cache.put(cacheKey, response.clone()));
 
     return response;
   } else {
@@ -143,9 +127,35 @@ router.all('*', async request => {
   return Response.redirect(Constants.REDIRECT_URL, 307);
 });
 
+const cacheWrapper = async (event: FetchEvent): Promise<Response> => {
+  const { request } = event;
+  // https://developers.cloudflare.com/workers/examples/cache-api/
+  const cacheUrl = new URL(request.url);
+  const cacheKey = new Request(cacheUrl.toString(), request);
+  const cache = caches.default;
+
+  let cachedResponse = await cache.match(cacheKey);
+
+  if (cachedResponse) {
+    console.log('Cache hit');
+    return cachedResponse;
+  }
+
+  console.log('Cache miss');
+
+  let response = await router.handle(event.request, event);
+
+  // Store the fetched response as cacheKey
+  // Use waitUntil so you can return the response without blocking on
+  // writing to cache
+  event.waitUntil(cache.put(cacheKey, response.clone()));
+
+  return response;
+};
+
 /*
   Event to receive web requests on Cloudflare Worker
 */
 addEventListener('fetch', (event: FetchEvent) => {
-  event.respondWith(router.handle(event.request, event));
+  event.respondWith(cacheWrapper(event));
 });
