@@ -24,7 +24,9 @@
 
 ---
 
-Here's a little chart comparing features to Twitter default embeds and other embedding services
+## Why use pxTwitter?
+
+In many ways, pxTwitter has richer embeds and does more. Here's a table comparing some of pxTwitter's features compared to Twitter default embeds as well as other embedding services
 
 |                                       |     pxTwitter      |         Twitter default          |    vxTwitter (BetterTwitFix)     |         Twxtter (sixFix)         |
 | ------------------------------------- | :----------------: | :------------------------------: | :------------------------------: | :------------------------------: |
@@ -49,9 +51,9 @@ Here's a little chart comparing features to Twitter default embeds and other emb
 
 ---
 
-## Why pxTwitter is better to develop for and deploy
+## Why pxTwitter is nicer to develop for and deploy
 
-TwitFix and derivatives have quite a few dependencies you need to rely on. You need to set up a server somewhere, install Python, all its dependencies, then either set up `youtube-dl` (more resource intensive) or [beg Twitter for API access](https://twitter.com/dangeredwolf/status/1438983606135832581), and optionally set up a database, otherwise it uses the file system to cache.
+TwitFix and its derivatives have quite a few dependencies you need to rely on. You need to set up a server somewhere, install Python, all its dependencies, then either set up `youtube-dl` (more resource intensive) or [beg Twitter for API access](https://twitter.com/dangeredwolf/status/1438983606135832581), and optionally set up a database, otherwise it uses the file system to cache.
 
 pxTwitter was written from the start as a lightweight, TypeScript-based Cloudflare Worker. Cloudflare Workers are completely free for up to 100,000 requests per day, per account. Cloudflare Workers are [fast to set up](https://developers.cloudflare.com/workers/get-started/guide/) and your script is distributed in their datacenters around the world for lower latency.
 
