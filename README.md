@@ -29,7 +29,8 @@ Here's a little chart comparing features to Twitter default embeds and other emb
 |                                       |     pxTwitter      |         Twitter default          |    vxTwitter (BetterTwitFix)     |         Twxtter (sixFix)         |
 | ------------------------------------- | :----------------: | :------------------------------: | :------------------------------: | :------------------------------: |
 | Embed Tweets / Photos                 | :heavy_check_mark: |        :heavy_check_mark:        |        :heavy_check_mark:        |        :heavy_check_mark:        |
-| Embed Videos                          | :heavy_check_mark: |               :x:¹               |        :heavy_check_mark:        |        :heavy_check_mark:        |
+| Embed Twitter Videos                  | :heavy_check_mark: |               :x:¹               |        :heavy_check_mark:        |        :heavy_check_mark:        |
+| Embed External Videos (YouTube, etc.) | :heavy_check_mark: |               :x:                |               :x:⁴               |               :x:                |
 | Embed Poll results                    | :heavy_check_mark: |               :x:                |               :x:                |               :x:                |
 | Embed Quote Tweets                    | :heavy_check_mark: |               :x:                | :heavy_minus_sign: Without Media | :heavy_minus_sign: Without Media |
 | Embed Multiple Images                 |        :x:         | :heavy_minus_sign: Discord Only³ |       With c.vxtwitter.com       |               :x:                |
@@ -43,6 +44,8 @@ Here's a little chart comparing features to Twitter default embeds and other emb
 ² Neither pxTwitter or vxTwitter have a public embed ledger, for privacy reasons. vxTwitter still stores all responses in a database / JSON file controlled by the owner. pxTwitter by contrast relies on Cloudflare caching of responses: there is no link store accessible to the owner.
 
 ³ Discord uses a custom embed container for Twitter.com to enable multi-image, which is unfortunately not available to other websites.
+
+⁴ On GitHub, BetterTwitFix (vxTwitter) claims to support this feature, however in my testing as of mid-July 2022, this does not seem to work.
 
 ---
 
