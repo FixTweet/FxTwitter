@@ -18,17 +18,17 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      BRANDING_NAME: `'${process.env.BRANDING_NAME}'`,
+      BRANDING_NAME: `'${process.env.BRANDING_NAME}'`
     }),
     new webpack.DefinePlugin({
-      DIRECT_MEDIA_DOMAINS: `'${process.env.DIRECT_MEDIA_DOMAINS}'`,
+      DIRECT_MEDIA_DOMAINS: `'${process.env.DIRECT_MEDIA_DOMAINS}'`
     }),
     new webpack.DefinePlugin({
-      HOST_URL: `'${process.env.HOST_URL}'`,
+      HOST_URL: `'${process.env.HOST_URL}'`
     }),
     new webpack.DefinePlugin({
-      REDIRECT_URL: `'${process.env.REDIRECT_URL}'`,
-    }),
+      REDIRECT_URL: `'${process.env.REDIRECT_URL}'`
+    })
   ],
   optimization: {
     mangleExports: 'size'
