@@ -1,12 +1,14 @@
-# pxTwitter
+# pxTwitter (Twittpr)
 
 [![Webpack](https://github.com/dangeredwolf/pxtwitter/actions/workflows/webpack.yml/badge.svg)](https://github.com/dangeredwolf/pxtwitter/actions/workflows/webpack.yml)
 
-## A TwitFix-like service that _does more_. Written in TypeScript for Cloudflare Workers!
+## A TwitFix-like service that _does more_ with better privacy in mind. Written in TypeScript for Cloudflare Workers!
 
-### Embed videos, polls, and more on Discord, Telegram, and others! Just add `px` before `twitter` to make `pxtwitter.com`
+### Embed videos, polls, and more on Discord, Telegram, and others!
 
-### ... Or on Discord, send a normal Twitter link and type `s/e/p` to replace the domain with `twittpr.com`.
+### On Discord, send a Twitter link and type `s/e/p` to make `twittpr.com`.
+
+### Otherwise, just add `px` before `twitter` to make `pxtwitter.com`
 
 ![https://cdn.discordapp.com/attachments/165560751363325952/997386462343462972/pxtwitter.png](https://cdn.discordapp.com/attachments/165560751363325952/997386462343462972/pxtwitter.png)
 
@@ -24,23 +26,53 @@
 
 ---
 
+## Advanced features
+
+### Direct media links
+
+Want to link directly to a Tweet's media without the embed? You can do that with pxTwitter.
+
+![Image demonstrating the feature](https://pxtwitter.com/dangeredwolf/status/1548119328498728960.jpg)
+
+There's a few supported ways to do this:
+
+- Add `d.` or `dl.` before the domain (so, `d.twittpr.com` or `dl.pxtwitter.com`)
+- Add `.mp4` to the end of videos or `.jpg` to the end of photos, after the tweet ID
+- Add `/dl` or `/dir` between the domain and the username
+
+Examples from above:
+
+- `https://d.twittpr.com/dangeredwolf/status/1548119328498728960`
+- `https://pxtwitter.com/dangeredwolf/status/1548117889437208581.jpg`
+- `https://pxtwitter.com/dl/dangeredwolf/status/1548117889437208581`
+
+Tweets with multiple imgaes are supported, so you can do something like this and it will pick the correct image:
+
+`https://d.twittpr.com/dangeredwolf/status/1547514042146865153/photo/3`
+
+Otherwise, it will default to the first image.
+
+---
+
 ## Why use pxTwitter?
 
 In many ways, pxTwitter has richer embeds and does more. Here's a table comparing some of pxTwitter's features compared to Twitter default embeds as well as other embedding services
 
-|                                       |     pxTwitter      |         Twitter default          |       vxTwitter (BetterTwitFix)       |           Twxtter (sixFix)            |
-| ------------------------------------- | :----------------: | :------------------------------: | :-----------------------------------: | :-----------------------------------: |
-| Embed Tweets / Images                 | :heavy_check_mark: |        :heavy_check_mark:        |          :heavy_check_mark:           |          :heavy_check_mark:           |
-| Embed profile pictures on text Tweets | :heavy_check_mark: |               :x:                |          :heavy_check_mark:           |          :heavy_check_mark:           |
-| Embed Twitter Videos                  | :heavy_check_mark: |               :x:¹               |          :heavy_check_mark:           |          :heavy_check_mark:           |
-| Embed External Videos (YouTube, etc.) | :heavy_check_mark: |               :x:                |                 :x:⁴                  |                  :x:                  |
-| Embed Poll results                    | :heavy_check_mark: |               :x:                |                  :x:                  |                  :x:                  |
-| Embed Quote Tweets                    | :heavy_check_mark: |               :x:                | :ballot_box_with_check: Without Media | :ballot_box_with_check: Without Media |
-| Embed Multiple Images                 |        :x:         | :heavy_minus_sign: Discord Only³ |         With c.vxtwitter.com          |                  :x:                  |
-| Publicly accessible embed index       |        :x:²        |               N/A                |                 :x:²                  |          :heavy_check_mark:           |
-| Replace t.co with original links      | :heavy_check_mark: |               :x:                |                  :x:                  |                  :x:                  |
-| Media-based embed colors on Discord   | :heavy_check_mark: |               :x:                |                  :x:                  |                  :x:                  |
-| Redirect to media file (wihout embed) | :heavy_check_mark: |               :x:                |                  :x:                  |          :heavy_check_mark:           |
+|                                         |       pxTwitter        |         Twitter default          |       vxTwitter (BetterTwitFix)       |           Twxtter (sixFix)            |
+| --------------------------------------- | :--------------------: | :------------------------------: | :-----------------------------------: | :-----------------------------------: |
+| Embed Tweets / Images                   |   :heavy_check_mark:   |        :heavy_check_mark:        |          :heavy_check_mark:           |          :heavy_check_mark:           |
+| Embed profile pictures on text Tweets   |   :heavy_check_mark:   |               :x:                |          :heavy_check_mark:           |          :heavy_check_mark:           |
+| Embed Twitter Videos                    |   :heavy_check_mark:   |               :x:¹               |          :heavy_check_mark:           |          :heavy_check_mark:           |
+| Embed External Videos (YouTube, etc.)   |   :heavy_check_mark:   |               :x:                |                 :x:⁴                  |                  :x:                  |
+| Embed Poll results                      |   :heavy_check_mark:   |               :x:                |                  :x:                  |                  :x:                  |
+| Embed Quote Tweets                      |   :heavy_check_mark:   |               :x:                | :ballot_box_with_check: Without Media | :ballot_box_with_check: Without Media |
+| Embed Multiple Images                   |          :x:           | :heavy_minus_sign: Discord Only³ |         With c.vxtwitter.com          |                  :x:                  |
+| Publicly accessible embed index         |          :x:²          |               N/A                |                 :x:²                  |          :heavy_check_mark:           |
+| Replace t.co with original links        |   :heavy_check_mark:   |               :x:                |                  :x:                  |                  :x:                  |
+| Media-based embed colors on Discord     |   :heavy_check_mark:   |               :x:                |                  :x:                  |                  :x:                  |
+| Redirect to media file (wihout embed)   |   :heavy_check_mark:   |               :x:                |                  :x:                  |          :heavy_check_mark:           |
+| Strip Twitter tracking info on redirect |   :heavy_check_mark:   |               :x:                |          :heavy_check_mark:           |          :heavy_check_mark:           |
+| Show retweet / like counts              | Coming soon to Discord |               :x:                |          :heavy_check_mark:           |          :heavy_check_mark:           |
 
 ¹ Discord will attempt to embed Twitter's video player, but it is unreliable
 
