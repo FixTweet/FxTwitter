@@ -81,6 +81,20 @@ export const handleStatus = async (
 
   let authorText = Strings.DEFAULT_AUTHOR_TEXT;
 
+  if (tweet.favorite_count > 0 || tweet.retweet_count > 0 || tweet.reply_count > 0) {
+    authorText = '';
+    if (tweet.reply_count > 0) {
+      authorText += `${tweet.reply_count} 🗩    `;
+    }
+    if (tweet.retweet_count > 0) {
+      authorText += `${tweet.retweet_count} ⮂    `;
+    }
+    if (tweet.favorite_count > 0) {
+      authorText += `${tweet.favorite_count} ❤    `;
+    }
+    authorText = authorText.trim();
+  }
+
   text = linkFixer(tweet, text);
 
   /* Cards are used by polls and non-Twitter video embeds */
@@ -257,11 +271,17 @@ export const handleStatus = async (
     }
 
     if (mediaList.length > 1) {
-      authorText = `Photo ${actualMediaNumber + 1} of ${mediaList.length}`;
+      let photoCounter = Strings.PHOTO_COUNT.format({
+        number: actualMediaNumber + 1,
+        total: mediaList.length
+      });
+
+      authorText =
+        authorText === Strings.DEFAULT_AUTHOR_TEXT
+          ? photoCounter
+          : `${authorText}   ―   ${photoCounter}`;
       headers.push(
-        `<meta property="og:site_name" content="${Constants.BRANDING_NAME} - Photo ${
-          actualMediaNumber + 1
-        } of ${mediaList.length}"/>`
+        `<meta property="og:site_name" content="${Constants.BRANDING_NAME} - ${photoCounter}"/>`
       );
     } else {
       headers.push(
