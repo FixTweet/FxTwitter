@@ -36,7 +36,7 @@ Here's a little chart comparing features to Twitter default embeds and other emb
 | Publicly accessible embed index       |        :x:²        |               N/A                |               :x:²               |        :heavy_check_mark:        |
 | Replace t.co with original links      | :heavy_check_mark: |               :x:                |               :x:                |               :x:                |
 | Media-based embed colors on Discord   | :heavy_check_mark: |               :x:                |               :x:                |               :x:                |
-| Redirect to video file (wihout embed) |    Coming soon!    |               :x:                |               :x:                |        :heavy_check_mark:        |
+| Redirect to media file (wihout embed) | :heavy_check_mark: |               :x:                |               :x:                |        :heavy_check_mark:        |
 
 ¹ Discord will attempt to embed Twitter's video player, but it is unreliable
 

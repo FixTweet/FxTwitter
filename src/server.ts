@@ -37,7 +37,12 @@ const statusRequest = async (request: any, event: FetchEvent, flags: Flags = {})
 
     console.log('Cache miss');
 
-    let status = await handleStatus(id.match(/\d{2,20}/)?.[0], parseInt(mediaNumber || 1), userAgent, flags);
+    let status = await handleStatus(
+      id.match(/\d{2,20}/)?.[0],
+      parseInt(mediaNumber || 1),
+      userAgent,
+      flags
+    );
 
     if (status instanceof Response) {
       console.log('handleStatus sent response');
@@ -49,13 +54,10 @@ const statusRequest = async (request: any, event: FetchEvent, flags: Flags = {})
       }
       console.log('handleStatus sent embed');
 
-      response = new Response(
-        status,
-        {
-          headers: Constants.RESPONSE_HEADERS,
-          status: 200
-        }
-      );
+      response = new Response(status, {
+        headers: Constants.RESPONSE_HEADERS,
+        status: 200
+      });
     }
 
     // Store the fetched response as cacheKey

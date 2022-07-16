@@ -195,12 +195,11 @@ export const handleStatus = async (
           pushedCardType = true;
         }
       } else if (media.type === 'video' || media.type === 'animated_gif') {
-
         // Find the variant with the highest bitrate
         let bestVariant = media.video_info?.variants?.reduce?.((a, b) =>
           (a.bitrate ?? 0) > (b.bitrate ?? 0) ? a : b
         );
-        
+
         if (flags?.direct && bestVariant?.url) {
           console.log(`Redirecting to ${bestVariant.url}`);
           redirectMedia = bestVariant.url;
@@ -252,7 +251,7 @@ export const handleStatus = async (
     }
 
     if (flags?.direct && redirectMedia) {
-      let response = Response.redirect(redirectMedia, 302)
+      let response = Response.redirect(redirectMedia, 302);
       console.log(response);
       return response;
     }
