@@ -2,9 +2,9 @@
 
 [![Webpack](https://github.com/dangeredwolf/pxtwitter/actions/workflows/webpack.yml/badge.svg)](https://github.com/dangeredwolf/pxtwitter/actions/workflows/webpack.yml)
 
-## A TwitFix-like solution written in TypeScript for Cloudflare Workers.
+## A TwitFix-like service that *does more*. Written in TypeScript for Cloudflare Workers!
 
-### Embed videos, polls, and more on Discord, Telegram, and more! Just add `px` before `twitter` to make `pxtwitter.com`
+### Embed videos, polls, and more on Discord, Telegram, and others! Just add `px` before `twitter` to make `pxtwitter.com`
 
 ### ... Or on Discord, send a normal Twitter link and type `s/e/p` to replace the domain with `twittpr.com`.
 
