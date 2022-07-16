@@ -1,4 +1,7 @@
 const path = require('path');
+const webpack = require('webpack');
+
+require('dotenv').config();
 
 module.exports = {
   entry: {
@@ -13,7 +16,20 @@ module.exports = {
     extensions: ['.ts', '.tsx', '.js'],
     fallback: { util: false }
   },
-  plugins: [],
+  plugins: [
+    new webpack.DefinePlugin({
+      BRANDING_NAME: `'${process.env.BRANDING_NAME}'`,
+    }),
+    new webpack.DefinePlugin({
+      DIRECT_MEDIA_DOMAINS: `'${process.env.DIRECT_MEDIA_DOMAINS}'`,
+    }),
+    new webpack.DefinePlugin({
+      HOST_URL: `'${process.env.HOST_URL}'`,
+    }),
+    new webpack.DefinePlugin({
+      REDIRECT_URL: `'${process.env.REDIRECT_URL}'`,
+    }),
+  ],
   optimization: {
     mangleExports: 'size'
   },

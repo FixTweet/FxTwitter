@@ -1,15 +1,10 @@
 const fakeChromeVersion = '103';
 
 export const Constants = {
-  BRANDING_NAME: `pxTwitter`,
-  DIRECT_MEDIA_DOMAINS: [
-    'd.pxtwitter.com',
-    'd.twittpr.com',
-    'dl.pxtwitter.com',
-    'dl.twittpr.com'
-  ],
-  HOST_URL: `https://pxtwitter.com`,
-  REDIRECT_URL: 'https://github.com/dangeredwolf/pxTwitter',
+  BRANDING_NAME: BRANDING_NAME,
+  DIRECT_MEDIA_DOMAINS: DIRECT_MEDIA_DOMAINS.split(','),
+  HOST_URL: HOST_URL,
+  REDIRECT_URL: REDIRECT_URL,
   TWITTER_ROOT: 'https://twitter.com',
   TWITTER_API_ROOT: 'https://api.twitter.com',
   /* We used to use Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA
