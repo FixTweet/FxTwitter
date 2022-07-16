@@ -71,6 +71,7 @@ export const handleStatus = async (
   }
 
   let text = tweet.full_text;
+  let engagementText = '';
   const user = tweet.user;
   const screenName = user?.screen_name || '';
   const name = user?.name || '';
@@ -93,6 +94,9 @@ export const handleStatus = async (
       authorText += `${tweet.favorite_count} ❤    `;
     }
     authorText = authorText.trim();
+
+    // engagementText has less spacing than authorText, also Telegram interprets the other heart as emoji
+    engagementText = authorText.replace(/    /g, ' ');
   }
 
   text = linkFixer(tweet, text);
@@ -280,9 +284,14 @@ export const handleStatus = async (
         authorText === Strings.DEFAULT_AUTHOR_TEXT
           ? photoCounter
           : `${authorText}   ―   ${photoCounter}`;
-      headers.push(
-        `<meta property="og:site_name" content="${Constants.BRANDING_NAME} - ${photoCounter}"/>`
-      );
+
+      let siteName = `${Constants.BRANDING_NAME} - ${photoCounter}`;
+
+      if (engagementText) {
+        siteName = `${Constants.BRANDING_NAME} - ${engagementText} - ${photoCounter}`;
+      }
+
+      headers.push(`<meta property="og:site_name" content="${siteName}"/>`);
     } else {
       headers.push(
         `<meta property="og:site_name" content="${Constants.BRANDING_NAME}"/>`
