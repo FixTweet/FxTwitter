@@ -73,6 +73,7 @@ In many ways, pxTwitter has richer embeds and does more. Here's a table comparin
 | Redirect to media file (wihout embed)   |   :heavy_check_mark:   |               :x:                |                  :x:                  |          :heavy_check_mark:           |
 | Strip Twitter tracking info on redirect |   :heavy_check_mark:   |               :x:                |          :heavy_check_mark:           |          :heavy_check_mark:           |
 | Show retweet / like counts              | Coming soon to Discord |               :x:                |          :heavy_check_mark:           |          :heavy_check_mark:           |
+| Discord / sed (`s/` replace) friendly   |       twittpr.com      |               :x:                |                  :x:                  |          :heavy_check_mark:           |
 
 ¹ Discord will attempt to embed Twitter's video player, but it is unreliable
 
