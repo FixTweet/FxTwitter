@@ -19,7 +19,6 @@ String.prototype.format = function (options: any) {
 
 /* Maybe we should, but pxTwitter doesn't use strings as much as pronouns bot did */
 export const Strings = {
-  TWITTER: 'Twitter',
   BASE_HTML: `<!DOCTYPE html>
 <html {lang}>
 <!--          ███████████            ▐█▌ ███    ███
@@ -36,6 +35,7 @@ export const Strings = {
 -->
 <head>{headers}</head>`,
   DEFAULT_AUTHOR_TEXT: 'Twitter',
+  QUOTE_TEXT: `════ ↘️ Quoting {name} (@{screen_name}) ════`,
   ERROR_API_FAIL: 'Tweet failed to load due to an API error :(',
   ERROR_PRIVATE: `I can't embed Tweets from private accounts, sorry about that :(`,
   ERROR_TWEET_NOT_FOUND: `Sorry, that Tweet doesn't exist :(`

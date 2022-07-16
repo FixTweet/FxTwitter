@@ -110,7 +110,7 @@ router.get('/owoembed', async (request: any) => {
     )}/status/${encodeURIComponent(status)}`,
     provider_name: Constants.BRANDING_NAME,
     provider_url: Constants.REDIRECT_URL,
-    title: Strings.TWITTER,
+    title: Strings.DEFAULT_AUTHOR_TEXT,
     type: 'link',
     version: '1.0'
   };
