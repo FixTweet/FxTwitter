@@ -134,23 +134,48 @@ const cacheWrapper = async (event: FetchEvent): Promise<Response> => {
   const cacheKey = new Request(cacheUrl.toString(), request);
   const cache = caches.default;
 
-  let cachedResponse = await cache.match(cacheKey);
+  switch(request.method) {
+    case 'GET':
+      let cachedResponse = await cache.match(cacheKey);
 
-  if (cachedResponse) {
-    console.log('Cache hit');
-    return cachedResponse;
+      if (cachedResponse) {
+        console.log('Cache hit');
+        return cachedResponse;
+      }
+
+      console.log('Cache miss');
+
+      let response = await router.handle(event.request, event);
+
+      // Store the fetched response as cacheKey
+      // Use waitUntil so you can return the response without blocking on
+      // writing to cache
+      event.waitUntil(cache.put(cacheKey, response.clone()));
+
+      return response;
+    /* Telegram sends this from Webpage Bot, and we respect it.
+       PURGE is not defined in an RFC, but other servers like Nginx apparently use it. */
+    case 'PURGE':
+      console.log('Purging cache as requested');
+      await cache.delete(cacheKey);
+      return new Response('', { status: 204 });
+    case 'HEAD':
+      return new Response('', {
+        headers: Constants.RESPONSE_HEADERS,
+        status: 200
+      });
+    case 'OPTIONS':
+      return new Response('', {
+        headers: {
+          'allow': Constants.RESPONSE_HEADERS.allow
+        },
+        status: 204
+      });
+    default:
+      return new Response('', { status: 405 });
   }
 
-  console.log('Cache miss');
-
-  let response = await router.handle(event.request, event);
-
-  // Store the fetched response as cacheKey
-  // Use waitUntil so you can return the response without blocking on
-  // writing to cache
-  event.waitUntil(cache.put(cacheKey, response.clone()));
-
-  return response;
+  
 };
 
 /*
