@@ -108,7 +108,7 @@ router.get('/owoembed', async (request: any) => {
     author_url: `${Constants.TWITTER_ROOT}/${encodeURIComponent(
       author
     )}/status/${encodeURIComponent(status)}`,
-    provider_name: Constants.BRANDING_NAME,
+    provider_name: Constants.BRANDING_NAME_DISCORD,
     provider_url: Constants.REDIRECT_URL,
     title: Strings.DEFAULT_AUTHOR_TEXT,
     type: 'link',

@@ -21,6 +21,9 @@ module.exports = {
       BRANDING_NAME: `'${process.env.BRANDING_NAME}'`
     }),
     new webpack.DefinePlugin({
+      BRANDING_NAME_DISCORD: `'${process.env.BRANDING_NAME_DISCORD}'`
+    }),
+    new webpack.DefinePlugin({
       DIRECT_MEDIA_DOMAINS: `'${process.env.DIRECT_MEDIA_DOMAINS}'`
     }),
     new webpack.DefinePlugin({
