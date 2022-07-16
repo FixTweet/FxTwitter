@@ -134,7 +134,7 @@ const cacheWrapper = async (event: FetchEvent): Promise<Response> => {
   const cacheKey = new Request(cacheUrl.toString(), request);
   const cache = caches.default;
 
-  switch(request.method) {
+  switch (request.method) {
     case 'GET':
       let cachedResponse = await cache.match(cacheKey);
 
@@ -167,15 +167,13 @@ const cacheWrapper = async (event: FetchEvent): Promise<Response> => {
     case 'OPTIONS':
       return new Response('', {
         headers: {
-          'allow': Constants.RESPONSE_HEADERS.allow
+          allow: Constants.RESPONSE_HEADERS.allow
         },
         status: 204
       });
     default:
       return new Response('', { status: 405 });
   }
-
-  
 };
 
 /*
