@@ -123,16 +123,35 @@ router.get('/owoembed', async (request: any) => {
 router.get('/:handle', profileRequest);
 router.get('/:handle/', profileRequest);
 
-router.all('*', async request => {
+router.get('*', async request => {
   return Response.redirect(Constants.REDIRECT_URL, 307);
 });
 
 const cacheWrapper = async (event: FetchEvent): Promise<Response> => {
   const { request } = event;
+  const userAgent = request.headers.get('User-Agent') || '';
   // https://developers.cloudflare.com/workers/examples/cache-api/
-  const cacheUrl = new URL(request.url);
+  const url = new URL(request.url);
+  const cacheUrl = new URL(
+    userAgent.includes('Telegram')
+      ? `${request.url}&telegram`
+      : userAgent.includes('Discord')
+      ? `${request.url}&discord`
+      : request.url
+  );
+
+  console.log('cacheUrl', cacheUrl);
+
   const cacheKey = new Request(cacheUrl.toString(), request);
   const cache = caches.default;
+
+  /* Itty-router doesn't seem to like routing file names for some reason */
+  if (cacheUrl.pathname === '/robots.txt') {
+    return new Response(Constants.ROBOTS_TXT, {
+      headers: Constants.RESPONSE_HEADERS,
+      status: 200
+    });
+  }
 
   switch (request.method) {
     case 'GET':
@@ -153,12 +172,12 @@ const cacheWrapper = async (event: FetchEvent): Promise<Response> => {
       event.waitUntil(cache.put(cacheKey, response.clone()));
 
       return response;
-    /* Telegram sends this from Webpage Bot, and we respect it.
+    /* Telegram sends this from Webpage Bot, and Cloudflare sends it if we purge cache, and we respect it.
        PURGE is not defined in an RFC, but other servers like Nginx apparently use it. */
     case 'PURGE':
       console.log('Purging cache as requested');
       await cache.delete(cacheKey);
-      return new Response('', { status: 204 });
+      return new Response('', { status: 200 });
     case 'HEAD':
       return new Response('', {
         headers: Constants.RESPONSE_HEADERS,

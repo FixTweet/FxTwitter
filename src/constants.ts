@@ -46,5 +46,14 @@ export const Constants = {
     'x-powered-by': '🏳️‍⚧️ Trans Rights',
     'cache-control': 'max-age=604800'
   },
-  DEFAULT_COLOR: '#10A3FF'
+  DEFAULT_COLOR: '#10A3FF',
+  ROBOTS_TXT: `User-agent: *
+Allow: /$
+Allow: /*/status
+Allow: /*/status/
+Allow: /owoembed
+Allow: /owoembed/
+Allow: /watch?v=dQw4w9WgXcQ
+Disallow: /doing-harm-to-others
+Disallow: /taking-over-the-world`
 };
