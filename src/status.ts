@@ -85,13 +85,13 @@ export const handleStatus = async (
   if (tweet.favorite_count > 0 || tweet.retweet_count > 0 || tweet.reply_count > 0) {
     authorText = '';
     if (tweet.reply_count > 0) {
-      authorText += `${tweet.reply_count} 🗩    `;
+      authorText += `${tweet.reply_count} 💬    `;
     }
     if (tweet.retweet_count > 0) {
-      authorText += `${tweet.retweet_count} ⮂    `;
+      authorText += `${tweet.retweet_count} 🔁    `;
     }
     if (tweet.favorite_count > 0) {
-      authorText += `${tweet.favorite_count} ❤    `;
+      authorText += `${tweet.favorite_count} ❤️    `;
     }
     authorText = authorText.trim();
 
@@ -117,6 +117,7 @@ export const handleStatus = async (
     conversation.globalObjects?.tweets?.[tweet.quoted_status_id_str || '0'] || null;
 
   if (quoteTweetMaybe) {
+    /* Populate quote tweet user from globalObjects */
     quoteTweetMaybe.user =
       conversation?.globalObjects?.users?.[quoteTweetMaybe.user_id_str] || {};
     const quoteText = handleQuote(quoteTweetMaybe);
@@ -127,13 +128,15 @@ export const handleStatus = async (
       text += `\n${quoteText}`;
     }
 
+    /* This code handles checking the quote tweet for media.
+       We'll embed a quote tweet's media if the linked tweet does not have any. */
     if (
       mediaList.length === 0 &&
       (quoteTweetMaybe.extended_entities?.media?.length ||
         quoteTweetMaybe.entities?.media?.length ||
         0) > 0
     ) {
-      console.log('No media in main tweet, maybe we have some media in the quote tweet?');
+      console.log(`No media in main tweet, let's try embedding the quote tweet's media instead!`);
       mediaList = Array.from(
         quoteTweetMaybe.extended_entities?.media || quoteTweetMaybe.entities?.media || []
       );
@@ -226,6 +229,10 @@ export const handleStatus = async (
 
         headers.push(`<meta name="twitter:image" content="${media.media_url_https}"/>`);
 
+        /* On Discord we have to use the author field in order to get the tweet text
+           to display on videos. This length is limited, however, and if there is too
+           much text Discord will refuse to display it at all, so we trim down as much
+           as the client will display. */
         if (userAgent && userAgent?.indexOf?.('Discord') > -1) {
           text = text.substr(0, 179);
         }
