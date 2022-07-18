@@ -45,7 +45,7 @@ export const Constants = {
     'allow': 'OPTIONS, GET, PURGE, HEAD',
     'content-type': 'text/html;charset=UTF-8',
     'x-powered-by': '🏳️‍⚧️ Trans Rights',
-    'cache-control': 'max-age=604800'
+    'cache-control': 'max-age=3600'
   },
   DEFAULT_COLOR: '#10A3FF',
   ROBOTS_TXT: `User-agent: *
