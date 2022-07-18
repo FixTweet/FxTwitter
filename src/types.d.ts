@@ -1,6 +1,11 @@
 /* tweetTypes has all the Twitter API-related types */
 
-export type Flags = {
+type InputFlags = {
   standard?: boolean;
   direct?: boolean;
 };
+
+interface StatusResponse {
+  text?: string;
+  response?: Response;
+}

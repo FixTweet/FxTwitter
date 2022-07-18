@@ -2,11 +2,10 @@ import { Router } from 'itty-router';
 import { Constants } from './constants';
 import { handleStatus } from './status';
 import { Strings } from './strings';
-import { Flags } from './types';
 
 const router = Router();
 
-const statusRequest = async (request: any, event: FetchEvent, flags: Flags = {}) => {
+const statusRequest = async (request: any, event: FetchEvent, flags: InputFlags = {}) => {
   const { handle, id, mediaNumber } = request.params;
   const url = new URL(request.url);
   const userAgent = request.headers.get('User-Agent');
@@ -26,26 +25,31 @@ const statusRequest = async (request: any, event: FetchEvent, flags: Flags = {})
 
     let response: Response;
 
-    let status = await handleStatus(
+    let statusResponse = await handleStatus(
       id.match(/\d{2,20}/)?.[0],
       parseInt(mediaNumber || 1),
       userAgent,
       flags
     );
 
-    if (status instanceof Response) {
+    if (statusResponse.response) {
       console.log('handleStatus sent response');
-      response = status;
-    } else {
+      response = statusResponse.response;
+    } else if (statusResponse.text) {
       /* Fallback if a person browses to a direct media link with a Tweet without media */
       if (!isBotUA) {
         return Response.redirect(`${Constants.TWITTER_ROOT}/${handle}/status/${id}`, 302);
       }
       console.log('handleStatus sent embed');
 
-      response = new Response(status, {
+      response = new Response(statusResponse.text, {
         headers: Constants.RESPONSE_HEADERS,
         status: 200
+      });
+    } else {
+      response = new Response(Strings.ERROR_UNKNOWN, {
+        headers: Constants.RESPONSE_HEADERS,
+        status: 500
       });
     }
 

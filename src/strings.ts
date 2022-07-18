@@ -39,5 +39,6 @@ export const Strings = {
   PHOTO_COUNT: `Photo {number} of {total}`,
   ERROR_API_FAIL: 'Tweet failed to load due to an API error :(',
   ERROR_PRIVATE: `I can't embed Tweets from private accounts, sorry about that :(`,
-  ERROR_TWEET_NOT_FOUND: `Sorry, that Tweet doesn't exist :(`
+  ERROR_TWEET_NOT_FOUND: `Sorry, that Tweet doesn't exist :(`,
+  ERROR_UNKNOWN: `Unknown error occurred, sorry about that :(`
 };

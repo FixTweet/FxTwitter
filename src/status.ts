@@ -6,24 +6,23 @@ import { renderCard } from './card';
 import { handleQuote } from './quote';
 import { sanitizeText } from './utils';
 import { Strings } from './strings';
-import { Flags } from './types';
 
-export const returnError = (error: string) => {
-  return Strings.BASE_HTML.format({
+export const returnError = (error: string): StatusResponse => {
+  return {text: Strings.BASE_HTML.format({
     lang: '',
     headers: [
       `<meta content="${Constants.BRANDING_NAME}" property="og:title"/>`,
       `<meta content="${error}" property="og:description"/>`
     ].join('')
-  });
+  })};
 };
 
 export const handleStatus = async (
   status: string,
   mediaNumber?: number,
   userAgent?: string,
-  flags?: Flags
-): Promise<string | Response> => {
+  flags?: InputFlags
+): Promise<StatusResponse> => {
   console.log('Direct?', flags?.direct);
   const conversation = await fetchUsingGuest(status);
 
@@ -278,7 +277,7 @@ export const handleStatus = async (
     if (flags?.direct && redirectMedia) {
       let response = Response.redirect(redirectMedia, 302);
       console.log(response);
-      return response;
+      return { response: response };
     }
 
     if (mediaList.length > 1) {
@@ -329,8 +328,8 @@ export const handleStatus = async (
   /* When dealing with a Tweet of unknown lang, fall back to en  */
   let lang = tweet.lang === 'unk' ? 'en' : tweet.lang || 'en';
 
-  return Strings.BASE_HTML.format({
+  return { text: Strings.BASE_HTML.format({
     lang: `lang="${lang}"`,
     headers: headers.join('')
-  });
+  }) };
 };
