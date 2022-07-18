@@ -1,7 +1,28 @@
 import { Constants } from './constants';
 
-export const fetchUsingGuest = async (status: string): Promise<TimelineBlobPartial> => {
+export const fetchUsingGuest = async (status: string, event: FetchEvent): Promise<TimelineBlobPartial> => {
   let apiAttempts = 0;
+  let cachedTokenFailed = false;
+
+  const tokenHeaders: { [header: string]: string } = {
+    Authorization: Constants.GUEST_BEARER_TOKEN,
+    ...Constants.BASE_HEADERS
+  };
+
+  const guestTokenRequest = new Request(
+    `${Constants.TWITTER_API_ROOT}/1.1/guest/activate.json`,
+    {
+      method: 'POST',
+      headers: tokenHeaders,
+      cf: {
+        cacheEverything: true,
+        cacheTtl: 600
+      },
+      body: ''
+    }
+  );
+
+  const cache = caches.default;
 
   while (apiAttempts < 10) {
     const csrfToken = crypto.randomUUID().replace(/-/g, ''); // Generate a random CSRF token, this doesn't matter, Twitter just cares that header and cookie match
@@ -13,19 +34,28 @@ export const fetchUsingGuest = async (status: string): Promise<TimelineBlobParti
 
     apiAttempts++;
 
-    /* If all goes according to plan, we have a guest token we can use to call API
-      AFAIK there is no limit to how many guest tokens you can request.
+    let activate: Response | null = null;
 
-      This can effectively mean virtually unlimited (read) access to Twitter's API,
-      which is very funny. */
-    const activate = await fetch(
-      `${Constants.TWITTER_API_ROOT}/1.1/guest/activate.json`,
-      {
-        method: 'POST',
-        headers: headers,
-        body: ''
+    if (!cachedTokenFailed) {
+      let cachedResponse = await cache.match(guestTokenRequest);
+
+      if (cachedResponse) {
+        console.log('Token cache hit');
+        activate = cachedResponse;
       }
-    );
+
+      console.log('Token cache miss');
+      cachedTokenFailed = true;
+    }
+
+    if (cachedTokenFailed || activate === null) {
+      /* If all goes according to plan, we have a guest token we can use to call API
+        AFAIK there is no limit to how many guest tokens you can request.
+
+        This can effectively mean virtually unlimited (read) access to Twitter's API,
+        which is very funny. */
+        activate = await fetch(guestTokenRequest);
+    }
 
     /* Let's grab that guest_token so we can use it */
     let activateJson: { guest_token: string };
@@ -71,6 +101,7 @@ export const fetchUsingGuest = async (status: string): Promise<TimelineBlobParti
       /* We'll usually only hit this if we get an invalid response from Twitter.
          It's rare, but it happens */
       console.error('Unknown error while fetching conversation from API');
+      cachedTokenFailed = true;
       continue;
     }
 
@@ -80,8 +111,12 @@ export const fetchUsingGuest = async (status: string): Promise<TimelineBlobParti
         conversation.errors?.[0]?.code === 239)
     ) {
       console.log('Failed to fetch conversation, got', conversation);
+      cachedTokenFailed = true;
       continue;
     }
+
+    /* Once we've confirmed we have a working guest token, let's cache it! */
+    // event.waitUntil(cache.put(guestTokenRequest, activate.clone()));
 
     return conversation;
   }

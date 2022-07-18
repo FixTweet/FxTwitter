@@ -20,13 +20,14 @@ export const returnError = (error: string): StatusResponse => {
 };
 
 export const handleStatus = async (
+  event: FetchEvent,
   status: string,
   mediaNumber?: number,
   userAgent?: string,
   flags?: InputFlags
 ): Promise<StatusResponse> => {
   console.log('Direct?', flags?.direct);
-  const conversation = await fetchUsingGuest(status);
+  const conversation = await fetchUsingGuest(status, event);
 
   const tweet = conversation?.globalObjects?.tweets?.[status] || {};
   /* With v2 conversation API we re-add the user object ot the tweet because

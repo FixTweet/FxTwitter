@@ -2,7 +2,7 @@ import { linkFixer } from './linkFixer';
 import { Strings } from './strings';
 
 export const handleQuote = (quote: TweetPartial): string | null => {
-  console.log('quote tweet: ', quote);
+  console.log('Quoting status ', quote.id_str);
 
   let str = `\n`;
   str += Strings.QUOTE_TEXT.format({

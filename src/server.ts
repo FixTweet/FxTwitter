@@ -26,6 +26,7 @@ const statusRequest = async (request: any, event: FetchEvent, flags: InputFlags 
     let response: Response;
 
     let statusResponse = await handleStatus(
+      event,
       id.match(/\d{2,20}/)?.[0],
       parseInt(mediaNumber || 1),
       userAgent,

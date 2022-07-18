@@ -45,8 +45,9 @@ export const Constants = {
     'allow': 'OPTIONS, GET, PURGE, HEAD',
     'content-type': 'text/html;charset=UTF-8',
     'x-powered-by': '🏳️‍⚧️ Trans Rights',
-    'cache-control': 'max-age=3600'
+    'cache-control': 'max-age=3600' // Can be overriden in some cases, like poll tweets
   },
+  POLL_TWEET_CACHE: 'max-age=60',
   DEFAULT_COLOR: '#10A3FF',
   ROBOTS_TXT: `User-agent: *
 Allow: /$
