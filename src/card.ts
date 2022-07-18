@@ -1,3 +1,5 @@
+import { Strings } from './strings';
+
 let barLength = 36;
 
 export const calculateTimeLeft = (date: Date) => {
@@ -12,14 +14,33 @@ export const calculateTimeLeft = (date: Date) => {
 
 export const calculateTimeLeftString = (date: Date) => {
   const { days, hours, minutes, seconds } = calculateTimeLeft(date);
-  const daysString = days > 0 ? `${days} ${days === 1 ? 'day left' : 'days left'}` : '';
+  const daysString =
+    days > 0
+      ? `${days} ${days === 1 ? Strings.SINGULAR_DAY_LEFT : Strings.PLURAL_DAYS_LEFT}`
+      : '';
   const hoursString =
-    hours > 0 ? `${hours} ${hours === 1 ? 'hour left' : 'hours left'}` : '';
+    hours > 0
+      ? `${hours} ${hours === 1 ? Strings.SINGULAR_HOUR_LEFT : Strings.PLURAL_HOURS_LEFT}`
+      : '';
   const minutesString =
-    minutes > 0 ? `${minutes} ${minutes === 1 ? 'minute left' : 'minutes left'}` : '';
+    minutes > 0
+      ? `${minutes} ${
+          minutes === 1 ? Strings.SINGULAR_MINUTE_LEFT : Strings.PLURAL_MINUTES_LEFT
+        }`
+      : '';
   const secondsString =
-    seconds > 0 ? `${seconds} ${seconds === 1 ? 'second left' : 'seconds left'}` : '';
-  return daysString || hoursString || minutesString || secondsString || 'Final results';
+    seconds > 0
+      ? `${seconds} ${
+          seconds === 1 ? Strings.SINGULAR_SECOND_LEFT : Strings.PLURAL_SECONDS_LEFT
+        }`
+      : '';
+  return (
+    daysString ||
+    hoursString ||
+    minutesString ||
+    secondsString ||
+    Strings.FINAL_POLL_RESULTS
+  );
 };
 
 export const renderCard = async (

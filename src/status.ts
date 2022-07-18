@@ -8,13 +8,15 @@ import { sanitizeText } from './utils';
 import { Strings } from './strings';
 
 export const returnError = (error: string): StatusResponse => {
-  return {text: Strings.BASE_HTML.format({
-    lang: '',
-    headers: [
-      `<meta content="${Constants.BRANDING_NAME}" property="og:title"/>`,
-      `<meta content="${error}" property="og:description"/>`
-    ].join('')
-  })};
+  return {
+    text: Strings.BASE_HTML.format({
+      lang: '',
+      headers: [
+        `<meta content="${Constants.BRANDING_NAME}" property="og:title"/>`,
+        `<meta content="${error}" property="og:description"/>`
+      ].join('')
+    })
+  };
 };
 
 export const handleStatus = async (
@@ -135,7 +137,9 @@ export const handleStatus = async (
         quoteTweetMaybe.entities?.media?.length ||
         0) > 0
     ) {
-      console.log(`No media in main tweet, let's try embedding the quote tweet's media instead!`);
+      console.log(
+        `No media in main tweet, let's try embedding the quote tweet's media instead!`
+      );
       mediaList = Array.from(
         quoteTweetMaybe.extended_entities?.media || quoteTweetMaybe.entities?.media || []
       );
@@ -328,8 +332,10 @@ export const handleStatus = async (
   /* When dealing with a Tweet of unknown lang, fall back to en  */
   let lang = tweet.lang === 'unk' ? 'en' : tweet.lang || 'en';
 
-  return { text: Strings.BASE_HTML.format({
-    lang: `lang="${lang}"`,
-    headers: headers.join('')
-  }) };
+  return {
+    text: Strings.BASE_HTML.format({
+      lang: `lang="${lang}"`,
+      headers: headers.join('')
+    })
+  };
 };
