@@ -5,10 +5,10 @@ import { Strings } from './strings';
 
 const router = Router();
 
-const statusRequest = async (request: any, event: FetchEvent, flags: InputFlags = {}) => {
+const statusRequest = async (request: Request, event: FetchEvent, flags: InputFlags = {}) => {
   const { handle, id, mediaNumber } = request.params;
   const url = new URL(request.url);
-  const userAgent = request.headers.get('User-Agent');
+  const userAgent = request.headers.get('User-Agent') || '';
 
   let isBotUA = userAgent.match(/bot|facebook/gi) !== null;
 
@@ -27,8 +27,8 @@ const statusRequest = async (request: any, event: FetchEvent, flags: InputFlags 
 
     let statusResponse = await handleStatus(
       event,
-      id.match(/\d{2,20}/)?.[0],
-      parseInt(mediaNumber || 1),
+      id?.match(/\d{2,20}/)?.[0] || '0',
+      parseInt(mediaNumber || '1'),
       userAgent,
       flags
     );
@@ -61,15 +61,15 @@ const statusRequest = async (request: any, event: FetchEvent, flags: InputFlags 
   }
 };
 
-const statusDirectMediaRequest = async (request: any, event: FetchEvent) => {
+const statusDirectMediaRequest = async (request: Request, event: FetchEvent) => {
   return await statusRequest(request, event, { direct: true });
 };
 
-const profileRequest = async (request: any, _event: FetchEvent) => {
+const profileRequest = async (request: Request, _event: FetchEvent) => {
   const { handle } = request.params;
   const url = new URL(request.url);
 
-  if (handle.match(/[a-z0-9_]{1,15}/gi)[0] !== handle) {
+  if (handle.match(/[a-z0-9_]{1,15}/gi)?.[0] !== handle) {
     return Response.redirect(Constants.REDIRECT_URL, 302);
   } else {
     return Response.redirect(`${Constants.TWITTER_ROOT}${url.pathname}`, 302);
@@ -99,7 +99,7 @@ router.get('/:handle/statuses/:id', statusRequest);
 router.get('/:handle/statuses/:id/photo/:mediaNumber', statusRequest);
 router.get('/:handle/statuses/:id/video/:mediaNumber', statusRequest);
 
-router.get('/owoembed', async (request: any) => {
+router.get('/owoembed', async (request: Request) => {
   console.log('oembed hit!');
   const { searchParams } = new URL(request.url);
 
@@ -128,7 +128,7 @@ router.get('/owoembed', async (request: any) => {
 router.get('/:handle', profileRequest);
 router.get('/:handle/', profileRequest);
 
-router.get('*', async request => {
+router.get('*', async (_request: Request) => {
   return Response.redirect(Constants.REDIRECT_URL, 307);
 });
 

@@ -9,3 +9,9 @@ interface StatusResponse {
   text?: string;
   response?: Response;
 }
+
+interface Request {
+  params: {
+    [param: string]: string;
+  }
+}
