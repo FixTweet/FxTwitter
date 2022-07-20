@@ -107,8 +107,8 @@ Once you're set up with your worker on `*.workers.dev`, [add your worker to your
 
 ### Things to tackle in the future
 
-- Combining multiple images together (would be outside CF Worker)
-- Caching guest token (So we don't have to bother Twitter for one on every request)
+- [Combining multiple images together (would be outside CF Worker)](https://github.com/dangeredwolf/pxTwitter-Combinator)
+- Feature: Translating Tweets within pxTwitter
 
 ### Bugs or issues?
 
