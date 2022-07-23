@@ -10,7 +10,7 @@ const statusRequest = async (request: Request, event: FetchEvent, flags: InputFl
   const url = new URL(request.url);
   const userAgent = request.headers.get('User-Agent') || '';
 
-  let isBotUA = userAgent.match(/bot|facebook/gi) !== null;
+  let isBotUA = userAgent.match(/bot|facebook|embed|got|Firefox\/92|curl|wget/gi) !== null;
 
   if (
     url.pathname.match(/\/status(es)?\/\d+\.(mp4|png|jpg)/g) !== null ||
@@ -28,7 +28,7 @@ const statusRequest = async (request: Request, event: FetchEvent, flags: InputFl
     let statusResponse = await handleStatus(
       event,
       id?.match(/\d{2,20}/)?.[0] || '0',
-      parseInt(mediaNumber || '1'),
+      mediaNumber ? parseInt(mediaNumber) : undefined,
       userAgent,
       flags
     );
@@ -56,7 +56,7 @@ const statusRequest = async (request: Request, event: FetchEvent, flags: InputFl
 
     return response;
   } else {
-    console.log('Matched human UA');
+    console.log('Matched human UA', request.headers.get('User-Agent'));
     return Response.redirect(`${Constants.TWITTER_ROOT}/${handle}/status/${id}`, 302);
   }
 };

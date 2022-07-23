@@ -6,6 +6,7 @@ import { renderCard } from './card';
 import { handleQuote } from './quote';
 import { sanitizeText } from './utils';
 import { Strings } from './strings';
+import { handleMosaic } from './mosaic';
 
 export const returnError = (error: string): StatusResponse => {
   return {
@@ -258,9 +259,11 @@ export const handleStatus = async (
       }
     };
 
-    let actualMediaNumber = 1;
+    let actualMediaNumber = 0;
+    let renderedMosaic = false;
 
     console.log('mediaNumber', mediaNumber);
+    console.log('mediaList length', mediaList.length);
 
     /* You can specify a specific photo in the URL and we'll pull the correct one,
        otherwise it falls back to first */
@@ -271,12 +274,14 @@ export const handleStatus = async (
       console.log(`Media ${mediaNumber} found`);
       actualMediaNumber = mediaNumber - 1;
       processMedia(mediaList[actualMediaNumber]);
-    } else {
+    } else if (mediaList.length === 1 || (userAgent?.indexOf?.('Telegram') || '') > -1) {
       console.log(`Media ${mediaNumber} not found, ${mediaList.length} total`);
-      /* I wish Telegram respected multiple photos in a tweet,
-         and that Discord could do the same for 3rd party providers like us */
-      // media.forEach(media => processMedia(media));
       processMedia(firstMedia);
+      // Telegram hates Mosaic media for some reason
+    } else if (mediaList.length > 1 && userAgent?.indexOf('Telegram') === -1) {
+      console.log('Handling mosaic');
+      processMedia(await handleMosaic(mediaList));
+      renderedMosaic = true;
     }
 
     if (flags?.direct && redirectMedia) {
@@ -285,7 +290,7 @@ export const handleStatus = async (
       return { response: response };
     }
 
-    if (mediaList.length > 1) {
+    if (mediaList.length > 1 && !renderedMosaic) {
       let photoCounter = Strings.PHOTO_COUNT.format({
         number: actualMediaNumber + 1,
         total: mediaList.length

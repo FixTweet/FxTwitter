@@ -31,7 +31,10 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       REDIRECT_URL: `'${process.env.REDIRECT_URL}'`
-    })
+    }),
+    new webpack.DefinePlugin({
+      MOSAIC_DOMAIN_LIST: `'${process.env.MOSAIC_DOMAIN_LIST}'`
+    }),
   ],
   optimization: {
     mangleExports: 'size'
