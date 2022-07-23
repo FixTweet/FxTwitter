@@ -13,5 +13,5 @@ interface StatusResponse {
 interface Request {
   params: {
     [param: string]: string;
-  }
+  };
 }

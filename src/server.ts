@@ -5,12 +5,17 @@ import { Strings } from './strings';
 
 const router = Router();
 
-const statusRequest = async (request: Request, event: FetchEvent, flags: InputFlags = {}) => {
+const statusRequest = async (
+  request: Request,
+  event: FetchEvent,
+  flags: InputFlags = {}
+) => {
   const { handle, id, mediaNumber } = request.params;
   const url = new URL(request.url);
   const userAgent = request.headers.get('User-Agent') || '';
 
-  let isBotUA = userAgent.match(/bot|facebook|embed|got|Firefox\/92|curl|wget/gi) !== null;
+  let isBotUA =
+    userAgent.match(/bot|facebook|embed|got|Firefox\/92|curl|wget/gi) !== null;
 
   if (
     url.pathname.match(/\/status(es)?\/\d+\.(mp4|png|jpg)/g) !== null ||

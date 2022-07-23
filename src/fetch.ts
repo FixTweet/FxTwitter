@@ -1,6 +1,9 @@
 import { Constants } from './constants';
 
-export const fetchUsingGuest = async (status: string, event: FetchEvent): Promise<TimelineBlobPartial> => {
+export const fetchUsingGuest = async (
+  status: string,
+  event: FetchEvent
+): Promise<TimelineBlobPartial> => {
   let apiAttempts = 0;
   let cachedTokenFailed = false;
 
@@ -54,7 +57,7 @@ export const fetchUsingGuest = async (status: string, event: FetchEvent): Promis
 
         This can effectively mean virtually unlimited (read) access to Twitter's API,
         which is very funny. */
-        activate = await fetch(guestTokenRequest);
+      activate = await fetch(guestTokenRequest);
     }
 
     /* Let's grab that guest_token so we can use it */

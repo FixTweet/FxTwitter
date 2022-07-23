@@ -1,4 +1,4 @@
-import { Constants } from "./constants"
+import { Constants } from './constants';
 
 export const handleMosaic = async (mediaList: TweetMedia[]): Promise<TweetMedia> => {
   let mosaicDomains = Constants.MOSAIC_DOMAIN_LIST;
@@ -8,7 +8,7 @@ export const handleMosaic = async (mediaList: TweetMedia[]): Promise<TweetMedia>
     let domain = mosaicDomains[Math.floor(Math.random() * mosaicDomains.length)];
     // let response = await fetch(`https://${domain}/ping`);
     // if (response.status === 200) {
-      selectedDomain = domain;
+    selectedDomain = domain;
     // } else {
     //   mosaicDomains = mosaicDomains.filter(d => d !== domain);
     //   console.log(`${domain} is not available, removing from list`);
@@ -20,7 +20,11 @@ export const handleMosaic = async (mediaList: TweetMedia[]): Promise<TweetMedia>
     return mediaList[0];
   } else {
     console.log('mediaList', mediaList);
-    let mosaicMedia = mediaList.map(media => media.media_url_https?.match(/(?<=\/media\/)[a-zA-Z0-9_\-]+(?=[\.\?])/g)?.[0] || '');
+    let mosaicMedia = mediaList.map(
+      media =>
+        media.media_url_https?.match(/(?<=\/media\/)[a-zA-Z0-9_\-]+(?=[\.\?])/g)?.[0] ||
+        ''
+    );
     console.log('mosaicMedia', mosaicMedia);
     let constructUrl = `https://${selectedDomain}/1`;
     if (mosaicMedia[0]) {
@@ -35,7 +39,7 @@ export const handleMosaic = async (mediaList: TweetMedia[]): Promise<TweetMedia>
     if (mosaicMedia[3]) {
       constructUrl += `/${mosaicMedia[3]}`;
     }
-    
+
     return {
       media_url_https: constructUrl,
       original_info: {
@@ -45,4 +49,4 @@ export const handleMosaic = async (mediaList: TweetMedia[]): Promise<TweetMedia>
       type: 'photo'
     } as TweetMedia;
   }
-}
+};
