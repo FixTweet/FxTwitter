@@ -1,16 +1,18 @@
-# pxTwitter (Twittpr)
+# pxTwitter // Twittpr
+
+![](https://skillicons.dev/icons?i=typescript,webpack,workers)
 
 [![Webpack](https://github.com/dangeredwolf/pxtwitter/actions/workflows/webpack.yml/badge.svg)](https://github.com/dangeredwolf/pxtwitter/actions/workflows/webpack.yml)
 
-## A TwitFix-like service that _does more_ with better privacy in mind. Written in TypeScript for Cloudflare Workers!
+## A TwitFix-like service that _does more_ with better privacy in mind.
+
+<img src="https://camo.githubusercontent.com/b22920252aaa349afe4a3568dcf04c4522114b7739b004ee3b29dfd61593208c/68747470733a2f2f63646e2e646973636f72646170702e636f6d2f6174746163686d656e74732f3136353536303735313336333332353935322f313030303437373437303234313333333336382f7078747769747465722e77656270" width="600">
 
 ### Embed videos, polls, and more on Discord, Telegram, and others!
 
-### On Discord, send a Twitter link and type `s/e/p` to make `twittpr.com`.
+#### On Discord, send a Twitter link and type `s/e/p` to make `twittpr.com`.
 
-### Otherwise, just add `px` before `twitter` to make `pxtwitter.com`
-
-![](https://cdn.discordapp.com/attachments/165560751363325952/1000477470241333368/pxtwitter.webp)
+#### Otherwise, just add `px` before `twitter` to make `pxtwitter.com`
 
 ![https://cdn.discordapp.com/attachments/165560751363325952/997386462343462972/pxtwitter.png](https://cdn.discordapp.com/attachments/165560751363325952/997386462343462972/pxtwitter.png)
 
