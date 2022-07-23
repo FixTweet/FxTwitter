@@ -83,7 +83,7 @@ In many ways, pxTwitter has richer embeds and does more. Here's a table comparin
 | Embed Tweets / Images                   |            :heavy_check_mark:            |            :heavy_check_mark:             |          :heavy_check_mark:           |          :heavy_check_mark:           |
 | Embed profile pictures on text Tweets   |            :heavy_check_mark:            |                    :x:                    |          :heavy_check_mark:           |          :heavy_check_mark:           |
 | Embed Twitter Videos                    |            :heavy_check_mark:            |                   :x:¹                    |          :heavy_check_mark:           |          :heavy_check_mark:           |
-| Embed External Videos (YouTube, etc.)   |            :heavy_check_mark:            |                    :x:                    |                 :x:⁴                  |                  :x:                  |
+| Embed External Videos (YouTube, etc.)   |            :heavy_check_mark:⁶           |                    :x:                    |                 :x:⁴                  |                  :x:                  |
 | Embed Poll results                      |            :heavy_check_mark:            |                    :x:                    |                  :x:                  |                  :x:                  |
 | Embed Quote Tweets                      |            :heavy_check_mark:            |                    :x:                    | :ballot_box_with_check: Without Media | :ballot_box_with_check: Without Media |
 | Embed Multiple Images                   | :ballot_box_with_check: Except Telegram⁵ |     :heavy_minus_sign: Discord Only³      |         With c.vxtwitter.com          |                  :x:                  |
@@ -92,7 +92,7 @@ In many ways, pxTwitter has richer embeds and does more. Here's a table comparin
 | Media-based embed colors on Discord     |            :heavy_check_mark:            |                    :x:                    |                  :x:                  |                  :x:                  |
 | Redirect to media file (wihout embed)   |            :heavy_check_mark:            |                    :x:                    |                  :x:                  |          :heavy_check_mark:           |
 | Strip Twitter tracking info on redirect |            :heavy_check_mark:            |                    :x:                    |          :heavy_check_mark:           |          :heavy_check_mark:           |
-| Show retweet, like, reply counts        |            :heavy_check_mark:            | :heavy_minus_sign: Likes in Discord Only³ |  :ballot_box_with_check: No replies   |  :ballot_box_with_check: No replies   |
+| Show retweet, like, reply counts        |            :heavy_check_mark:            |     :heavy_minus_sign: Discord Only³      |  :ballot_box_with_check: No replies   |  :ballot_box_with_check: No replies   |
 | Discord sed replace (`s/`) friendly     |               twittpr.com                |                    N/A                    |                  :x:                  |          :heavy_check_mark:           |
 
 ¹ Discord will attempt to embed Twitter's video player, but it is unreliable
@@ -103,7 +103,9 @@ In many ways, pxTwitter has richer embeds and does more. Here's a table comparin
 
 ⁴ On GitHub, BetterTwitFix (vxTwitter) claims to support this feature, however in my testing as of mid-July 2022, this does not seem to work.
 
-⁵ Telegram does not support WebP in embeds. We use WebP for multi-image mosaic for its combination of smaller file size and better text readability which makes it overall a better format than JPG or PNG for this purpose.
+⁵ Telegram does not support WebP in embeds. We use WebP for multi-image mosaic for its combination of smaller file size and better text readability which makes it overall a better format than JPG or PNG for this purpose. In the future we will likely add a compatibility mode for Telegram.
+
+⁶ External media requiring web containers, such as YouTube, won't embed in Telegram because Telegram doesn't support it. Plain media will work in Telegram, and it works either way inside Discord.
 
 ---
 
