@@ -134,4 +134,4 @@ Once you're set up with your worker on `*.workers.dev`, [add your worker to your
 
 ### Bugs or issues?
 
-Feel free to [open an issue](https://github.com/dangeredwolf/pxTwitter/issues), or [ping me on Twitter and I'll see what I can do](https://twitter.com/dangeredwolf).
+Feel free to [open an issue](https://github.com/pxTwitter/pxTwitter/issues), or [ping me on Twitter and I'll see what I can do](https://twitter.com/dangeredwolf).
