@@ -16,7 +16,7 @@
 
 ## Embed Videos
 
-Let's face it — we all have videos of memes and other things we want to quickly share with friends. With normal Twitter links, embedding videos is impossible on Telegram and often broken on Discord.
+Let's face it — we all have videos of memes and other things from Twitter we want to quickly share with friends. With normal Twitter links, embedding videos is often broken on Discord and impossible on Telegram.
 
 ![](https://cdn.discordapp.com/attachments/165560751363325952/1000495191817453578/pxTwitter.png)
 
@@ -86,7 +86,7 @@ In many ways, pxTwitter has richer embeds and does more. Here's a table comparin
 | Embed External Videos (YouTube, etc.)   |            :heavy_check_mark:⁶           |                    :x:                    |                 :x:⁴                  |                  :x:                  |
 | Embed Poll results                      |            :heavy_check_mark:            |                    :x:                    |                  :x:                  |                  :x:                  |
 | Embed Quote Tweets                      |            :heavy_check_mark:            |                    :x:                    | :ballot_box_with_check: Without Media | :ballot_box_with_check: Without Media |
-| Embed Multiple Images                   | :ballot_box_with_check: Except Telegram⁵ |     :heavy_minus_sign: Discord Only³      |         With c.vxtwitter.com          |                  :x:                  |
+| Embed Multiple Images                   | :ballot_box_with_check: Except Telegram⁵ |     :heavy_minus_sign: Discord Only³      | :ballot_box_with_check: With c.vxtwitter.com |                  :x:                  |
 | Publicly accessible embed index         |                   :x:²                   |                    N/A                    |                 :x:²                  |          :heavy_check_mark:           |
 | Replace t.co with original links        |            :heavy_check_mark:            |                    :x:                    |                  :x:                  |                  :x:                  |
 | Media-based embed colors on Discord     |            :heavy_check_mark:            |                    :x:                    |                  :x:                  |                  :x:                  |
