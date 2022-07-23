@@ -20,7 +20,7 @@ Let's face it — we all have videos of memes and other things we want to quickl
 
 ![](https://cdn.discordapp.com/attachments/165560751363325952/1000495191817453578/pxTwitter.png)
 
-We'll also automatically embed videos from other platforms, such as YouTube, so they can play without having to open a browser.
+On Discord, we'll also automatically embed videos linked from other platforms, such as YouTube, so they can play without having to open a browser.
 
 ## Embed Polls
 
