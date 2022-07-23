@@ -10,6 +10,8 @@
 
 ### Otherwise, just add `px` before `twitter` to make `pxtwitter.com`
 
+![](https://cdn.discordapp.com/attachments/165560751363325952/1000477470241333368/pxtwitter.webp)
+
 ![https://cdn.discordapp.com/attachments/165560751363325952/997386462343462972/pxtwitter.png](https://cdn.discordapp.com/attachments/165560751363325952/997386462343462972/pxtwitter.png)
 
 :heavy_check_mark: **Embed Videos** (Including Twitter videos and compatible external providers, such as YouTube)
