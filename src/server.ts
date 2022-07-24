@@ -134,7 +134,10 @@ router.get('/owoembed', async (request: Request) => {
     version: '1.0'
   };
   return new Response(JSON.stringify(test), {
-    headers: Constants.RESPONSE_HEADERS,
+    headers: {
+      ...Constants.RESPONSE_HEADERS,
+      'content-type': 'application/json'
+    },
     status: 200
   });
 });
