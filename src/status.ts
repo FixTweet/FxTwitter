@@ -7,6 +7,7 @@ import { handleQuote } from './quote';
 import { sanitizeText } from './utils';
 import { Strings } from './strings';
 import { handleMosaic } from './mosaic';
+import { translateTweet } from './translate';
 
 export const returnError = (error: string): StatusResponse => {
   return {
@@ -25,7 +26,8 @@ export const handleStatus = async (
   status: string,
   mediaNumber?: number,
   userAgent?: string,
-  flags?: InputFlags
+  flags?: InputFlags,
+  language?: string
 ): Promise<StatusResponse> => {
   console.log('Direct?', flags?.direct);
   const conversation = await fetchUsingGuest(status, event);
@@ -78,6 +80,13 @@ export const handleStatus = async (
   const user = tweet.user;
   const screenName = user?.screen_name || '';
   const name = user?.name || '';
+
+  if (
+    (typeof language === 'string' && language.length === 2) ||
+    (tweet.lang !== 'en' && tweet.lang !== 'unk')
+  ) {
+    text = await translateTweet(tweet, conversation.guestToken || '', language || 'en');
+  }
 
   let mediaList = Array.from(
     tweet.extended_entities?.media || tweet.entities?.media || []

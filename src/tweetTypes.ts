@@ -44,6 +44,7 @@ type TimelineBlobPartial = {
     instructions: TimelineInstruction[];
   };
   errors?: TwitterAPIError[];
+  guestToken?: string;
 };
 
 type TweetMediaSize = {
@@ -122,13 +123,18 @@ type TweetCard = {
   name: string;
 };
 
+type TweetEntities = {
+  urls?: TcoExpansion[];
+  media?: TweetMedia[];
+};
+
 type TweetPartial = {
   card?: TweetCard;
   conversation_id_str: string;
   created_at: string; // date string
   display_text_range: [number, number];
-  entities: { urls?: TcoExpansion[]; media?: TweetMedia[] };
-  extended_entities: { media?: TweetMedia[] };
+  entities: TweetEntities;
+  extended_entities: TweetEntities;
   favorite_count: number;
   in_reply_to_screen_name?: string;
   in_reply_to_status_id_str?: string;
@@ -162,4 +168,15 @@ type MediaPlaceholderColor = {
     green: number;
     blue: number;
   };
+};
+
+type TranslationPartial = {
+  id_str: string;
+  translationState: 'Success'; // TODO: figure out other values
+  sourceLanguage: string;
+  localizedSourceLanguage: string;
+  destinationLanguage: string;
+  translationSource: 'Google';
+  translation: string;
+  entities: TweetEntities;
 };
