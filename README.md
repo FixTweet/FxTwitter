@@ -86,7 +86,7 @@ Furthermore, if the person who posted a FixTweet link forgot to strip tracking, 
 
 In many ways, FixTweet has richer embeds and does more. Here's a table comparing some of FixTweet's features compared to Twitter default embeds as well as other embedding services
 
-|                                         |               FixTweet              |         Twitter default          |          vxTwitter (BetterTwitFix)           |           Twxtter (sixFix)            |
+|                                         |              FixTweet               |         Twitter default          |          vxTwitter (BetterTwitFix)           |           Twxtter (sixFix)            |
 | --------------------------------------- | :---------------------------------: | :------------------------------: | :------------------------------------------: | :-----------------------------------: |
 | Embed Tweets / Images                   |         :heavy_check_mark:          |        :heavy_check_mark:        |              :heavy_check_mark:              |          :heavy_check_mark:           |
 | Embed profile pictures on text Tweets   |         :heavy_check_mark:          |               :x:                |              :heavy_check_mark:              |          :heavy_check_mark:           |

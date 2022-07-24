@@ -28,7 +28,7 @@ export const handleMosaic = async (
         media.media_url_https?.match(/(?<=\/media\/)[a-zA-Z0-9_\-]+(?=[\.\?])/g)?.[0] ||
         ''
     );
-    console.log('mosaicMedia', mosaicMedia);
+    // console.log('mosaicMedia', mosaicMedia);
     // TODO: use a better system for this, 0 gets png 1 gets webp, usually
     let constructUrl = `https://${selectedDomain}/${
       userAgent.indexOf('Telegram') > -1 ? '0' : '1'
@@ -46,7 +46,7 @@ export const handleMosaic = async (
       constructUrl += `/${mosaicMedia[3]}`;
     }
 
-    console.log(`Mosaic URL: ${constructUrl}`)
+    console.log(`Mosaic URL: ${constructUrl}`);
 
     return {
       media_url_https: constructUrl,

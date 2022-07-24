@@ -26,7 +26,7 @@ const statusRequest = async (
   }
 
   if (isBotUA || flags.direct) {
-    console.log('Matched bot UA');
+    console.log(`Matched bot UA ${userAgent}`);
 
     let response: Response;
 
