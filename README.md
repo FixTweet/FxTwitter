@@ -30,7 +30,7 @@ If you want to share the results of a Twitter poll, you can do so by just linkin
 
 ## Embed Quote Tweets & Media
 
-Quote tweets and their media can provide important context to a Tweet. So we'll automatically add said context, and even media if there isn't already media embedded in the quote.  
+Quote tweets and their media can provide important context to a Tweet. So we'll automatically add said context, and even media if there isn't already media embedded in the quote.
 
 ![](https://cdn.discordapp.com/attachments/165560751363325952/1000490187190702190/pxTwitter.png)
 
@@ -60,11 +60,11 @@ Otherwise, it will default to the first image.
 
 ## Replace t.co shorteners with original link
 
-The default Twitter embeds include t.co link shorteners, which make it difficult to know where the link is heading. We automatically replace t.co links with their original links to make things clearer. 
+The default Twitter embeds include t.co link shorteners, which make it difficult to know where the link is heading. We automatically replace t.co links with their original links to make things clearer.
 
 ## Color-matched embeds on Discord
 
-We use Twitter's color data for either the first image/video of the tweet, or the author's profile picture. It makes the embed's appearance more *aesthetic*, as well  as in line with the content of the Tweet.
+We use Twitter's color data for either the first image/video of the tweet, or the author's profile picture. It makes the embed's appearance more _aesthetic_, as well as in line with the content of the Tweet.
 
 ## Built with privacy in mind
 
@@ -78,22 +78,22 @@ Furthermore, if the person who posted a pxTwitter link forgot to strip tracking,
 
 In many ways, pxTwitter has richer embeds and does more. Here's a table comparing some of pxTwitter's features compared to Twitter default embeds as well as other embedding services
 
-|                                         |                pxTwitter                 |              Twitter default              |       vxTwitter (BetterTwitFix)       |           Twxtter (sixFix)            |
-| --------------------------------------- | :--------------------------------------: | :---------------------------------------: | :-----------------------------------: | :-----------------------------------: |
-| Embed Tweets / Images                   |            :heavy_check_mark:            |            :heavy_check_mark:             |          :heavy_check_mark:           |          :heavy_check_mark:           |
-| Embed profile pictures on text Tweets   |            :heavy_check_mark:            |                    :x:                    |          :heavy_check_mark:           |          :heavy_check_mark:           |
-| Embed Twitter Videos                    |            :heavy_check_mark:            |                   :x:¹                    |          :heavy_check_mark:           |          :heavy_check_mark:           |
-| Embed External Videos (YouTube, etc.)   |            :heavy_check_mark:⁶           |                    :x:                    |                 :x:⁴                  |                  :x:                  |
-| Embed Poll results                      |            :heavy_check_mark:            |                    :x:                    |                  :x:                  |                  :x:                  |
-| Embed Quote Tweets                      |            :heavy_check_mark:            |                    :x:                    | :ballot_box_with_check: Without Media | :ballot_box_with_check: Without Media |
-| Embed Multiple Images                   | :ballot_box_with_check: Except Telegram⁵ |     :heavy_minus_sign: Discord Only³      | :ballot_box_with_check: With c.vxtwitter.com |                  :x:                  |
-| Publicly accessible embed index         |                   :x:²                   |                    N/A                    |                 :x:²                  |          :heavy_check_mark:           |
-| Replace t.co with original links        |            :heavy_check_mark:            |                    :x:                    |                  :x:                  |                  :x:                  |
-| Media-based embed colors on Discord     |            :heavy_check_mark:            |                    :x:                    |                  :x:                  |                  :x:                  |
-| Redirect to media file (wihout embed)   |            :heavy_check_mark:            |                    :x:                    |                  :x:                  |          :heavy_check_mark:           |
-| Strip Twitter tracking info on redirect |            :heavy_check_mark:            |                    :x:                    |          :heavy_check_mark:           |          :heavy_check_mark:           |
-| Show retweet, like, reply counts        |            :heavy_check_mark:            |     :heavy_minus_sign: Discord Only³      |  :ballot_box_with_check: No replies   |  :ballot_box_with_check: No replies   |
-| Discord sed replace (`s/`) friendly     |               twittpr.com                |                    N/A                    |                  :x:                  |          :heavy_check_mark:           |
+|                                         |                pxTwitter                 |         Twitter default          |          vxTwitter (BetterTwitFix)           |           Twxtter (sixFix)            |
+| --------------------------------------- | :--------------------------------------: | :------------------------------: | :------------------------------------------: | :-----------------------------------: |
+| Embed Tweets / Images                   |            :heavy_check_mark:            |        :heavy_check_mark:        |              :heavy_check_mark:              |          :heavy_check_mark:           |
+| Embed profile pictures on text Tweets   |            :heavy_check_mark:            |               :x:                |              :heavy_check_mark:              |          :heavy_check_mark:           |
+| Embed Twitter Videos                    |            :heavy_check_mark:            |               :x:¹               |              :heavy_check_mark:              |          :heavy_check_mark:           |
+| Embed External Videos (YouTube, etc.)   |           :heavy_check_mark:⁶            |               :x:                |                     :x:⁴                     |                  :x:                  |
+| Embed Poll results                      |            :heavy_check_mark:            |               :x:                |                     :x:                      |                  :x:                  |
+| Embed Quote Tweets                      |            :heavy_check_mark:            |               :x:                |    :ballot_box_with_check: Without Media     | :ballot_box_with_check: Without Media |
+| Embed Multiple Images                   | :ballot_box_with_check: Except Telegram⁵ | :heavy_minus_sign: Discord Only³ | :ballot_box_with_check: With c.vxtwitter.com |                  :x:                  |
+| Publicly accessible embed index         |                   :x:²                   |               N/A                |                     :x:²                     |          :heavy_check_mark:           |
+| Replace t.co with original links        |            :heavy_check_mark:            |               :x:                |                     :x:                      |                  :x:                  |
+| Media-based embed colors on Discord     |            :heavy_check_mark:            |               :x:                |                     :x:                      |                  :x:                  |
+| Redirect to media file (wihout embed)   |            :heavy_check_mark:            |               :x:                |                     :x:                      |          :heavy_check_mark:           |
+| Strip Twitter tracking info on redirect |            :heavy_check_mark:            |               :x:                |              :heavy_check_mark:              |          :heavy_check_mark:           |
+| Show retweet, like, reply counts        |            :heavy_check_mark:            | :heavy_minus_sign: Discord Only³ |      :ballot_box_with_check: No replies      |  :ballot_box_with_check: No replies   |
+| Discord sed replace (`s/`) friendly     |               twittpr.com                |               N/A                |                     :x:                      |          :heavy_check_mark:           |
 
 ¹ Discord will attempt to embed Twitter's video player, but it is unreliable
 
@@ -131,7 +131,7 @@ Once you're set up with your worker on `*.workers.dev`, [add your worker to your
 
 ### Things to tackle in the future
 
-- Returning JPG with multi-image for Telegram as it doesn't support WebP in embeds for some reason  
+- Returning JPG with multi-image for Telegram as it doesn't support WebP in embeds for some reason
 - Feature: Translating Tweets within pxTwitter
 
 ### Bugs or issues?

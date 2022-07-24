@@ -10,7 +10,7 @@ const statusRequest = async (
   event: FetchEvent,
   flags: InputFlags = {}
 ) => {
-  const { handle, id, mediaNumber } = request.params;
+  const { handle, id, mediaNumber, language } = request.params;
   const url = new URL(request.url);
   const userAgent = request.headers.get('User-Agent') || '';
 
@@ -35,7 +35,8 @@ const statusRequest = async (
       id?.match(/\d{2,20}/)?.[0] || '0',
       mediaNumber ? parseInt(mediaNumber) : undefined,
       userAgent,
-      flags
+      flags,
+      language
     );
 
     if (statusResponse.response) {
@@ -84,25 +85,33 @@ const profileRequest = async (request: Request, _event: FetchEvent) => {
 /* Direct media handlers */
 router.get('/dl/:handle/status/:id', statusDirectMediaRequest);
 router.get('/dl/:handle/status/:id/photo/:mediaNumber', statusDirectMediaRequest);
+router.get('/dl/:handle/status/:id/photos/:mediaNumber', statusDirectMediaRequest);
 router.get('/dl/:handle/status/:id/video/:mediaNumber', statusDirectMediaRequest);
 router.get('/dl/:handle/statuses/:id', statusDirectMediaRequest);
 router.get('/dl/:handle/statuses/:id/photo/:mediaNumber', statusDirectMediaRequest);
+router.get('/dl/:handle/statuses/:id/photos/:mediaNumber', statusDirectMediaRequest);
 router.get('/dl/:handle/statuses/:id/video/:mediaNumber', statusDirectMediaRequest);
 
 router.get('/dir/:handle/status/:id', statusDirectMediaRequest);
 router.get('/dir/:handle/status/:id/photo/:mediaNumber', statusDirectMediaRequest);
+router.get('/dir/:handle/status/:id/photos/:mediaNumber', statusDirectMediaRequest);
 router.get('/dir/:handle/status/:id/video/:mediaNumber', statusDirectMediaRequest);
 router.get('/dir/:handle/statuses/:id', statusDirectMediaRequest);
 router.get('/dir/:handle/statuses/:id/photo/:mediaNumber', statusDirectMediaRequest);
+router.get('/dir/:handle/statuses/:id/photos/:mediaNumber', statusDirectMediaRequest);
 router.get('/dir/:handle/statuses/:id/video/:mediaNumber', statusDirectMediaRequest);
 
 /* Handlers for Twitter statuses */
 router.get('/:handle/status/:id', statusRequest);
 router.get('/:handle/status/:id/photo/:mediaNumber', statusRequest);
+router.get('/:handle/status/:id/photos/:mediaNumber', statusRequest);
 router.get('/:handle/status/:id/video/:mediaNumber', statusRequest);
 router.get('/:handle/statuses/:id', statusRequest);
 router.get('/:handle/statuses/:id/photo/:mediaNumber', statusRequest);
+router.get('/:handle/statuses/:id/photos/:mediaNumber', statusRequest);
 router.get('/:handle/statuses/:id/video/:mediaNumber', statusRequest);
+router.get('/:handle/status/:id/:language', statusRequest);
+router.get('/:handle/statuses/:id/:language', statusRequest);
 
 router.get('/owoembed', async (request: Request) => {
   console.log('oembed hit!');
