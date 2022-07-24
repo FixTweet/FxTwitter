@@ -77,14 +77,13 @@ export const handleStatus = async (
 
   let text = tweet.full_text;
   let engagementText = '';
+
   const user = tweet.user;
   const screenName = user?.screen_name || '';
   const name = user?.name || '';
 
-  if (
-    (typeof language === 'string' && language.length === 2) ||
-    (tweet.lang !== 'en' && tweet.lang !== 'unk')
-  ) {
+  /* If a language is specified, let's try translating it! */
+  if (typeof language === 'string' && language.length === 2) {
     text = await translateTweet(tweet, conversation.guestToken || '', language || 'en');
   }
 
@@ -94,6 +93,7 @@ export const handleStatus = async (
 
   let authorText = Strings.DEFAULT_AUTHOR_TEXT;
 
+  /* Build out reply, retweet, like counts */
   if (tweet.favorite_count > 0 || tweet.retweet_count > 0 || tweet.reply_count > 0) {
     authorText = '';
     if (tweet.reply_count > 0) {
@@ -107,7 +107,7 @@ export const handleStatus = async (
     }
     authorText = authorText.trim();
 
-    // engagementText has less spacing than authorText, also Telegram interprets the other heart as emoji
+    // engagementText has less spacing than authorText
     engagementText = authorText.replace(/    /g, ' ');
   }
 
@@ -134,9 +134,9 @@ export const handleStatus = async (
       conversation?.globalObjects?.users?.[quoteTweetMaybe.user_id_str] || {};
     const quoteText = handleQuote(quoteTweetMaybe);
 
-    console.log('quoteText', quoteText);
-
     if (quoteText) {
+      console.log('quoteText', quoteText);
+
       text += `\n${quoteText}`;
     }
 
@@ -166,7 +166,6 @@ export const handleStatus = async (
     let palette = user?.profile_image_extensions_media_color?.palette;
     let colorOverride: string = Constants.DEFAULT_COLOR;
 
-    // for loop for palettes
     if (palette) {
       colorOverride = colorFromPalette(palette);
     }
@@ -241,6 +240,7 @@ export const handleStatus = async (
           return;
         }
 
+        /* This is for the video thumbnail */
         headers.push(`<meta name="twitter:image" content="${media.media_url_https}"/>`);
 
         /* On Discord we have to use the author field in order to get the tweet text

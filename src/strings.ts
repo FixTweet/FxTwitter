@@ -38,7 +38,7 @@ export const Strings = {
 
   QUOTE_TEXT: `═ ↘️ Quoting {name} (@{screen_name}) ═════`,
   TRANSLATE_TEXT: `═ ↘️ Translated from {language} ═════`,
-  TRANSLATE_TEXT_INTL: `═ ↘️ {source} -> {destination} ═════`,
+  TRANSLATE_TEXT_INTL: `═ ↘️ {source} ➡️ {destination} ═════`,
   PHOTO_COUNT: `Photo {number} of {total}`,
 
   SINGULAR_DAY_LEFT: 'day left',
