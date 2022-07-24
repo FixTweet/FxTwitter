@@ -95,6 +95,7 @@ In many ways, pxTwitter has richer embeds and does more. Here's a table comparin
 | Embed Poll results                      |            :heavy_check_mark:            |               :x:                |                     :x:                      |                  :x:                  |
 | Embed Quote Tweets                      |            :heavy_check_mark:            |               :x:                |    :ballot_box_with_check: Without Media     | :ballot_box_with_check: Without Media |
 | Embed Multiple Images                   | :ballot_box_with_check: Except Telegram⁵ | :heavy_minus_sign: Discord Only³ | :ballot_box_with_check: With c.vxtwitter.com |                  :x:                  |
+| Translate Tweets                        |            :heavy_check_mark:            |               :x:                |                     :x:                      |                  :x:                  |
 | Publicly accessible embed index         |                   :x:²                   |               N/A                |                     :x:²                     |          :heavy_check_mark:           |
 | Replace t.co with original links        |            :heavy_check_mark:            |               :x:                |                     :x:                      |                  :x:                  |
 | Media-based embed colors on Discord     |            :heavy_check_mark:            |               :x:                |                     :x:                      |                  :x:                  |
