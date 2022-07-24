@@ -283,7 +283,7 @@ export const handleStatus = async (
       console.log(`Media ${mediaNumber} found`);
       actualMediaNumber = mediaNumber - 1;
       processMedia(mediaList[actualMediaNumber]);
-    } else if (mediaList.length === 1 ) {
+    } else if (mediaList.length === 1) {
       console.log(`Media ${mediaNumber} not found, ${mediaList.length} total`);
       processMedia(firstMedia);
     } else if (mediaList.length > 1) {
