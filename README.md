@@ -36,9 +36,9 @@ Quote tweets and their media can provide important context to a Tweet. So we'll 
 
 ## Translate Tweets
 
-Tweets in languages other than English will automagically be translated into English, with the original and translated text displayed as space allows.
+You can translate a tweet into any other supported language, with the original and translated text displayed as space allows.
 
-Want to translate to a language that isn't English? No trouble, just add any supported language 2-letter ISO code afterward, like so:
+Just append a tweet with its 2-letter language code. So for English, add `/en` at the end.
 
 ![](https://cdn.discordapp.com/attachments/165560751363325952/1000579738248675338/pxTwitter.png)
 
