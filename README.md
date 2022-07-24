@@ -6,7 +6,7 @@
 
 [![Webpack](https://github.com/dangeredwolf/FixTweet/actions/workflows/webpack.yml/badge.svg)](https://github.com/dangeredwolf/FixTweet/actions/workflows/webpack.yml)
 
-## Inspired by [RobinUniverse's TwitFix](https://github.com/robinuniverse/TwitFix), but rewritten as a TypeScript Cloudflare Worker to scale, while also being packed with even more features.
+## Inspired by [RobinUniverse's TwitFix](https://github.com/robinuniverse/TwitFix), but rewritten in TypeScript as a Cloudflare Worker to scale, while also being packed with even more features.
 
 ### Add `fx` before your Twitter link to make it `fxtwitter.com` (Alternative: `pxtwitter.com`)
 
