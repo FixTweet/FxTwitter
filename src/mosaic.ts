@@ -22,7 +22,7 @@ export const handleMosaic = async (
   if (selectedDomain === null) {
     return mediaList[0];
   } else {
-    console.log('mediaList', mediaList);
+    // console.log('mediaList', mediaList);
     let mosaicMedia = mediaList.map(
       media =>
         media.media_url_https?.match(/(?<=\/media\/)[a-zA-Z0-9_\-]+(?=[\.\?])/g)?.[0] ||
