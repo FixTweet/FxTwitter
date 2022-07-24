@@ -34,6 +34,14 @@ Quote tweets and their media can provide important context to a Tweet. So we'll 
 
 ![](https://cdn.discordapp.com/attachments/165560751363325952/1000490187190702190/pxTwitter.png)
 
+## Translate Tweets
+
+Tweets in languages other than English will automagically be translated into English, with the original and translated text displayed as space allows.
+
+Want to translate to a language that isn't English? No trouble, just add any supported language 2-letter ISO code afterward, like so:
+
+![](https://cdn.discordapp.com/attachments/165560751363325952/1000579738248675338/pxTwitter.png)
+
 ## Direct media links
 
 Want to link directly to a Tweet's media without the embed? You can do easily do that using pxTwitter.
@@ -57,14 +65,6 @@ Tweets with multiple images are supported, so you can do something like this and
 `https://d.twittpr.com/dangeredwolf/status/1547514042146865153/photo/3`
 
 Otherwise, it will default to the first image.
-
-## Translate Tweets
-
-Tweets in languages other than English will automagically be translated into English, with the original and translated text displayed as space allows.
-
-Want to translate to a language that isn't English? No trouble, just add any supported language 2-letter ISO code afterward, like so:
-
-![](https://cdn.discordapp.com/attachments/165560751363325952/1000579738248675338/pxTwitter.png)
 
 ## Replace t.co shorteners with original link
 
