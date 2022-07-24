@@ -167,7 +167,10 @@ const cacheWrapper = async (event: FetchEvent): Promise<Response> => {
   /* Itty-router doesn't seem to like routing file names for some reason */
   if (cacheUrl.pathname === '/robots.txt') {
     return new Response(Constants.ROBOTS_TXT, {
-      headers: Constants.RESPONSE_HEADERS,
+      headers: {
+        ...Constants.RESPONSE_HEADERS,
+        'content-type': 'text/plain'
+      },
       status: 200
     });
   }
