@@ -6,7 +6,7 @@
 
 ## A TwitFix-like service that _does way more_ with better privacy in mind.
 
-### Embed videos, polls, and more on Discord, Telegram, and others!
+### Embed videos, polls, Tweet translations, and more on Discord, Telegram, and others.
 
 #### On Discord, send a Twitter link and type `s/e/p` to make `twittpr.com`.
 
@@ -57,6 +57,14 @@ Tweets with multiple images are supported, so you can do something like this and
 `https://d.twittpr.com/dangeredwolf/status/1547514042146865153/photo/3`
 
 Otherwise, it will default to the first image.
+
+## Translate Tweets
+
+Tweets in languages other than English will automagically be translated into English, with the original and translated text displayed as space allows.
+
+Want to translate to a language that isn't English? No trouble, just add any supported language 2-letter ISO code afterward, like so:
+
+![](https://cdn.discordapp.com/attachments/165560751363325952/1000579738248675338/pxTwitter.png)
 
 ## Replace t.co shorteners with original link
 
@@ -132,7 +140,6 @@ Once you're set up with your worker on `*.workers.dev`, [add your worker to your
 ### Things to tackle in the future
 
 - Returning JPG with multi-image for Telegram as it doesn't support WebP in embeds for some reason
-- Feature: Translating Tweets within pxTwitter
 
 ### Bugs or issues?
 
