@@ -40,7 +40,7 @@ You can translate a tweet into any other supported language, with the original a
 
 Just append a tweet with its 2-letter language code. So for English, add `/en` at the end.
 
-![](https://cdn.discordapp.com/attachments/165560751363325952/1000579738248675338/pxTwitter.png)
+![](https://cdn.discordapp.com/attachments/165560751363325952/1000890584153735238/FixTweet.png)
 
 ## Direct media links
 
@@ -140,7 +140,8 @@ Once you're set up with your worker on `*.workers.dev`, [add your worker to your
 
 ### Things to tackle in the future
 
-- Returning JPG with multi-image for Telegram as it doesn't support WebP in embeds for some reason
+- More reliable Multi-Image in Telegram
+- Reimplement TwitFix API for third-party developers
 
 ### Bugs or issues?
 
