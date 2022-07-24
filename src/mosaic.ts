@@ -1,6 +1,6 @@
 import { Constants } from './constants';
 
-export const handleMosaic = async (mediaList: TweetMedia[]): Promise<TweetMedia> => {
+export const handleMosaic = async (mediaList: TweetMedia[], userAgent: string): Promise<TweetMedia> => {
   let mosaicDomains = Constants.MOSAIC_DOMAIN_LIST;
   let selectedDomain: string | null = null;
   while (selectedDomain === null && mosaicDomains.length > 0) {
@@ -26,7 +26,8 @@ export const handleMosaic = async (mediaList: TweetMedia[]): Promise<TweetMedia>
         ''
     );
     console.log('mosaicMedia', mosaicMedia);
-    let constructUrl = `https://${selectedDomain}/1`;
+    // TODO: use a better system for this, 0 gets png 1 gets webp, usually
+    let constructUrl = `https://${selectedDomain}/${userAgent.indexOf('Telegram') > -1 ? '0' : '1'}`;
     if (mosaicMedia[0]) {
       constructUrl += `/${mosaicMedia[0]}`;
     }

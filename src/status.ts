@@ -288,7 +288,7 @@ export const handleStatus = async (
       processMedia(firstMedia);
     } else if (mediaList.length > 1) {
       console.log('Handling mosaic');
-      processMedia(await handleMosaic(mediaList));
+      processMedia(await handleMosaic(mediaList, userAgent || ''));
       renderedMosaic = true;
     }
 
