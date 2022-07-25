@@ -44,20 +44,14 @@ export const calculateTimeLeftString = (date: Date) => {
 };
 
 export const renderCard = async (
-  card: TweetCard,
-  headers: string[],
-  userAgent: string = ''
-): Promise<string> => {
+  card: TweetCard
+): Promise<{ poll?: APIPoll; external_media?: APIExternalMedia }> => {
   let str = '\n\n';
   const values = card.binding_values;
 
   console.log('rendering card on ', card);
 
   // Telegram's bars need to be a lot smaller to fit its bubbles
-  if (userAgent.indexOf('Telegram') > -1) {
-    barLength = 24;
-  }
-
   let choices: { [label: string]: number } = {};
   let totalVotes = 0;
   let timeLeft = '';
@@ -68,6 +62,9 @@ export const renderCard = async (
       typeof values.choice1_count !== 'undefined' &&
       typeof values.choice2_count !== 'undefined'
     ) {
+      let poll = {} as APIPoll;
+      poll.ends_at = values.end_datetime_utc?.string_value || '';
+
       if (typeof values.end_datetime_utc !== 'undefined') {
         const date = new Date(values.end_datetime_utc.string_value);
         timeLeft = calculateTimeLeftString(date);
@@ -89,44 +86,35 @@ export const renderCard = async (
       if (typeof values.choice4_count !== 'undefined') {
         choices[values.choice4_label?.string_value || ''] = parseInt(
           values.choice4_count.string_value
-        );
+        ) || 0;
         totalVotes += parseInt(values.choice4_count.string_value);
       }
 
-      for (const [label, votes] of Object.entries(choices)) {
-        // render bar
-        const bar = '█'.repeat(Math.round((votes / totalVotes || 0) * barLength));
-        str += `${bar}
-${label}  (${Math.round((votes / totalVotes || 0) * 100)}%)
-`;
-      }
+      poll.total_votes = totalVotes;
+      poll.choices = Object.keys(choices).map(label => {
+        return {
+          label: label,
+          count: choices[label],
+          percentage: ((Math.round((choices[label] / totalVotes) * 1000) || 0) / 10 || 0)
+        };
+      });
 
-      str += `\n${totalVotes} votes · ${timeLeft}`;
+      return { poll: poll };
       /* Oh good, a non-Twitter video URL! This enables YouTube embeds and stuff to just work */
     } else if (typeof values.player_url !== 'undefined') {
-      headers.push(
-        `<meta name="twitter:player" content="${values.player_url.string_value}">`,
-        `<meta name="twitter:player:width" content="${
-          values.player_width?.string_value || '1280'
-        }">`,
-        `<meta name="twitter:player:height" content="${
-          values.player_height?.string_value || '720'
-        }">`,
-        `<meta property="og:type" content="video.other">`,
-        `<meta property="og:video:url" content="${values.player_url.string_value}">`,
-        `<meta property="og:video:secure_url" content="${values.player_url.string_value}">`,
-        `<meta property="og:video:width" content="${
-          values.player_width?.string_value || '1280'
-        }">`,
-        `<meta property="og:video:height" content="${
-          values.player_height?.string_value || '720'
-        }">`
-      );
-
-      /* A control sequence I made up to tell status.ts that external media is being embedded */
-      str = 'EMBED_CARD';
+      return {
+        external_media: {
+          type: 'video',
+          url: values.player_url.string_value,
+          width: parseInt(
+            (values.player_width?.string_value || '1280').replace('px', '')
+          ), // TODO: Replacing px might not be necessary, it's just there as a precaution
+          height: parseInt(
+            (values.player_height?.string_value || '720').replace('px', '')
+          )
+        }
+      };
     }
   }
-
-  return str;
+  return {};
 };

@@ -9,7 +9,7 @@ import { Strings } from './strings';
 import { handleMosaic } from './mosaic';
 import { translateTweet } from './translate';
 import { getAuthorText } from './author';
-import { statueAPI } from './api';
+import { statusAPI } from './api';
 
 export const returnError = (error: string): StatusResponse => {
   return {
@@ -33,7 +33,7 @@ export const handleStatus = async (
 ): Promise<StatusResponse> => {
   console.log('Direct?', flags?.direct);
 
-  let api = await statueAPI(event, status, language || 'en');
+  let api = await statusAPI(event, status, language || 'en');
 
   if (flags?.api || true) {
     return {

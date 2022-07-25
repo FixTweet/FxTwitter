@@ -24,19 +24,37 @@ interface APIResponse {
 }
 
 interface APITranslate {
-  translated_text: string;
-  source_language: string;
-  target_language: string;
+  text: string;
+  source_lang: string;
+  target_lang: string;
 }
 
 interface APIAuthor {
   name?: string;
   screen_name?: string;
   avatar_url?: string;
+  avatar_color: string;
   banner_url?: string;
 }
 
-interface APIPoll {}
+interface APIExternalMedia {
+  type: 'video';
+  url: string;
+  height: number;
+  width: number;
+}
+
+interface APIPollChoice {
+  label: string;
+  count: number;
+  percentage: number;
+}
+
+interface APIPoll {
+  choices: APIPollChoice[];
+  total_votes: number;
+  ends_at: string;
+}
 
 interface APITweet {
   id: string;
@@ -48,9 +66,14 @@ interface APITweet {
   retweets: number;
   replies: number;
 
-  quote_tweet?: APITweet;
+  palette: string;
+
+  quote?: APITweet;
+  poll?: APIPoll;
   translation?: APITranslate;
   author: APIAuthor;
 
-  thumbnail: string;
+  media: {
+    external?: APIExternalMedia;
+  };
 }
