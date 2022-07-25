@@ -43,7 +43,7 @@ export const translateTweet = async (
     console.log(translationResults);
     return translationResults;
   } catch (e: any) {
-    console.error('Unknown error while fetching from Translation API');
+    console.error('Unknown error while fetching from Translation API', e);
     return {} as TranslationPartial; // No work to do
   }
 };

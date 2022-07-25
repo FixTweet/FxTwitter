@@ -101,7 +101,7 @@ export const handleStatus = async (
   /* Photo renderer */
   if (tweet.media?.photos) {
     const { photos } = tweet.media;
-    let photo = photos[mediaNumber || 0];
+    let photo = photos[(mediaNumber || 1) - 1];
 
     if (
       typeof mediaNumber !== 'number' &&
