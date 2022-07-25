@@ -78,7 +78,6 @@ const populateTweetProperties = async (
 
   mediaList.forEach(media => {
     let mediaObject = processMedia(media);
-    console.log('mediaObject', JSON.stringify(mediaObject));
     if (mediaObject) {
       if (mediaObject.type === 'photo') {
         apiTweet.twitter_card = 'summary_large_image';
@@ -86,7 +85,6 @@ const populateTweetProperties = async (
         apiTweet.media.photos = apiTweet.media.photos || [];
         apiTweet.media.photos.push(mediaObject);
 
-        console.log('media', apiTweet.media);
       } else if (mediaObject.type === 'video' || mediaObject.type === 'gif') {
         apiTweet.twitter_card = 'player';
         apiTweet.media = apiTweet.media || {};

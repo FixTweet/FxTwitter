@@ -4,7 +4,6 @@ import { sanitizeText } from './utils';
 import { Strings } from './strings';
 import { getAuthorText } from './author';
 import { statusAPI } from './api';
-import { calculateTimeLeftString } from './pollHelper';
 
 export const returnError = (error: string): StatusResponse => {
   return {
@@ -63,6 +62,7 @@ export const handleStatus = async (
     }
   }
 
+  /* Use quote media if there is no media */
   if (!tweet.media && tweet.quote?.media) {
     tweet.media = tweet.quote.media;
     tweet.twitter_card = 'summary_large_image';
@@ -79,6 +79,7 @@ export const handleStatus = async (
     `<meta name="twitter:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`
   ];
 
+  /* Video renderer */
   if (tweet.media?.video) {
     authorText = encodeURIComponent(tweet.text || '');
 
@@ -97,6 +98,7 @@ export const handleStatus = async (
     );
   }
 
+  /* Photo renderer */
   if (tweet.media?.photos) {
     const { photos } = tweet.media;
     let photo = photos[mediaNumber || 0];
@@ -145,6 +147,7 @@ export const handleStatus = async (
     );
   }
 
+  /* External media renderer (i.e. YouTube) */
   if (tweet.media?.external) {
     const { external } = tweet.media;
     headers.push(
@@ -162,6 +165,7 @@ export const handleStatus = async (
   let siteName = Constants.BRANDING_NAME;
   let newText = tweet.text;
 
+  /* Poll renderer */
   if (tweet.poll) {
     const { poll } = tweet;
     let barLength = 34;
