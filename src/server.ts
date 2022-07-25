@@ -20,13 +20,17 @@ const statusRequest = async (
   if (
     url.pathname.match(/\/status(es)?\/\d+\.(mp4|png|jpg)/g) !== null ||
     Constants.DIRECT_MEDIA_DOMAINS.includes(url.hostname) ||
-    (prefix === 'dl' || prefix === 'dir')
+    prefix === 'dl' ||
+    prefix === 'dir'
   ) {
     console.log('Direct media request by extension');
     flags.direct = true;
   }
 
-  if (url.pathname.match(/\/status(es)?\/\d+\.(json)/g) !== null) {
+  if (
+    url.pathname.match(/\/status(es)?\/\d+\.(json)/g) !== null ||
+    url.hostname === Constants.API_HOST
+  ) {
     console.log('JSON API request');
     flags.api = true;
   }

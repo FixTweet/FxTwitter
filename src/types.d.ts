@@ -32,13 +32,11 @@ interface APITranslate {
 interface APIAuthor {
   name?: string;
   screen_name?: string;
-  profile_picture_url?: string;
-  profile_banner_url?: string;
+  avatar_url?: string;
+  banner_url?: string;
 }
 
-interface APIPoll {
-  
-}
+interface APIPoll {}
 
 interface APITweet {
   id: string;
@@ -55,5 +53,4 @@ interface APITweet {
   author: APIAuthor;
 
   thumbnail: string;
-
 }

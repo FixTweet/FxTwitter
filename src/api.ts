@@ -1,7 +1,11 @@
-import { fetchUsingGuest } from "./fetch";
-import { translateTweet } from "./translate";
+import { fetchUsingGuest } from './fetch';
+import { translateTweet } from './translate';
 
-export const statueAPI = async (event: FetchEvent, status: string, language: string): Promise<APIResponse> => {
+export const statueAPI = async (
+  event: FetchEvent,
+  status: string,
+  language: string
+): Promise<APIResponse> => {
   const conversation = await fetchUsingGuest(status, event);
   const tweet = conversation?.globalObjects?.tweets?.[status] || {};
   /* With v2 conversation API we re-add the user object ot the tweet because
@@ -32,7 +36,7 @@ export const statueAPI = async (event: FetchEvent, status: string, language: str
     return { code: 500, message: 'API_FAIL' };
   }
 
-  let response: APIResponse = {} as APIResponse;
+  let response: APIResponse = { code: 200, message: 'OK' } as APIResponse;
   let apiTweet: APITweet = {} as APITweet;
 
   const user = tweet.user;
@@ -43,23 +47,27 @@ export const statueAPI = async (event: FetchEvent, status: string, language: str
   apiTweet.author = {
     name: name,
     screen_name: screenName,
-    profile_picture_url: user?.profile_image_url_https || '',
-    profile_banner_url: user?.profile_banner_url || ''
-  }
+    avatar_url: user?.profile_image_url_https || '',
+    banner_url: user?.profile_banner_url || ''
+  };
   apiTweet.replies = tweet.reply_count;
   apiTweet.retweets = tweet.retweet_count;
   apiTweet.likes = tweet.favorite_count;
 
   /* If a language is specified, let's try translating it! */
   if (typeof language === 'string' && language.length === 2 && language !== tweet.lang) {
-    let translateAPI = await translateTweet(tweet, conversation.guestToken || '', language || 'en');
+    let translateAPI = await translateTweet(
+      tweet,
+      conversation.guestToken || '',
+      language || 'en'
+    );
     apiTweet.translation = {
       translated_text: translateAPI?.translation || '',
       source_language: tweet.lang,
       target_language: language
-    }
+    };
   }
 
   response.tweet = apiTweet;
   return response;
-}
+};

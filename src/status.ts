@@ -35,7 +35,16 @@ export const handleStatus = async (
 
   let api = await statueAPI(event, status, language || 'en');
 
-  switch(api.code) {
+  if (flags?.api || true) {
+    return {
+      response: new Response(JSON.stringify(api), {
+        headers: { ...Constants.RESPONSE_HEADERS, 'content-type': 'application/json' },
+        status: api.code
+      })
+    };
+  }
+
+  switch (api.code) {
     case 401:
       return returnError(Strings.ERROR_PRIVATE);
     case 404:
@@ -50,9 +59,7 @@ export const handleStatus = async (
   let engagementText = '';
 
   if (api?.tweet?.translation) {
-    
   }
-  
 
   let mediaList = Array.from(
     tweet.extended_entities?.media || tweet.entities?.media || []

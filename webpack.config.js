@@ -34,6 +34,9 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       MOSAIC_DOMAIN_LIST: `'${process.env.MOSAIC_DOMAIN_LIST}'`
+    }),
+    new webpack.DefinePlugin({
+      API_HOST: `'${process.env.API_HOST}'`
     })
   ],
   optimization: {
