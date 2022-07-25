@@ -1,5 +1,4 @@
 import { Constants } from './constants';
-import { fetchUsingGuest } from './fetch';
 import { linkFixer } from './linkFixer';
 import { colorFromPalette } from './palette';
 import { renderCard } from './card';
@@ -7,7 +6,6 @@ import { handleQuote } from './quote';
 import { sanitizeText } from './utils';
 import { Strings } from './strings';
 import { handleMosaic } from './mosaic';
-import { translateTweet } from './translate';
 import { getAuthorText } from './author';
 import { statusAPI } from './api';
 
@@ -34,8 +32,9 @@ export const handleStatus = async (
   console.log('Direct?', flags?.direct);
 
   let api = await statusAPI(event, status, language || 'en');
+  const tweet = api?.tweet as APITweet;
 
-  if (flags?.api || true) {
+  if (flags?.api) {
     return {
       response: new Response(JSON.stringify(api), {
         headers: { ...Constants.RESPONSE_HEADERS, 'content-type': 'application/json' },
@@ -53,151 +52,72 @@ export const handleStatus = async (
       return returnError(Strings.ERROR_API_FAIL);
   }
 
-  let headers: string[] = [];
-
-  let redirectMedia = '';
-  let engagementText = '';
-
-  if (api?.tweet?.translation) {
+  if (flags?.direct) {
+    if (tweet.media) {
+      let redirectUrl: string | null = null;
+      if (tweet.media.video) {
+        redirectUrl = tweet.media.video.url;
+      } else if (tweet.media.photos) {
+        redirectUrl = (tweet.media.photos[mediaNumber || 0] || tweet.media.photos[0]).url;
+      }
+      if (redirectUrl) {
+        return { response: Response.redirect(redirectUrl, 302) };
+      }
+    }
   }
 
-  let mediaList = Array.from(
-    tweet.extended_entities?.media || tweet.entities?.media || []
-  );
+  if (!tweet.media && tweet.quote?.media) {
+    tweet.media = tweet.quote.media;
+  }
 
   let authorText = getAuthorText(tweet) || Strings.DEFAULT_AUTHOR_TEXT;
+  let engagementText = authorText.replace(/    /g, ' ');
 
-  // engagementText has less spacing than authorText
-  engagementText = authorText.replace(/    /g, ' ');
+  let headers: string[] = [
+    `<meta content="${tweet.color}" property="theme-color"/>`,
+    `<meta name="twitter:card" content="${tweet.twitter_card}"/>`,
+    `<meta name="twitter:site" content="@${tweet.author.screen_name}"/>`,
+    `<meta name="twitter:creator" content="@${tweet.author.screen_name}"/>`,
+    `<meta name="twitter:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`
+  ];
 
-  text = linkFixer(tweet, text);
+  if (tweet.media?.video) {
+    authorText = encodeURIComponent(tweet.text || '');
 
-  /* Cards are used by polls and non-Twitter video embeds */
-  if (tweet.card) {
-    let cardRender = await renderCard(tweet.card, headers, userAgent);
-
-    if (cardRender === 'EMBED_CARD') {
-      authorText = encodeURIComponent(text);
-    } else {
-      text += cardRender;
-    }
-  }
-
-  /* Trying to uncover a quote tweet referenced by this tweet */
-  let quoteTweetMaybe =
-    conversation.globalObjects?.tweets?.[tweet.quoted_status_id_str || '0'] || null;
-
-  if (quoteTweetMaybe) {
-    /* Populate quote tweet user from globalObjects */
-    quoteTweetMaybe.user =
-      conversation?.globalObjects?.users?.[quoteTweetMaybe.user_id_str] || {};
-    const quoteText = handleQuote(quoteTweetMaybe);
-
-    if (quoteText) {
-      console.log('quoteText', quoteText);
-
-      text += `\n${quoteText}`;
-    }
-
-    /* This code handles checking the quote tweet for media.
-       We'll embed a quote tweet's media if the linked tweet does not have any. */
-    if (
-      mediaList.length === 0 &&
-      (quoteTweetMaybe.extended_entities?.media?.length ||
-        quoteTweetMaybe.entities?.media?.length ||
-        0) > 0
-    ) {
-      console.log(
-        `No media in main tweet, let's try embedding the quote tweet's media instead!`
-      );
-      mediaList = Array.from(
-        quoteTweetMaybe.extended_entities?.media || quoteTweetMaybe.entities?.media || []
-      );
-
-      console.log('updated mediaList', mediaList);
-    }
-  }
-
-  /* No media was found, but that's OK because we can still enrichen the Tweet
-     with a profile picture and color-matched embed in Discord! */
-  if (mediaList.length === 0) {
-    console.log('No media');
-    let palette = user?.profile_image_extensions_media_color?.palette;
-    let colorOverride: string = Constants.DEFAULT_COLOR;
-
-    if (palette) {
-      colorOverride = colorFromPalette(palette);
-    }
+    const { video } = tweet.media;
 
     headers.push(
-      `<meta content="${colorOverride}" property="theme-color"/>`,
-      `<meta property="og:site_name" content="${Constants.BRANDING_NAME}"/>`,
-      // Use a slightly higher resolution image for profile pics
-      `<meta property="og:image" content="${user?.profile_image_url_https.replace(
-        '_normal',
-        '_200x200'
-      )}"/>`,
-      `<meta name="twitter:card" content="tweet"/>`,
-      `<meta name="twitter:title" content="${name} (@${screenName})"/>`,
-      `<meta name="twitter:image" content="0"/>`,
-      `<meta name="twitter:creator" content="@${name}"/>`,
-      `<meta content="${sanitizeText(text)}" property="og:description"/>`
+      `<meta name="twitter:image" content="${video.thumbnail_url}"/>`,
+      `<meta name="twitter:player:stream" content="${video.url}"/>`,
+      `<meta name="twitter:player:stream:content_type" content="${video.format}"/>`,
+      `<meta name="twitter:player:height" content="${video.height}"/>`,
+      `<meta name="twitter:player:width" content="${video.width}"/>`,
+      `<meta name="og:video" content="${video.url}"/>`,
+      `<meta name="og:video:secure_url" content="${video.url}"/>`,
+      `<meta name="og:video:height" content="${video.height}"/>`,
+      `<meta name="og:video:width" content="${video.width}"/>`,
+      `<meta name="og:video:type" content="${video.format}"/>`
     );
-  } else {
-    console.log('Media available');
-    let firstMedia = mediaList[0];
+  }
 
-    /* Try grabbing media color palette */
-    let palette = firstMedia?.ext_media_color?.palette;
-    let colorOverride: string = Constants.DEFAULT_COLOR;
-    let pushedCardType = false;
+  if (tweet.media?.photos) {
+    const { photos } = tweet.media;
+    let photo = photos[mediaNumber || 0];
 
-    if (palette) {
-      colorOverride = colorFromPalette(palette);
-    }
-
-    /* theme-color is used by discord to style the embed.
-
-       We take full advantage of that!*/
-    headers.push(`<meta content="${colorOverride}" property="theme-color"/>`);
-
-    /* Inline helper function for handling media */
-    
-
-    let actualMediaNumber = 0;
-    let renderedMosaic = false;
-
-    console.log('mediaNumber', mediaNumber);
-    console.log('mediaList length', mediaList.length);
-
-    /* You can specify a specific photo in the URL and we'll pull the correct one,
-       otherwise it falls back to first */
-    if (
-      typeof mediaNumber !== 'undefined' &&
-      typeof mediaList[mediaNumber - 1] !== 'undefined'
-    ) {
-      console.log(`Media ${mediaNumber} found`);
-      actualMediaNumber = mediaNumber - 1;
-      processMedia(mediaList[actualMediaNumber]);
-    } else if (mediaList.length === 1) {
-      console.log(`Media ${mediaNumber} not found, ${mediaList.length} total`);
-      processMedia(firstMedia);
-    } else if (mediaList.length > 1) {
-      console.log('Handling mosaic');
-      processMedia(await handleMosaic(mediaList, userAgent || ''));
-      renderedMosaic = true;
-    }
-
-    if (flags?.direct && redirectMedia) {
-      let response = Response.redirect(redirectMedia, 302);
-      console.log(response);
-      return { response: response };
-    }
-
-    if (mediaList.length > 1 && !renderedMosaic) {
+    if (typeof mediaNumber !== 'number' && tweet.media.mosaic) {
+      photo = {
+        url:
+          userAgent?.indexOf('Telegram') !== -1
+            ? tweet.media.mosaic.formats.webp
+            : tweet.media.mosaic.formats.jpeg,
+        width: tweet.media.mosaic.width,
+        height: tweet.media.mosaic.height,
+        type: 'photo'
+      };
+    } else if (photos.length > 1) {
       let photoCounter = Strings.PHOTO_COUNT.format({
-        number: actualMediaNumber + 1,
-        total: mediaList.length
+        number: photos.indexOf(photo) + 1,
+        total: photos.length
       });
 
       authorText =
@@ -212,21 +132,76 @@ export const handleStatus = async (
       }
 
       headers.push(`<meta property="og:site_name" content="${siteName}"/>`);
-    } else {
-      headers.push(
-        `<meta property="og:site_name" content="${Constants.BRANDING_NAME}"/>`
-      );
     }
 
     headers.push(
-      `<meta content="${name} (@${screenName})" property="og:title"/>`,
-      `<meta content="${sanitizeText(text)}" property="og:description"/>`
+      `<meta name="twitter:image" content="${photo.url}"/>`,
+      `<meta name="twitter:image:width" content="${photo.width}"/>`,
+      `<meta name="twitter:image:height" content="${photo.height}"/>`,
+      `<meta name="og:image" content="${photo.url}"/>`,
+      `<meta name="og:image:width" content="${photo.width}"/>`,
+      `<meta name="og:image:height" content="${photo.height}"/>`
     );
   }
 
+  if (tweet.media?.external) {
+    const { external } = tweet.media;
+    headers.push(
+      `<meta name="twitter:player" content="${external.url}">`,
+      `<meta name="twitter:player:width" content="${external.width}">`,
+      `<meta name="twitter:player:height" content="${external.height}">`,
+      `<meta property="og:type" content="video.other">`,
+      `<meta property="og:video:url" content="${external.url}">`,
+      `<meta property="og:video:secure_url" content="${external.url}">`,
+      `<meta property="og:video:width" content="${external.width}">`,
+      `<meta property="og:video:height" content="${external.height}">`
+    );
+  }
+
+  let siteName = Constants.BRANDING_NAME;
+
+  if (!tweet.media?.video && !tweet.media?.photos) {
+    headers.push(
+      // Use a slightly higher resolution image for profile pics
+      `<meta property="og:image" content="${tweet.author.avatar_url?.replace(
+        '_normal',
+        '_200x200'
+      )}"/>`,
+      `<meta name="twitter:image" content="0"/>`
+    );
+  }
+
+  let newText = tweet.text;
+
+  if (api.tweet?.translation) {
+    const { translation } = api.tweet;
+
+    let formatText =
+      language === 'en'
+        ? Strings.TRANSLATE_TEXT.format({
+            language: translation.source_lang
+          })
+        : Strings.TRANSLATE_TEXT_INTL.format({
+            source: translation.source_lang.toUpperCase(),
+            destination: translation.target_lang.toUpperCase()
+          });
+
+    newText = `${translation.text}\n\n` + `${formatText}\n\n` + `${newText}`;
+  }
+
+  if (api.tweet?.quote) {
+    const quoteText = handleQuote(api.tweet.quote);
+    newText += `\n${quoteText}`;
+  }
+
+  headers.push(
+    `<meta content="${tweet.author.name} (@${tweet.author.screen_name})" property="og:title"/>`,
+    `<meta content="${sanitizeText(newText)}" property="og:description"/>`
+  );
+
   /* Special reply handling if authorText is not overriden */
-  if (tweet.in_reply_to_screen_name && authorText === 'Twitter') {
-    authorText = `↪ Replying to @${tweet.in_reply_to_screen_name}`;
+  if (tweet.replying_to && authorText === Strings.DEFAULT_AUTHOR_TEXT) {
+    authorText = `↪ Replying to @${tweet.replying_to}`;
   }
 
   /* The additional oembed is pulled by Discord to enable improved embeds.
@@ -235,8 +210,8 @@ export const handleStatus = async (
     `<link rel="alternate" href="${Constants.HOST_URL}/owoembed?text=${encodeURIComponent(
       authorText
     )}&status=${encodeURIComponent(status)}&author=${encodeURIComponent(
-      user?.screen_name || ''
-    )}" type="application/json+oembed" title="${name}">`
+      tweet.author?.screen_name || ''
+    )}" type="application/json+oembed" title="${tweet.author.name}">`
   );
 
   /* When dealing with a Tweet of unknown lang, fall back to en  */

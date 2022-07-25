@@ -1,17 +1,16 @@
-import { linkFixer } from './linkFixer';
 import { Strings } from './strings';
 
-export const handleQuote = (quote: TweetPartial): string | null => {
-  console.log('Quoting status ', quote.id_str);
+export const handleQuote = (quote: APITweet): string | null => {
+  console.log('Quoting status ', quote.id);
 
   let str = `\n`;
   str += Strings.QUOTE_TEXT.format({
-    name: quote.user?.name,
-    screen_name: quote.user?.screen_name
+    name: quote.author?.name,
+    screen_name: quote.author?.screen_name
   });
 
   str += ` \n\n`;
-  str += linkFixer(quote, quote.full_text);
+  str += quote.text;
 
   return str;
 };

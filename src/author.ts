@@ -1,15 +1,15 @@
-export const getAuthorText = (tweet: TweetPartial): string | null => {
+export const getAuthorText = (tweet: APITweet): string | null => {
   /* Build out reply, retweet, like counts */
-  if (tweet.favorite_count > 0 || tweet.retweet_count > 0 || tweet.reply_count > 0) {
+  if (tweet.likes > 0 || tweet.retweets > 0 || tweet.replies > 0) {
     let authorText = '';
-    if (tweet.reply_count > 0) {
-      authorText += `${tweet.reply_count} 💬    `;
+    if (tweet.replies > 0) {
+      authorText += `${tweet.replies} 💬    `;
     }
-    if (tweet.retweet_count > 0) {
-      authorText += `${tweet.retweet_count} 🔁    `;
+    if (tweet.retweets > 0) {
+      authorText += `${tweet.retweets} 🔁    `;
     }
-    if (tweet.favorite_count > 0) {
-      authorText += `${tweet.favorite_count} ❤️    `;
+    if (tweet.likes > 0) {
+      authorText += `${tweet.likes} ❤️    `;
     }
     authorText = authorText.trim();
 

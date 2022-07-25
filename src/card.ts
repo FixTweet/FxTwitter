@@ -84,9 +84,8 @@ export const renderCard = async (
         totalVotes += parseInt(values.choice3_count.string_value);
       }
       if (typeof values.choice4_count !== 'undefined') {
-        choices[values.choice4_label?.string_value || ''] = parseInt(
-          values.choice4_count.string_value
-        ) || 0;
+        choices[values.choice4_label?.string_value || ''] =
+          parseInt(values.choice4_count.string_value) || 0;
         totalVotes += parseInt(values.choice4_count.string_value);
       }
 
@@ -95,7 +94,7 @@ export const renderCard = async (
         return {
           label: label,
           count: choices[label],
-          percentage: ((Math.round((choices[label] / totalVotes) * 1000) || 0) / 10 || 0)
+          percentage: (Math.round((choices[label] / totalVotes) * 1000) || 0) / 10 || 0
         };
       });
 

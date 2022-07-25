@@ -13,7 +13,7 @@ const processMedia = (media: TweetMedia): APIPhoto | APIVideo | null => {
       url: media.media_url_https,
       width: media.original_info.width,
       height: media.original_info.height
-    }
+    };
   } else if (media.type === 'video' || media.type === 'animated_gif') {
     // Find the variant with the highest bitrate
     let bestVariant = media.video_info?.variants?.reduce?.((a, b) =>
@@ -26,7 +26,7 @@ const processMedia = (media: TweetMedia): APIPhoto | APIVideo | null => {
       height: media.original_info.height,
       format: bestVariant?.content_type || '',
       type: media.type === 'animated_gif' ? 'gif' : 'video'
-    }
+    };
   }
   return null;
 };
@@ -38,6 +38,11 @@ const populateTweetProperties = async (
 ): Promise<APITweet> => {
   let apiTweet = {} as APITweet;
 
+  /* With v2 conversation API we re-add the user object ot the tweet because
+     Twitter stores it separately in the conversation API. This is to consolidate
+     it in case a user appears multiple times in a thread. */
+  tweet.user = conversation?.globalObjects?.users?.[tweet.user_id_str] || {};
+
   const user = tweet.user as UserPartial;
   const screenName = user?.screen_name || '';
   const name = user?.name || '';
@@ -48,7 +53,9 @@ const populateTweetProperties = async (
     name: name,
     screen_name: screenName,
     avatar_url: user?.profile_image_url_https.replace('_normal', '_200x200') || '',
-    avatar_color: colorFromPalette(tweet.user?.profile_image_extensions_media_color?.palette || []),
+    avatar_color: colorFromPalette(
+      tweet.user?.profile_image_extensions_media_color?.palette || []
+    ),
     banner_url: user?.profile_banner_url || ''
   };
   apiTweet.replies = tweet.reply_count;
@@ -57,13 +64,21 @@ const populateTweetProperties = async (
   apiTweet.color = apiTweet.author.avatar_color;
   apiTweet.twitter_card = 'tweet';
 
+  if (tweet.lang !== 'unk') {
+    apiTweet.lang = tweet.lang;
+  } else {
+    apiTweet.lang = null;
+  }
+
+  apiTweet.replying_to = tweet.in_reply_to_screen_name || null;
+
   let mediaList = Array.from(
     tweet.extended_entities?.media || tweet.entities?.media || []
   );
 
   mediaList.forEach(media => {
     let mediaObject = processMedia(media);
-    console.log('mediaObject', JSON.stringify(mediaObject))
+    console.log('mediaObject', JSON.stringify(mediaObject));
     if (mediaObject) {
       apiTweet.twitter_card = 'summary_large_image';
       if (mediaObject.type === 'photo') {
@@ -71,21 +86,21 @@ const populateTweetProperties = async (
         apiTweet.media.photos = apiTweet.media.photos || [];
         apiTweet.media.photos.push(mediaObject);
 
-        console.log('media',apiTweet.media);
+        console.log('media', apiTweet.media);
       } else if (mediaObject.type === 'video' || mediaObject.type === 'gif') {
         apiTweet.media = apiTweet.media || {};
         apiTweet.media.video = mediaObject as APIVideo;
       }
     }
-  })
+  });
 
   if (mediaList[0]?.ext_media_color?.palette) {
     apiTweet.color = colorFromPalette(mediaList[0].ext_media_color.palette);
   }
 
   if (apiTweet.media?.photos?.length || 0 > 1) {
-    let mosaic = await handleMosaic(apiTweet.media.photos || []);
-    if (mosaic !== null) {
+    let mosaic = await handleMosaic(apiTweet.media?.photos || []);
+    if (typeof apiTweet.media !== 'undefined' && mosaic !== null) {
       apiTweet.media.mosaic = mosaic;
     }
   }
@@ -106,7 +121,7 @@ const populateTweetProperties = async (
   if (typeof language === 'string' && language.length === 2 && language !== tweet.lang) {
     let translateAPI = await translateTweet(
       tweet,
-      conversation.guestToken || '', 
+      conversation.guestToken || '',
       language
     );
     apiTweet.translation = {
@@ -126,10 +141,9 @@ export const statusAPI = async (
 ): Promise<APIResponse> => {
   const conversation = await fetchUsingGuest(status, event);
   const tweet = conversation?.globalObjects?.tweets?.[status] || {};
-  /* With v2 conversation API we re-add the user object ot the tweet because
-     Twitter stores it separately in the conversation API. This is to consolidate
-     it in case a user appears multiple times in a thread. */
-  tweet.user = conversation?.globalObjects?.users?.[tweet.user_id_str] || {};
+
+  console.log('users', JSON.stringify(conversation?.globalObjects?.users));
+  console.log('user_id_str', tweet.user_id_str);
 
   /* Fallback for if Tweet did not load */
   if (typeof tweet.full_text === 'undefined') {

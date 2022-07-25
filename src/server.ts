@@ -15,7 +15,7 @@ const statusRequest = async (
   const userAgent = request.headers.get('User-Agent') || '';
 
   let isBotUA =
-    userAgent.match(/bot|facebook|embed|got|Firefox\/92|curl|wget/gi) !== null;
+    userAgent.match(/bot|facebook|embed|got|Firefox\/92|curl|wget/gi) !== null || true;
 
   if (
     url.pathname.match(/\/status(es)?\/\d+\.(mp4|png|jpg)/g) !== null ||
@@ -169,17 +169,16 @@ const cacheWrapper = async (event: FetchEvent): Promise<Response> => {
   switch (request.method) {
     case 'GET':
       if (cacheUrl.hostname !== Constants.API_HOST) {
-
         let cachedResponse = await cache.match(cacheKey);
 
         if (cachedResponse) {
           console.log('Cache hit');
           return cachedResponse;
         }
-  
+
         console.log('Cache miss');
       }
-  
+
       let response = await router.handle(event.request, event);
 
       // Store the fetched response as cacheKey

@@ -23,9 +23,7 @@ export const handleMosaic = async (
   } else {
     // console.log('mediaList', mediaList);
     let mosaicMedia = mediaList.map(
-      media =>
-        media.url?.match(/(?<=\/media\/)[a-zA-Z0-9_\-]+(?=[\.\?])/g)?.[0] ||
-        ''
+      media => media.url?.match(/(?<=\/media\/)[a-zA-Z0-9_\-]+(?=[\.\?])/g)?.[0] || ''
     );
     // console.log('mosaicMedia', mosaicMedia);
     // TODO: use a better system for this, 0 gets png 1 gets webp, usually
@@ -50,7 +48,7 @@ export const handleMosaic = async (
       width: mediaList.reduce((acc, media) => acc + media.width, 0),
       formats: {
         jpeg: `${baseUrl}jpeg${path}`,
-        webp: `${baseUrl}webp${path}`,
+        webp: `${baseUrl}webp${path}`
       }
     } as APIMosaicPhoto;
   }

@@ -70,7 +70,7 @@ interface APIMosaicPhoto {
   formats: {
     webp: string;
     jpeg: string;
-  }
+  };
 }
 
 interface APIVideo {
@@ -86,7 +86,7 @@ interface APITweet {
   id: string;
   url: string;
   tweet: string;
-  text?: string;
+  text: string;
   created_at: string;
 
   likes: number;
@@ -100,12 +100,15 @@ interface APITweet {
   translation?: APITranslate;
   author: APIAuthor;
 
-  media: {
+  media?: {
     external?: APIExternalMedia;
     photos?: APIPhoto[];
     video?: APIVideo;
     mosaic?: APIMosaicPhoto;
   };
+
+  lang: string | null;
+  replying_to: string | null;
 
   twitter_card: 'tweet' | 'summary' | 'summary_large_image' | 'player';
 }
