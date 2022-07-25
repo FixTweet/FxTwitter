@@ -56,8 +56,35 @@ interface APIPoll {
   ends_at: string;
 }
 
+interface APIPhoto {
+  type: 'photo';
+  url: string;
+  width: number;
+  height: number;
+}
+
+interface APIMosaicPhoto {
+  type: 'mosaic_photo';
+  width: number;
+  height: number;
+  formats: {
+    webp: string;
+    jpeg: string;
+  }
+}
+
+interface APIVideo {
+  type: 'video' | 'gif';
+  url: string;
+  thumbnail_url: string;
+  width: number;
+  height: number;
+  format: string;
+}
+
 interface APITweet {
   id: string;
+  url: string;
   tweet: string;
   text?: string;
   created_at: string;
@@ -66,7 +93,7 @@ interface APITweet {
   retweets: number;
   replies: number;
 
-  palette: string;
+  color: string;
 
   quote?: APITweet;
   poll?: APIPoll;
@@ -75,5 +102,10 @@ interface APITweet {
 
   media: {
     external?: APIExternalMedia;
+    photos?: APIPhoto[];
+    video?: APIVideo;
+    mosaic?: APIMosaicPhoto;
   };
+
+  twitter_card: 'tweet' | 'summary' | 'summary_large_image' | 'player';
 }

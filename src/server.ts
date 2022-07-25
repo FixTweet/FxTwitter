@@ -168,15 +168,18 @@ const cacheWrapper = async (event: FetchEvent): Promise<Response> => {
 
   switch (request.method) {
     case 'GET':
-      let cachedResponse = await cache.match(cacheKey);
+      if (cacheUrl.hostname !== Constants.API_HOST) {
 
-      if (cachedResponse) {
-        console.log('Cache hit');
-        return cachedResponse;
+        let cachedResponse = await cache.match(cacheKey);
+
+        if (cachedResponse) {
+          console.log('Cache hit');
+          return cachedResponse;
+        }
+  
+        console.log('Cache miss');
       }
-
-      console.log('Cache miss');
-
+  
       let response = await router.handle(event.request, event);
 
       // Store the fetched response as cacheKey

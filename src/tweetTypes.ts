@@ -85,7 +85,7 @@ type TweetMedia = {
     medium: TweetMediaSize;
     small: TweetMediaSize;
   };
-  type: 'photo' | 'video';
+  type: 'photo' | 'video' | 'animated_gif';
   url: string;
   video_info?: {
     aspect_ratio: [number, number];

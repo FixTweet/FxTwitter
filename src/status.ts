@@ -162,70 +162,7 @@ export const handleStatus = async (
     headers.push(`<meta content="${colorOverride}" property="theme-color"/>`);
 
     /* Inline helper function for handling media */
-    const processMedia = (media: TweetMedia) => {
-      if (media.type === 'photo') {
-        if (flags?.direct && typeof media.media_url_https === 'string') {
-          redirectMedia = media.media_url_https;
-          return;
-        }
-
-        headers.push(
-          `<meta name="twitter:image" content="${media.media_url_https}"/>`,
-          `<meta property="og:image" content="${media.media_url_https}"/>`
-        );
-
-        if (media.original_info?.width && media.original_info?.height) {
-          headers.push(
-            `<meta name="twitter:image:width" content="${media.original_info.width}"/>`,
-            `<meta name="twitter:image:height" content="${media.original_info.height}"/>`,
-            `<meta name="og:image:width" content="${media.original_info.width}"/>`,
-            `<meta name="og:image:height" content="${media.original_info.height}"/>`
-          );
-        }
-
-        if (!pushedCardType) {
-          headers.push(`<meta name="twitter:card" content="summary_large_image"/>`);
-          pushedCardType = true;
-        }
-      } else if (media.type === 'video' || media.type === 'animated_gif') {
-        // Find the variant with the highest bitrate
-        let bestVariant = media.video_info?.variants?.reduce?.((a, b) =>
-          (a.bitrate ?? 0) > (b.bitrate ?? 0) ? a : b
-        );
-
-        if (flags?.direct && bestVariant?.url) {
-          console.log(`Redirecting to ${bestVariant.url}`);
-          redirectMedia = bestVariant.url;
-          return;
-        }
-
-        /* This is for the video thumbnail */
-        headers.push(`<meta name="twitter:image" content="${media.media_url_https}"/>`);
-
-        /* On Discord we have to use the author field in order to get the tweet text
-           to display on videos. This length is limited, however, and if there is too
-           much text Discord will refuse to display it at all, so we trim down as much
-           as the client will display. */
-        if (userAgent && userAgent?.indexOf?.('Discord') > -1) {
-          text = text.substr(0, 179);
-        }
-
-        authorText = encodeURIComponent(text);
-
-        headers.push(
-          `<meta name="twitter:card" content="player"/>`,
-          `<meta name="twitter:player:stream" content="${bestVariant?.url}"/>`,
-          `<meta name="twitter:player:stream:content_type" content="${bestVariant?.content_type}"/>`,
-          `<meta name="twitter:player:height" content="${media.original_info.height}"/>`,
-          `<meta name="twitter:player:width" content="${media.original_info.width}"/>`,
-          `<meta name="og:video" content="${bestVariant?.url}"/>`,
-          `<meta name="og:video:secure_url" content="${bestVariant?.url}"/>`,
-          `<meta name="og:video:height" content="${media.original_info.height}"/>`,
-          `<meta name="og:video:width" content="${media.original_info.width}"/>`,
-          `<meta name="og:video:type" content="${bestVariant?.content_type}"/>`
-        );
-      }
-    };
+    
 
     let actualMediaNumber = 0;
     let renderedMosaic = false;

@@ -1,9 +1,8 @@
 import { Constants } from './constants';
 
 export const handleMosaic = async (
-  mediaList: TweetMedia[],
-  userAgent: string
-): Promise<TweetMedia> => {
+  mediaList: APIPhoto[]
+): Promise<APIMosaicPhoto | null> => {
   let mosaicDomains = Constants.MOSAIC_DOMAIN_LIST;
   let selectedDomain: string | null = null;
   while (selectedDomain === null && mosaicDomains.length > 0) {
@@ -20,41 +19,39 @@ export const handleMosaic = async (
 
   // Fallback if all Mosaic servers are down
   if (selectedDomain === null) {
-    return mediaList[0];
+    return null;
   } else {
     // console.log('mediaList', mediaList);
     let mosaicMedia = mediaList.map(
       media =>
-        media.media_url_https?.match(/(?<=\/media\/)[a-zA-Z0-9_\-]+(?=[\.\?])/g)?.[0] ||
+        media.url?.match(/(?<=\/media\/)[a-zA-Z0-9_\-]+(?=[\.\?])/g)?.[0] ||
         ''
     );
     // console.log('mosaicMedia', mosaicMedia);
     // TODO: use a better system for this, 0 gets png 1 gets webp, usually
-    let constructUrl = `https://${selectedDomain}/${
-      userAgent.indexOf('Telegram') > -1 ? '0' : '1'
-    }`;
+    let baseUrl = `https://${selectedDomain}/`;
+    let path = '';
+
     if (mosaicMedia[0]) {
-      constructUrl += `/${mosaicMedia[0]}`;
+      path += `/${mosaicMedia[0]}`;
     }
     if (mosaicMedia[1]) {
-      constructUrl += `/${mosaicMedia[1]}`;
+      path += `/${mosaicMedia[1]}`;
     }
     if (mosaicMedia[2]) {
-      constructUrl += `/${mosaicMedia[2]}`;
+      path += `/${mosaicMedia[2]}`;
     }
     if (mosaicMedia[3]) {
-      constructUrl += `/${mosaicMedia[3]}`;
+      path += `/${mosaicMedia[3]}`;
     }
 
-    console.log(`Mosaic URL: ${constructUrl}`);
-
     return {
-      media_url_https: constructUrl,
-      original_info: {
-        height: mediaList.reduce((acc, media) => acc + media.original_info?.height, 0),
-        width: mediaList.reduce((acc, media) => acc + media.original_info?.width, 0)
-      },
-      type: 'photo'
-    } as TweetMedia;
+      height: mediaList.reduce((acc, media) => acc + media.height, 0),
+      width: mediaList.reduce((acc, media) => acc + media.width, 0),
+      formats: {
+        jpeg: `${baseUrl}jpeg${path}`,
+        webp: `${baseUrl}webp${path}`,
+      }
+    } as APIMosaicPhoto;
   }
 };

@@ -1,8 +1,35 @@
 import { renderCard } from './card';
+import { Constants } from './constants';
 import { fetchUsingGuest } from './fetch';
 import { linkFixer } from './linkFixer';
+import { handleMosaic } from './mosaic';
 import { colorFromPalette } from './palette';
 import { translateTweet } from './translate';
+
+const processMedia = (media: TweetMedia): APIPhoto | APIVideo | null => {
+  if (media.type === 'photo') {
+    return {
+      type: 'photo',
+      url: media.media_url_https,
+      width: media.original_info.width,
+      height: media.original_info.height
+    }
+  } else if (media.type === 'video' || media.type === 'animated_gif') {
+    // Find the variant with the highest bitrate
+    let bestVariant = media.video_info?.variants?.reduce?.((a, b) =>
+      (a.bitrate ?? 0) > (b.bitrate ?? 0) ? a : b
+    );
+    return {
+      url: bestVariant?.url || '',
+      thumbnail_url: media.media_url_https,
+      width: media.original_info.width,
+      height: media.original_info.height,
+      format: bestVariant?.content_type || '',
+      type: media.type === 'animated_gif' ? 'gif' : 'video'
+    }
+  }
+  return null;
+};
 
 const populateTweetProperties = async (
   tweet: TweetPartial,
@@ -11,30 +38,62 @@ const populateTweetProperties = async (
 ): Promise<APITweet> => {
   let apiTweet = {} as APITweet;
 
-  const user = tweet.user;
+  const user = tweet.user as UserPartial;
   const screenName = user?.screen_name || '';
   const name = user?.name || '';
 
+  apiTweet.url = `${Constants.TWITTER_ROOT}/${screenName}/status/${tweet.id_str}`;
   apiTweet.text = linkFixer(tweet, tweet.full_text);
   apiTweet.author = {
     name: name,
     screen_name: screenName,
     avatar_url: user?.profile_image_url_https.replace('_normal', '_200x200') || '',
-    avatar_color: (apiTweet.palette = colorFromPalette(
-      tweet.user?.profile_image_extensions_media_color?.palette || []
-    )),
+    avatar_color: colorFromPalette(tweet.user?.profile_image_extensions_media_color?.palette || []),
     banner_url: user?.profile_banner_url || ''
   };
   apiTweet.replies = tweet.reply_count;
   apiTweet.retweets = tweet.retweet_count;
   apiTweet.likes = tweet.favorite_count;
-  apiTweet.palette = colorFromPalette(
-    tweet.user?.profile_image_extensions_media_color?.palette || []
+  apiTweet.color = apiTweet.author.avatar_color;
+  apiTweet.twitter_card = 'tweet';
+
+  let mediaList = Array.from(
+    tweet.extended_entities?.media || tweet.entities?.media || []
   );
+
+  mediaList.forEach(media => {
+    let mediaObject = processMedia(media);
+    console.log('mediaObject', JSON.stringify(mediaObject))
+    if (mediaObject) {
+      apiTweet.twitter_card = 'summary_large_image';
+      if (mediaObject.type === 'photo') {
+        apiTweet.media = apiTweet.media || {};
+        apiTweet.media.photos = apiTweet.media.photos || [];
+        apiTweet.media.photos.push(mediaObject);
+
+        console.log('media',apiTweet.media);
+      } else if (mediaObject.type === 'video' || mediaObject.type === 'gif') {
+        apiTweet.media = apiTweet.media || {};
+        apiTweet.media.video = mediaObject as APIVideo;
+      }
+    }
+  })
+
+  if (mediaList[0]?.ext_media_color?.palette) {
+    apiTweet.color = colorFromPalette(mediaList[0].ext_media_color.palette);
+  }
+
+  if (apiTweet.media?.photos?.length || 0 > 1) {
+    let mosaic = await handleMosaic(apiTweet.media.photos || []);
+    if (mosaic !== null) {
+      apiTweet.media.mosaic = mosaic;
+    }
+  }
 
   if (tweet.card) {
     let card = await renderCard(tweet.card);
     if (card.external_media) {
+      apiTweet.twitter_card = 'summary_large_image';
       apiTweet.media = apiTweet.media || {};
       apiTweet.media.external = card.external_media;
     }
