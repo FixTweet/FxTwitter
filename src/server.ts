@@ -98,6 +98,7 @@ router.get('/:prefix?/:handle/statuses/:id/photos/:mediaNumber', statusRequest);
 router.get('/:prefix?/:handle/statuses/:id/video/:mediaNumber', statusRequest);
 router.get('/:prefix?/:handle/status/:id/:language', statusRequest);
 router.get('/:prefix?/:handle/statuses/:id/:language', statusRequest);
+router.get('/status/:id', statusRequest);
 
 router.get('/owoembed', async (request: Request) => {
   console.log('oembed hit!');

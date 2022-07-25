@@ -24,7 +24,7 @@ export const statueAPI = async (
 
     /* {"errors":[{"code":34,"message":"Sorry, that page does not exist."}]} */
     if (conversation.errors?.[0]?.code === 34) {
-      return { code: 404, message: 'STATUS_NOT_FOUND' };
+      return { code: 404, message: 'NOT_FOUND' };
     }
 
     /* Tweets object is completely missing, smells like API failure */
