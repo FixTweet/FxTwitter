@@ -80,14 +80,15 @@ const populateTweetProperties = async (
     let mediaObject = processMedia(media);
     console.log('mediaObject', JSON.stringify(mediaObject));
     if (mediaObject) {
-      apiTweet.twitter_card = 'summary_large_image';
       if (mediaObject.type === 'photo') {
+        apiTweet.twitter_card = 'summary_large_image';
         apiTweet.media = apiTweet.media || {};
         apiTweet.media.photos = apiTweet.media.photos || [];
         apiTweet.media.photos.push(mediaObject);
 
         console.log('media', apiTweet.media);
       } else if (mediaObject.type === 'video' || mediaObject.type === 'gif') {
+        apiTweet.twitter_card = 'player';
         apiTweet.media = apiTweet.media || {};
         apiTweet.media.video = mediaObject as APIVideo;
       }
@@ -98,7 +99,7 @@ const populateTweetProperties = async (
     apiTweet.color = colorFromPalette(mediaList[0].ext_media_color.palette);
   }
 
-  if (apiTweet.media?.photos?.length || 0 > 1) {
+  if ((apiTweet.media?.photos?.length || 0) > 1) {
     let mosaic = await handleMosaic(apiTweet.media?.photos || []);
     if (typeof apiTweet.media !== 'undefined' && mosaic !== null) {
       apiTweet.media.mosaic = mosaic;

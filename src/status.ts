@@ -68,6 +68,7 @@ export const handleStatus = async (
 
   if (!tweet.media && tweet.quote?.media) {
     tweet.media = tweet.quote.media;
+    tweet.twitter_card = 'summary_large_image';
   }
 
   let authorText = getAuthorText(tweet) || Strings.DEFAULT_AUTHOR_TEXT;
@@ -87,8 +88,6 @@ export const handleStatus = async (
     const { video } = tweet.media;
 
     headers.push(
-      `<meta name="twitter:image" content="${video.thumbnail_url}"/>`,
-      `<meta name="twitter:player:stream" content="${video.url}"/>`,
       `<meta name="twitter:player:stream:content_type" content="${video.format}"/>`,
       `<meta name="twitter:player:height" content="${video.height}"/>`,
       `<meta name="twitter:player:width" content="${video.width}"/>`,
@@ -96,7 +95,8 @@ export const handleStatus = async (
       `<meta name="og:video:secure_url" content="${video.url}"/>`,
       `<meta name="og:video:height" content="${video.height}"/>`,
       `<meta name="og:video:width" content="${video.width}"/>`,
-      `<meta name="og:video:type" content="${video.format}"/>`
+      `<meta name="og:video:type" content="${video.format}"/>`,
+      `<meta name="twitter:image" content="${video.thumbnail_url}"/>`
     );
   }
 
@@ -196,7 +196,8 @@ export const handleStatus = async (
 
   headers.push(
     `<meta content="${tweet.author.name} (@${tweet.author.screen_name})" property="og:title"/>`,
-    `<meta content="${sanitizeText(newText)}" property="og:description"/>`
+    `<meta content="${sanitizeText(newText)}" property="og:description"/>`,
+    `<meta content="${siteName}" property="og:site_name"/>`
   );
 
   /* Special reply handling if authorText is not overriden */
