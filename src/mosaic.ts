@@ -31,8 +31,8 @@ export const handleMosaic = async (
     // console.log('mosaicMedia', mosaicMedia);
     // TODO: use a better system for this, 0 gets png 1 gets webp, usually
     let constructUrl = `https://${selectedDomain}/${
-      userAgent.indexOf('Telegram') > -1 ? '0' : '1'
-    }`;
+      userAgent.indexOf('Telegram') > -1 ? 'jpeg' : 'webp'
+    }/0`;
     if (mosaicMedia[0]) {
       constructUrl += `/${mosaicMedia[0]}`;
     }
