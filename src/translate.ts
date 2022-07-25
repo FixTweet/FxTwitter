@@ -1,12 +1,10 @@
 import { Constants } from './constants';
-import { linkFixer } from './linkFixer';
-import { Strings } from './strings';
 
 export const translateTweet = async (
   tweet: TweetPartial,
   guestToken: string,
   language: string
-): Promise<string> => {
+): Promise<TranslationPartial | null> => {
   const csrfToken = crypto.randomUUID().replace(/-/g, ''); // Generate a random CSRF token, this doesn't matter, Twitter just cares that header and cookie match
 
   let headers: { [header: string]: string } = {
@@ -25,7 +23,6 @@ export const translateTweet = async (
 
   let apiRequest;
   let translationResults: TranslationPartial;
-  let resultText = tweet.full_text;
 
   headers['x-twitter-client-language'] = language;
 
@@ -39,35 +36,15 @@ export const translateTweet = async (
     );
     translationResults = (await apiRequest.json()) as TranslationPartial;
 
-    console.log(translationResults);
-
-    if (
-      translationResults.sourceLanguage === translationResults.destinationLanguage ||
-      translationResults.translationState !== 'Success'
-    ) {
-      return tweet.full_text; // No work to do
+    if (translationResults.translationState !== 'Success') {
+      return null;
     }
 
-    console.log(`Twitter interpreted language as ${tweet.lang}`);
+    console.log(translationResults);
+    return translationResults;
 
-    let formatText =
-      language === 'en'
-        ? Strings.TRANSLATE_TEXT.format({
-            language: translationResults.localizedSourceLanguage
-          })
-        : Strings.TRANSLATE_TEXT_INTL.format({
-            source: translationResults.sourceLanguage.toUpperCase(),
-            destination: translationResults.destinationLanguage.toUpperCase()
-          });
-
-    resultText =
-      `${translationResults.translation}\n\n` +
-      `${formatText}\n\n` +
-      `${tweet.full_text}`;
   } catch (e: any) {
     console.error('Unknown error while fetching from Translation API');
-    return tweet.full_text; // No work to do
+    return {} as TranslationPartial; // No work to do
   }
-
-  return linkFixer(tweet, resultText);
 };

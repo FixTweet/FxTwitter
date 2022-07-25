@@ -9,6 +9,7 @@ import { Strings } from './strings';
 import { handleMosaic } from './mosaic';
 import { translateTweet } from './translate';
 import { getAuthorText } from './author';
+import { statueAPI } from './api';
 
 export const returnError = (error: string): StatusResponse => {
   return {
@@ -32,52 +33,26 @@ export const handleStatus = async (
 ): Promise<StatusResponse> => {
   console.log('Direct?', flags?.direct);
 
-  const conversation = await fetchUsingGuest(status, event);
+  let api = await statueAPI(event, status, language || 'en');
 
-  const tweet = conversation?.globalObjects?.tweets?.[status] || {};
-  /* With v2 conversation API we re-add the user object ot the tweet because
-     Twitter stores it separately in the conversation API. This is to consolidate
-     it in case a user appears multiple times in a thread. */
-  tweet.user = conversation?.globalObjects?.users?.[tweet.user_id_str] || {};
+  switch(api.code) {
+    case 401:
+      return returnError(Strings.ERROR_PRIVATE);
+    case 404:
+      return returnError(Strings.ERROR_TWEET_NOT_FOUND);
+    case 500:
+      return returnError(Strings.ERROR_API_FAIL);
+  }
 
   let headers: string[] = [];
 
   let redirectMedia = '';
-
-  /* Fallback for if Tweet did not load */
-  if (typeof tweet.full_text === 'undefined') {
-    console.log('Invalid status, got tweet ', tweet, ' conversation ', conversation);
-
-    /* We've got timeline instructions, so the Tweet is probably private */
-    if (conversation.timeline?.instructions?.length > 0) {
-      return returnError(Strings.ERROR_PRIVATE);
-    }
-
-    /* {"errors":[{"code":34,"message":"Sorry, that page does not exist."}]} */
-    if (conversation.errors?.[0]?.code === 34) {
-      return returnError(Strings.ERROR_TWEET_NOT_FOUND);
-    }
-
-    /* Tweets object is completely missing, smells like API failure */
-    if (typeof conversation?.globalObjects?.tweets === 'undefined') {
-      return returnError(Strings.ERROR_API_FAIL);
-    }
-
-    /* If we have no idea what happened then just return API error */
-    return returnError(Strings.ERROR_API_FAIL);
-  }
-
-  let text = tweet.full_text;
   let engagementText = '';
 
-  const user = tweet.user;
-  const screenName = user?.screen_name || '';
-  const name = user?.name || '';
-
-  /* If a language is specified, let's try translating it! */
-  if (typeof language === 'string' && language.length === 2) {
-    text = await translateTweet(tweet, conversation.guestToken || '', language || 'en');
+  if (api?.tweet?.translation) {
+    
   }
+  
 
   let mediaList = Array.from(
     tweet.extended_entities?.media || tweet.entities?.media || []

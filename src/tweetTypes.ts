@@ -157,6 +157,7 @@ type UserPartial = {
   name: string;
   screen_name: string;
   profile_image_url_https: string;
+  profile_banner_url: string;
   profile_image_extensions_media_color?: {
     palette?: MediaPlaceholderColor[];
   };
