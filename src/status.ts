@@ -1,13 +1,10 @@
 import { Constants } from './constants';
-import { linkFixer } from './linkFixer';
-import { colorFromPalette } from './palette';
-import { renderCard } from './card';
 import { handleQuote } from './quote';
 import { sanitizeText } from './utils';
 import { Strings } from './strings';
-import { handleMosaic } from './mosaic';
 import { getAuthorText } from './author';
 import { statusAPI } from './api';
+import { calculateTimeLeftString } from './pollHelper';
 
 export const returnError = (error: string): StatusResponse => {
   return {
@@ -104,7 +101,11 @@ export const handleStatus = async (
     const { photos } = tweet.media;
     let photo = photos[mediaNumber || 0];
 
-    if (typeof mediaNumber !== 'number' && tweet.media.mosaic) {
+    if (
+      typeof mediaNumber !== 'number' &&
+      tweet.media.mosaic &&
+      userAgent?.indexOf('Telegram') === -1
+    ) {
       photo = {
         url:
           userAgent?.indexOf('Telegram') !== -1
@@ -159,6 +160,29 @@ export const handleStatus = async (
   }
 
   let siteName = Constants.BRANDING_NAME;
+  let newText = tweet.text;
+
+  if (tweet.poll) {
+    const { poll } = tweet;
+    let barLength = 34;
+    let str = '';
+
+    if (userAgent?.indexOf('Telegram') !== -1) {
+      barLength = 24;
+    }
+
+    tweet.poll.choices.forEach(choice => {
+      // render bar
+      const bar = '█'.repeat((choice.percentage / 100) * barLength);
+      str += `${bar}
+${choice.label}  (${choice.percentage}%)
+`;
+    });
+
+    str += `\n${poll.total_votes} votes · ${poll.time_left_en}`;
+
+    newText += `\n\n${str}`;
+  }
 
   if (!tweet.media?.video && !tweet.media?.photos) {
     headers.push(
@@ -170,8 +194,6 @@ export const handleStatus = async (
       `<meta name="twitter:image" content="0"/>`
     );
   }
-
-  let newText = tweet.text;
 
   if (api.tweet?.translation) {
     const { translation } = api.tweet;

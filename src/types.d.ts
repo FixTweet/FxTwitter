@@ -54,6 +54,7 @@ interface APIPoll {
   choices: APIPollChoice[];
   total_votes: number;
   ends_at: string;
+  time_left_en: string;
 }
 
 interface APIPhoto {

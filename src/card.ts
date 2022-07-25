@@ -1,47 +1,4 @@
-import { Strings } from './strings';
-
-let barLength = 36;
-
-export const calculateTimeLeft = (date: Date) => {
-  const now = new Date();
-  const diff = date.getTime() - now.getTime();
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-  return { days, hours, minutes, seconds };
-};
-
-export const calculateTimeLeftString = (date: Date) => {
-  const { days, hours, minutes, seconds } = calculateTimeLeft(date);
-  const daysString =
-    days > 0
-      ? `${days} ${days === 1 ? Strings.SINGULAR_DAY_LEFT : Strings.PLURAL_DAYS_LEFT}`
-      : '';
-  const hoursString =
-    hours > 0
-      ? `${hours} ${hours === 1 ? Strings.SINGULAR_HOUR_LEFT : Strings.PLURAL_HOURS_LEFT}`
-      : '';
-  const minutesString =
-    minutes > 0
-      ? `${minutes} ${
-          minutes === 1 ? Strings.SINGULAR_MINUTE_LEFT : Strings.PLURAL_MINUTES_LEFT
-        }`
-      : '';
-  const secondsString =
-    seconds > 0
-      ? `${seconds} ${
-          seconds === 1 ? Strings.SINGULAR_SECOND_LEFT : Strings.PLURAL_SECONDS_LEFT
-        }`
-      : '';
-  return (
-    daysString ||
-    hoursString ||
-    minutesString ||
-    secondsString ||
-    Strings.FINAL_POLL_RESULTS
-  );
-};
+import { calculateTimeLeftString } from './pollHelper';
 
 export const renderCard = async (
   card: TweetCard
@@ -54,7 +11,6 @@ export const renderCard = async (
   // Telegram's bars need to be a lot smaller to fit its bubbles
   let choices: { [label: string]: number } = {};
   let totalVotes = 0;
-  let timeLeft = '';
 
   if (typeof values !== 'undefined') {
     /* TODO: make poll code cleaner */
@@ -63,11 +19,12 @@ export const renderCard = async (
       typeof values.choice2_count !== 'undefined'
     ) {
       let poll = {} as APIPoll;
-      poll.ends_at = values.end_datetime_utc?.string_value || '';
 
       if (typeof values.end_datetime_utc !== 'undefined') {
+        poll.ends_at = values.end_datetime_utc.string_value || '';
+
         const date = new Date(values.end_datetime_utc.string_value);
-        timeLeft = calculateTimeLeftString(date);
+        poll.time_left_en = calculateTimeLeftString(date);
       }
       choices[values.choice1_label?.string_value || ''] = parseInt(
         values.choice1_count.string_value
