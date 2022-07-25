@@ -8,6 +8,7 @@ import { sanitizeText } from './utils';
 import { Strings } from './strings';
 import { handleMosaic } from './mosaic';
 import { translateTweet } from './translate';
+import { getAuthorText } from './author';
 
 export const returnError = (error: string): StatusResponse => {
   return {
@@ -30,6 +31,7 @@ export const handleStatus = async (
   language?: string
 ): Promise<StatusResponse> => {
   console.log('Direct?', flags?.direct);
+
   const conversation = await fetchUsingGuest(status, event);
 
   const tweet = conversation?.globalObjects?.tweets?.[status] || {};
@@ -38,17 +40,7 @@ export const handleStatus = async (
      it in case a user appears multiple times in a thread. */
   tweet.user = conversation?.globalObjects?.users?.[tweet.user_id_str] || {};
 
-  /* Try to deep link to mobile apps, just like Twitter does.
-     No idea if this actually works.*/
-  let headers: string[] = [
-    `<meta property="fb:app_id" content="2231777543"/>`,
-    `<meta content="twitter://status?id=${status}" property="al:ios:url"/>`,
-    `<meta content="333903271" property="al:ios:app_store_id"/>`,
-    `<meta content="Twitter" property="al:ios:app_name"/>`,
-    `<meta content="twitter://status?id=${status}" property="al:android:url"/>`,
-    `<meta content="com.twitter.android" property="al:android:package"/>`,
-    `<meta content="Twitter" property="al:android:app_name"/>`
-  ];
+  let headers: string[] = [];
 
   let redirectMedia = '';
 
@@ -91,25 +83,10 @@ export const handleStatus = async (
     tweet.extended_entities?.media || tweet.entities?.media || []
   );
 
-  let authorText = Strings.DEFAULT_AUTHOR_TEXT;
+  let authorText = getAuthorText(tweet) || Strings.DEFAULT_AUTHOR_TEXT;
 
-  /* Build out reply, retweet, like counts */
-  if (tweet.favorite_count > 0 || tweet.retweet_count > 0 || tweet.reply_count > 0) {
-    authorText = '';
-    if (tweet.reply_count > 0) {
-      authorText += `${tweet.reply_count} 💬    `;
-    }
-    if (tweet.retweet_count > 0) {
-      authorText += `${tweet.retweet_count} 🔁    `;
-    }
-    if (tweet.favorite_count > 0) {
-      authorText += `${tweet.favorite_count} ❤️    `;
-    }
-    authorText = authorText.trim();
-
-    // engagementText has less spacing than authorText
-    engagementText = authorText.replace(/    /g, ' ');
-  }
+  // engagementText has less spacing than authorText
+  engagementText = authorText.replace(/    /g, ' ');
 
   text = linkFixer(tweet, text);
 
