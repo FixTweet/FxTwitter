@@ -1,7 +1,8 @@
 import { Constants } from './constants';
 
 export const handleMosaic = async (
-  mediaList: APIPhoto[]
+  mediaList: APIPhoto[],
+  id: string
 ): Promise<APIMosaicPhoto | null> => {
   const mosaicDomains = Constants.MOSAIC_DOMAIN_LIST;
   let selectedDomain: string | null = null;
@@ -47,8 +48,8 @@ export const handleMosaic = async (
       height: mediaList.reduce((acc, media) => acc + media.height, 0),
       width: mediaList.reduce((acc, media) => acc + media.width, 0),
       formats: {
-        jpeg: `${baseUrl}jpeg${path}`,
-        webp: `${baseUrl}webp${path}`
+        jpeg: `${baseUrl}jpeg/${id}${path}`,
+        webp: `${baseUrl}webp/${id}${path}`
       }
     } as APIMosaicPhoto;
   }

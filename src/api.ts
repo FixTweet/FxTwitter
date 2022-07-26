@@ -99,7 +99,7 @@ const populateTweetProperties = async (
   }
 
   if ((apiTweet.media?.photos?.length || 0) > 1) {
-    const mosaic = await handleMosaic(apiTweet.media?.photos || []);
+    const mosaic = await handleMosaic(apiTweet.media?.photos || [], tweet.id_str);
     if (typeof apiTweet.media !== 'undefined' && mosaic !== null) {
       apiTweet.media.mosaic = mosaic;
     }
