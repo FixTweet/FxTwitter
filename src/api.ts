@@ -123,11 +123,13 @@ const populateTweetProperties = async (
       conversation.guestToken || '',
       language
     );
-    apiTweet.translation = {
-      text: translateAPI?.translation || '',
-      source_lang: translateAPI?.sourceLanguage || '',
-      target_lang: translateAPI?.destinationLanguage || ''
-    };
+    if (translateAPI !== null) {
+      apiTweet.translation = {
+        text: translateAPI?.translation || '',
+        source_lang: translateAPI?.sourceLanguage || '',
+        target_lang: translateAPI?.destinationLanguage || ''
+      };
+    }
   }
 
   return apiTweet;
