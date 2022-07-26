@@ -34,7 +34,7 @@ const processMedia = (media: TweetMedia): APIPhoto | APIVideo | null => {
 const populateTweetProperties = async (
   tweet: TweetPartial,
   conversation: TimelineBlobPartial,
-  language: string = 'en'
+  language: string
 ): Promise<APITweet> => {
   let apiTweet = {} as APITweet;
 
