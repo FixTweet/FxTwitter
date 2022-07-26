@@ -76,9 +76,13 @@ We use Twitter's color data for either the first image/video of the tweet, or th
 
 ## Built with privacy in mind
 
-We don't save logs of what tweets you're sending, nor do we have a public record of what tweets are being embedded by FixTweet. We use Cloudflare to cache FixTweet responses to make repeat access faster.
+FixTweet doesn't save logs of what tweets you're sending, nor do we have a public record of what tweets are being embedded by FixTweet.
 
-Furthermore, if the person who posted a FixTweet link forgot to strip tracking, we strip it upon redirecting to the Tweet.
+In fact, because our core embedding and API service uses Cloudflare Workers, where FixTweet can only run when you send it a request and its memory doesn't stick around, and it doesn't have a file system or database to access at all. That is how we keep our privacy promise by building it into the architecture. My goal is always to provide a good public service, and FixTweet doesn't make any money.
+
+Note: We use Cloudflare to cache FixTweet responses to make repeat access faster, which have a maximum TTL of 1 hour. Temporary real-time logging in the terminal (specifically `wrangler tail`) may be used only by the developer while the Worker is being serviced or debugged (to make sure things work as they should), however these logs are only shown in the terminal and are never saved or used for any other purpose.
+
+On a different note, if the person who posted a FixTweet link forgot to strip tracking parameters (like `?s` and `&t`), we strip it upon redirecting to the Tweet as they are only used for Twitter Telemetry and Marketing.
 
 ---
 
