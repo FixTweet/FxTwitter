@@ -70,6 +70,8 @@ export const handleStatus = async (
 
   let authorText = getAuthorText(tweet) || Strings.DEFAULT_AUTHOR_TEXT;
   let engagementText = authorText.replace(/    /g, ' ');
+  let siteName = Constants.BRANDING_NAME;
+  let newText = tweet.text;
 
   let headers: string[] = [
     `<meta content="${tweet.color}" property="theme-color"/>`,
@@ -79,9 +81,29 @@ export const handleStatus = async (
     `<meta name="twitter:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`
   ];
 
+  if (tweet.translation) {
+    const { translation } = tweet;
+
+    let formatText =
+      language === 'en'
+        ? Strings.TRANSLATE_TEXT.format({
+            language: translation.source_lang
+          })
+        : Strings.TRANSLATE_TEXT_INTL.format({
+            source: translation.source_lang.toUpperCase(),
+            destination: translation.target_lang.toUpperCase()
+          });
+
+    newText = `${translation.text}\n\n` + `${formatText}\n\n` + `${newText}`;
+  }
+
   /* Video renderer */
   if (tweet.media?.video) {
-    authorText = encodeURIComponent(tweet.text || '').substr(0, 300);
+    authorText = encodeURIComponent(newText || '');
+
+    if (tweet?.translation) {
+      authorText = encodeURIComponent(tweet.translation?.text || '');
+    }
 
     const { video } = tweet.media;
 
@@ -162,9 +184,6 @@ export const handleStatus = async (
     );
   }
 
-  let siteName = Constants.BRANDING_NAME;
-  let newText = tweet.text;
-
   /* Poll renderer */
   if (tweet.poll) {
     const { poll } = tweet;
@@ -199,22 +218,6 @@ ${choice.label}  (${choice.percentage}%)
     );
   }
 
-  if (api.tweet?.translation) {
-    const { translation } = api.tweet;
-
-    let formatText =
-      language === 'en'
-        ? Strings.TRANSLATE_TEXT.format({
-            language: translation.source_lang
-          })
-        : Strings.TRANSLATE_TEXT_INTL.format({
-            source: translation.source_lang.toUpperCase(),
-            destination: translation.target_lang.toUpperCase()
-          });
-
-    newText = `${translation.text}\n\n` + `${formatText}\n\n` + `${newText}`;
-  }
-
   if (api.tweet?.quote) {
     const quoteText = handleQuote(api.tweet.quote);
     newText += `\n${quoteText}`;
@@ -236,7 +239,7 @@ ${choice.label}  (${choice.percentage}%)
   headers.push(
     `<link rel="alternate" href="${Constants.HOST_URL}/owoembed?text=${encodeURIComponent(
       authorText
-    )}&status=${encodeURIComponent(status)}&author=${encodeURIComponent(
+    )}&status=${encodeURIComponent(status).substr(1, 240)}&author=${encodeURIComponent(
       tweet.author?.screen_name || ''
     )}" type="application/json+oembed" title="${tweet.author.name}">`
   );
