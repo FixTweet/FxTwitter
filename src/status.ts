@@ -27,7 +27,7 @@ export const handleStatus = async (
 ): Promise<StatusResponse> => {
   console.log('Direct?', flags?.direct);
 
-  let api = await statusAPI(event, status, language || 'en');
+  let api = await statusAPI(event, status, language);
   const tweet = api?.tweet as APITweet;
 
   if (flags?.api) {

@@ -34,7 +34,7 @@ const processMedia = (media: TweetMedia): APIPhoto | APIVideo | null => {
 const populateTweetProperties = async (
   tweet: TweetPartial,
   conversation: TimelineBlobPartial,
-  language: string
+  language: string | undefined
 ): Promise<APITweet> => {
   let apiTweet = {} as APITweet;
 
@@ -116,6 +116,8 @@ const populateTweetProperties = async (
     }
   }
 
+  console.log('language', language);
+
   /* If a language is specified, let's try translating it! */
   if (typeof language === 'string' && language.length === 2 && language !== tweet.lang) {
     let translateAPI = await translateTweet(
@@ -138,7 +140,7 @@ const populateTweetProperties = async (
 export const statusAPI = async (
   event: FetchEvent,
   status: string,
-  language: string
+  language: string | undefined
 ): Promise<APIResponse> => {
   const conversation = await fetchUsingGuest(status, event);
   const tweet = conversation?.globalObjects?.tweets?.[status] || {};
