@@ -7,7 +7,7 @@ export const translateTweet = async (
 ): Promise<TranslationPartial | null> => {
   const csrfToken = crypto.randomUUID().replace(/-/g, ''); // Generate a random CSRF token, this doesn't matter, Twitter just cares that header and cookie match
 
-  let headers: { [header: string]: string } = {
+  const headers: { [header: string]: string } = {
     'Authorization': Constants.GUEST_BEARER_TOKEN,
     ...Constants.BASE_HEADERS,
     'Cookie': [
@@ -42,7 +42,7 @@ export const translateTweet = async (
 
     console.log(translationResults);
     return translationResults;
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.error('Unknown error while fetching from Translation API', e);
     return {} as TranslationPartial; // No work to do
   }

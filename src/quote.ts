@@ -5,8 +5,8 @@ export const handleQuote = (quote: APITweet): string | null => {
 
   let str = `\n`;
   str += Strings.QUOTE_TEXT.format({
-    name: quote.author?.name,
-    screen_name: quote.author?.screen_name
+    name: quote.author?.name || '',
+    screen_name: quote.author?.screen_name || ''
   });
 
   str += ` \n\n`;

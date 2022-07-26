@@ -18,7 +18,6 @@ export const returnError = (error: string): StatusResponse => {
 };
 
 export const handleStatus = async (
-  event: FetchEvent,
   status: string,
   mediaNumber?: number,
   userAgent?: string,
@@ -27,7 +26,7 @@ export const handleStatus = async (
 ): Promise<StatusResponse> => {
   console.log('Direct?', flags?.direct);
 
-  let api = await statusAPI(event, status, language || 'en');
+  const api = await statusAPI(status, language);
   const tweet = api?.tweet as APITweet;
 
   if (flags?.api) {
@@ -48,17 +47,15 @@ export const handleStatus = async (
       return returnError(Strings.ERROR_API_FAIL);
   }
 
-  if (flags?.direct) {
-    if (tweet.media) {
-      let redirectUrl: string | null = null;
-      if (tweet.media.video) {
-        redirectUrl = tweet.media.video.url;
-      } else if (tweet.media.photos) {
-        redirectUrl = (tweet.media.photos[mediaNumber || 0] || tweet.media.photos[0]).url;
-      }
-      if (redirectUrl) {
-        return { response: Response.redirect(redirectUrl, 302) };
-      }
+  if (flags?.direct && tweet.media) {
+    let redirectUrl: string | null = null;
+    if (tweet.media.video) {
+      redirectUrl = tweet.media.video.url;
+    } else if (tweet.media.photos) {
+      redirectUrl = (tweet.media.photos[mediaNumber || 0] || tweet.media.photos[0]).url;
+    }
+    if (redirectUrl) {
+      return { response: Response.redirect(redirectUrl, 302) };
     }
   }
 
@@ -69,9 +66,11 @@ export const handleStatus = async (
   }
 
   let authorText = getAuthorText(tweet) || Strings.DEFAULT_AUTHOR_TEXT;
-  let engagementText = authorText.replace(/    /g, ' ');
+  const engagementText = authorText.replace(/ {4}/g, ' ');
+  const siteName = Constants.BRANDING_NAME;
+  let newText = tweet.text;
 
-  let headers: string[] = [
+  const headers = [
     `<meta content="${tweet.color}" property="theme-color"/>`,
     `<meta name="twitter:card" content="${tweet.twitter_card}"/>`,
     `<meta name="twitter:site" content="@${tweet.author.screen_name}"/>`,
@@ -79,9 +78,29 @@ export const handleStatus = async (
     `<meta name="twitter:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`
   ];
 
+  if (tweet.translation) {
+    const { translation } = tweet;
+
+    const formatText =
+      language === 'en'
+        ? Strings.TRANSLATE_TEXT.format({
+            language: translation.source_lang
+          })
+        : Strings.TRANSLATE_TEXT_INTL.format({
+            source: translation.source_lang.toUpperCase(),
+            destination: translation.target_lang.toUpperCase()
+          });
+
+    newText = `${translation.text}\n\n` + `${formatText}\n\n` + `${newText}`;
+  }
+
   /* Video renderer */
   if (tweet.media?.video) {
-    authorText = encodeURIComponent(tweet.text || '').substr(0, 300);
+    authorText = encodeURIComponent(newText || '');
+
+    if (tweet?.translation) {
+      authorText = encodeURIComponent(tweet.translation?.text || '');
+    }
 
     const { video } = tweet.media;
 
@@ -118,9 +137,9 @@ export const handleStatus = async (
         type: 'photo'
       };
     } else if (photos.length > 1) {
-      let photoCounter = Strings.PHOTO_COUNT.format({
-        number: photos.indexOf(photo) + 1,
-        total: photos.length
+      const photoCounter = Strings.PHOTO_COUNT.format({
+        number: String(photos.indexOf(photo) + 1),
+        total: String(photos.length)
       });
 
       authorText =
@@ -162,9 +181,6 @@ export const handleStatus = async (
     );
   }
 
-  let siteName = Constants.BRANDING_NAME;
-  let newText = tweet.text;
-
   /* Poll renderer */
   if (tweet.poll) {
     const { poll } = tweet;
@@ -199,22 +215,6 @@ ${choice.label}  (${choice.percentage}%)
     );
   }
 
-  if (api.tweet?.translation) {
-    const { translation } = api.tweet;
-
-    let formatText =
-      language === 'en'
-        ? Strings.TRANSLATE_TEXT.format({
-            language: translation.source_lang
-          })
-        : Strings.TRANSLATE_TEXT_INTL.format({
-            source: translation.source_lang.toUpperCase(),
-            destination: translation.target_lang.toUpperCase()
-          });
-
-    newText = `${translation.text}\n\n` + `${formatText}\n\n` + `${newText}`;
-  }
-
   if (api.tweet?.quote) {
     const quoteText = handleQuote(api.tweet.quote);
     newText += `\n${quoteText}`;
@@ -242,7 +242,7 @@ ${choice.label}  (${choice.percentage}%)
   );
 
   /* When dealing with a Tweet of unknown lang, fall back to en  */
-  let lang = tweet.lang === 'unk' ? 'en' : tweet.lang || 'en';
+  const lang = tweet.lang === 'unk' ? 'en' : tweet.lang || 'en';
 
   return {
     text: Strings.BASE_HTML.format({

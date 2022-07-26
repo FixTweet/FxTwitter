@@ -3,11 +3,11 @@ import { Constants } from './constants';
 export const handleMosaic = async (
   mediaList: APIPhoto[]
 ): Promise<APIMosaicPhoto | null> => {
-  let mosaicDomains = Constants.MOSAIC_DOMAIN_LIST;
+  const mosaicDomains = Constants.MOSAIC_DOMAIN_LIST;
   let selectedDomain: string | null = null;
   while (selectedDomain === null && mosaicDomains.length > 0) {
     // fetch /ping on a random domain
-    let domain = mosaicDomains[Math.floor(Math.random() * mosaicDomains.length)];
+    const domain = mosaicDomains[Math.floor(Math.random() * mosaicDomains.length)];
     // let response = await fetch(`https://${domain}/ping`);
     // if (response.status === 200) {
     selectedDomain = domain;
@@ -22,12 +22,12 @@ export const handleMosaic = async (
     return null;
   } else {
     // console.log('mediaList', mediaList);
-    let mosaicMedia = mediaList.map(
-      media => media.url?.match(/(?<=\/media\/)[a-zA-Z0-9_\-]+(?=[\.\?])/g)?.[0] || ''
+    const mosaicMedia = mediaList.map(
+      media => media.url?.match(/(?<=\/media\/)[\w-]+(?=[.?])/g)?.[0] || ''
     );
     // console.log('mosaicMedia', mosaicMedia);
     // TODO: use a better system for this, 0 gets png 1 gets webp, usually
-    let baseUrl = `https://${selectedDomain}/`;
+    const baseUrl = `https://${selectedDomain}/`;
     let path = '';
 
     if (mosaicMedia[0]) {

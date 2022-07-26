@@ -14,8 +14,8 @@ const statusRequest = async (
   const url = new URL(request.url);
   const userAgent = request.headers.get('User-Agent') || '';
 
-  let isBotUA =
-    userAgent.match(/bot|facebook|embed|got|Firefox\/92|curl|wget/gi) !== null;
+  const isBotUA =
+    userAgent.match(/bot|facebook|embed|got|firefox\/92|curl|wget/gi) !== null;
 
   if (
     url.pathname.match(/\/status(es)?\/\d+\.(mp4|png|jpg)/g) !== null ||
@@ -40,8 +40,7 @@ const statusRequest = async (
 
     let response: Response;
 
-    let statusResponse = await handleStatus(
-      event,
+    const statusResponse = await handleStatus(
       id?.match(/\d{2,20}/)?.[0] || '0',
       mediaNumber ? parseInt(mediaNumber) : undefined,
       userAgent,
@@ -72,16 +71,16 @@ const statusRequest = async (
 
     return response;
   } else {
-    console.log('Matched human UA', request.headers.get('User-Agent'));
+    console.log('Matched human UA', userAgent);
     return Response.redirect(`${Constants.TWITTER_ROOT}/${handle}/status/${id}`, 302);
   }
 };
 
-const profileRequest = async (request: Request, _event: FetchEvent) => {
+const profileRequest = async (request: Request) => {
   const { handle } = request.params;
   const url = new URL(request.url);
 
-  if (handle.match(/[a-z0-9_]{1,15}/gi)?.[0] !== handle) {
+  if (handle.match(/\w{1,15}/gi)?.[0] !== handle) {
     return Response.redirect(Constants.REDIRECT_URL, 302);
   } else {
     return Response.redirect(`${Constants.TWITTER_ROOT}${url.pathname}`, 302);
@@ -106,9 +105,9 @@ router.get('/owoembed', async (request: Request) => {
   const { searchParams } = new URL(request.url);
 
   /* Fallbacks */
-  let text = searchParams.get('text') || 'Twitter';
-  let author = searchParams.get('author') || 'dangeredwolf';
-  let status = searchParams.get('status') || '1547514042146865153';
+  const text = searchParams.get('text') || 'Twitter';
+  const author = searchParams.get('author') || 'dangeredwolf';
+  const status = searchParams.get('status') || '1547514042146865153';
 
   const test = {
     author_name: decodeURIComponent(text),
@@ -139,7 +138,6 @@ router.get('*', async (request: Request) => {
   if (url.hostname === Constants.API_HOST) {
     return Response.redirect(Constants.API_DOCS_URL, 307);
   }
-
   return Response.redirect(Constants.REDIRECT_URL, 307);
 });
 
@@ -147,7 +145,6 @@ const cacheWrapper = async (event: FetchEvent): Promise<Response> => {
   const { request } = event;
   const userAgent = request.headers.get('User-Agent') || '';
   // https://developers.cloudflare.com/workers/examples/cache-api/
-  const url = new URL(request.url);
   const cacheUrl = new URL(
     userAgent.includes('Telegram')
       ? `${request.url}&telegram`
@@ -175,7 +172,7 @@ const cacheWrapper = async (event: FetchEvent): Promise<Response> => {
   switch (request.method) {
     case 'GET':
       if (cacheUrl.hostname !== Constants.API_HOST) {
-        let cachedResponse = await cache.match(cacheKey);
+        const cachedResponse = await cache.match(cacheKey);
 
         if (cachedResponse) {
           console.log('Cache hit');
@@ -185,7 +182,8 @@ const cacheWrapper = async (event: FetchEvent): Promise<Response> => {
         console.log('Cache miss');
       }
 
-      let response = await router.handle(event.request, event);
+      // eslint-disable-next-line no-case-declarations
+      const response = await router.handle(event.request, event);
 
       // Store the fetched response as cacheKey
       // Use waitUntil so you can return the response without blocking on

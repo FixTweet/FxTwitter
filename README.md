@@ -76,9 +76,13 @@ We use Twitter's color data for either the first image/video of the tweet, or th
 
 ## Built with privacy in mind
 
-We don't save logs of what tweets you're sending, nor do we have a public record of what tweets are being embedded by FixTweet. We use Cloudflare to cache FixTweet responses to make repeat access faster.
+FixTweet doesn't save logs of what tweets you're sending, nor do we have a public record of what tweets are being embedded by FixTweet.
 
-Furthermore, if the person who posted a FixTweet link forgot to strip tracking, we strip it upon redirecting to the Tweet.
+In fact, because our core embedding and API service uses Cloudflare Workers, where FixTweet can only run when you send it a request and its memory doesn't stick around, and it doesn't have a file system or database to access at all. That is how we keep our privacy promise by building it into the architecture. My goal is always to provide a good public service, and FixTweet doesn't make any money.
+
+Note: We use Cloudflare to cache FixTweet responses to make repeat access faster, which have a maximum TTL of 1 hour. Temporary real-time logging in the terminal (specifically `wrangler tail`) may be used only by the developer while the Worker is being serviced or debugged (to make sure things work as they should), however these logs are only shown in the terminal and are never saved or used for any other purpose.
+
+On a different note, if the person who posted a FixTweet link forgot to strip tracking parameters (like `?s` and `&t`), we strip it upon redirecting to the Tweet as they are only used for Twitter Telemetry and Marketing.
 
 ---
 
@@ -103,7 +107,7 @@ In many ways, FixTweet has richer embeds and does more. Here's a table comparing
 | Strip Twitter tracking info on redirect |         :heavy_check_mark:          |               :x:                |              :heavy_check_mark:              |          :heavy_check_mark:           |
 | Show retweet, like, reply counts        |         :heavy_check_mark:          | :heavy_minus_sign: Discord Only³ |      :ballot_box_with_check: No replies      |  :ballot_box_with_check: No replies   |
 | Discord sed replace (`s/`) friendly     | :ballot_box_with_check: twittpr.com |               N/A                |                     :x:                      |          :heavy_check_mark:           |
-| Tweet fetch API for Developers          |            Coming soon!             |               N/A                |                     :x:                      |          :heavy_check_mark:           |
+| Tweet fetch API for Developers          |         :heavy_check_mark:          |               N/A                |                     :x:                      |          :heavy_check_mark:           |
 
 ¹ Discord will attempt to embed Twitter's video player, but it is unreliable
 
@@ -142,7 +146,7 @@ Once you're set up with your worker on `*.workers.dev`, [add your worker to your
 ### Things to tackle in the future
 
 - More reliable Multi-Image in Telegram
-- Reimplement TwitFix API for third-party developers
+- Discord bot
 
 ### Bugs or issues?
 

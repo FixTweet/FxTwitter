@@ -100,26 +100,28 @@ type CardValue = {
   string_value: string;
 };
 
-type TweetCard = {
-  binding_values: {
-    card_url: CardValue;
-    choice1_count?: CardValue;
-    choice2_count?: CardValue;
-    choice3_count?: CardValue;
-    choice4_count?: CardValue;
-    choice1_label?: CardValue;
-    choice2_label?: CardValue;
-    choice3_label?: CardValue;
-    choice4_label?: CardValue;
-    counts_are_final?: CardValue;
-    duration_minutes?: CardValue;
-    end_datetime_utc?: CardValue;
+type TweetCardBindingValues = {
+  card_url: CardValue;
+  choice1_count?: CardValue;
+  choice2_count?: CardValue;
+  choice3_count?: CardValue;
+  choice4_count?: CardValue;
+  choice1_label?: CardValue;
+  choice2_label?: CardValue;
+  choice3_label?: CardValue;
+  choice4_label?: CardValue;
+  counts_are_final?: CardValue;
+  duration_minutes?: CardValue;
+  end_datetime_utc?: CardValue;
 
-    player_url?: CardValue;
-    player_width?: CardValue;
-    player_height?: CardValue;
-    title?: CardValue;
-  };
+  player_url?: CardValue;
+  player_width?: CardValue;
+  player_height?: CardValue;
+  title?: CardValue;
+};
+
+type TweetCard = {
+  binding_values: TweetCardBindingValues; 
   name: string;
 };
 

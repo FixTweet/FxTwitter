@@ -1,6 +1,6 @@
 declare global {
   interface String {
-    format(options: any): string;
+    format(options: { [find: string]: string }): string;
   }
 }
 
@@ -8,7 +8,7 @@ declare global {
   Useful little function to format strings for us
 */
 
-String.prototype.format = function (options: any) {
+String.prototype.format = function (options: { [find: string]: string }) {
   return this.replace(/{([^{}]+)}/g, (match: string, name: string) => {
     if (options[name] !== undefined) {
       return options[name];
