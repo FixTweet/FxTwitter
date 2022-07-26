@@ -1,9 +1,6 @@
 import { Constants } from './constants';
 
-export const fetchUsingGuest = async (
-  status: string,
-  event: FetchEvent
-): Promise<TimelineBlobPartial> => {
+export const fetchUsingGuest = async (status: string): Promise<TimelineBlobPartial> => {
   let apiAttempts = 0;
   let cachedTokenFailed = false;
 
@@ -30,7 +27,7 @@ export const fetchUsingGuest = async (
   while (apiAttempts < 10) {
     const csrfToken = crypto.randomUUID().replace(/-/g, ''); // Generate a random CSRF token, this doesn't matter, Twitter just cares that header and cookie match
 
-    let headers: { [header: string]: string } = {
+    const headers: { [header: string]: string } = {
       Authorization: Constants.GUEST_BEARER_TOKEN,
       ...Constants.BASE_HEADERS
     };
@@ -40,7 +37,7 @@ export const fetchUsingGuest = async (
     let activate: Response | null = null;
 
     if (!cachedTokenFailed) {
-      let cachedResponse = await cache.match(guestTokenRequest);
+      const cachedResponse = await cache.match(guestTokenRequest);
 
       if (cachedResponse) {
         console.log('Token cache hit');
@@ -65,7 +62,7 @@ export const fetchUsingGuest = async (
 
     try {
       activateJson = (await activate.json()) as { guest_token: string };
-    } catch (e: any) {
+    } catch (e: unknown) {
       continue;
     }
 
@@ -100,7 +97,7 @@ export const fetchUsingGuest = async (
         }
       );
       conversation = await apiRequest.json();
-    } catch (e: any) {
+    } catch (e: unknown) {
       /* We'll usually only hit this if we get an invalid response from Twitter.
          It's rare, but it happens */
       console.error('Unknown error while fetching conversation from API');
@@ -124,6 +121,7 @@ export const fetchUsingGuest = async (
     return conversation;
   }
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore - This is only returned if we completely failed to fetch the conversation
   return {};
 };

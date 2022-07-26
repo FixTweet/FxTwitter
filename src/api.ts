@@ -16,7 +16,7 @@ const processMedia = (media: TweetMedia): APIPhoto | APIVideo | null => {
     };
   } else if (media.type === 'video' || media.type === 'animated_gif') {
     // Find the variant with the highest bitrate
-    let bestVariant = media.video_info?.variants?.reduce?.((a, b) =>
+    const bestVariant = media.video_info?.variants?.reduce?.((a, b) =>
       (a.bitrate ?? 0) > (b.bitrate ?? 0) ? a : b
     );
     return {
@@ -35,8 +35,9 @@ const populateTweetProperties = async (
   tweet: TweetPartial,
   conversation: TimelineBlobPartial,
   language: string | undefined
+  // eslint-disable-next-line sonarjs/cognitive-complexity
 ): Promise<APITweet> => {
-  let apiTweet = {} as APITweet;
+  const apiTweet = {} as APITweet;
 
   /* With v2 conversation API we re-add the user object ot the tweet because
      Twitter stores it separately in the conversation API. This is to consolidate
@@ -72,19 +73,18 @@ const populateTweetProperties = async (
 
   apiTweet.replying_to = tweet.in_reply_to_screen_name || null;
 
-  let mediaList = Array.from(
+  const mediaList = Array.from(
     tweet.extended_entities?.media || tweet.entities?.media || []
   );
 
   mediaList.forEach(media => {
-    let mediaObject = processMedia(media);
+    const mediaObject = processMedia(media);
     if (mediaObject) {
       if (mediaObject.type === 'photo') {
         apiTweet.twitter_card = 'summary_large_image';
         apiTweet.media = apiTweet.media || {};
         apiTweet.media.photos = apiTweet.media.photos || [];
         apiTweet.media.photos.push(mediaObject);
-
       } else if (mediaObject.type === 'video' || mediaObject.type === 'gif') {
         apiTweet.twitter_card = 'player';
         apiTweet.media = apiTweet.media || {};
@@ -98,14 +98,14 @@ const populateTweetProperties = async (
   }
 
   if ((apiTweet.media?.photos?.length || 0) > 1) {
-    let mosaic = await handleMosaic(apiTweet.media?.photos || []);
+    const mosaic = await handleMosaic(apiTweet.media?.photos || []);
     if (typeof apiTweet.media !== 'undefined' && mosaic !== null) {
       apiTweet.media.mosaic = mosaic;
     }
   }
 
   if (tweet.card) {
-    let card = await renderCard(tweet.card);
+    const card = await renderCard(tweet.card);
     if (card.external_media) {
       apiTweet.twitter_card = 'summary_large_image';
       apiTweet.media = apiTweet.media || {};
@@ -120,7 +120,7 @@ const populateTweetProperties = async (
 
   /* If a language is specified, let's try translating it! */
   if (typeof language === 'string' && language.length === 2 && language !== tweet.lang) {
-    let translateAPI = await translateTweet(
+    const translateAPI = await translateTweet(
       tweet,
       conversation.guestToken || '',
       language
@@ -138,11 +138,10 @@ const populateTweetProperties = async (
 };
 
 export const statusAPI = async (
-  event: FetchEvent,
   status: string,
   language: string | undefined
 ): Promise<APIResponse> => {
-  const conversation = await fetchUsingGuest(status, event);
+  const conversation = await fetchUsingGuest(status);
   const tweet = conversation?.globalObjects?.tweets?.[status] || {};
 
   /* Fallback for if Tweet did not load */
@@ -168,14 +167,14 @@ export const statusAPI = async (
     return { code: 500, message: 'API_FAIL' };
   }
 
-  let response: APIResponse = { code: 200, message: 'OK' } as APIResponse;
-  let apiTweet: APITweet = (await populateTweetProperties(
+  const response: APIResponse = { code: 200, message: 'OK' } as APIResponse;
+  const apiTweet: APITweet = (await populateTweetProperties(
     tweet,
     conversation,
     language
   )) as APITweet;
 
-  let quoteTweet =
+  const quoteTweet =
     conversation.globalObjects?.tweets?.[tweet.quoted_status_id_str || '0'] || null;
   if (quoteTweet) {
     apiTweet.quote = (await populateTweetProperties(

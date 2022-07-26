@@ -3,13 +3,11 @@ import { calculateTimeLeftString } from './pollHelper';
 export const renderCard = async (
   card: TweetCard
 ): Promise<{ poll?: APIPoll; external_media?: APIExternalMedia }> => {
-  let str = '\n\n';
   const values = card.binding_values;
 
   console.log('rendering card on ', card);
 
-  // Telegram's bars need to be a lot smaller to fit its bubbles
-  let choices: { [label: string]: number } = {};
+  const choices: { [label: string]: number } = {};
   let totalVotes = 0;
 
   if (typeof values !== 'undefined') {
@@ -18,7 +16,7 @@ export const renderCard = async (
       typeof values.choice1_count !== 'undefined' &&
       typeof values.choice2_count !== 'undefined'
     ) {
-      let poll = {} as APIPoll;
+      const poll = {} as APIPoll;
 
       if (typeof values.end_datetime_utc !== 'undefined') {
         poll.ends_at = values.end_datetime_utc.string_value || '';

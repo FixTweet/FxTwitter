@@ -103,7 +103,7 @@ In many ways, FixTweet has richer embeds and does more. Here's a table comparing
 | Strip Twitter tracking info on redirect |         :heavy_check_mark:          |               :x:                |              :heavy_check_mark:              |          :heavy_check_mark:           |
 | Show retweet, like, reply counts        |         :heavy_check_mark:          | :heavy_minus_sign: Discord Only³ |      :ballot_box_with_check: No replies      |  :ballot_box_with_check: No replies   |
 | Discord sed replace (`s/`) friendly     | :ballot_box_with_check: twittpr.com |               N/A                |                     :x:                      |          :heavy_check_mark:           |
-| Tweet fetch API for Developers          |            Coming soon!             |               N/A                |                     :x:                      |          :heavy_check_mark:           |
+| Tweet fetch API for Developers          |         :heavy_check_mark:          |               N/A                |                     :x:                      |          :heavy_check_mark:           |
 
 ¹ Discord will attempt to embed Twitter's video player, but it is unreliable
 
@@ -142,7 +142,7 @@ Once you're set up with your worker on `*.workers.dev`, [add your worker to your
 ### Things to tackle in the future
 
 - More reliable Multi-Image in Telegram
-- Reimplement TwitFix API for third-party developers
+- Discord bot
 
 ### Bugs or issues?
 
