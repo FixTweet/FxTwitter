@@ -1,4 +1,4 @@
-name = "pxtwitter"
+name = "fixtweet"
 account_id = "[CLOUDFLARE_ACCOUNT_ID]"
 workers_dev = true
 main = "./dist/worker.js"
