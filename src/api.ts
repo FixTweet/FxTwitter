@@ -141,9 +141,6 @@ export const statusAPI = async (
   const conversation = await fetchUsingGuest(status, event);
   const tweet = conversation?.globalObjects?.tweets?.[status] || {};
 
-  console.log('users', JSON.stringify(conversation?.globalObjects?.users));
-  console.log('user_id_str', tweet.user_id_str);
-
   /* Fallback for if Tweet did not load */
   if (typeof tweet.full_text === 'undefined') {
     console.log('Invalid status, got tweet ', tweet, ' conversation ', conversation);
