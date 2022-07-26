@@ -85,7 +85,7 @@ type TweetMedia = {
     medium: TweetMediaSize;
     small: TweetMediaSize;
   };
-  type: 'photo' | 'video';
+  type: 'photo' | 'video' | 'animated_gif';
   url: string;
   video_info?: {
     aspect_ratio: [number, number];
@@ -157,6 +157,7 @@ type UserPartial = {
   name: string;
   screen_name: string;
   profile_image_url_https: string;
+  profile_banner_url: string;
   profile_image_extensions_media_color?: {
     palette?: MediaPlaceholderColor[];
   };

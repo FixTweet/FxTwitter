@@ -15,18 +15,22 @@ const statusRequest = async (
   const userAgent = request.headers.get('User-Agent') || '';
 
   let isBotUA =
-    userAgent.match(/bot|facebook|embed|got|Firefox\/92|curl|wget/gi) !== null;
+    userAgent.match(/bot|facebook|embed|got|Firefox\/92|curl|wget/gi) !== null || true;
 
   if (
     url.pathname.match(/\/status(es)?\/\d+\.(mp4|png|jpg)/g) !== null ||
     Constants.DIRECT_MEDIA_DOMAINS.includes(url.hostname) ||
-    (prefix === 'dl' || prefix === 'dir')
+    prefix === 'dl' ||
+    prefix === 'dir'
   ) {
     console.log('Direct media request by extension');
     flags.direct = true;
   }
 
-  if (url.pathname.match(/\/status(es)?\/\d+\.(json)/g) !== null) {
+  if (
+    url.pathname.match(/\/status(es)?\/\d+\.(json)/g) !== null ||
+    url.hostname === Constants.API_HOST
+  ) {
     console.log('JSON API request');
     flags.api = true;
   }
@@ -94,6 +98,8 @@ router.get('/:prefix?/:handle/statuses/:id/photos/:mediaNumber', statusRequest);
 router.get('/:prefix?/:handle/statuses/:id/video/:mediaNumber', statusRequest);
 router.get('/:prefix?/:handle/status/:id/:language', statusRequest);
 router.get('/:prefix?/:handle/statuses/:id/:language', statusRequest);
+router.get('/status/:id', statusRequest);
+router.get('/status/:id/:language', statusRequest);
 
 router.get('/owoembed', async (request: Request) => {
   console.log('oembed hit!');
@@ -162,14 +168,16 @@ const cacheWrapper = async (event: FetchEvent): Promise<Response> => {
 
   switch (request.method) {
     case 'GET':
-      let cachedResponse = await cache.match(cacheKey);
+      if (cacheUrl.hostname !== Constants.API_HOST) {
+        let cachedResponse = await cache.match(cacheKey);
 
-      if (cachedResponse) {
-        console.log('Cache hit');
-        return cachedResponse;
+        if (cachedResponse) {
+          console.log('Cache hit');
+          return cachedResponse;
+        }
+
+        console.log('Cache miss');
       }
-
-      console.log('Cache miss');
 
       let response = await router.handle(event.request, event);
 
