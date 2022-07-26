@@ -29,6 +29,8 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
 
+      - run: npm install
+
       - name: Run ESLint
         run: npx eslint .
           --config .eslintrc.yml
