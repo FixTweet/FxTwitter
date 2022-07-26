@@ -16,6 +16,7 @@
   "license": "MIT",
   "devDependencies": {
     "@cloudflare/workers-types": "^3.14.1",
+    "@microsoft/eslint-formatter-sarif": "^3.0.0",
     "@types/service-worker-mock": "^2.0.1",
     "@typescript-eslint/eslint-plugin": "^5.31.0",
     "@typescript-eslint/parser": "^5.31.0",
