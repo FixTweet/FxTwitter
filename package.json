@@ -9,14 +9,20 @@
     "log": "wrangler tail",
     "reload": "wrangler publish && wrangler tail",
     "register": "node src/register.js",
-    "prettier": "prettier --write ."
+    "prettier": "prettier --write .",
+    "lint:eslint": "eslint --max-warnings=0 src"
   },
   "author": "dangered wolf",
   "license": "MIT",
   "devDependencies": {
     "@cloudflare/workers-types": "^3.14.1",
     "@types/service-worker-mock": "^2.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.31.0",
+    "@typescript-eslint/parser": "^5.31.0",
     "dotenv": "^16.0.1",
+    "eslint": "^8.20.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-typescript": "^3.0.0",
     "prettier": "^2.7.1",
     "service-worker-mock": "^2.0.5",
     "ts-loader": "^9.3.1",
