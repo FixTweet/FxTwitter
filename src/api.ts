@@ -63,6 +63,7 @@ const populateTweetProperties = async (
   apiTweet.likes = tweet.favorite_count;
   apiTweet.color = apiTweet.author.avatar_color;
   apiTweet.twitter_card = 'tweet';
+  apiTweet.created_at = tweet.created_at;
 
   if (tweet.lang !== 'unk') {
     apiTweet.lang = tweet.lang;

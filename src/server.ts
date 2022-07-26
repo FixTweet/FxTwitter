@@ -133,7 +133,13 @@ router.get('/owoembed', async (request: Request) => {
 router.get('/:handle', profileRequest);
 router.get('/:handle/', profileRequest);
 
-router.get('*', async (_request: Request) => {
+router.get('*', async (request: Request) => {
+  const url = new URL(request.url);
+
+  if (url.hostname === Constants.API_HOST) {
+    return Response.redirect(Constants.API_DOCS_URL, 307);
+  }
+
   return Response.redirect(Constants.REDIRECT_URL, 307);
 });
 

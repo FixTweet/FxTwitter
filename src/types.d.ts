@@ -86,7 +86,6 @@ interface APIVideo {
 interface APITweet {
   id: string;
   url: string;
-  tweet: string;
   text: string;
   created_at: string;
 
