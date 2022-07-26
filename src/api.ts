@@ -123,7 +123,7 @@ const populateTweetProperties = async (
       conversation.guestToken || '',
       language
     );
-    if (translateAPI !== null) {
+    if (translateAPI !== null && translateAPI?.translation) {
       apiTweet.translation = {
         text: translateAPI?.translation || '',
         source_lang: translateAPI?.sourceLanguage || '',
