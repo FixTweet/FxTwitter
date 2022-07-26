@@ -3,3 +3,9 @@ root: true
 extends:
   - typescript
   - prettier
+  - plugin:optimize-regex/recommended
+  - plugin:sonarjs/recommended
+
+plugins:
+  - eslint-plugin-optimize-regex
+  - sonarjs
