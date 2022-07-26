@@ -129,7 +129,7 @@ export const handleStatus = async (
     ) {
       photo = {
         url:
-          userAgent?.indexOf('Telegram') !== -1
+          userAgent?.indexOf('Telegram') === -1
             ? tweet.media.mosaic.formats.webp
             : tweet.media.mosaic.formats.jpeg,
         width: tweet.media.mosaic.width,
