@@ -15,7 +15,7 @@ const statusRequest = async (
   const userAgent = request.headers.get('User-Agent') || '';
 
   let isBotUA =
-    userAgent.match(/bot|facebook|embed|got|Firefox\/92|curl|wget/gi) !== null || true;
+    userAgent.match(/bot|facebook|embed|got|Firefox\/92|curl|wget/gi) !== null;
 
   if (
     url.pathname.match(/\/status(es)?\/\d+\.(mp4|png|jpg)/g) !== null ||

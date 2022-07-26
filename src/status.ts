@@ -81,7 +81,7 @@ export const handleStatus = async (
 
   /* Video renderer */
   if (tweet.media?.video) {
-    authorText = encodeURIComponent(tweet.text || '');
+    authorText = encodeURIComponent(tweet.text || '').substr(0, 300);
 
     const { video } = tweet.media;
 
