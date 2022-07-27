@@ -65,6 +65,7 @@ const populateTweetProperties = async (
   apiTweet.color = apiTweet.author.avatar_color;
   apiTweet.twitter_card = 'tweet';
   apiTweet.created_at = tweet.created_at;
+  apiTweet.created_timestamp = new Date(tweet.created_at).getTime() / 1000;
 
   if (tweet.lang !== 'unk') {
     apiTweet.lang = tweet.lang;

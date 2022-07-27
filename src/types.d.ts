@@ -88,6 +88,7 @@ interface APITweet {
   url: string;
   text: string;
   created_at: string;
+  created_timestamp: number;
 
   likes: number;
   retweets: number;
