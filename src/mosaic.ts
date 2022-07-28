@@ -134,23 +134,3 @@ const calcVerticalSize = (first: Size, second: Size): VerticalSize => {
     secondHeight: swapped ? big.height : smallHeight
   } as VerticalSize;
 };
-
-interface Size {
-  width: number;
-  height: number;
-}
-
-interface HorizontalSize {
-  width: number;
-  height: number;
-  firstWidth: number;
-  secondWidth: number;
-}
-
-interface VerticalSize {
-  width: number;
-  height: number;
-  firstHeight: number;
-  secondHeight: number;
-}
-

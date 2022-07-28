@@ -17,6 +17,25 @@ interface Request {
   };
 }
 
+interface Size {
+  width: number;
+  height: number;
+}
+
+interface HorizontalSize {
+  width: number;
+  height: number;
+  firstWidth: number;
+  secondWidth: number;
+}
+
+interface VerticalSize {
+  width: number;
+  height: number;
+  firstHeight: number;
+  secondHeight: number;
+}
+
 interface APIResponse {
   code: number;
   message: string;
