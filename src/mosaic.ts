@@ -31,17 +31,10 @@ export const handleMosaic = async (
     const baseUrl = `https://${selectedDomain}/`;
     let path = '';
 
-    if (mosaicMedia[0]) {
-      path += `/${mosaicMedia[0]}`;
-    }
-    if (mosaicMedia[1]) {
-      path += `/${mosaicMedia[1]}`;
-    }
-    if (mosaicMedia[2]) {
-      path += `/${mosaicMedia[2]}`;
-    }
-    if (mosaicMedia[3]) {
-      path += `/${mosaicMedia[3]}`;
+    for (let i = 0; i++; i < 3) {
+      if (mosaicMedia[i]) {
+        path += `/${mosaicMedia[i]}`;
+      }
     }
 
     const size = calcSize(mediaList.map(i => ({ width: i.width, height: i.height } as Size)));
