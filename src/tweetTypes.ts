@@ -121,7 +121,7 @@ type TweetCardBindingValues = {
 };
 
 type TweetCard = {
-  binding_values: TweetCardBindingValues; 
+  binding_values: TweetCardBindingValues;
   name: string;
 };
 

@@ -44,7 +44,9 @@ export const handleMosaic = async (
       path += `/${mosaicMedia[3]}`;
     }
 
-    const size = calcSize(mediaList.map(i => ({ width: i.width, height: i.height } as Size)));
+    const size = calcSize(
+      mediaList.map(i => ({ width: i.width, height: i.height } as Size))
+    );
     return {
       height: size.height,
       width: size.width,
@@ -87,7 +89,7 @@ const calcSize = (images: Size[]): Size => {
     const bottom = calcHorizontalSize(images[2], images[3]);
     const all = calcVerticalSize(top, bottom);
 
-    const sizeMult = (all.width > 2000 || all.height > 2000) ? BIG_IMAGE_MULTIPLIER : 1;
+    const sizeMult = all.width > 2000 || all.height > 2000 ? BIG_IMAGE_MULTIPLIER : 1;
     return {
       width: all.width * sizeMult,
       height: all.height * sizeMult
@@ -126,7 +128,7 @@ const calcVerticalSize = (first: Size, second: Size): VerticalSize => {
     swapped = true;
   }
 
-  const smallHeight = Math.round(big.width / small.width * small.height);
+  const smallHeight = Math.round((big.width / small.width) * small.height);
   return {
     width: big.width,
     height: smallHeight + SPACING_SIZE + big.height,

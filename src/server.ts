@@ -217,6 +217,31 @@ const cacheWrapper = async (event: FetchEvent): Promise<Response> => {
 /*
   Event to receive web requests on Cloudflare Worker
 */
-addEventListener('fetch', (event: FetchEvent) => {
-  event.respondWith(cacheWrapper(event));
+addEventListener('fetch', async (event: FetchEvent) => {
+  try {
+    event.respondWith(cacheWrapper(event));
+  } catch (e: unknown) {
+    let error = e as Error;
+    if (typeof EXCEPTION_DISCORD_WEBHOOK !== 'undefined') {
+      try {
+        const a = await fetch(EXCEPTION_DISCORD_WEBHOOK, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'User-Agent': `${Constants.BRANDING_NAME}`
+          },
+          body: JSON.stringify({
+            embeds: [
+              {
+                title: `Exception in ${Constants.BRANDING_NAME}`,
+                description: `${error} - occurred while processing ${event.request.url}`,
+              }
+            ]
+          })
+        });
+      } catch (e) {
+        console.log('Failed to send caught exception to Discord', e);
+      }
+    }
+  }
 });

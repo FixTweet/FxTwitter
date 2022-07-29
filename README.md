@@ -80,7 +80,7 @@ FixTweet doesn't save logs of what tweets you're sending, nor do we have a publi
 
 In fact, because our core embedding and API service uses Cloudflare Workers, where FixTweet can only run when you send it a request and its memory doesn't stick around, and it doesn't have a file system or database to access at all. That is how we keep our privacy promise by building it into the architecture. My goal is always to provide a good public service, and FixTweet doesn't make any money.
 
-Note: We use Cloudflare to cache FixTweet responses to make repeat access faster, which have a maximum TTL of 1 hour. Temporary real-time logging in the terminal (specifically `wrangler tail`) may be used only by the developer while the Worker is being serviced or debugged (to make sure things work as they should), however these logs are only shown in the terminal and are never saved or used for any other purpose.
+Note: We use Cloudflare to cache FixTweet responses to make repeat access faster, which have a maximum TTL of 1 hour. Temporary real-time logging in the terminal (specifically `wrangler tail`) may be used only by the developer while the Worker is being serviced or debugged (to make sure things work as they should), however these logs are only shown in the terminal and are never saved or used for any other purpose. URLs that cause runtime errors in the script (aka Exceptions, usually exceedingly rare unless there was a faulty update pushed out) may be logged for a developer to diagnose the issue that is preventing your embed from working.
 
 On a different note, if the person who posted a FixTweet link forgot to strip tracking parameters (like `?s` and `&t`), we strip it upon redirecting to the Tweet as they are only used for Twitter Telemetry and Marketing.
 
@@ -138,6 +138,8 @@ Clone the repo, install [Node.js](https://nodejs.org/) and run `npm install` in 
 [If you have more questions about setting up Cloudflare Workers, check out their Getting Started guide](https://developers.cloudflare.com/workers/get-started/guide/).
 
 Once you're set up with your worker on `*.workers.dev`, [add your worker to your custom domain](https://developers.cloudflare.com/workers/platform/routing/custom-domains/).
+
+Optional: Set the `EXCEPTION_DISCORD_WEBHOOK` secret to a Discord webhook URL to log exceptions to a Discord channel. At this time, we have not integrated an error handling SDK to keep the script small and execution times to a minimum, but it is something that may be explored in the future.
 
 ---
 
