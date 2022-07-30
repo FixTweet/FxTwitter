@@ -38,7 +38,7 @@ Quote tweets and their media can provide important context to a Tweet. So we'll 
 
 You can translate a tweet into any other supported language, with the original and translated text displayed as space allows.
 
-Just append a tweet with its 2-letter language code. So for English, add `/en` at the end.
+Just append a tweet with its 2-letter ISO language code. So for English, add `/en` at the end.
 
 ![](https://cdn.discordapp.com/attachments/165560751363325952/1000890584153735238/FixTweet.png)
 
@@ -117,7 +117,7 @@ In many ways, FixTweet has richer embeds and does more. Here's a table comparing
 
 ⁴ On GitHub, BetterTwitFix (vxTwitter) claims to support this feature, however in my testing as of mid-July 2022, this does not seem to work.
 
-⁵ Telegram does not support WebP in embeds. We use WebP for multi-image mosaic for its combination of smaller file size and better text readability which makes it overall a better format than JPG or PNG for this purpose. In the future we will likely add a compatibility mode for Telegram.
+⁵ We've temporarily paused multi-image on Telegram due to issues with its embedding service that can cause images to sometimes not show up at all.  ([#15](https://github.com/dangeredwolf/FixTweet/issues/15)) However, multi-image continues to work in Discord and most other platforms. 
 
 ⁶ External media requiring web containers, such as YouTube, won't embed in Telegram because Telegram doesn't support it. Plain media will work in Telegram, and it works either way inside Discord.
 
@@ -143,13 +143,40 @@ Optional: Set the `EXCEPTION_DISCORD_WEBHOOK` secret to a Discord webhook URL to
 
 ---
 
+## Q&A
+
+### What's the difference between `fxtwitter.com`, `pxtwitter.com`, and `twittpr.com`?
+
+They all run the exact same worker and have no difference to end users... you can use whatever you'd like!
+
+However, we do consider `fxtwitter.com` to be the primary domain these days, and the public API is only on `api.fxtwitter.com`.
+
+`pxtwitter.com` was our original domain for the project, bought the day before we launched FixTweet (then known as pxTwtiter). I was trying to find something memorable and `px` kinda sounds like "pix" or can mean "pixels" which is fitting as a service that can embed images, videos, etc. Not long after, I bought `twittpr.com` because it's easier to do sed replacement with on Discord (`s/e/p`), and because it had a `p` in it, it was sorta related to pxTwitter. They have always functioned identically.
+
+A couple weeks later, I acquired the `fxtwitter.com` domain from RobinUniverse and alongside this rebranded the project as FixTweet and shifted `fxtwitter.com` to be the primary domain instead of `pxtwitter.com`. Like the addition of `twittpr.com` this domain works identically to the others. I wouldn't go as far as to say `pxtwitter.com` is deprecated, but it certainly is the less preferred domain of the 3.
+
+### How come embedding takes so long / is not working in Telegram?
+
+Telegram's embedding servers sometimes never even send us a request to embed a URL, possibly due to their servers being overloaded. If you have a link that is broken you can try one of FixTweets other domains (`fxtwitter.com`, `pxtwitter.com`, `twittpr.com`) or use [Webpage Bot](https://t.me/WebpageBot) to try to clear the cache of the embed.
+
+### Why doesn't multi-image doesn't work in Telegram?
+
+We've temporarily paused multi-image on Telegram due to issues with its embedding service that can cause images to sometimes not show up at all. ([#15](https://github.com/dangeredwolf/FixTweet/issues/15))
+
+### What if I don't want FixTweet to combine my Tweet's images together with multi-image?
+
+No problem! You can pick any specific photo from a Tweet using Twitter's own URL syntax (`/photo/1` is the first photo of a tweet) and we'll render you the full-resolution original image.
+
+---
+
 **Licensed under the permissive MIT license. Feel free to send a pull request!**
 
-### Things to tackle in the future
+## Things to tackle in the future
 
-- More reliable Multi-Image in Telegram
-- Discord bot
+- Reliable multi-image in Telegram
+- Fix guest token caching
+- Discord bot?
 
-### Bugs or issues?
+## Bugs or issues?
 
 Feel free to [open an issue](https://github.com/dangeredwolf/FixTweet/issues), or [ping me on Twitter and I'll see what I can do](https://twitter.com/dangeredwolf).
