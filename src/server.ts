@@ -217,14 +217,14 @@ const cacheWrapper = async (event: FetchEvent): Promise<Response> => {
 /*
   Event to receive web requests on Cloudflare Worker
 */
-addEventListener('fetch', async (event: FetchEvent) => {
+addEventListener('fetch', (event: FetchEvent) => {
   try {
     event.respondWith(cacheWrapper(event));
   } catch (e: unknown) {
     let error = e as Error;
     if (typeof EXCEPTION_DISCORD_WEBHOOK !== 'undefined') {
       try {
-        const a = await fetch(EXCEPTION_DISCORD_WEBHOOK, {
+        fetch(EXCEPTION_DISCORD_WEBHOOK, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

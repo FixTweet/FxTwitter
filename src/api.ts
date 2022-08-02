@@ -129,7 +129,7 @@ const populateTweetProperties = async (
     );
     if (translateAPI !== null && translateAPI?.translation) {
       apiTweet.translation = {
-        text: translateAPI?.translation || '',
+        text: linkFixer(tweet, translateAPI?.translation || ''),
         source_lang: translateAPI?.sourceLanguage || '',
         target_lang: translateAPI?.destinationLanguage || ''
       };
