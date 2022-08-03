@@ -49,6 +49,7 @@ const populateTweetProperties = async (
   const name = user?.name || '';
 
   apiTweet.url = `${Constants.TWITTER_ROOT}/${screenName}/status/${tweet.id_str}`;
+  apiTweet.id = tweet.id_str;
   apiTweet.text = linkFixer(tweet, tweet.full_text);
   apiTweet.author = {
     name: name,
