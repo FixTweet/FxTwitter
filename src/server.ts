@@ -221,7 +221,7 @@ addEventListener('fetch', (event: FetchEvent) => {
   try {
     event.respondWith(cacheWrapper(event));
   } catch (e: unknown) {
-    let error = e as Error;
+    const error = e as Error;
     if (typeof EXCEPTION_DISCORD_WEBHOOK !== 'undefined') {
       try {
         fetch(EXCEPTION_DISCORD_WEBHOOK, {
