@@ -62,7 +62,7 @@ export const handleStatus = async (
   /* Use quote media if there is no media */
   if (!tweet.media && tweet.quote?.media) {
     tweet.media = tweet.quote.media;
-    tweet.twitter_card = 'summary_large_image';
+    tweet.twitter_card = tweet.quote.twitter_card;
   }
 
   let authorText = getAuthorText(tweet) || Strings.DEFAULT_AUTHOR_TEXT;
