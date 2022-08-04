@@ -35,6 +35,8 @@
     "wrangler": "^2.0.23"
   },
   "dependencies": {
+    "@sentry/browser": "^7.8.1",
+    "@sentry/tracing": "^7.8.1",
     "itty-router": "^2.6.1"
   }
 }

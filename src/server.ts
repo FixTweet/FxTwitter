@@ -1,3 +1,6 @@
+import * as Sentry from "@sentry/browser";
+import { Integrations } from "@sentry/tracing";
+
 import { Router } from 'itty-router';
 import { Constants } from './constants';
 import { handleStatus } from './status';
@@ -218,30 +221,22 @@ const cacheWrapper = async (event: FetchEvent): Promise<Response> => {
   Event to receive web requests on Cloudflare Worker
 */
 addEventListener('fetch', (event: FetchEvent) => {
-  try {
-    event.respondWith(cacheWrapper(event));
-  } catch (e: unknown) {
-    const error = e as Error;
-    if (typeof EXCEPTION_DISCORD_WEBHOOK !== 'undefined') {
-      try {
-        fetch(EXCEPTION_DISCORD_WEBHOOK, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'User-Agent': `${Constants.BRANDING_NAME}`
-          },
-          body: JSON.stringify({
-            embeds: [
-              {
-                title: `Exception in ${Constants.BRANDING_NAME}`,
-                description: `${error} - occurred while processing ${event.request.url}`,
-              }
-            ]
-          })
-        });
-      } catch (e) {
-        console.log('Failed to send caught exception to Discord', e);
-      }
-    }
+  if (typeof SENTRY_DSN !== 'undefined') {
+    Sentry.init({
+      dsn: SENTRY_DSN,
+      debug: true,
+      integrations: [new Integrations.BrowserTracing()],
+
+      tracesSampleRate: 1.0,
+    });
+    console.log('Sentry initialized')
+  } else {
+    console.log('Sentry DSN not defined');
   }
+  try {
+    throw "hi"
+  } catch (e: unknown) {
+    Sentry.captureException(e);
+  }
+  event.respondWith(cacheWrapper(event));
 });

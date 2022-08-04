@@ -6,4 +6,4 @@ declare const REDIRECT_URL: string;
 declare const MOSAIC_DOMAIN_LIST: string;
 declare const API_HOST: string;
 
-declare const EXCEPTION_DISCORD_WEBHOOK: string;
+declare const SENTRY_DSN: string;

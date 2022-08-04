@@ -37,6 +37,9 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       API_HOST: `'${process.env.API_HOST}'`
+    }),
+    new webpack.DefinePlugin({
+      SENTRY_DSN: `'${process.env.SENTRY_DSN}'`
     })
   ],
   optimization: {
