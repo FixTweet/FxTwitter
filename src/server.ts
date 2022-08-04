@@ -1,5 +1,4 @@
-import * as Sentry from "@sentry/browser";
-import { Integrations } from "@sentry/tracing";
+import Toucan from 'toucan-js';
 
 import { Router } from 'itty-router';
 import { Constants } from './constants';
@@ -217,26 +216,44 @@ const cacheWrapper = async (event: FetchEvent): Promise<Response> => {
   }
 };
 
+const sentryWrapper = async (event: FetchEvent): Promise<void> => {
+  let sentry: null | Toucan = null;
+
+  if (typeof SENTRY_DSN !== 'undefined') {
+    sentry = new Toucan({
+      dsn: SENTRY_DSN,
+      context: event, // Includes 'waitUntil', which is essential for Sentry logs to be delivered. Also includes 'request' -- no need to set it separately.
+      allowedHeaders: /(.*)/,
+      allowedSearchParams: /(.*)/,
+      release: RELEASE_NAME,
+      rewriteFrames: {
+        root: '/'
+      },
+      event
+    });
+  }
+
+  event.respondWith((async (): Promise<Response> => {
+    try {
+      return await cacheWrapper(event)
+    } catch(err: unknown) {
+      sentry && sentry.captureException(err);
+
+      return new Response(Strings.ERROR_HTML, {
+        headers: {
+          ...Constants.RESPONSE_HEADERS,
+          'content-type': 'text/html',
+          'cache-control': 'max-age=1' 
+        },
+        status: 500
+      });
+    }
+  })())
+}
+
 /*
   Event to receive web requests on Cloudflare Worker
 */
 addEventListener('fetch', (event: FetchEvent) => {
-  if (typeof SENTRY_DSN !== 'undefined') {
-    Sentry.init({
-      dsn: SENTRY_DSN,
-      debug: true,
-      integrations: [new Integrations.BrowserTracing()],
-
-      tracesSampleRate: 1.0,
-    });
-    console.log('Sentry initialized')
-  } else {
-    console.log('Sentry DSN not defined');
-  }
-  try {
-    throw "hi"
-  } catch (e: unknown) {
-    Sentry.captureException(e);
-  }
-  event.respondWith(cacheWrapper(event));
+  sentryWrapper(event);
 });

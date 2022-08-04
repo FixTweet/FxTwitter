@@ -8,6 +8,7 @@ export const Constants = {
   API_HOST: API_HOST,
   HOST_URL: HOST_URL,
   REDIRECT_URL: REDIRECT_URL,
+  RELEASE_NAME: RELEASE_NAME,
   API_DOCS_URL: `https://github.com/dangeredwolf/FixTweet/wiki/Status-API`,
   TWITTER_ROOT: 'https://twitter.com',
   TWITTER_API_ROOT: 'https://api.twitter.com',

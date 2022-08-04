@@ -235,7 +235,7 @@ ${choice.label}  (${choice.percentage}%)
      Telegram does not use this. */
   headers.push(
     `<link rel="alternate" href="${Constants.HOST_URL}/owoembed?text=${encodeURIComponent(
-      authorText.substr(0, 200)
+      authorText.substring(0, 200)
     )}&status=${encodeURIComponent(status)}&author=${encodeURIComponent(
       tweet.author?.screen_name || ''
     )}" type="application/json+oembed" title="${tweet.author.name}">`

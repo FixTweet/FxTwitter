@@ -7,3 +7,4 @@ declare const MOSAIC_DOMAIN_LIST: string;
 declare const API_HOST: string;
 
 declare const SENTRY_DSN: string;
+declare const RELEASE_NAME: string;

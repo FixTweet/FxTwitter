@@ -17,6 +17,7 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^3.14.1",
     "@microsoft/eslint-formatter-sarif": "^3.0.0",
+    "@sentry/webpack-plugin": "^1.19.0",
     "@types/service-worker-mock": "^2.0.1",
     "@typescript-eslint/eslint-plugin": "^5.31.0",
     "@typescript-eslint/parser": "^5.31.0",
@@ -35,8 +36,7 @@
     "wrangler": "^2.0.23"
   },
   "dependencies": {
-    "@sentry/browser": "^7.8.1",
-    "@sentry/tracing": "^7.8.1",
-    "itty-router": "^2.6.1"
+    "itty-router": "^2.6.1",
+    "toucan-js": "^2.6.1"
   }
 }
