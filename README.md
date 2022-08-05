@@ -139,7 +139,7 @@ Clone the repo, install [Node.js](https://nodejs.org/) and run `npm install` in 
 
 Once you're set up with your worker on `*.workers.dev`, [add your worker to your custom domain](https://developers.cloudflare.com/workers/platform/routing/custom-domains/).
 
-Optional: Set the `EXCEPTION_DISCORD_WEBHOOK` secret to a Discord webhook URL to log exceptions to a Discord channel. At this time, we have not integrated an error handling SDK to keep the script small and execution times to a minimum, but it is something that may be explored in the future.
+Populate Sentry details in your `.env` to use Sentry in your product to catch exceptions.
 
 ---
 
