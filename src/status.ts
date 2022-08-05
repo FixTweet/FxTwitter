@@ -52,7 +52,8 @@ export const handleStatus = async (
     if (tweet.media.video) {
       redirectUrl = tweet.media.video.url;
     } else if (tweet.media.photos) {
-      redirectUrl = (tweet.media.photos[mediaNumber || 0] || tweet.media.photos[0]).url;
+      const photos = tweet.media.photos;
+      redirectUrl = (photos[(mediaNumber || 1) - 1] || photos[0]).url;
     }
     if (redirectUrl) {
       return { response: Response.redirect(redirectUrl, 302) };
