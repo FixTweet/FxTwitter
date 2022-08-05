@@ -34,6 +34,34 @@ export const Strings = {
 ███   by @dangeredwolf, et al.
 -->
 <head>{headers}</head>`,
+  ERROR_HTML: `<!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>:(</title>
+      <style>
+        body {
+          font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+          padding: 0 20px;
+        }
+        h1 {
+          font-size: 4em;
+          font-weight: 900;
+          margin-bottom: 0;
+        }
+        p {
+          font-size:10px;
+          opacity:0.3
+        }
+      </style>
+    </head>
+    <body>
+      <h1>Owie :(</h1>
+      <h2>You hit a snag that broke ${BRANDING_NAME}. It's not your fault though&mdash;This is usually caused by a Twitter outage or a new bug.</h2>
+      <p>${RELEASE_NAME}</p>
+    </body>
+  </html>`.replace(/( {2}|\n)/g, ''),
   DEFAULT_AUTHOR_TEXT: 'Twitter',
 
   QUOTE_TEXT: `═ ↘️ Quoting {name} (@{screen_name}) ═════`,

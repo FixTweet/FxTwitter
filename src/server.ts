@@ -1,3 +1,5 @@
+import Toucan from 'toucan-js';
+
 import { Router } from 'itty-router';
 import { Constants } from './constants';
 import { handleStatus } from './status';
@@ -214,34 +216,44 @@ const cacheWrapper = async (event: FetchEvent): Promise<Response> => {
   }
 };
 
+const sentryWrapper = async (event: FetchEvent): Promise<void> => {
+  let sentry: null | Toucan = null;
+
+  if (typeof SENTRY_DSN !== 'undefined') {
+    sentry = new Toucan({
+      dsn: SENTRY_DSN,
+      context: event, // Includes 'waitUntil', which is essential for Sentry logs to be delivered. Also includes 'request' -- no need to set it separately.
+      allowedHeaders: /(.*)/,
+      allowedSearchParams: /(.*)/,
+      release: RELEASE_NAME,
+      rewriteFrames: {
+        root: '/'
+      },
+      event
+    });
+  }
+
+  event.respondWith((async (): Promise<Response> => {
+    try {
+      return await cacheWrapper(event)
+    } catch(err: unknown) {
+      sentry && sentry.captureException(err);
+
+      return new Response(Strings.ERROR_HTML, {
+        headers: {
+          ...Constants.RESPONSE_HEADERS,
+          'content-type': 'text/html',
+          'cache-control': 'max-age=1' 
+        },
+        status: 500
+      });
+    }
+  })())
+}
+
 /*
   Event to receive web requests on Cloudflare Worker
 */
 addEventListener('fetch', (event: FetchEvent) => {
-  try {
-    event.respondWith(cacheWrapper(event));
-  } catch (e: unknown) {
-    const error = e as Error;
-    if (typeof EXCEPTION_DISCORD_WEBHOOK !== 'undefined') {
-      try {
-        fetch(EXCEPTION_DISCORD_WEBHOOK, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'User-Agent': `${Constants.BRANDING_NAME}`
-          },
-          body: JSON.stringify({
-            embeds: [
-              {
-                title: `Exception in ${Constants.BRANDING_NAME}`,
-                description: `${error} - occurred while processing ${event.request.url}`,
-              }
-            ]
-          })
-        });
-      } catch (e) {
-        console.log('Failed to send caught exception to Discord', e);
-      }
-    }
-  }
+  sentryWrapper(event);
 });

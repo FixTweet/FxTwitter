@@ -151,7 +151,7 @@ They all run the exact same worker and have no difference to end users... you ca
 
 However, we do consider `fxtwitter.com` to be the primary domain these days, and the public API is only on `api.fxtwitter.com`.
 
-`pxtwitter.com` was our original domain for the project, bought the day before we launched FixTweet (then known as pxTwtiter). I was trying to find something memorable and `px` kinda sounds like "pix" or can mean "pixels" which is fitting as a service that can embed images, videos, etc. Not long after, I bought `twittpr.com` because it's easier to do sed replacement with on Discord (`s/e/p`), and because it had a `p` in it, it was sorta related to pxTwitter. They have always functioned identically.
+`pxtwitter.com` was our original domain for the project, bought the day before we launched FixTweet (then known as pxTwitter). I was trying to find something memorable and `px` kinda sounds like "pix" or can mean "pixels" which is fitting as a service that can embed images, videos, etc. Not long after, I bought `twittpr.com` because it's easier to do sed replacement with on Discord (`s/e/p`), and because it had a `p` in it, it was sorta related to pxTwitter. They have always functioned identically.
 
 A couple weeks later, I acquired the `fxtwitter.com` domain from RobinUniverse and alongside this rebranded the project as FixTweet and shifted `fxtwitter.com` to be the primary domain instead of `pxtwitter.com`. Like the addition of `twittpr.com` this domain works identically to the others. I wouldn't go as far as to say `pxtwitter.com` is deprecated, but it certainly is the less preferred domain of the 3.
 
