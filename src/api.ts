@@ -5,6 +5,7 @@ import { linkFixer } from './linkFixer';
 import { handleMosaic } from './mosaic';
 import { colorFromPalette } from './palette';
 import { translateTweet } from './translate';
+import { unescapeText } from './utils';
 
 const processMedia = (media: TweetMedia): APIPhoto | APIVideo | null => {
   if (media.type === 'photo') {
@@ -50,7 +51,7 @@ const populateTweetProperties = async (
 
   apiTweet.url = `${Constants.TWITTER_ROOT}/${screenName}/status/${tweet.id_str}`;
   apiTweet.id = tweet.id_str;
-  apiTweet.text = linkFixer(tweet, tweet.full_text);
+  apiTweet.text = unescapeText(linkFixer(tweet, tweet.full_text));
   apiTweet.author = {
     name: name,
     screen_name: screenName,
@@ -130,7 +131,7 @@ const populateTweetProperties = async (
     );
     if (translateAPI !== null && translateAPI?.translation) {
       apiTweet.translation = {
-        text: linkFixer(tweet, translateAPI?.translation || ''),
+        text: unescapeText(linkFixer(tweet, translateAPI?.translation || '')),
         source_lang: translateAPI?.sourceLanguage || '',
         target_lang: translateAPI?.destinationLanguage || ''
       };
