@@ -18,9 +18,8 @@ String.prototype.format = function (options: { [find: string]: string }) {
 };
 
 export const Strings = {
-  BASE_HTML: `<!DOCTYPE html>
-<html {lang}>
-<!--
+  BASE_HTML: `<!DOCTYPE html><html {lang}><!--
+
    █████ ▐█▌       ███████████                              ███
  ███      █            ███                                  ███
 ███                    ███                                  ███
@@ -32,8 +31,9 @@ export const Strings = {
 ███
 ███   A better Tweet embedding service
 ███   by @dangeredwolf, et al.
--->
-<head>{headers}</head>`,
+
+--><head>{headers}</head>
+<!-- Worker build ${RELEASE_NAME} -->`,
   ERROR_HTML: `<!DOCTYPE html>
   <html lang="en">
     <head>

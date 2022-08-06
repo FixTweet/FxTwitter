@@ -155,6 +155,7 @@ const cacheWrapper = async (event: FetchEvent): Promise<Response> => {
       : request.url
   );
 
+  console.log('userAgent', userAgent);
   console.log('cacheUrl', cacheUrl);
 
   const cacheKey = new Request(cacheUrl.toString(), request);
