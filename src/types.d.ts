@@ -45,6 +45,7 @@ interface APIResponse {
 interface APITranslate {
   text: string;
   source_lang: string;
+  source_lang_en: string;
   target_lang: string;
 }
 

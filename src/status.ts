@@ -85,7 +85,7 @@ export const handleStatus = async (
     const formatText =
       language === 'en'
         ? Strings.TRANSLATE_TEXT.format({
-            language: translation.source_lang
+            language: translation.source_lang_en
           })
         : Strings.TRANSLATE_TEXT_INTL.format({
             source: translation.source_lang.toUpperCase(),

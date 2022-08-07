@@ -133,7 +133,8 @@ const populateTweetProperties = async (
       apiTweet.translation = {
         text: unescapeText(linkFixer(tweet, translateAPI?.translation || '')),
         source_lang: translateAPI?.sourceLanguage || '',
-        target_lang: translateAPI?.destinationLanguage || ''
+        target_lang: translateAPI?.destinationLanguage || '',
+        source_lang_en: translateAPI?.localizedSourceLanguage || '',
       };
     }
   }
