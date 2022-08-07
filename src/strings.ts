@@ -39,6 +39,10 @@ export const Strings = {
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta content="FixTweet" property="og:title"/>
+      <meta content="Owie, you crashed ${BRANDING_NAME} :(
+
+This is caused by Twitter API downtime or a new bug. Try again in a little while." property="og:description"/></head>
       <title>:(</title>
       <style>
         body {
