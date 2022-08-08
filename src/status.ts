@@ -170,6 +170,7 @@ export const handleStatus = async (
   /* External media renderer (i.e. YouTube) */
   if (tweet.media?.external) {
     const { external } = tweet.media;
+    authorText = newText || '';
     headers.push(
       `<meta name="twitter:player" content="${external.url}">`,
       `<meta name="twitter:player:width" content="${external.width}">`,
