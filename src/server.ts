@@ -145,8 +145,7 @@ router.get('*', async (request: Request) => {
   return Response.redirect(Constants.REDIRECT_URL, 307);
 });
 
-const cacheWrapper = async (event: FetchEvent): Promise<Response> => {
-  const { request } = event;
+const cacheWrapper = async (request: Request, env: unknown, context: ExecutionContext): Promise<Response> => {
   const userAgent = request.headers.get('User-Agent') || '';
   // https://developers.cloudflare.com/workers/examples/cache-api/
   const cacheUrl = new URL(
@@ -188,12 +187,12 @@ const cacheWrapper = async (event: FetchEvent): Promise<Response> => {
       }
 
       // eslint-disable-next-line no-case-declarations
-      const response = await router.handle(event.request, event);
+      const response = await router.handle(request, context);
 
       // Store the fetched response as cacheKey
       // Use waitUntil so you can return the response without blocking on
       // writing to cache
-      event.waitUntil(cache.put(cacheKey, response.clone()));
+      context.waitUntil(cache.put(cacheKey, response.clone()));
 
       return response;
     /* Telegram sends this from Webpage Bot, and Cloudflare sends it if we purge cache, and we respect it.
@@ -219,46 +218,45 @@ const cacheWrapper = async (event: FetchEvent): Promise<Response> => {
   }
 };
 
-const sentryWrapper = async (event: FetchEvent): Promise<void> => {
+const sentryWrapper = async (request: Request, env: unknown, context: ExecutionContext): Promise<Response> => {
   let sentry: null | Toucan = null;
 
   if (typeof SENTRY_DSN !== 'undefined') {
     sentry = new Toucan({
       dsn: SENTRY_DSN,
-      context: event, // Includes 'waitUntil', which is essential for Sentry logs to be delivered. Also includes 'request' -- no need to set it separately.
       allowedHeaders: /(.*)/,
       allowedSearchParams: /(.*)/,
       release: RELEASE_NAME,
       rewriteFrames: {
         root: '/'
       },
-      event
+      context  // Includes 'waitUntil', which is essential for Sentry logs to be delivered. Also includes 'request' -- no need to set it separately.
     });
   }
 
-  event.respondWith(
-    (async (): Promise<Response> => {
-      try {
-        return await cacheWrapper(event);
-      } catch (err: unknown) {
-        sentry && sentry.captureException(err);
+  try {
+    return await cacheWrapper(request, env, context);
+  } catch (err: unknown) {
+    sentry && sentry.captureException(err);
 
-        return new Response(Strings.ERROR_HTML, {
-          headers: {
-            ...Constants.RESPONSE_HEADERS,
-            'content-type': 'text/html',
-            'cache-control': 'max-age=1'
-          },
-          status: 500
-        });
-      }
-    })()
-  );
+    return new Response(Strings.ERROR_HTML, {
+      headers: {
+        ...Constants.RESPONSE_HEADERS,
+        'content-type': 'text/html',
+        'cache-control': 'max-age=1'
+      },
+      status: 500
+    });
+  }
 };
 
-/*
-  Event to receive web requests on Cloudflare Worker
-*/
-addEventListener('fetch', (event: FetchEvent) => {
-  sentryWrapper(event);
-});
+const worker = {
+  /*
+    Event to receive web requests on Cloudflare Worker
+  */
+  async fetch(request: Request, env: unknown, context: ExecutionContext) {
+    return await sentryWrapper(request, env, context);
+  }
+}
+
+export default worker;

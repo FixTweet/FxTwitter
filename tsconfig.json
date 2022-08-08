@@ -5,13 +5,16 @@
     "target": "es2022",
     "lib": ["es2022"],
     "alwaysStrict": true,
+    "incremental": true, 
     "strict": true,
     "preserveConstEnums": true,
     "moduleResolution": "node",
     "allowJs": true,
     "sourceMap": true,
     "esModuleInterop": true,
-    "types": ["@cloudflare/workers-types", "@types/service-worker-mock"]
+    "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
+    "types": ["@cloudflare/workers-types", "@types/service-worker-mock", "@types/jest"]
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist", "test"]

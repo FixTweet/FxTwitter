@@ -78,6 +78,9 @@ module.exports = {
   optimization: {
     mangleExports: 'size'
   },
+  exports: {
+    ".": "./src/server.ts"
+  },
   module: {
     rules: [
       {

@@ -116,7 +116,7 @@ export const fetchUsingGuest = async (status: string): Promise<TimelineBlobParti
     }
 
     /* Once we've confirmed we have a working guest token, let's cache it! */
-    // event.waitUntil(cache.put(guestTokenRequest, activate.clone()));
+    // context.waitUntil(cache.put(guestTokenRequest, activate.clone()));
     conversation.guestToken = guestToken;
     return conversation;
   }
