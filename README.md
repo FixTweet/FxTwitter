@@ -1,4 +1,4 @@
-# FixTweet
+# 🔧 FixTweet
 
 ## Embed Twitter videos, polls, translations, & more on Discord and Telegram!
 
