@@ -17,7 +17,9 @@ const statusRequest = async (
   const userAgent = request.headers.get('User-Agent') || '';
 
   const isBotUA =
-    userAgent.match(/bot|facebook|embed|got|firefox\/92|curl|wget|go-http|yahoo|generator|whatsapp|preview|link|proxy|vkshare|images|analyzer|index|crawl|spider/gi) !== null;
+    userAgent.match(
+      /bot|facebook|embed|got|firefox\/92|curl|wget|go-http|yahoo|generator|whatsapp|preview|link|proxy|vkshare|images|analyzer|index|crawl|spider/gi
+    ) !== null;
 
   if (
     url.pathname.match(/\/status(es)?\/\d+\.(mp4|png|jpg)/g) !== null ||
@@ -234,23 +236,25 @@ const sentryWrapper = async (event: FetchEvent): Promise<void> => {
     });
   }
 
-  event.respondWith((async (): Promise<Response> => {
-    try {
-      return await cacheWrapper(event)
-    } catch(err: unknown) {
-      sentry && sentry.captureException(err);
+  event.respondWith(
+    (async (): Promise<Response> => {
+      try {
+        return await cacheWrapper(event);
+      } catch (err: unknown) {
+        sentry && sentry.captureException(err);
 
-      return new Response(Strings.ERROR_HTML, {
-        headers: {
-          ...Constants.RESPONSE_HEADERS,
-          'content-type': 'text/html',
-          'cache-control': 'max-age=1' 
-        },
-        status: 500
-      });
-    }
-  })())
-}
+        return new Response(Strings.ERROR_HTML, {
+          headers: {
+            ...Constants.RESPONSE_HEADERS,
+            'content-type': 'text/html',
+            'cache-control': 'max-age=1'
+          },
+          status: 500
+        });
+      }
+    })()
+  );
+};
 
 /*
   Event to receive web requests on Cloudflare Worker

@@ -117,7 +117,7 @@ In many ways, FixTweet has richer embeds and does more. Here's a table comparing
 
 ⁴ On GitHub, BetterTwitFix (vxTwitter) claims to support this feature, however in my testing as of mid-July 2022, this does not seem to work.
 
-⁵ We've temporarily paused multi-image on Telegram due to issues with its embedding service that can cause images to sometimes not show up at all.  ([#15](https://github.com/dangeredwolf/FixTweet/issues/15)) However, multi-image continues to work in Discord and most other platforms. 
+⁵ We've temporarily paused multi-image on Telegram due to issues with its embedding service that can cause images to sometimes not show up at all. ([#15](https://github.com/dangeredwolf/FixTweet/issues/15)) However, multi-image continues to work in Discord and most other platforms.
 
 ⁶ External media requiring web containers, such as YouTube, won't embed in Telegram because Telegram doesn't support it. Plain media will work in Telegram, and it works either way inside Discord.
 

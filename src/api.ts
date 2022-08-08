@@ -134,7 +134,7 @@ const populateTweetProperties = async (
         text: unescapeText(linkFixer(tweet, translateAPI?.translation || '')),
         source_lang: translateAPI?.sourceLanguage || '',
         target_lang: translateAPI?.destinationLanguage || '',
-        source_lang_en: translateAPI?.localizedSourceLanguage || '',
+        source_lang_en: translateAPI?.localizedSourceLanguage || ''
       };
     }
   }

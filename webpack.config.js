@@ -3,15 +3,17 @@ const webpack = require('webpack');
 const SentryWebpackPlugin = require('@sentry/webpack-plugin');
 
 const gitCommit = require('child_process')
-				.execSync('git rev-parse --short HEAD')
-				.toString()
-				.trim();
+  .execSync('git rev-parse --short HEAD')
+  .toString()
+  .trim();
 const gitBranch = require('child_process')
-        .execSync('git rev-parse --abbrev-ref HEAD')
-        .toString()
-        .trim();
+  .execSync('git rev-parse --abbrev-ref HEAD')
+  .toString()
+  .trim();
 
-const releaseName = `fixtweet-${gitBranch}-${gitCommit}-${new Date().toISOString().substring(0,19)}`
+const releaseName = `fixtweet-${gitBranch}-${gitCommit}-${new Date()
+  .toISOString()
+  .substring(0, 19)}`;
 
 require('dotenv').config();
 
@@ -43,7 +45,7 @@ let plugins = [
   new webpack.DefinePlugin({
     RELEASE_NAME: `'${releaseName}'`
   })
-]
+];
 
 if (process.env.SENTRY_AUTH_TOKEN) {
   plugins.push(
@@ -52,9 +54,9 @@ if (process.env.SENTRY_AUTH_TOKEN) {
       include: './dist',
       urlPrefix: '~/',
       ignore: ['node_modules', 'webpack.config.js'],
-      authToken: process.env.SENTRY_AUTH_TOKEN,
+      authToken: process.env.SENTRY_AUTH_TOKEN
     })
-  )
+  );
 }
 
 module.exports = {
