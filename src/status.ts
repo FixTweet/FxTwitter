@@ -195,8 +195,8 @@ export const handleStatus = async (
     tweet.poll.choices.forEach(choice => {
       // render bar
       const bar = '█'.repeat((choice.percentage / 100) * barLength);
-      str += `${bar}
-${choice.label}  (${choice.percentage}%)
+      // eslint-disable-next-line no-irregular-whitespace
+      str += `${bar}\n${choice.label}  (${choice.percentage}%)
 `;
     });
 
