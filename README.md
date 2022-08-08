@@ -1,4 +1,4 @@
-# FixTweet (formerly pxTwitter)
+# FixTweet
 
 ## Embed Twitter videos, polls, translations, & more on Discord and Telegram!
 
@@ -8,7 +8,7 @@
 
 ## Inspired by [RobinUniverse's TwitFix](https://github.com/robinuniverse/TwitFix), but rewritten in TypeScript as a Cloudflare Worker to scale, while also being packed with even more features.
 
-### Add `fx` before your Twitter link to make it `fxtwitter.com` (Alternative: `pxtwitter.com`)
+### Add `fx` before your Twitter link to make it `fxtwitter.com`
 
 ### In a hurry? On Discord, send a Twitter link and type `s/e/p` to make `twittpr.com`.
 
