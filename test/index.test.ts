@@ -35,7 +35,7 @@ describe('handle', () => {
     expect(tweet.url).toEqual('https://twitter.com/jack/status/20');
     expect(tweet.id).toEqual('20');
     expect(tweet.text).toEqual('just setting up my twttr');
-    expect(tweet.author.screen_name.toLowerCase()).toEqual('jack');
+    expect(tweet.author.screen_name?.toLowerCase()).toEqual('jack');
     expect(tweet.author.name).toBeTruthy();
     expect(tweet.author.avatar_url).toBeTruthy();
     expect(tweet.author.banner_url).toBeTruthy();
