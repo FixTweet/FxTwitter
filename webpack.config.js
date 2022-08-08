@@ -63,7 +63,7 @@ module.exports = {
   entry: {
     worker: './src/server.ts'
   },
-  target: 'webworker',
+  target: 'node12.17',
   devtool: 'source-map',
   output: {
     filename: '[name].js',
@@ -76,16 +76,19 @@ module.exports = {
     },
     library: {
       type: 'module',
-      export: 'default',
+      export: ['default']
     }
   },
-  mode: 'production',
+  mode: 'development',
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
     fallback: { util: false }
   },
   experiments: {
     outputModule: true
+  },
+  optimization: {
+    runtimeChunk: 'single'
   },
   plugins: plugins,
   module: {
