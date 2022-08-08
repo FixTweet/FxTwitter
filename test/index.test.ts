@@ -1,9 +1,4 @@
 import { cacheWrapper } from '../src/server';
-// import { webcrypto } from 'node:crypto';
-// const crypto = webcrypto;
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-// declare const global: any;
 
 const botHeaders = { 'User-Agent': 'Discordbot/2.0' };
 const humanHeaders = {
