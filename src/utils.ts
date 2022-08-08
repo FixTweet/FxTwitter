@@ -13,4 +13,4 @@ export const unescapeText = (text: string) => {
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
     .replace(/&amp;/g, '&');
-}
+};
