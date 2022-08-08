@@ -1,0 +1,20 @@
+name: Tests
+
+on:
+  push:
+    branches: [main, unit-tests]
+  pull_request:
+    branches: [main, unit-tests]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+      - run: npm install
+      - run: npx webpack && npm test

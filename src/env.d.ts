@@ -8,3 +8,5 @@ declare const API_HOST: string;
 
 declare const SENTRY_DSN: string;
 declare const RELEASE_NAME: string;
+
+declare const TEST: boolean | undefined;

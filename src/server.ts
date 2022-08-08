@@ -140,13 +140,15 @@ router.get('*', async (request: Request) => {
   const url = new URL(request.url);
 
   if (url.hostname === Constants.API_HOST) {
-    return Response.redirect(Constants.API_DOCS_URL, 307);
+    return Response.redirect(Constants.API_DOCS_URL, 302);
   }
-  return Response.redirect(Constants.REDIRECT_URL, 307);
+  return Response.redirect(Constants.REDIRECT_URL, 302);
 });
 
-const cacheWrapper = async (event: FetchEvent): Promise<Response> => {
-  const { request } = event;
+export const cacheWrapper = async (
+  request: Request,
+  event?: FetchEvent
+): Promise<Response> => {
   const userAgent = request.headers.get('User-Agent') || '';
   // https://developers.cloudflare.com/workers/examples/cache-api/
   const cacheUrl = new URL(
@@ -177,6 +179,7 @@ const cacheWrapper = async (event: FetchEvent): Promise<Response> => {
   switch (request.method) {
     case 'GET':
       if (cacheUrl.hostname !== Constants.API_HOST) {
+        /* cache may be undefined in tests */
         const cachedResponse = await cache.match(cacheKey);
 
         if (cachedResponse) {
@@ -188,12 +191,12 @@ const cacheWrapper = async (event: FetchEvent): Promise<Response> => {
       }
 
       // eslint-disable-next-line no-case-declarations
-      const response = await router.handle(event.request, event);
+      const response = await router.handle(request, event);
 
       // Store the fetched response as cacheKey
       // Use waitUntil so you can return the response without blocking on
       // writing to cache
-      event.waitUntil(cache.put(cacheKey, response.clone()));
+      event && event.waitUntil(cache.put(cacheKey, response.clone()));
 
       return response;
     /* Telegram sends this from Webpage Bot, and Cloudflare sends it if we purge cache, and we respect it.
@@ -219,10 +222,10 @@ const cacheWrapper = async (event: FetchEvent): Promise<Response> => {
   }
 };
 
-const sentryWrapper = async (event: FetchEvent): Promise<void> => {
+const sentryWrapper = async (event: FetchEvent, test = false): Promise<void> => {
   let sentry: null | Toucan = null;
 
-  if (typeof SENTRY_DSN !== 'undefined') {
+  if (typeof SENTRY_DSN !== 'undefined' && !test) {
     sentry = new Toucan({
       dsn: SENTRY_DSN,
       context: event, // Includes 'waitUntil', which is essential for Sentry logs to be delivered. Also includes 'request' -- no need to set it separately.
@@ -239,7 +242,7 @@ const sentryWrapper = async (event: FetchEvent): Promise<void> => {
   event.respondWith(
     (async (): Promise<Response> => {
       try {
-        return await cacheWrapper(event);
+        return await cacheWrapper(event.request, event);
       } catch (err: unknown) {
         sentry && sentry.captureException(err);
 
@@ -256,9 +259,10 @@ const sentryWrapper = async (event: FetchEvent): Promise<void> => {
   );
 };
 
-/*
-  Event to receive web requests on Cloudflare Worker
-*/
-addEventListener('fetch', (event: FetchEvent) => {
-  sentryWrapper(event);
-});
+/* May be undefined in test scenarios */
+if (typeof addEventListener !== 'undefined') {
+  /* Event to receive web requests on Cloudflare Worker */
+  addEventListener('fetch', (event: FetchEvent) => {
+    sentryWrapper(event);
+  });
+}
