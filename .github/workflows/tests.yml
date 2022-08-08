@@ -7,7 +7,7 @@ on:
     branches: [main, unit-tests]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -17,4 +17,4 @@ jobs:
           cache: 'npm'
           cache-dependency-path: package-lock.json
       - run: npm install
-      - run: npm test
+      - run: npx webpack && npm test
