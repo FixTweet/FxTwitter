@@ -63,3 +63,8 @@ Allow: /watch?v=dQw4w9WgXcQ
 Disallow: /doing-harm-to-others
 Disallow: /taking-over-the-world`
 };
+
+if (typeof TEST !== 'undefined') {
+  /* Undici gets angry about unicode headers, this is a workaround. */
+  Constants.RESPONSE_HEADERS['x-powered-by'] = 'Trans Rights';
+}
