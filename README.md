@@ -16,9 +16,9 @@
 
 ## Embed Videos
 
-Let's face it — we all have videos of memes and other things from Twitter we want to quickly share with friends. With normal Twitter links, embedding videos is often broken on Discord and impossible on Telegram. But using FixTweet, we embed the raw mp4 file so it's compatible with just about anything supporting video embeds.
+We all have videos of memes and other things from Twitter we want to quickly share with friends. With normal Twitter links, embedding videos is often broken on Discord and impossible on Telegram. But using FixTweet, we embed the raw mp4 file so it's compatible with just about anything supporting video embeds.
 
-![](https://cdn.discordapp.com/attachments/165560751363325952/1000495191817453578/pxTwitter.png)
+![](https://cdn.discordapp.com/attachments/165560751363325952/1006337645737156758/FixTweet.png)
 
 On Discord, we'll also automatically embed videos linked from other platforms, such as YouTube, so they can play without having to open a browser.
 
@@ -26,13 +26,13 @@ On Discord, we'll also automatically embed videos linked from other platforms, s
 
 If you want to share the results of a Twitter poll, you can do so by just linking the Tweet using FixTweet.
 
-![](https://cdn.discordapp.com/attachments/165560751363325952/1000487446393397328/pxTwitter.png)
+![](https://cdn.discordapp.com/attachments/165560751363325952/1006331192372629544/FixTweet.png)
 
 ## Embed Quote Tweets & Media
 
 Quote tweets and their media can provide important context to a Tweet. So we'll automatically add said context, and even media if there isn't already media embedded in the quote.
 
-![](https://cdn.discordapp.com/attachments/165560751363325952/1000490187190702190/pxTwitter.png)
+![](https://cdn.discordapp.com/attachments/165560751363325952/1006334041202630757/FixTweet.png)
 
 ## Translate Tweets
 
@@ -40,13 +40,13 @@ You can translate a tweet into any other supported language, with the original a
 
 Just append a tweet with its 2-letter ISO language code. So for English, add `/en` at the end.
 
-![](https://cdn.discordapp.com/attachments/165560751363325952/1000890584153735238/FixTweet.png)
+![](https://cdn.discordapp.com/attachments/165560751363325952/1006333011136102400/FixTweet.png)
 
 ## Direct media links
 
 Want to link directly to a Tweet's media without the embed? You can do easily do that using FixTweet.
 
-![Image demonstrating the feature](https://fxtwitter.com/dangeredwolf/status/1548119328498728960.jpg)
+![Image demonstrating the feature](https://cdn.discordapp.com/attachments/165560751363325952/1006338772192989194/FixTweet.png)
 
 There's a few supported ways to do this:
 
