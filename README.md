@@ -11,8 +11,7 @@
 ### Add `fx` before your Twitter link to make it `fxtwitter.com`
 
 ### In a hurry? On Discord, send a Twitter link and type `s/e/p` to make `twittpr.com`.
-
-<img src="https://camo.githubusercontent.com/b22920252aaa349afe4a3568dcf04c4522114b7739b004ee3b29dfd61593208c/68747470733a2f2f63646e2e646973636f72646170702e636f6d2f6174746163686d656e74732f3136353536303735313336333332353935322f313030303437373437303234313333333336382f7078747769747465722e77656270" width="600">
+<img src="https://cdn.discordapp.com/attachments/165560751363325952/1006346785985417307/fixtweet.webp">
 
 ## Embed Videos
 
