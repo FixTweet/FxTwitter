@@ -67,20 +67,27 @@ module.exports = {
   devtool: 'source-map',
   output: {
     filename: '[name].js',
-    path: path.join(__dirname, 'dist')
+    path: path.join(__dirname, 'dist'),
+    iife: false,
+    chunkFormat: 'module',
+    chunkLoading: 'import',
+    environment: {
+      module: true
+    },
+    library: {
+      type: 'module',
+      export: 'default',
+    }
   },
   mode: 'production',
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
     fallback: { util: false }
   },
+  experiments: {
+    outputModule: true
+  },
   plugins: plugins,
-  optimization: {
-    mangleExports: 'size'
-  },
-  exports: {
-    ".": "./src/server.ts"
-  },
   module: {
     rules: [
       {
@@ -93,3 +100,4 @@ module.exports = {
     ]
   }
 };
+
