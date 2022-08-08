@@ -8,7 +8,6 @@
     "publish": "wrangler publish",
     "log": "wrangler tail",
     "reload": "wrangler publish && wrangler tail",
-    "register": "node src/register.js",
     "prettier": "prettier --write .",
     "lint:eslint": "eslint --max-warnings=0 src"
   },
