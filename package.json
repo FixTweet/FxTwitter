@@ -26,7 +26,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-typescript": "^3.0.0",
     "eslint-plugin-optimize-regex": "^1.2.1",
-    "eslint-plugin-sonarjs": "^0.14.0",
+    "eslint-plugin-sonarjs": "^0.15.0",
     "prettier": "^2.7.1",
     "service-worker-mock": "^2.0.5",
     "ts-loader": "^9.3.1",
