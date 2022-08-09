@@ -189,4 +189,4 @@ Feel free to [open an issue](https://github.com/dangeredwolf/FixTweet/issues), o
 - Worker (Embeds + API) [dangered wolf](https://github.com/dangeredwolf)
 - Mosaic Multi-Image [Antonio32A](https://github.com/Antonio32A)
 
-& other contributions by [Burner](https://github.com/YaBoiBurner), [Deer-Spangle](https://github.com/Deer-Spangle)
+& other contributions by [Burner](https://github.com/YaBoiBurner), [Deer-Spangle](https://github.com/Deer-Spangle), [Antonio32A](https://github.com/Antonio32A)
