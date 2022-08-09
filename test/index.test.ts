@@ -5,15 +5,46 @@ const humanHeaders = {
   'User-Agent':
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
 };
+const githubUrl = 'https://github.com/dangeredwolf/FixTweet';
 
 test('Home page redirect', async () => {
   const result = await cacheWrapper(
-    new Request('https://fxtwitter.com', { method: 'GET' })
+    new Request('https://fxtwitter.com', {
+      method: 'GET',
+      headers: botHeaders
+    })
+  );
+  const resultHuman = await cacheWrapper(
+    new Request('https://fxtwitter.com', {
+      method: 'GET',
+      headers: humanHeaders
+    })
   );
   expect(result.status).toEqual(302);
-  expect(result.headers.get('location')).toEqual(
-    'https://github.com/dangeredwolf/FixTweet'
+  expect(result.headers.get('location')).toEqual(githubUrl);
+  expect(resultHuman.status).toEqual(302);
+  expect(resultHuman.headers.get('location')).toEqual(githubUrl);
+});
+
+test('Tweet redirect human', async () => {
+  const result = await cacheWrapper(
+    new Request('https://fxtwitter.com/jack/status/20', {
+      method: 'GET',
+      headers: humanHeaders
+    })
   );
+  expect(result.status).toEqual(302);
+  expect(result.headers.get('location')).toEqual('https://twitter.com/jack/status/20');
+});
+
+test('Tweet response robot', async () => {
+  const result = await cacheWrapper(
+    new Request('https://fxtwitter.com/jack/status/20', {
+      method: 'GET',
+      headers: botHeaders
+    })
+  );
+  expect(result.status).toEqual(200);
 });
 
 test('API fetch basic Tweet', async () => {
