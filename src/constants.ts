@@ -1,4 +1,4 @@
-const fakeChromeVersion = '103';
+const fakeChromeVersion = '104';
 
 export const Constants = {
   BRANDING_NAME: BRANDING_NAME,
