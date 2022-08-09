@@ -75,7 +75,7 @@ The default Twitter embeds include t.co link shorteners, which make it difficult
 
 We use Twitter's color data for either the first image/video of the tweet, or the author's profile picture. It makes the embed's appearance more _aesthetic_, as well as in line with the content of the Tweet.
 
-![](https://cdn.discordapp.com/attachments/165560751363325952/1006366880304463922/fixtweetcolor3.png)
+![](https://cdn.discordapp.com/attachments/165560751363325952/1006370708265386134/fixtweetcolor3.png)
 
 ## Built with privacy in mind
 
