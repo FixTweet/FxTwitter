@@ -183,3 +183,10 @@ No problem! You can pick any specific photo from a Tweet using Twitter's own URL
 ## Bugs or issues?
 
 Feel free to [open an issue](https://github.com/dangeredwolf/FixTweet/issues), or [ping me on Twitter and I'll see what I can do](https://twitter.com/dangeredwolf).
+
+## Credits
+
+Worker + API [dangered wolf](https://github.com/dangeredwolf)
+Mosaic Multi-Image [Antonio32A](https://github.com/Antonio32A)
+
+& other contributions by [Burner](https://github.com/YaBoiBurner), [Deer-Spangle](https://github.com/Deer-Spangle), [Toast](https://github.com/toastythetoaster)
