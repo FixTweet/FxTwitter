@@ -9,7 +9,7 @@ export const Constants = {
   HOST_URL: HOST_URL,
   REDIRECT_URL: REDIRECT_URL,
   RELEASE_NAME: RELEASE_NAME,
-  API_DOCS_URL: `https://github.com/dangeredwolf/FixTweet/wiki/Status-API`,
+  API_DOCS_URL: `https://github.com/dangeredwolf/FixTweet/wiki/API-Home`,
   TWITTER_ROOT: 'https://twitter.com',
   TWITTER_API_ROOT: 'https://api.twitter.com',
   /* We used to use Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA
