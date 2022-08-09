@@ -160,7 +160,7 @@ A couple weeks later, I acquired the `fxtwitter.com` domain from RobinUniverse a
 
 ### How come embedding takes so long / is not working in Telegram?
 
-Telegram's embedding servers sometimes never even send us a request to embed a URL, possibly due to their servers being overloaded. If you have a link that is broken you can try one of FixTweets other domains (`fxtwitter.com`, `pxtwitter.com`, `twittpr.com`) or use [Webpage Bot](https://t.me/WebpageBot) to try to clear the cache of the embed.
+Telegram's embedding servers sometimes never even send us a request to embed a URL, possibly due to their servers being overloaded. If you have a link that is broken you can try one of FixTweet's other domains (`fxtwitter.com`, `pxtwitter.com`, `twittpr.com`) or use [Webpage Bot](https://t.me/WebpageBot) to try to clear the cache of the embed.
 
 ### Why doesn't multi-image doesn't work in Telegram?
 
