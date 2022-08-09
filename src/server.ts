@@ -18,7 +18,7 @@ const statusRequest = async (
 
   const isBotUA =
     userAgent.match(
-      /bot|facebook|embed|got|firefox\/92|curl|wget|go-http|yahoo|generator|whatsapp|preview|link|proxy|vkshare|images|analyzer|index|crawl|spider/gi
+      /bot|facebook|embed|got|firefox\/92|curl|wget|go-http|yahoo|generator|whatsapp|preview|link|proxy|vkshare|images|analyzer|index|crawl|spider|python/gi
     ) !== null;
 
   if (
