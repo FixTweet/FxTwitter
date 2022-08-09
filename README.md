@@ -69,6 +69,8 @@ Otherwise, it will default to the first image.
 
 The default Twitter embeds include t.co link shorteners, which make it difficult to know where the link is heading. We automatically replace t.co links with their original links to make things clearer.
 
+![](https://cdn.discordapp.com/attachments/165560751363325952/1006348698659344464/FixTweet.png)
+
 ## Color-matched embeds on Discord
 
 We use Twitter's color data for either the first image/video of the tweet, or the author's profile picture. It makes the embed's appearance more _aesthetic_, as well as in line with the content of the Tweet.
