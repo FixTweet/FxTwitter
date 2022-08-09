@@ -105,16 +105,19 @@ export const handleStatus = async (
 
     const { video } = tweet.media;
 
+    /* Multiplying by 0.5 is an ugly hack to fix Discord
+    disliking videos that are too large lol */
+
     headers.push(
       `<meta name="twitter:player:stream:content_type" content="${video.format}"/>`,
-      `<meta name="twitter:player:height" content="${video.height}"/>`,
-      `<meta name="twitter:player:width" content="${video.width}"/>`,
+      `<meta name="twitter:player:height" content="${video.height*0.5}"/>`,
+      `<meta name="twitter:player:width" content="${video.width*0.5}"/>`,
       `<meta name="og:video" content="${video.url}"/>`,
       `<meta name="og:video:secure_url" content="${video.url}"/>`,
-      `<meta name="og:video:height" content="${video.height}"/>`,
-      `<meta name="og:video:width" content="${video.width}"/>`,
+      `<meta name="og:video:height" content="${video.height*0.5}"/>`,
+      `<meta name="og:video:width" content="${video.width*0.5}"/>`,
       `<meta name="og:video:type" content="${video.format}"/>`,
-      `<meta name="twitter:image" content="${video.thumbnail_url}"/>`
+      `<meta name="twitter:image" content="0"/>`
     );
   }
 
@@ -186,7 +189,7 @@ export const handleStatus = async (
   /* Poll renderer */
   if (tweet.poll) {
     const { poll } = tweet;
-    let barLength = 34;
+    let barLength = 36;
     let str = '';
 
     if (userAgent?.indexOf('Telegram') !== -1) {
