@@ -187,6 +187,6 @@ Feel free to [open an issue](https://github.com/dangeredwolf/FixTweet/issues), o
 ## Credits
 
 - Worker (Embeds + API) [dangered wolf](https://github.com/dangeredwolf)
-- [Mosaic](https://github.com/FixTweet/mosaic) Multi-Image [Antonio32A](https://github.com/Antonio32A)
+- [Mosaic](https://github.com/FixTweet/mosaic) Multi-image combiner [Antonio32A](https://github.com/Antonio32A)
 
 & other contributions by [Burner](https://github.com/YaBoiBurner), [Deer-Spangle](https://github.com/Deer-Spangle), [Antonio32A](https://github.com/Antonio32A)
