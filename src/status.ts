@@ -76,9 +76,12 @@ export const handleStatus = async (
     `<meta name="twitter:card" content="${tweet.twitter_card}"/>`,
     `<meta name="twitter:site" content="@${tweet.author.screen_name}"/>`,
     `<meta name="twitter:creator" content="@${tweet.author.screen_name}"/>`,
-    `<meta name="twitter:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`,
-    `<meta http-equiv="refresh" content="0;url=https://twitter.com/${tweet.author.screen_name}/status/${tweet.id}"/>` 
+    `<meta name="twitter:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`
   ];
+
+  if (userAgent?.indexOf('Telegram') === -1) {
+    headers.push(`<meta http-equiv="refresh" content="0;url=https://twitter.com/${tweet.author.screen_name}/status/${tweet.id}"/>`)
+  }
 
   if (tweet.translation) {
     const { translation } = tweet;
