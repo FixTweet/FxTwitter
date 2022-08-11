@@ -112,14 +112,23 @@ export const handleStatus = async (
     /* Multiplying by 0.5 is an ugly hack to fix Discord
     disliking videos that are too large lol */
 
+    let sizeMultiplier = 1;
+
+    if (video.width > 1920 || video.height > 1920) {
+      sizeMultiplier = 0.5;
+    }
+    if (video.width < 400 && video.height < 400) {
+      sizeMultiplier = 2;
+    }
+
     headers.push(
       `<meta name="twitter:player:stream:content_type" content="${video.format}"/>`,
-      `<meta name="twitter:player:height" content="${video.height*0.5}"/>`,
-      `<meta name="twitter:player:width" content="${video.width*0.5}"/>`,
+      `<meta name="twitter:player:height" content="${video.height*sizeMultiplier}"/>`,
+      `<meta name="twitter:player:width" content="${video.width*sizeMultiplier}"/>`,
       `<meta name="og:video" content="${video.url}"/>`,
       `<meta name="og:video:secure_url" content="${video.url}"/>`,
-      `<meta name="og:video:height" content="${video.height*0.5}"/>`,
-      `<meta name="og:video:width" content="${video.width*0.5}"/>`,
+      `<meta name="og:video:height" content="${video.height*sizeMultiplier}"/>`,
+      `<meta name="og:video:width" content="${video.width*sizeMultiplier}"/>`,
       `<meta name="og:video:type" content="${video.format}"/>`,
       `<meta name="twitter:image" content="0"/>`
     );
