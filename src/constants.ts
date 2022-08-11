@@ -7,6 +7,7 @@ export const Constants = {
   MOSAIC_DOMAIN_LIST: MOSAIC_DOMAIN_LIST.split(','),
   API_HOST_LIST: API_HOST_LIST.split(','),
   HOST_URL: HOST_URL,
+  EMBED_URL: EMBED_URL,
   REDIRECT_URL: REDIRECT_URL,
   RELEASE_NAME: RELEASE_NAME,
   API_DOCS_URL: `https://github.com/dangeredwolf/FixTweet/wiki/API-Home`,

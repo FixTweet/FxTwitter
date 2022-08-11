@@ -34,6 +34,9 @@ let plugins = [
     REDIRECT_URL: `'${process.env.REDIRECT_URL}'`
   }),
   new webpack.DefinePlugin({
+    EMBED_URL: `'${process.env.EMBED_URL}'`
+  }),
+  new webpack.DefinePlugin({
     MOSAIC_DOMAIN_LIST: `'${process.env.MOSAIC_DOMAIN_LIST}'`
   }),
   new webpack.DefinePlugin({

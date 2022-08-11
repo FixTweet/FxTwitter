@@ -11,6 +11,7 @@
     "API_HOST_LIST": "api.fxtwitter.com",
     "HOST_URL": "https://fxtwitter.com",
     "REDIRECT_URL": "https://github.com/dangeredwolf/FixTweet",
+    "EMBED_URL": "https://discord.gg/6CQTTTkGaH",
     "RELEASE_NAME": "fixtweet-test",
     "TEST": true
   },

@@ -119,7 +119,7 @@ router.get('/owoembed', async (request: Request) => {
       author
     )}/status/${encodeURIComponent(status)}`,
     provider_name: Constants.BRANDING_NAME_DISCORD,
-    provider_url: Constants.REDIRECT_URL,
+    provider_url: Constants.EMBED_URL,
     title: Strings.DEFAULT_AUTHOR_TEXT,
     type: 'link',
     version: '1.0'
