@@ -37,7 +37,7 @@ let plugins = [
     MOSAIC_DOMAIN_LIST: `'${process.env.MOSAIC_DOMAIN_LIST}'`
   }),
   new webpack.DefinePlugin({
-    API_HOST: `'${process.env.API_HOST}'`
+    API_HOST_LIST: `'${process.env.API_HOST_LIST}'`
   }),
   new webpack.DefinePlugin({
     SENTRY_DSN: `'${process.env.SENTRY_DSN}'`

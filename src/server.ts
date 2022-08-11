@@ -33,7 +33,7 @@ const statusRequest = async (
 
   if (
     url.pathname.match(/\/status(es)?\/\d+\.(json)/g) !== null ||
-    url.hostname === Constants.API_HOST
+    Constants.API_HOST_LIST.includes(url.hostname)
   ) {
     console.log('JSON API request');
     flags.api = true;
@@ -139,7 +139,7 @@ router.get('/:handle/', profileRequest);
 router.get('*', async (request: Request) => {
   const url = new URL(request.url);
 
-  if (url.hostname === Constants.API_HOST) {
+  if (Constants.API_HOST_LIST.includes(url.hostname)) {
     return Response.redirect(Constants.API_DOCS_URL, 302);
   }
   return Response.redirect(Constants.REDIRECT_URL, 302);
@@ -185,7 +185,7 @@ export const cacheWrapper = async (
 
   switch (request.method) {
     case 'GET':
-      if (cacheUrl.hostname !== Constants.API_HOST) {
+      if (!Constants.API_HOST_LIST.includes(cacheUrl.hostname)) {
         /* cache may be undefined in tests */
         const cachedResponse = await cache.match(cacheKey);
 

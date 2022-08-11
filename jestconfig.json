@@ -8,7 +8,7 @@
     "BRANDING_NAME_DISCORD": "FixTweetBrandingDiscord",
     "DIRECT_MEDIA_DOMAINS": "d.fxtwitter.com,dl.fxtwitter.com",
     "MOSAIC_DOMAIN_LIST": "mosaic.fxtwitter.com",
-    "API_HOST": "api.fxtwitter.com",
+    "API_HOST_LIST": "api.fxtwitter.com",
     "HOST_URL": "https://fxtwitter.com",
     "REDIRECT_URL": "https://github.com/dangeredwolf/FixTweet",
     "RELEASE_NAME": "fixtweet-test",
