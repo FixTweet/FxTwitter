@@ -4,7 +4,7 @@
 
 ![](https://skillicons.dev/icons?i=typescript,webpack,workers)
 
-[![Webpack](https://github.com/dangeredwolf/FixTweet/actions/workflows/webpack.yml/badge.svg)](https://github.com/dangeredwolf/FixTweet/actions/workflows/webpack.yml) [![Tests](https://github.com/dangeredwolf/FixTweet/actions/workflows/tests.yml/badge.svg)](https://github.com/dangeredwolf/FixTweet/actions/workflows/tests.yml)
+[![Webpack](https://github.com/dangeredwolf/FixTweet/actions/workflows/webpack.yml/badge.svg)](https://github.com/dangeredwolf/FixTweet/actions/workflows/webpack.yml) [![Tests](https://github.com/dangeredwolf/FixTweet/actions/workflows/tests.yml/badge.svg)](https://github.com/dangeredwolf/FixTweet/actions/workflows/tests.yml) [![](https://dcbadge.vercel.app/api/server/6CQTTTkGaH?style=flat)](https://discord.gg/6CQTTTkGaH)
 
 ## Inspired by [RobinUniverse's TwitFix](https://github.com/robinuniverse/TwitFix), but rewritten in TypeScript as a Cloudflare Worker to scale, while also being packed with even more features.
 
