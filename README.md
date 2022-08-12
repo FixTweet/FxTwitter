@@ -98,10 +98,10 @@ In many ways, FixTweet has richer embeds and does more. Here's a table comparing
 | Embed Tweets / Images                   |         :heavy_check_mark:          |        :heavy_check_mark:        |            :heavy_check_mark:           |          :heavy_check_mark:           |
 | Embed profile pictures on text Tweets   |         :heavy_check_mark:          |               :x:                |            :heavy_check_mark:           |          :heavy_check_mark:           |
 | Embed Twitter Videos                    |         :heavy_check_mark:          |               :x:¹               |            :heavy_check_mark:           |          :heavy_check_mark:           |
-| Embed External Videos (YouTube, etc.)   |         :heavy_check_mark:⁶         |               :x:                |                   :x:⁴                  |                  :x:                  |
+| Embed External Videos (YouTube, etc.)   |         :heavy_check_mark:⁵         |               :x:                |                   :x:⁴                  |                  :x:                  |
 | Embed Poll results                      |         :heavy_check_mark:          |               :x:                |                   :x:                   |                  :x:                  |
 | Embed Quote Tweets                      |         :heavy_check_mark:          |               :x:                |  :ballot_box_with_check: Without Media  | :ballot_box_with_check: Without Media |
-| Embed Multiple Images                   |         :heavy_check_mark:⁵         | :heavy_minus_sign: Discord Only³ | :ballot_box_with_check: c.vxtwitter.com |                  :x:                  |
+| Embed Multiple Images                   |         :heavy_check_mark:          | :heavy_minus_sign: Discord Only³ | :ballot_box_with_check: c.vxtwitter.com |                  :x:                  |
 | Translate Tweets                        |         :heavy_check_mark:          |               :x:                |                   :x:                   |                  :x:                  |
 | Publicly accessible embed index         |                :x:²                 |               N/A                |                   :x:²                  |          :heavy_check_mark:           |
 | Replace t.co with original links        |         :heavy_check_mark:          |               :x:                |                   :x:                   |                  :x:                  |
@@ -120,9 +120,7 @@ In many ways, FixTweet has richer embeds and does more. Here's a table comparing
 
 ⁴ On GitHub, BetterTwitFix (vxTwitter) claims to support this feature, however in my testing as of mid-July 2022, this does not seem to work.
 
-⁵ We've temporarily paused multi-image on Telegram due to issues with its embedding service that can cause images to sometimes not show up at all. ([#15](https://github.com/dangeredwolf/FixTweet/issues/15)) However, multi-image continues to work in Discord and most other platforms.
-
-⁶ External media requiring web containers, such as YouTube, won't embed in Telegram because Telegram doesn't support it. Plain media will work in Telegram, and it works either way inside Discord.
+⁵ External media requiring web containers, such as YouTube, won't embed in Telegram because Telegram doesn't support it. Plain media will work in Telegram, and it works either way inside Discord.
 
 ---
 

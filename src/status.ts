@@ -141,8 +141,7 @@ export const handleStatus = async (
 
     if (
       typeof mediaNumber !== 'number' &&
-      tweet.media.mosaic &&
-      userAgent?.indexOf('Telegram') === -1
+      tweet.media.mosaic
     ) {
       photo = {
         url:
