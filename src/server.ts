@@ -176,7 +176,11 @@ export const cacheWrapper = async (
     });
   }
 
-  if (cacheUrl.pathname.startsWith('/api/') || cacheUrl.pathname.startsWith('/other/') || cacheUrl.pathname.startsWith('/info/')) {
+  if (
+    cacheUrl.pathname.startsWith('/api/') ||
+    cacheUrl.pathname.startsWith('/other/') ||
+    cacheUrl.pathname.startsWith('/info/')
+  ) {
     return new Response(Strings.TWITFIX_API_SUNSET, {
       headers: Constants.RESPONSE_HEADERS,
       status: 404

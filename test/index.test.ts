@@ -97,7 +97,9 @@ test('API fetch video Tweet', async () => {
   expect(tweet).toBeTruthy();
   expect(tweet.url).toEqual('https://twitter.com/Twitter/status/854416760933556224');
   expect(tweet.id).toEqual('854416760933556224');
-  expect(tweet.text).toEqual('Get the sauces ready, #NuggsForCarter has 3 million+ Retweets.');
+  expect(tweet.text).toEqual(
+    'Get the sauces ready, #NuggsForCarter has 3 million+ Retweets.'
+  );
   expect(tweet.author.screen_name?.toLowerCase()).toEqual('twitter');
   expect(tweet.author.name).toBeTruthy();
   expect(tweet.author.avatar_url).toBeTruthy();
@@ -113,14 +115,15 @@ test('API fetch video Tweet', async () => {
   expect(tweet.replying_to).toBeNull();
   expect(tweet.media?.video).toBeTruthy();
   const video = tweet.media?.video as APIVideo;
-  expect(video.url).toEqual('https://video.twimg.com/amplify_video/854415175776059393/vid/720x720/dNEi0crU-jA4mTtr.mp4');
+  expect(video.url).toEqual(
+    'https://video.twimg.com/amplify_video/854415175776059393/vid/720x720/dNEi0crU-jA4mTtr.mp4'
+  );
   expect(video.thumbnail_url).toEqual('https://pbs.twimg.com/media/C9t-btLVoAEqZI1.jpg');
   expect(video.width).toEqual(1596);
   expect(video.height).toEqual(1600);
-  expect(video.format).toEqual("video/mp4");
-  expect(video.type).toEqual("video");
+  expect(video.format).toEqual('video/mp4');
+  expect(video.type).toEqual('video');
 });
-
 
 test('API fetch multi-photo Tweet', async () => {
   const result = await cacheWrapper(
@@ -137,7 +140,9 @@ test('API fetch multi-photo Tweet', async () => {
 
   const tweet = response.tweet as APITweet;
   expect(tweet).toBeTruthy();
-  expect(tweet.url).toEqual('https://twitter.com/dangeredwolf/status/1554870933449482240');
+  expect(tweet.url).toEqual(
+    'https://twitter.com/dangeredwolf/status/1554870933449482240'
+  );
   expect(tweet.id).toEqual('1554870933449482240');
   expect(tweet.text).toEqual('4 photos');
   expect(tweet.author.screen_name?.toLowerCase()).toEqual('dangeredwolf');
@@ -167,7 +172,10 @@ test('API fetch multi-photo Tweet', async () => {
   const mosaic = tweet.media?.mosaic as APIMosaicPhoto;
   expect(mosaic.width).toEqual(1610);
   expect(mosaic.height).toEqual(846);
-  expect(mosaic.formats?.jpeg).toEqual('https://mosaic.fxtwitter.com/jpeg/1554870933449482240/FZQCeMmXwAAOJTt/FZQCl-lWIAMtoW9/FZQCsQPX0AIbY6H/FZQCxmLXEAMST4q');
-  expect(mosaic.formats?.webp).toEqual('https://mosaic.fxtwitter.com/webp/1554870933449482240/FZQCeMmXwAAOJTt/FZQCl-lWIAMtoW9/FZQCsQPX0AIbY6H/FZQCxmLXEAMST4q');
-
+  expect(mosaic.formats?.jpeg).toEqual(
+    'https://mosaic.fxtwitter.com/jpeg/1554870933449482240/FZQCeMmXwAAOJTt/FZQCl-lWIAMtoW9/FZQCsQPX0AIbY6H/FZQCxmLXEAMST4q'
+  );
+  expect(mosaic.formats?.webp).toEqual(
+    'https://mosaic.fxtwitter.com/webp/1554870933449482240/FZQCeMmXwAAOJTt/FZQCl-lWIAMtoW9/FZQCsQPX0AIbY6H/FZQCxmLXEAMST4q'
+  );
 });
