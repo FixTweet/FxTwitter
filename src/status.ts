@@ -125,20 +125,22 @@ export const handleStatus = async (
       sizeMultiplier = 2;
     }
 
-    const videoCounter = Strings.VIDEO_COUNT.format({
-      number: String(videos.indexOf(video) + 1),
-      total: String(videos.length)
-    });
-
-    authorText =
-      authorText === Strings.DEFAULT_AUTHOR_TEXT
-        ? videoCounter
-        : `${authorText}${authorText ? '   ―   ' : ''}${videoCounter}`;
-
-    let siteName = `${Constants.BRANDING_NAME} - ${videoCounter}`;
-
-    if (engagementText) {
-      siteName = `${Constants.BRANDING_NAME} - ${engagementText} - ${videoCounter}`;
+    if (videos.length > 1) {
+      const videoCounter = Strings.VIDEO_COUNT.format({
+        number: String(videos.indexOf(video) + 1),
+        total: String(videos.length)
+      });
+  
+      authorText =
+        authorText === Strings.DEFAULT_AUTHOR_TEXT
+          ? videoCounter
+          : `${authorText}${authorText ? '   ―   ' : ''}${videoCounter}`;
+  
+      siteName = `${Constants.BRANDING_NAME} - ${videoCounter}`;
+  
+      if (engagementText) {
+        siteName = `${Constants.BRANDING_NAME} - ${engagementText} - ${videoCounter}`;
+      }
     }
 
     headers.push(`<meta property="og:site_name" content="${siteName}"/>`);
