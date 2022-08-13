@@ -72,6 +72,7 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
   TRANSLATE_TEXT: `═ ↘️ Translated from {language} ═════`,
   TRANSLATE_TEXT_INTL: `═ ↘️ {source} ➡️ {destination} ═════`,
   PHOTO_COUNT: `Photo {number} of {total}`,
+  VIDEO_COUNT: `Video {number} of {total}`,
 
   SINGULAR_DAY_LEFT: 'day left',
   PLURAL_DAYS_LEFT: 'days left',

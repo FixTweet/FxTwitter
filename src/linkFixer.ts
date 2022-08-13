@@ -5,7 +5,7 @@ export const linkFixer = (tweet: TweetPartial, text: string): string => {
       text = text.replace(url.url, url.expanded_url);
     });
 
-    text = text.replace(/ ?https:\/\/t\.co\/\w{10}/, '');
+    text = text.replace(/ ?https:\/\/t\.co\/\w{10}/g, '');
   }
 
   return text;

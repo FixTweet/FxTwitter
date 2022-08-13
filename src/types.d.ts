@@ -101,6 +101,7 @@ interface APIVideo {
   width: number;
   height: number;
   format: string;
+  duration: number;
 }
 
 interface APITweet {
@@ -125,6 +126,7 @@ interface APITweet {
     external?: APIExternalMedia;
     photos?: APIPhoto[];
     video?: APIVideo;
+    videos?: APIVideo[];
     mosaic?: APIMosaicPhoto;
   };
 
