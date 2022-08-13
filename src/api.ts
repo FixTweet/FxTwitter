@@ -23,6 +23,7 @@ const processMedia = (media: TweetMedia): APIPhoto | APIVideo | null => {
     return {
       url: bestVariant?.url || '',
       thumbnail_url: media.media_url_https,
+      duration: (media.video_info?.duration_millis || 0) / 1000,
       width: media.original_info.width,
       height: media.original_info.height,
       format: bestVariant?.content_type || '',
@@ -93,6 +94,16 @@ const populateTweetProperties = async (
         apiTweet.twitter_card = 'player';
         apiTweet.media = apiTweet.media || {};
         apiTweet.media.video = mediaObject as APIVideo;
+        apiTweet.media.videos = apiTweet.media.videos || [];
+        apiTweet.media.videos.push(mediaObject);
+
+        apiTweet.media.video = {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
+          WARNING:
+            'video is deprecated and will be removed. Please use videos[0] instead.',
+          ...mediaObject
+        };
       }
     }
   });
