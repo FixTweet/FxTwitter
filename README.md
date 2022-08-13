@@ -6,7 +6,7 @@
 
 [![Webpack](https://github.com/dangeredwolf/FixTweet/actions/workflows/webpack.yml/badge.svg)](https://github.com/dangeredwolf/FixTweet/actions/workflows/webpack.yml) [![Tests](https://github.com/dangeredwolf/FixTweet/actions/workflows/tests.yml/badge.svg)](https://github.com/dangeredwolf/FixTweet/actions/workflows/tests.yml) [![](https://dcbadge.vercel.app/api/server/6CQTTTkGaH?style=flat)](https://discord.gg/6CQTTTkGaH)
 
-## Inspired by [RobinUniverse's TwitFix](https://github.com/robinuniverse/TwitFix), but rewritten in TypeScript as a Cloudflare Worker to scale, while also being packed with even more features and best-in-class privacy.
+## Inspired by [RobinUniverse's TwitFix](https://github.com/robinuniverse/TwitFix), rewritten in TypeScript as a Cloudflare Worker to scale, but packed with even more features and best-in-class privacy.
 
 ### Add `fx` before your Twitter link to make it `fxtwitter.com`
 
