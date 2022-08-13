@@ -49,10 +49,11 @@ export const handleStatus = async (
 
   if (flags?.direct && tweet.media) {
     let redirectUrl: string | null = null;
-    if (tweet.media.video) {
-      redirectUrl = tweet.media.video.url;
+    if (tweet.media.videos) {
+      const { videos } = tweet.media;
+      redirectUrl = (videos[(mediaNumber || 1) - 1] || videos[0]).url;
     } else if (tweet.media.photos) {
-      const photos = tweet.media.photos;
+      const { photos } = tweet.media;
       redirectUrl = (photos[(mediaNumber || 1) - 1] || photos[0]).url;
     }
     if (redirectUrl) {
@@ -68,7 +69,7 @@ export const handleStatus = async (
 
   let authorText = getAuthorText(tweet) || Strings.DEFAULT_AUTHOR_TEXT;
   const engagementText = authorText.replace(/ {4}/g, ' ');
-  const siteName = Constants.BRANDING_NAME;
+  let siteName = Constants.BRANDING_NAME;
   let newText = tweet.text;
 
   const headers = [
@@ -102,14 +103,15 @@ export const handleStatus = async (
   }
 
   /* Video renderer */
-  if (tweet.media?.video) {
+  if (tweet.media?.videos) {
     authorText = newText || '';
 
     if (tweet?.translation) {
       authorText = tweet.translation?.text || '';
     }
 
-    const { video } = tweet.media;
+    const { videos } = tweet.media;
+    const video = videos[(mediaNumber || 1) - 1];
 
     /* Multiplying by 0.5 is an ugly hack to fix Discord
     disliking videos that are too large lol */
@@ -122,6 +124,24 @@ export const handleStatus = async (
     if (video.width < 400 && video.height < 400) {
       sizeMultiplier = 2;
     }
+
+    const videoCounter = Strings.VIDEO_COUNT.format({
+      number: String(videos.indexOf(video) + 1),
+      total: String(videos.length)
+    });
+
+    authorText =
+      authorText === Strings.DEFAULT_AUTHOR_TEXT
+        ? videoCounter
+        : `${authorText}${authorText ? '   ―   ' : ''}${videoCounter}`;
+
+    let siteName = `${Constants.BRANDING_NAME} - ${videoCounter}`;
+
+    if (engagementText) {
+      siteName = `${Constants.BRANDING_NAME} - ${engagementText} - ${videoCounter}`;
+    }
+
+    headers.push(`<meta property="og:site_name" content="${siteName}"/>`);
 
     headers.push(
       `<meta name="twitter:player:stream:content_type" content="${video.format}"/>`,
@@ -160,15 +180,13 @@ export const handleStatus = async (
       authorText =
         authorText === Strings.DEFAULT_AUTHOR_TEXT
           ? photoCounter
-          : `${authorText}   ―   ${photoCounter}`;
+          : `${authorText}${authorText ? '   ―   ' : ''}${photoCounter}`;
 
-      let siteName = `${Constants.BRANDING_NAME} - ${photoCounter}`;
+      siteName = `${Constants.BRANDING_NAME} - ${photoCounter}`;
 
       if (engagementText) {
         siteName = `${Constants.BRANDING_NAME} - ${engagementText} - ${photoCounter}`;
       }
-
-      headers.push(`<meta property="og:site_name" content="${siteName}"/>`);
     }
 
     headers.push(
