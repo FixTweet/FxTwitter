@@ -80,7 +80,9 @@ export const handleStatus = async (
   ];
 
   if (userAgent?.indexOf('Telegram') === -1) {
-    headers.push(`<meta http-equiv="refresh" content="0;url=https://twitter.com/${tweet.author.screen_name}/status/${tweet.id}"/>`)
+    headers.push(
+      `<meta http-equiv="refresh" content="0;url=https://twitter.com/${tweet.author.screen_name}/status/${tweet.id}"/>`
+    );
   }
 
   if (tweet.translation) {
@@ -123,12 +125,12 @@ export const handleStatus = async (
 
     headers.push(
       `<meta name="twitter:player:stream:content_type" content="${video.format}"/>`,
-      `<meta name="twitter:player:height" content="${video.height*sizeMultiplier}"/>`,
-      `<meta name="twitter:player:width" content="${video.width*sizeMultiplier}"/>`,
+      `<meta name="twitter:player:height" content="${video.height * sizeMultiplier}"/>`,
+      `<meta name="twitter:player:width" content="${video.width * sizeMultiplier}"/>`,
       `<meta name="og:video" content="${video.url}"/>`,
       `<meta name="og:video:secure_url" content="${video.url}"/>`,
-      `<meta name="og:video:height" content="${video.height*sizeMultiplier}"/>`,
-      `<meta name="og:video:width" content="${video.width*sizeMultiplier}"/>`,
+      `<meta name="og:video:height" content="${video.height * sizeMultiplier}"/>`,
+      `<meta name="og:video:width" content="${video.width * sizeMultiplier}"/>`,
       `<meta name="og:video:type" content="${video.format}"/>`,
       `<meta name="twitter:image" content="0"/>`
     );
@@ -139,11 +141,7 @@ export const handleStatus = async (
     const { photos } = tweet.media;
     let photo = photos[(mediaNumber || 1) - 1];
 
-    if (
-      typeof mediaNumber !== 'number' &&
-      tweet.media.mosaic &&
-      userAgent?.indexOf('Telegram') === -1
-    ) {
+    if (typeof mediaNumber !== 'number' && tweet.media.mosaic) {
       photo = {
         url:
           userAgent?.indexOf('Telegram') === -1
