@@ -2,9 +2,26 @@
 
 ## Embed Twitter videos, polls, translations, & more on Discord and Telegram!
 
-![](https://skillicons.dev/icons?i=typescript,webpack,workers)
+![][icons]
 
-[![Webpack](https://github.com/dangeredwolf/FixTweet/actions/workflows/webpack.yml/badge.svg)](https://github.com/dangeredwolf/FixTweet/actions/workflows/webpack.yml) [![Tests](https://github.com/dangeredwolf/FixTweet/actions/workflows/tests.yml/badge.svg)](https://github.com/dangeredwolf/FixTweet/actions/workflows/tests.yml) [![](https://dcbadge.vercel.app/api/server/6CQTTTkGaH?style=flat)](https://discord.gg/6CQTTTkGaH)
+[![Webpack][webpackbadge]][webpack]
+[![Tests][testsbadge]][tests]
+[![Join the Discord server][discordbadge]][discord]
+![Uptime][uptimebadge]
+
+<!-- Links & Badges -->
+[icons]: https://skillicons.dev/icons?i=typescript,webpack,workers
+
+[webpack]: https://github.com/dangeredwolf/FixTweet/actions/workflows/webpack.yml
+[webpackbadge]: https://github.com/dangeredwolf/FixTweet/actions/workflows/webpack.yml/badge.svg
+
+[tests]: https://github.com/dangeredwolf/FixTweet/actions/workflows/tests.yml
+[testsbadge]: https://github.com/dangeredwolf/FixTweet/actions/workflows/tests.yml/badge.svg
+
+[discord]: https://discord.gg/6CQTTTkGaH
+[discordbadge]: https://dcbadge.vercel.app/api/server/6CQTTTkGaH?style=flat
+
+[uptimebadge]: https://img.shields.io/uptimerobot/ratio/m792476277-53add6f22c4e6f4d3a2d7e98
 
 ## Inspired by [Robin Universe's TwitFix](https://github.com/robinuniverse/TwitFix), rewritten in TypeScript as a Cloudflare Worker to scale, packed with even more features and best-in-class user privacy.
 
@@ -112,6 +129,15 @@ In many ways, FixTweet has richer embeds and does more. Here's a table comparing
 | Show retweet, like, reply counts        |         :heavy_check_mark:          | :heavy_minus_sign: Discord Only³ |   :ballot_box_with_check: No replies    |  :ballot_box_with_check: No replies   |
 | Discord sed replace (`s/`) friendly     | :ballot_box_with_check: twittpr.com |               N/A                |                   :x:                   |          :heavy_check_mark:           |
 | Tweet fetch API for Developers          |         :heavy_check_mark:          |               N/A                |                   :x:                   |          :heavy_check_mark:           |
+| Last commit                             |           [![][flc]][fc]            |               N/A                |             [![][vlc]][vc]              |            [![][slc]][sc]             |
+
+[flc]: https://img.shields.io/github/last-commit/dangeredwolf/FixTweet?label
+[vlc]: https://img.shields.io/github/last-commit/dylanpdx/BetterTwitFix?label
+[slc]: https://img.shields.io/github/last-commit/Twxtter/Twxtter-main?label
+
+[fc]: https://github.com/dangeredwolf/FixTweet/commits
+[vc]: https://github.com/dylanpdx/BetterTwitFix/commits
+[sc]: https://github.com/Twxtter/Twxtter-main/commits
 
 ¹ Discord will attempt to embed Twitter's video player, but it is unreliable
 
