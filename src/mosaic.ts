@@ -7,15 +7,8 @@ export const handleMosaic = async (
   const mosaicDomains = Constants.MOSAIC_DOMAIN_LIST;
   let selectedDomain: string | null = null;
   while (selectedDomain === null && mosaicDomains.length > 0) {
-    // fetch /ping on a random domain
     const domain = mosaicDomains[Math.floor(Math.random() * mosaicDomains.length)];
-    // let response = await fetch(`https://${domain}/ping`);
-    // if (response.status === 200) {
     selectedDomain = domain;
-    // } else {
-    //   mosaicDomains = mosaicDomains.filter(d => d !== domain);
-    //   console.log(`${domain} is not available, removing from list`);
-    // }
   }
 
   // Fallback if all Mosaic servers are down
