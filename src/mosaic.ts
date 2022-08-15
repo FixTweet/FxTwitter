@@ -11,7 +11,7 @@ export const handleMosaic = async (
     selectedDomain = domain;
   }
 
-  // Fallback if all Mosaic servers are down
+  // Fallback if there are no Mosaic servers
   if (selectedDomain === null) {
     return null;
   } else {
@@ -20,7 +20,6 @@ export const handleMosaic = async (
       media => media.url?.match(/(?<=\/media\/)[\w-]+(?=[.?])/g)?.[0] || ''
     );
     // console.log('mosaicMedia', mosaicMedia);
-    // TODO: use a better system for this, 0 gets png 1 gets webp, usually
     const baseUrl = `https://${selectedDomain}/`;
     let path = '';
 
