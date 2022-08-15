@@ -212,29 +212,45 @@ test('API fetch multi-video Tweet', async () => {
   expect(tweet.replying_to).toBeNull();
   expect(tweet.media?.videos).toBeTruthy();
   const videos = tweet.media?.videos as APIVideo[];
-  expect(videos[0].url).toEqual('https://video.twimg.com/ext_tw_video/1539029945124528130/pu/vid/1662x1080/ZQP4eoQhnGnKcLEb.mp4?tag=14');
-  expect(videos[0].thumbnail_url).toEqual("https://pbs.twimg.com/ext_tw_video_thumb/1539029945124528130/pu/img/6Z1MXMliums60j03.jpg");
+  expect(videos[0].url).toEqual(
+    'https://video.twimg.com/ext_tw_video/1539029945124528130/pu/vid/1662x1080/ZQP4eoQhnGnKcLEb.mp4?tag=14'
+  );
+  expect(videos[0].thumbnail_url).toEqual(
+    'https://pbs.twimg.com/ext_tw_video_thumb/1539029945124528130/pu/img/6Z1MXMliums60j03.jpg'
+  );
   expect(videos[0].width).toEqual(3548);
   expect(videos[0].height).toEqual(2304);
   expect(videos[0].duration).toEqual(37.75);
   expect(videos[0].format).toEqual('video/mp4');
   expect(videos[0].type).toEqual('video');
-  expect(videos[1].url).toEqual('https://video.twimg.com/ext_tw_video/1543316856697769984/pu/vid/1920x1080/3fo7b4EnWv2WO8Z1.mp4?tag=14');
-  expect(videos[1].thumbnail_url).toEqual("https://pbs.twimg.com/ext_tw_video_thumb/1543316856697769984/pu/img/eCl67JRWO8r4r8A4.jpg");
+  expect(videos[1].url).toEqual(
+    'https://video.twimg.com/ext_tw_video/1543316856697769984/pu/vid/1920x1080/3fo7b4EnWv2WO8Z1.mp4?tag=14'
+  );
+  expect(videos[1].thumbnail_url).toEqual(
+    'https://pbs.twimg.com/ext_tw_video_thumb/1543316856697769984/pu/img/eCl67JRWO8r4r8A4.jpg'
+  );
   expect(videos[1].width).toEqual(1920);
   expect(videos[1].height).toEqual(1080);
   expect(videos[1].duration).toEqual(71.855);
   expect(videos[1].format).toEqual('video/mp4');
   expect(videos[1].type).toEqual('video');
-  expect(videos[2].url).toEqual('https://video.twimg.com/ext_tw_video/1543797953105625088/pu/vid/1920x1080/GHSLxzBrwiDLhLYD.mp4?tag=14');
-  expect(videos[2].thumbnail_url).toEqual("https://pbs.twimg.com/ext_tw_video_thumb/1543797953105625088/pu/img/2eX2QQkd7b2S1YDl.jpg");
+  expect(videos[2].url).toEqual(
+    'https://video.twimg.com/ext_tw_video/1543797953105625088/pu/vid/1920x1080/GHSLxzBrwiDLhLYD.mp4?tag=14'
+  );
+  expect(videos[2].thumbnail_url).toEqual(
+    'https://pbs.twimg.com/ext_tw_video_thumb/1543797953105625088/pu/img/2eX2QQkd7b2S1YDl.jpg'
+  );
   expect(videos[2].width).toEqual(1920);
   expect(videos[2].height).toEqual(1080);
   expect(videos[2].duration).toEqual(22.018);
   expect(videos[2].format).toEqual('video/mp4');
   expect(videos[2].type).toEqual('video');
-  expect(videos[3].url).toEqual('https://video.twimg.com/ext_tw_video/1548602342488129536/pu/vid/720x1280/I_D3svYfjBl7_xGS.mp4?tag=14');
-  expect(videos[3].thumbnail_url).toEqual("https://pbs.twimg.com/ext_tw_video_thumb/1548602342488129536/pu/img/V_1u5Nv5BwKBynwv.jpg");
+  expect(videos[3].url).toEqual(
+    'https://video.twimg.com/ext_tw_video/1548602342488129536/pu/vid/720x1280/I_D3svYfjBl7_xGS.mp4?tag=14'
+  );
+  expect(videos[3].thumbnail_url).toEqual(
+    'https://pbs.twimg.com/ext_tw_video_thumb/1548602342488129536/pu/img/V_1u5Nv5BwKBynwv.jpg'
+  );
   expect(videos[3].width).toEqual(720);
   expect(videos[3].height).toEqual(1280);
   expect(videos[3].duration).toEqual(25.133);
