@@ -18,7 +18,7 @@
     "@cloudflare/workers-types": "^3.14.1",
     "@microsoft/eslint-formatter-sarif": "^3.0.0",
     "@sentry/webpack-plugin": "^1.19.0",
-    "@types/jest": "^28.1.6",
+    "@types/jest": "^28.1.7",
     "@typescript-eslint/eslint-plugin": "^5.33.1",
     "@typescript-eslint/parser": "^5.33.1",
     "dotenv": "^16.0.1",
