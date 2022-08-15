@@ -130,14 +130,14 @@ export const handleStatus = async (
         number: String(videos.indexOf(video) + 1),
         total: String(videos.length)
       });
-  
+
       authorText =
         authorText === Strings.DEFAULT_AUTHOR_TEXT
           ? videoCounter
           : `${authorText}${authorText ? '   ―   ' : ''}${videoCounter}`;
-  
+
       siteName = `${Constants.BRANDING_NAME} - ${videoCounter}`;
-  
+
       if (engagementText) {
         siteName = `${Constants.BRANDING_NAME} - ${engagementText} - ${videoCounter}`;
       }

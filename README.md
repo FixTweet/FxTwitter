@@ -6,21 +6,22 @@
 
 [![Webpack][webpackbadge]][webpack]
 [![Tests][testsbadge]][tests]
-[![Join the Discord server][discordbadge]][discord]
+[![License][licensebadge]][license]
 ![Uptime][uptimebadge]
 
-<!-- Links & Badges -->
-[icons]: https://skillicons.dev/icons?i=typescript,webpack,workers
+[![Join the Discord server][discordbadge]][discord]
 
+<!-- Links & Badges -->
+
+[icons]: https://skillicons.dev/icons?i=typescript,webpack,workers
 [webpack]: https://github.com/dangeredwolf/FixTweet/actions/workflows/webpack.yml
 [webpackbadge]: https://github.com/dangeredwolf/FixTweet/actions/workflows/webpack.yml/badge.svg
-
 [tests]: https://github.com/dangeredwolf/FixTweet/actions/workflows/tests.yml
 [testsbadge]: https://github.com/dangeredwolf/FixTweet/actions/workflows/tests.yml/badge.svg
-
 [discord]: https://discord.gg/6CQTTTkGaH
 [discordbadge]: https://dcbadge.vercel.app/api/server/6CQTTTkGaH?style=flat
-
+[license]: https://github.com/dangeredwolf/FixTweet/blob/main/LICENSE.md
+[licensebadge]: https://img.shields.io/github/license/dangeredwolf/FixTweet
 [uptimebadge]: https://img.shields.io/uptimerobot/ratio/m792476277-53add6f22c4e6f4d3a2d7e98
 
 ## Inspired by [Robin Universe's TwitFix](https://github.com/robinuniverse/TwitFix), rewritten in TypeScript as a Cloudflare Worker to scale, packed with even more features and best-in-class user privacy.
@@ -134,7 +135,6 @@ In many ways, FixTweet has richer embeds and does more. Here's a table comparing
 [flc]: https://img.shields.io/github/last-commit/dangeredwolf/FixTweet?label
 [vlc]: https://img.shields.io/github/last-commit/dylanpdx/BetterTwitFix?label
 [slc]: https://img.shields.io/github/last-commit/Twxtter/Twxtter-main?label
-
 [fc]: https://github.com/dangeredwolf/FixTweet/commits
 [vc]: https://github.com/dylanpdx/BetterTwitFix/commits
 [sc]: https://github.com/Twxtter/Twxtter-main/commits
