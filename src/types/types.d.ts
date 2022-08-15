@@ -1,4 +1,5 @@
-/* tweetTypes has all the Twitter API-related types */
+/* This file contains types relevant to FixTweet and the FixTweet API
+   For Twitter API types, see twitterTypes.d.ts */
 
 type InputFlags = {
   standard?: boolean;

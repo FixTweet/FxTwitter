@@ -1,4 +1,6 @@
-import { Strings } from './strings';
+/* Helps create strings for polls! */
+
+import { Strings } from '../strings';
 
 export const calculateTimeLeft = (date: Date) => {
   const now = new Date();

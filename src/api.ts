@@ -1,38 +1,15 @@
-import { renderCard } from './card';
+import { renderCard } from './helpers/card';
 import { Constants } from './constants';
 import { fetchUsingGuest } from './fetch';
-import { linkFixer } from './linkFixer';
-import { handleMosaic } from './mosaic';
-import { colorFromPalette } from './palette';
-import { translateTweet } from './translate';
-import { unescapeText } from './utils';
+import { linkFixer } from './helpers/linkFixer';
+import { handleMosaic } from './helpers/mosaic';
+import { colorFromPalette } from './helpers/palette';
+import { translateTweet } from './helpers/translate';
+import { unescapeText } from './helpers/utils';
+import { processMedia } from './helpers/media';
 
-const processMedia = (media: TweetMedia): APIPhoto | APIVideo | null => {
-  if (media.type === 'photo') {
-    return {
-      type: 'photo',
-      url: media.media_url_https,
-      width: media.original_info.width,
-      height: media.original_info.height
-    };
-  } else if (media.type === 'video' || media.type === 'animated_gif') {
-    // Find the variant with the highest bitrate
-    const bestVariant = media.video_info?.variants?.reduce?.((a, b) =>
-      (a.bitrate ?? 0) > (b.bitrate ?? 0) ? a : b
-    );
-    return {
-      url: bestVariant?.url || '',
-      thumbnail_url: media.media_url_https,
-      duration: (media.video_info?.duration_millis || 0) / 1000,
-      width: media.original_info.width,
-      height: media.original_info.height,
-      format: bestVariant?.content_type || '',
-      type: media.type === 'animated_gif' ? 'gif' : 'video'
-    };
-  }
-  return null;
-};
-
+/* This function does the heavy lifting of processing data from Twitter API
+   and using it to create FixTweet's streamlined API responses */
 const populateTweetProperties = async (
   tweet: TweetPartial,
   conversation: TimelineBlobPartial,
@@ -50,6 +27,7 @@ const populateTweetProperties = async (
   const screenName = user?.screen_name || '';
   const name = user?.name || '';
 
+  /* Populating a lot of the basics */
   apiTweet.url = `${Constants.TWITTER_ROOT}/${screenName}/status/${tweet.id_str}`;
   apiTweet.id = tweet.id_str;
   apiTweet.text = unescapeText(linkFixer(tweet, tweet.full_text));
@@ -82,6 +60,7 @@ const populateTweetProperties = async (
     tweet.extended_entities?.media || tweet.entities?.media || []
   );
 
+  /* Populate this Tweet's media */
   mediaList.forEach(media => {
     const mediaObject = processMedia(media);
     if (mediaObject) {
@@ -99,7 +78,7 @@ const populateTweetProperties = async (
 
         apiTweet.media.video = {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-expect-error
+          // @ts-expect-error Temporary warning
           WARNING:
             'video is deprecated and will be removed. Please use videos[0] instead.',
           ...mediaObject
@@ -108,10 +87,12 @@ const populateTweetProperties = async (
     }
   });
 
+  /* Grab color palette data */
   if (mediaList[0]?.ext_media_color?.palette) {
     apiTweet.color = colorFromPalette(mediaList[0].ext_media_color.palette);
   }
 
+  /* Handle photos and mosaic if available */
   if ((apiTweet.media?.photos?.length || 0) > 1) {
     const mosaic = await handleMosaic(apiTweet.media?.photos || [], tweet.id_str);
     if (typeof apiTweet.media !== 'undefined' && mosaic !== null) {
@@ -119,6 +100,7 @@ const populateTweetProperties = async (
     }
   }
 
+  /* Populate a Twitter card */
   if (tweet.card) {
     const card = await renderCard(tweet.card);
     if (card.external_media) {
@@ -131,9 +113,7 @@ const populateTweetProperties = async (
     }
   }
 
-  console.log('language', language);
-
-  /* If a language is specified, let's try translating it! */
+  /* If a language is specified in API or by user, let's try translating it! */
   if (typeof language === 'string' && language.length === 2 && language !== tweet.lang) {
     const translateAPI = await translateTweet(
       tweet,
@@ -153,6 +133,9 @@ const populateTweetProperties = async (
   return apiTweet;
 };
 
+/* API for Twitter statuses (Tweets)
+   Used internally by FixTweet's embed service, or
+   available for free using api.fxtwitter.com. */
 export const statusAPI = async (
   status: string,
   language: string | undefined
@@ -183,6 +166,7 @@ export const statusAPI = async (
     return { code: 500, message: 'API_FAIL' };
   }
 
+  /* Creating the response objects */
   const response: APIResponse = { code: 200, message: 'OK' } as APIResponse;
   const apiTweet: APITweet = (await populateTweetProperties(
     tweet,
@@ -190,6 +174,7 @@ export const statusAPI = async (
     language
   )) as APITweet;
 
+  /* We found a quote tweet, let's process that too */
   const quoteTweet =
     conversation.globalObjects?.tweets?.[tweet.quoted_status_id_str || '0'] || null;
   if (quoteTweet) {
@@ -200,6 +185,8 @@ export const statusAPI = async (
     )) as APITweet;
   }
 
+  /* Finally, staple the Tweet to the response and return it */
   response.tweet = apiTweet;
+
   return response;
 };

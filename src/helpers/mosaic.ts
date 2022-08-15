@@ -1,4 +1,4 @@
-import { Constants } from './constants';
+import { Constants } from '../constants';
 
 export const handleMosaic = async (
   mediaList: APIPhoto[],
@@ -11,15 +11,13 @@ export const handleMosaic = async (
     selectedDomain = domain;
   }
 
-  // Fallback if there are no Mosaic servers
+  /* Fallback if there are no Mosaic servers */
   if (selectedDomain === null) {
     return null;
   } else {
-    // console.log('mediaList', mediaList);
     const mosaicMedia = mediaList.map(
       media => media.url?.match(/(?<=\/media\/)[\w-]+(?=[.?])/g)?.[0] || ''
     );
-    // console.log('mosaicMedia', mosaicMedia);
     const baseUrl = `https://${selectedDomain}/`;
     let path = '';
 
@@ -50,7 +48,8 @@ export const handleMosaic = async (
   }
 };
 
-// Port of https://github.com/FixTweet/mosaic/blob/feature/size-endpoint/src/mosaic.rs#L236
+/* TypeScript Port of https://github.com/FixTweet/mosaic/blob/feature/size-endpoint/src/mosaic.rs#L236
+   We use this to generate accurate mosaic sizes which helps Discord render it correctly */
 
 const SPACING_SIZE = 10;
 /*

@@ -1,6 +1,7 @@
-import { Constants } from './constants';
+import { Constants } from '../constants';
 
-// https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
+/* Converts rgb to hex, as we use hex for API and embeds
+  https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb */
 const componentToHex = (component: number) => {
   const hex = component.toString(16);
   return hex.length === 1 ? '0' + hex : hex;
@@ -9,6 +10,7 @@ const componentToHex = (component: number) => {
 const rgbToHex = (r: number, g: number, b: number) =>
   `#${componentToHex(r)}${componentToHex(g)}${componentToHex(b)}`;
 
+/* Selects the (hopefully) best color from Twitter's palette */
 export const colorFromPalette = (palette: MediaPlaceholderColor[]) => {
   for (let i = 0; i < palette.length; i++) {
     const rgb = palette[i].rgb;

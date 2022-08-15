@@ -1,5 +1,6 @@
-import { Constants } from './constants';
+import { Constants } from '../constants';
 
+/* Handles translating Tweets when asked! */
 export const translateTweet = async (
   tweet: TweetPartial,
   guestToken: string,

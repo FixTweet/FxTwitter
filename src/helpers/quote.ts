@@ -1,5 +1,6 @@
-import { Strings } from './strings';
+import { Strings } from '../strings';
 
+/* Helper for Quote Tweets */
 export const handleQuote = (quote: APITweet): string | null => {
   console.log('Quoting status ', quote.id);
 

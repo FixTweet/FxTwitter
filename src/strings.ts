@@ -4,10 +4,7 @@ declare global {
   }
 }
 
-/*
-  Useful little function to format strings for us
-*/
-
+/* Useful little function to format strings for us */
 String.prototype.format = function (options: { [find: string]: string }) {
   return this.replace(/{([^{}]+)}/g, (match: string, name: string) => {
     if (options[name] !== undefined) {
@@ -17,6 +14,7 @@ String.prototype.format = function (options: { [find: string]: string }) {
   });
 };
 
+/* Lots of strings! These are strings used in HTML or are shown to end users in embeds. */
 export const Strings = {
   BASE_HTML: `<!DOCTYPE html><html {lang}><!--
 

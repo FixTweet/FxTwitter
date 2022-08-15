@@ -1,8 +1,8 @@
 import { Constants } from './constants';
-import { handleQuote } from './quote';
-import { sanitizeText } from './utils';
+import { handleQuote } from './helpers/quote';
+import { sanitizeText } from './helpers/utils';
 import { Strings } from './strings';
-import { getAuthorText } from './author';
+import { getAuthorText } from './helpers/author';
 import { statusAPI } from './api';
 
 export const returnError = (error: string): StatusResponse => {
@@ -17,18 +17,22 @@ export const returnError = (error: string): StatusResponse => {
   };
 };
 
+/* Handler for Twitter statuses (Tweets).
+   Like Twitter, we use the terminologies interchangably. */
 export const handleStatus = async (
   status: string,
   mediaNumber?: number,
   userAgent?: string,
   flags?: InputFlags,
   language?: string
+  // eslint-disable-next-line sonarjs/cognitive-complexity
 ): Promise<StatusResponse> => {
   console.log('Direct?', flags?.direct);
 
   const api = await statusAPI(status, language);
   const tweet = api?.tweet as APITweet;
 
+  /* Catch this request if it's an API response */
   if (flags?.api) {
     return {
       response: new Response(JSON.stringify(api), {
@@ -38,6 +42,7 @@ export const handleStatus = async (
     };
   }
 
+  /* If there was any errors fetching the Tweet, we'll return it */
   switch (api.code) {
     case 401:
       return returnError(Strings.ERROR_PRIVATE);
@@ -47,6 +52,7 @@ export const handleStatus = async (
       return returnError(Strings.ERROR_API_FAIL);
   }
 
+  /* Catch direct media request (d.fxtwitter.com, or .mp4 / .jpg) */
   if (flags?.direct && tweet.media) {
     let redirectUrl: string | null = null;
     if (tweet.media.videos) {
@@ -61,11 +67,14 @@ export const handleStatus = async (
     }
   }
 
-  /* Use quote media if there is no media */
+  /* Use quote media if there is no media in this Tweet */
   if (!tweet.media && tweet.quote?.media) {
     tweet.media = tweet.quote.media;
     tweet.twitter_card = tweet.quote.twitter_card;
   }
+
+  /* At this point, we know we're going to have to create a
+     regular embed because it's not an API or direct media request */
 
   let authorText = getAuthorText(tweet) || Strings.DEFAULT_AUTHOR_TEXT;
   const engagementText = authorText.replace(/ {4}/g, ' ');
@@ -80,12 +89,17 @@ export const handleStatus = async (
     `<meta name="twitter:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`
   ];
 
+  /* This little thing ensures if by some miracle a FixTweet embed is loaded in a browser,
+     it will gracefully redirect to the destination instead of just seeing a blank screen.
+
+     Telegram is dumb and it just gets stuck if this is included, so we never include it for Telegram UAs. */
   if (userAgent?.indexOf('Telegram') === -1) {
     headers.push(
       `<meta http-equiv="refresh" content="0;url=https://twitter.com/${tweet.author.screen_name}/status/${tweet.id}"/>`
     );
   }
 
+  /* This Tweet has a translation attached to it, so we'll render it. */
   if (tweet.translation) {
     const { translation } = tweet;
 
@@ -102,7 +116,10 @@ export const handleStatus = async (
     newText = `${translation.text}\n\n` + `${formatText}\n\n` + `${newText}`;
   }
 
-  /* Video renderer */
+  /* This Tweet has a video to render.
+
+     Twitter supports multiple videos in a Tweet now. But we have no mechanism to embed more than one.
+     You can still use /video/:number to get a specific video. Otherwise, it'll pick the first. */
   if (tweet.media?.videos) {
     authorText = newText || '';
 
@@ -113,8 +130,13 @@ export const handleStatus = async (
     const { videos } = tweet.media;
     const video = videos[(mediaNumber || 1) - 1];
 
-    /* Multiplying by 0.5 is an ugly hack to fix Discord
-    disliking videos that are too large lol */
+    /* This fix is specific to Discord not wanting to render videos that are too large,
+       or rendering low quality videos too small.
+       
+       Basically, our solution is to cut the dimensions in half if the video is too big (> 1080p),
+       or double them if it's too small. (<400p)
+       
+       We check both height and width so we can apply this to both horizontal and vertical videos equally*/
 
     let sizeMultiplier = 1;
 
@@ -125,6 +147,8 @@ export const handleStatus = async (
       sizeMultiplier = 2;
     }
 
+    /* Like photos when picking a specific one (not using mosaic),
+       we'll put an indicator if there are more than one video */
     if (videos.length > 1) {
       const videoCounter = Strings.VIDEO_COUNT.format({
         number: String(videos.indexOf(video) + 1),
@@ -143,9 +167,9 @@ export const handleStatus = async (
       }
     }
 
-    headers.push(`<meta property="og:site_name" content="${siteName}"/>`);
-
+    /* Push the raw video-related headers */
     headers.push(
+      `<meta property="og:site_name" content="${siteName}"/>`,
       `<meta name="twitter:player:stream:content_type" content="${video.format}"/>`,
       `<meta name="twitter:player:height" content="${video.height * sizeMultiplier}"/>`,
       `<meta name="twitter:player:width" content="${video.width * sizeMultiplier}"/>`,
@@ -158,13 +182,16 @@ export const handleStatus = async (
     );
   }
 
-  /* Photo renderer */
+  /* This Tweet has one or more photos to render */
   if (tweet.media?.photos) {
     const { photos } = tweet.media;
     let photo = photos[(mediaNumber || 1) - 1];
 
+    /* If there isn't a specified media number and we have a
+       mosaic response, we'll render it using mosaic */
     if (typeof mediaNumber !== 'number' && tweet.media.mosaic) {
       photo = {
+        /* Telegram is dumb and doesn't support webp in opengraph embeds */
         url:
           userAgent?.indexOf('Telegram') === -1
             ? tweet.media.mosaic.formats.webp
@@ -173,6 +200,8 @@ export const handleStatus = async (
         height: tweet.media.mosaic.height,
         type: 'photo'
       };
+      /* If mosaic isn't available or the link calls for a specific photo,
+         we'll indicate which photo it is out of the total */
     } else if (photos.length > 1) {
       const photoCounter = Strings.PHOTO_COUNT.format({
         number: String(photos.indexOf(photo) + 1),
@@ -191,6 +220,7 @@ export const handleStatus = async (
       }
     }
 
+    /* Push the raw photo-related headers */
     headers.push(
       `<meta name="twitter:image" content="${photo.url}"/>`,
       `<meta name="twitter:image:width" content="${photo.width}"/>`,
@@ -201,7 +231,7 @@ export const handleStatus = async (
     );
   }
 
-  /* External media renderer (i.e. YouTube) */
+  /* We have external media available to us (i.e. YouTube videos) */
   if (tweet.media?.external) {
     const { external } = tweet.media;
     authorText = newText || '';
@@ -217,32 +247,41 @@ export const handleStatus = async (
     );
   }
 
-  /* Poll renderer */
+  /* This Tweet contains a poll, so we'll render it */
   if (tweet.poll) {
     const { poll } = tweet;
     let barLength = 36;
     let str = '';
 
+    /* Telegram Embeds are smaller, so we use a smaller bar to compensate */
     if (userAgent?.indexOf('Telegram') !== -1) {
       barLength = 24;
     }
 
+    /* Render each poll choice */
     tweet.poll.choices.forEach(choice => {
-      // render bar
       const bar = '█'.repeat((choice.percentage / 100) * barLength);
       // eslint-disable-next-line no-irregular-whitespace
-      str += `${bar}\n${choice.label}  (${choice.percentage}%)
-`;
+      str += `${bar}\n${choice.label}  (${choice.percentage}%)\n`;
     });
 
+    /* Finally, add the footer of the poll with # of votes and time left */
     str += `\n${poll.total_votes} votes · ${poll.time_left_en}`;
 
+    /* And now we'll put the poll right after the Tweet text! */
     newText += `\n\n${str}`;
   }
 
+  /* This Tweet quotes another Tweet, so we'll render the other Tweet where possible */
+  if (api.tweet?.quote) {
+    const quoteText = handleQuote(api.tweet.quote);
+    newText += `\n${quoteText}`;
+  }
+
+  /* If we have no media to display, instead we'll display the user profile picture in the embed */
   if (!tweet.media?.video && !tweet.media?.photos) {
     headers.push(
-      // Use a slightly higher resolution image for profile pics
+      /* Use a slightly higher resolution image for profile pics */
       `<meta property="og:image" content="${tweet.author.avatar_url?.replace(
         '_normal',
         '_200x200'
@@ -251,11 +290,7 @@ export const handleStatus = async (
     );
   }
 
-  if (api.tweet?.quote) {
-    const quoteText = handleQuote(api.tweet.quote);
-    newText += `\n${quoteText}`;
-  }
-
+  /* Push basic headers relating to author, Tweet text, and site name */
   headers.push(
     `<meta content="${tweet.author.name} (@${tweet.author.screen_name})" property="og:title"/>`,
     `<meta content="${sanitizeText(newText)}" property="og:description"/>`,
@@ -265,6 +300,9 @@ export const handleStatus = async (
   /* Special reply handling if authorText is not overriden */
   if (tweet.replying_to && authorText === Strings.DEFAULT_AUTHOR_TEXT) {
     authorText = `↪ Replying to @${tweet.replying_to}`;
+    /* We'll assume it's a thread if it's a reply to themselves */
+  } else if (tweet.replying_to === tweet.author.screen_name) {
+    authorText = `↪ A part @${tweet.author.screen_name}'s thread`;
   }
 
   /* The additional oembed is pulled by Discord to enable improved embeds.
@@ -277,9 +315,10 @@ export const handleStatus = async (
     )}" type="application/json+oembed" title="${tweet.author.name}">`
   );
 
-  /* When dealing with a Tweet of unknown lang, fall back to en  */
-  const lang = tweet.lang === 'unk' ? 'en' : tweet.lang || 'en';
+  /* When dealing with a Tweet of unknown lang, fall back to en */
+  const lang = tweet.lang === null ? 'en' : tweet.lang || 'en';
 
+  /* Finally, after all that work we return the response HTML! */
   return {
     text: Strings.BASE_HTML.format({
       lang: `lang="${lang}"`,

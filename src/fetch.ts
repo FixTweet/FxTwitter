@@ -25,7 +25,12 @@ export const fetchUsingGuest = async (status: string): Promise<TimelineBlobParti
   const cache = caches.default;
 
   while (apiAttempts < 10) {
-    const csrfToken = crypto.randomUUID().replace(/-/g, ''); // Generate a random CSRF token, this doesn't matter, Twitter just cares that header and cookie match
+    const csrfToken = crypto
+      .randomUUID()
+      .replace(
+        /-/g,
+        ''
+      ); /* Generate a random CSRF token, this doesn't matter, Twitter just cares that header and cookie match */
 
     const headers: { [header: string]: string } = {
       Authorization: Constants.GUEST_BEARER_TOKEN,
@@ -84,7 +89,8 @@ export const fetchUsingGuest = async (status: string): Promise<TimelineBlobParti
     headers['x-guest-token'] = guestToken;
 
     /* We pretend to be the Twitter Web App as closely as possible,
-      so we use twitter.com/i/api/2 instead of api.twitter.com/2 */
+      so we use twitter.com/i/api/2 instead of api.twitter.com/2.
+      We probably don't have to do this at all. But hey, better to be consistent with Twitter Web App. */
     let conversation: TimelineBlobPartial;
     let apiRequest;
 
@@ -99,7 +105,7 @@ export const fetchUsingGuest = async (status: string): Promise<TimelineBlobParti
       conversation = await apiRequest.json();
     } catch (e: unknown) {
       /* We'll usually only hit this if we get an invalid response from Twitter.
-         It's rare, but it happens */
+         It's uncommon, but it happens */
       console.error('Unknown error while fetching conversation from API');
       cachedTokenFailed = true;
       continue;
@@ -108,7 +114,8 @@ export const fetchUsingGuest = async (status: string): Promise<TimelineBlobParti
     if (
       typeof conversation.globalObjects === 'undefined' &&
       (typeof conversation.errors === 'undefined' ||
-        conversation.errors?.[0]?.code === 239)
+        conversation.errors?.[0]?.code ===
+          239) /* TODO: i forgot what code 239 actually is lol */
     ) {
       console.log('Failed to fetch conversation, got', conversation);
       cachedTokenFailed = true;
@@ -122,6 +129,6 @@ export const fetchUsingGuest = async (status: string): Promise<TimelineBlobParti
   }
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore - This is only returned if we completely failed to fetch the conversation
+  // @ts-expect-error - This is only returned if we completely failed to fetch the conversation
   return {};
 };

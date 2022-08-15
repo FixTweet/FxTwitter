@@ -1,5 +1,6 @@
-import { calculateTimeLeftString } from './pollHelper';
+import { calculateTimeLeftString } from './pollTime';
 
+/* Renders card for polls and non-Twitter video embeds (i.e. YouTube) */
 export const renderCard = async (
   card: TweetCard
 ): Promise<{ poll?: APIPoll; external_media?: APIExternalMedia }> => {
@@ -11,7 +12,7 @@ export const renderCard = async (
   let totalVotes = 0;
 
   if (typeof values !== 'undefined') {
-    /* TODO: make poll code cleaner */
+    /* TODO: make poll code cleaner. It really sucks. */
     if (
       typeof values.choice1_count !== 'undefined' &&
       typeof values.choice2_count !== 'undefined'
@@ -54,8 +55,8 @@ export const renderCard = async (
       });
 
       return { poll: poll };
-      /* Oh good, a non-Twitter video URL! This enables YouTube embeds and stuff to just work */
     } else if (typeof values.player_url !== 'undefined') {
+      /* Oh good, a non-Twitter video URL! This enables YouTube embeds and stuff to just work */
       return {
         external_media: {
           type: 'video',
