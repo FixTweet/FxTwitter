@@ -33,7 +33,7 @@ const statusRequest = async (
 
   if (
     Constants.DEPRECATED_DOMAIN_LIST.includes(url.hostname) &&
-    BigInt(id) > Constants.DEPRECATED_DOMAIN_EPOCH
+    BigInt(id?.match(/\d{2,20}/g)?.[0] || 0) > Constants.DEPRECATED_DOMAIN_EPOCH
   ) {
     console.log('Request to deprecated domain');
     flags.deprecated = true;
