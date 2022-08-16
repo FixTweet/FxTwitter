@@ -22,7 +22,7 @@ const statusRequest = async (
     ) !== null;
 
   if (
-    url.pathname.match(/\/status(es)?\/\d+\.(mp4|png|jpg)/g) !== null ||
+    url.pathname.match(/\/status(es)?\/\d{2,20}\.(mp4|png|jpg)/g) !== null ||
     Constants.DIRECT_MEDIA_DOMAINS.includes(url.hostname) ||
     prefix === 'dl' ||
     prefix === 'dir'
@@ -40,7 +40,7 @@ const statusRequest = async (
   }
 
   if (
-    url.pathname.match(/\/status(es)?\/\d+\.(json)/g) !== null ||
+    url.pathname.match(/\/status(es)?\/\d{2,20}\.(json)/g) !== null ||
     Constants.API_HOST_LIST.includes(url.hostname)
   ) {
     console.log('JSON API request');
@@ -84,7 +84,7 @@ const statusRequest = async (
     return response;
   } else {
     console.log('Matched human UA', userAgent);
-    return Response.redirect(`${Constants.TWITTER_ROOT}/${handle}/status/${id}`, 302);
+    return Response.redirect(`${Constants.TWITTER_ROOT}/${handle}/status/${id?.match(/\d{2,20}/)?.[0]}`, 302);
   }
 };
 
