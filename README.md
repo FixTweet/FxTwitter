@@ -173,15 +173,17 @@ Populate Sentry details in your `.env` to use Sentry in your product to catch ex
 
 ## Q&A
 
-### What's the difference between `fxtwitter.com`, `pxtwitter.com`, and `twittpr.com`?
+### What's the difference between `fxtwitter.com`, `twittpr.com`, and `pxtwitter.com`?
 
-They all run the exact same worker and have no difference to end users... you can use whatever you'd like!
+They all run the exact same worker and function identically... mostly.
 
-However, we do consider `fxtwitter.com` to be the primary domain these days, and the public API is only on `api.fxtwitter.com`.
+`fxtwitter.com` is the primary domain these days, with `twittpr.com` as an alternative that allows for quick sed replacement. `pxtwitter.com` was our original domain, but we consider to be deprecated now.
+
+The way we handle this is that on post-deprecation Tweets linked using `pxtwitter.com`, instead of saying "FixTweet", it will have a notice that we've moved to `fxtwitter.com`. The embeds and redirects will still work, and Tweets posted before deprecation will not be unaffected at all, but it will gently encourage people to migrate by applying the notice to newer Tweets.
 
 `pxtwitter.com` was our original domain for the project, bought the day before we launched FixTweet (then known as pxTwitter). I was trying to find something memorable and `px` kinda sounds like "pix" or can mean "pixels" which is fitting as a service that can embed images, videos, etc. Not long after, I bought `twittpr.com` because it's easier to do sed replacement with on Discord (`s/e/p`), and because it had a `p` in it, it was sorta related to pxTwitter. They have always functioned identically.
 
-A couple weeks later, I acquired the `fxtwitter.com` domain from RobinUniverse and alongside this rebranded the project as FixTweet and shifted `fxtwitter.com` to be the primary domain instead of `pxtwitter.com`. Like the addition of `twittpr.com` this domain works identically to the others. I wouldn't go as far as to say `pxtwitter.com` is deprecated, but it certainly is the less preferred domain of the 3.
+A couple weeks later, I acquired the `fxtwitter.com` domain from RobinUniverse and alongside this rebranded the project as FixTweet and shifted `fxtwitter.com` to be the primary domain instead of `pxtwitter.com`. Like the addition of `twittpr.com` this domain works identically to the others.
 
 ### How come embedding takes so long / is not working in Telegram?
 

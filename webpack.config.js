@@ -47,6 +47,12 @@ let plugins = [
   }),
   new webpack.DefinePlugin({
     RELEASE_NAME: `'${releaseName}'`
+  }),
+  new webpack.DefinePlugin({
+    DEPRECATED_DOMAIN_LIST: `'${process.env.DEPRECATED_DOMAIN_LIST}'`
+  }),
+  new webpack.DefinePlugin({
+    DEPRECATED_DOMAIN_EPOCH: `'${process.env.DEPRECATED_DOMAIN_EPOCH}'`
   })
 ];
 

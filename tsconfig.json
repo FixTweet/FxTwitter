@@ -11,7 +11,7 @@
     "allowJs": true,
     "sourceMap": true,
     "esModuleInterop": true,
-    "types": ["@cloudflare/workers-types", "@types/service-worker-mock", "@types/jest"]
+    "types": ["@cloudflare/workers-types", "@types/jest"]
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist", "test"]

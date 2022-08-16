@@ -81,6 +81,7 @@ export const handleStatus = async (
   let siteName = Constants.BRANDING_NAME;
   let newText = tweet.text;
 
+  /* Base headers included in all responses */
   const headers = [
     `<meta content="${tweet.color}" property="theme-color"/>`,
     `<meta name="twitter:card" content="${tweet.twitter_card}"/>`,
@@ -169,7 +170,6 @@ export const handleStatus = async (
 
     /* Push the raw video-related headers */
     headers.push(
-      `<meta property="og:site_name" content="${siteName}"/>`,
       `<meta name="twitter:player:stream:content_type" content="${video.format}"/>`,
       `<meta name="twitter:player:height" content="${video.height * sizeMultiplier}"/>`,
       `<meta name="twitter:player:width" content="${video.width * sizeMultiplier}"/>`,
@@ -290,6 +290,11 @@ export const handleStatus = async (
     );
   }
 
+  /* Notice that user is using deprecated domain */
+  if (flags?.deprecated) {
+    siteName = Strings.DEPRECATED_DOMAIN_NOTICE;
+  }
+
   /* Push basic headers relating to author, Tweet text, and site name */
   headers.push(
     `<meta content="${tweet.author.name} (@${tweet.author.screen_name})" property="og:title"/>`,
@@ -310,7 +315,9 @@ export const handleStatus = async (
   headers.push(
     `<link rel="alternate" href="${Constants.HOST_URL}/owoembed?text=${encodeURIComponent(
       authorText.substring(0, 200)
-    )}&status=${encodeURIComponent(status)}&author=${encodeURIComponent(
+    )}${flags?.deprecated ? '&deprecated=true' : ''}&status=${encodeURIComponent(
+      status
+    )}&author=${encodeURIComponent(
       tweet.author?.screen_name || ''
     )}" type="application/json+oembed" title="${tweet.author.name}">`
   );

@@ -32,6 +32,14 @@ const statusRequest = async (
   }
 
   if (
+    Constants.DEPRECATED_DOMAIN_LIST.includes(url.hostname) &&
+    BigInt(id) > Constants.DEPRECATED_DOMAIN_EPOCH
+  ) {
+    console.log('Request to deprecated domain');
+    flags.deprecated = true;
+  }
+
+  if (
     url.pathname.match(/\/status(es)?\/\d+\.(json)/g) !== null ||
     Constants.API_HOST_LIST.includes(url.hostname)
   ) {
@@ -118,7 +126,10 @@ router.get('/owoembed', async (request: Request) => {
     author_url: `${Constants.TWITTER_ROOT}/${encodeURIComponent(
       author
     )}/status/${encodeURIComponent(status)}`,
-    provider_name: Constants.BRANDING_NAME_DISCORD,
+    provider_name:
+      searchParams.get('deprecated') === 'true'
+        ? Strings.DEPRECATED_DOMAIN_NOTICE_DISCORD
+        : Constants.BRANDING_NAME_DISCORD,
     provider_url: Constants.EMBED_URL,
     title: Strings.DEFAULT_AUTHOR_TEXT,
     type: 'link',
