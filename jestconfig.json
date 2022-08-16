@@ -13,6 +13,8 @@
     "REDIRECT_URL": "https://github.com/dangeredwolf/FixTweet",
     "EMBED_URL": "https://discord.gg/6CQTTTkGaH",
     "RELEASE_NAME": "fixtweet-test",
+    "DEPRECATED_DOMAIN_LIST": "pxtwitter.com,www.pxtwitter.com",
+    "DEPRECATED_DOMAIN_EPOCH": "1559320000000000000",
     "TEST": true
   },
   "testRegex": "/test/.*\\.test\\.ts$",
