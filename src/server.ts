@@ -78,7 +78,11 @@ const statusRequest = async (
 
   /* Direct media or API access bypasses bot check, returning same response regardless of UA */
   if (isBotUA || flags.direct || flags.api) {
-    console.log(`Matched bot UA ${userAgent}`);
+    if (isBotUA) {
+      console.log(`Matched bot UA ${userAgent}`);
+    } else {
+      console.log('Bypass bot check');
+    }
 
     /* This throws the necessary data to handleStatus (in status.ts) */
     const statusResponse = await handleStatus(
