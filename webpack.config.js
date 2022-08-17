@@ -17,42 +17,28 @@ const releaseName = `fixtweet-${gitBranch}-${gitCommit}-${new Date()
 
 require('dotenv').config();
 
+let envVariables = [
+  'BRANDING_NAME',
+  'BRANDING_NAME_DISCORD',
+  'DIRECT_MEDIA_DOMAINS',
+  'HOST_URL',
+  'REDIRECT_URL',
+  'EMBED_URL',
+  'MOSAIC_DOMAIN_LIST',
+  'API_HOST_LIST',
+  'SENTRY_DSN',
+  'DEPRECATED_DOMAIN_LIST',
+  'DEPRECATED_DOMAIN_EPOCH'
+];
+
 let plugins = [
-  new webpack.DefinePlugin({
-    BRANDING_NAME: `'${process.env.BRANDING_NAME}'`
-  }),
-  new webpack.DefinePlugin({
-    BRANDING_NAME_DISCORD: `'${process.env.BRANDING_NAME_DISCORD}'`
-  }),
-  new webpack.DefinePlugin({
-    DIRECT_MEDIA_DOMAINS: `'${process.env.DIRECT_MEDIA_DOMAINS}'`
-  }),
-  new webpack.DefinePlugin({
-    HOST_URL: `'${process.env.HOST_URL}'`
-  }),
-  new webpack.DefinePlugin({
-    REDIRECT_URL: `'${process.env.REDIRECT_URL}'`
-  }),
-  new webpack.DefinePlugin({
-    EMBED_URL: `'${process.env.EMBED_URL}'`
-  }),
-  new webpack.DefinePlugin({
-    MOSAIC_DOMAIN_LIST: `'${process.env.MOSAIC_DOMAIN_LIST}'`
-  }),
-  new webpack.DefinePlugin({
-    API_HOST_LIST: `'${process.env.API_HOST_LIST}'`
-  }),
-  new webpack.DefinePlugin({
-    SENTRY_DSN: `'${process.env.SENTRY_DSN}'`
+  ...envVariables.map(envVar => {
+    return new webpack.DefinePlugin({
+      [envVar]: JSON.stringify(process.env[envVar])
+    });
   }),
   new webpack.DefinePlugin({
     RELEASE_NAME: `'${releaseName}'`
-  }),
-  new webpack.DefinePlugin({
-    DEPRECATED_DOMAIN_LIST: `'${process.env.DEPRECATED_DOMAIN_LIST}'`
-  }),
-  new webpack.DefinePlugin({
-    DEPRECATED_DOMAIN_EPOCH: `'${process.env.DEPRECATED_DOMAIN_EPOCH}'`
   })
 ];
 
@@ -69,9 +55,7 @@ if (process.env.SENTRY_AUTH_TOKEN) {
 }
 
 module.exports = {
-  entry: {
-    worker: './src/server.ts'
-  },
+  entry: { worker: './src/server.ts' },
   target: 'webworker',
   devtool: 'source-map',
   output: {
@@ -84,17 +68,13 @@ module.exports = {
     fallback: { util: false }
   },
   plugins: plugins,
-  optimization: {
-    mangleExports: 'size'
-  },
+  optimization: { mangleExports: false },
   module: {
     rules: [
       {
         test: /\.tsx?$/,
         loader: 'ts-loader',
-        options: {
-          transpileOnly: true
-        }
+        options: { transpileOnly: true }
       }
     ]
   }

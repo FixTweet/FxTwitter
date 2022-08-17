@@ -88,7 +88,7 @@ const statusRequest = async (
       flags,
       language
     );
-    
+
     /* Complete responses are normally sent just by errors. Normal embeds send a `text` value. */
     if (statusResponse.response) {
       console.log('handleStatus sent response');
@@ -120,7 +120,10 @@ const statusRequest = async (
     /* A human has clicked a fxtwitter.com/:screen_name/status/:id link!
        Obviously we just need to redirect to the Tweet directly.*/
     console.log('Matched human UA', userAgent);
-    return Response.redirect(`${Constants.TWITTER_ROOT}/${handle}/status/${id?.match(/\d{2,20}/)?.[0]}`, 302);
+    return Response.redirect(
+      `${Constants.TWITTER_ROOT}/${handle}/status/${id?.match(/\d{2,20}/)?.[0]}`,
+      302
+    );
   }
 };
 
@@ -316,8 +319,9 @@ const sentryWrapper = async (event: FetchEvent, test = false): Promise<void> => 
     /* We use Toucan for Sentry. Toucan is a Sentry SDK designed for Cloudflare Workers / DOs */
     sentry = new Toucan({
       dsn: SENTRY_DSN,
-      context: event, /* Includes 'waitUntil', which is essential for Sentry logs to be delivered.
-                         Also includes 'request' -- no need to set it separately. */
+      context: event,
+      /* event includes 'waitUntil', which is essential for Sentry logs to be delivered.
+         Also includes 'request' -- no need to set it separately. */
       allowedHeaders: /(.*)/,
       allowedSearchParams: /(.*)/,
       release: RELEASE_NAME,
