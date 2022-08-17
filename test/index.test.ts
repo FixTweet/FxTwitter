@@ -257,3 +257,52 @@ test('API fetch multi-video Tweet', async () => {
   expect(videos[3].format).toEqual('video/mp4');
   expect(videos[3].type).toEqual('video');
 });
+
+test('API fetch poll Tweet', async () => {
+  const result = await cacheWrapper(
+    new Request('https://api.fxtwitter.com/status/1547441637739184128', {
+      method: 'GET',
+      headers: botHeaders
+    })
+  );
+  expect(result.status).toEqual(200);
+  const response = (await result.json()) as APIResponse;
+  expect(response).toBeTruthy();
+  expect(response.code).toEqual(200);
+  expect(response.message).toEqual('OK');
+
+  const tweet = response.tweet as APITweet;
+  expect(tweet).toBeTruthy();
+  expect(tweet.url).toEqual('https://twitter.com/dangeredwolf/status/1547441637739184128');
+  expect(tweet.id).toEqual('1547441637739184128');
+  expect(tweet.text).toEqual('Poll with 4 values');
+  expect(tweet.author.screen_name?.toLowerCase()).toEqual('dangeredwolf');
+  expect(tweet.author.name).toBeTruthy();
+  expect(tweet.author.avatar_url).toBeTruthy();
+  expect(tweet.author.banner_url).toBeTruthy();
+  expect(tweet.author.avatar_color).toBeTruthy();
+  expect(tweet.twitter_card).toEqual('tweet');
+  expect(tweet.created_at).toEqual('Thu Jul 14 04:43:31 +0000 2022');
+  expect(tweet.created_timestamp).toEqual(1657773811);
+  expect(tweet.lang).toEqual('en');
+  expect(tweet.replying_to).toBeNull();
+  expect(tweet.poll).toBeTruthy();
+  const poll = tweet.poll as APIPoll;
+  expect(poll.ends_at).toEqual('2022-07-15T04:43:31Z');
+  expect(poll.time_left_en).toEqual('Final results');
+  expect(poll.total_votes).toEqual(194);
+  
+  const choices = poll.choices as APIPollChoice[];
+  expect(choices[0].label).toEqual('1');
+  expect(choices[0].count).toEqual(14);
+  expect(choices[0].percentage).toEqual(7.2);
+  expect(choices[1].label).toEqual('2');
+  expect(choices[1].count).toEqual(36);
+  expect(choices[1].percentage).toEqual(18.6);
+  expect(choices[2].label).toEqual('3');
+  expect(choices[2].count).toEqual(80);
+  expect(choices[2].percentage).toEqual(41.2);
+  expect(choices[3].label).toEqual('4');
+  expect(choices[3].count).toEqual(64);
+  expect(choices[3].percentage).toEqual(33);
+});

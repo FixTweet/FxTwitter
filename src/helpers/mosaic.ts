@@ -1,5 +1,6 @@
 import { Constants } from '../constants';
 
+/* Handler for mosaic (multi-image combiner) */
 export const handleMosaic = async (
   mediaList: APIPhoto[],
   id: string
@@ -21,17 +22,8 @@ export const handleMosaic = async (
     const baseUrl = `https://${selectedDomain}/`;
     let path = '';
 
-    if (mosaicMedia[0]) {
-      path += `/${mosaicMedia[0]}`;
-    }
-    if (mosaicMedia[1]) {
-      path += `/${mosaicMedia[1]}`;
-    }
-    if (mosaicMedia[2]) {
-      path += `/${mosaicMedia[2]}`;
-    }
-    if (mosaicMedia[3]) {
-      path += `/${mosaicMedia[3]}`;
+    for (let j = 0; j < 4; j++) {
+      path += `/${mosaicMedia[j]}`;
     }
 
     const size = calcSize(
@@ -52,12 +44,10 @@ export const handleMosaic = async (
    We use this to generate accurate mosaic sizes which helps Discord render it correctly */
 
 const SPACING_SIZE = 10;
-/*
- * This number will be multiplied by the height and weight
- * if all combined images are over 2000 pixels in height or width.
- * In my tests setting this to 0.5 increased performance by 4x (at the cost of 50% resolution)
- * NOTE: This only works for when there's 4 images supplied.
- */
+/* This number will be multiplied by the height and weight
+   if all combined images are over 2000 pixels in height or width.
+   In my tests setting this to 0.5 increased performance by 4x (at the cost of 50% resolution)
+   NOTE: This only works for when there's 4 images supplied. */
 const BIG_IMAGE_MULTIPLIER = 1;
 
 const calcSize = (images: Size[]): Size => {

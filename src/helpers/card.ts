@@ -8,49 +8,29 @@ export const renderCard = async (
 
   console.log('rendering card');
 
-  const choices: { [label: string]: number } = {};
-  let totalVotes = 0;
-
   if (typeof values !== 'undefined') {
-    /* TODO: make poll code cleaner. It really sucks. */
-    if (
-      typeof values.choice1_count !== 'undefined' &&
-      typeof values.choice2_count !== 'undefined'
-    ) {
+    if (typeof values.choice1_count !== 'undefined') {
       const poll = {} as APIPoll;
 
       if (typeof values.end_datetime_utc !== 'undefined') {
         poll.ends_at = values.end_datetime_utc.string_value || '';
-
-        const date = new Date(values.end_datetime_utc.string_value);
-        poll.time_left_en = calculateTimeLeftString(date);
-      }
-      choices[values.choice1_label?.string_value || ''] = parseInt(
-        values.choice1_count.string_value
-      );
-      totalVotes += parseInt(values.choice1_count.string_value);
-      choices[values.choice2_label?.string_value || ''] = parseInt(
-        values.choice2_count.string_value
-      );
-      totalVotes += parseInt(values.choice2_count.string_value);
-      if (typeof values.choice3_count !== 'undefined') {
-        choices[values.choice3_label?.string_value || ''] = parseInt(
-          values.choice3_count.string_value
-        );
-        totalVotes += parseInt(values.choice3_count.string_value);
-      }
-      if (typeof values.choice4_count !== 'undefined') {
-        choices[values.choice4_label?.string_value || ''] =
-          parseInt(values.choice4_count.string_value) || 0;
-        totalVotes += parseInt(values.choice4_count.string_value);
+        poll.time_left_en = calculateTimeLeftString(new Date(values.end_datetime_utc.string_value));
       }
 
-      poll.total_votes = totalVotes;
-      poll.choices = Object.keys(choices).map(label => {
+      const choices: { [label: string]: number } = {
+        [values.choice1_label?.string_value || '']: parseInt(values.choice1_count?.string_value || '0'),
+        [values.choice2_label?.string_value || '']: parseInt(values.choice2_count?.string_value || '0'),
+        [values.choice3_label?.string_value || '']: parseInt(values.choice3_count?.string_value || '0'),
+        [values.choice4_label?.string_value || '']: parseInt(values.choice4_count?.string_value || '0')
+      }
+
+      poll.total_votes = Object.values(choices).reduce((a, b) => a + b, 0);
+
+      poll.choices = Object.keys(choices).filter(label => label !== '').map(label => {
         return {
           label: label,
           count: choices[label],
-          percentage: (Math.round((choices[label] / totalVotes) * 1000) || 0) / 10 || 0
+          percentage: (Math.round((choices[label] / poll.total_votes) * 1000) || 0) / 10 || 0
         };
       });
 
