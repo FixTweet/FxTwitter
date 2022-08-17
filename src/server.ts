@@ -296,7 +296,7 @@ export const cacheWrapper = async (
       console.log('Purging cache as requested');
       await cache.delete(cacheKey);
       return new Response('', { status: 200 });
-    /* yes, we dd give HEAD */
+    /* yes, we do give HEAD */
     case 'HEAD':
       return new Response('', {
         headers: Constants.RESPONSE_HEADERS,
