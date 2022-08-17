@@ -173,8 +173,7 @@ router.get('/owoembed', async (request: Request) => {
     author_url: `${Constants.TWITTER_ROOT}/${encodeURIComponent(
       author
     )}/status/${encodeURIComponent(status)}`,
-    /* Change provider name if tweet is on deprecated domain.
-       TODO: Implement rotating messages/links */
+    /* Change provider name if tweet is on deprecated domain. */
     provider_name:
       searchParams.get('deprecated') === 'true'
         ? Strings.DEPRECATED_DOMAIN_NOTICE_DISCORD
