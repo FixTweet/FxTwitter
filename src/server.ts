@@ -5,6 +5,8 @@ import { Constants } from './constants';
 import { handleStatus } from './status';
 import { Strings } from './strings';
 
+import motd from '../motd.json';
+
 const router = Router();
 
 /* Handler for status (Tweet) request */
@@ -163,6 +165,9 @@ router.get('/owoembed', async (request: Request) => {
   const author = searchParams.get('author') || 'dangeredwolf';
   const status = searchParams.get('status') || '1547514042146865153';
 
+  const random = Math.floor(Math.random() * Object.keys(motd).length);
+  const [name, url] = Object.entries(motd)[random];
+
   const test = {
     author_name: decodeURIComponent(text),
     author_url: `${Constants.TWITTER_ROOT}/${encodeURIComponent(
@@ -173,8 +178,8 @@ router.get('/owoembed', async (request: Request) => {
     provider_name:
       searchParams.get('deprecated') === 'true'
         ? Strings.DEPRECATED_DOMAIN_NOTICE_DISCORD
-        : Constants.BRANDING_NAME_DISCORD,
-    provider_url: Constants.EMBED_URL,
+        : name,
+    provider_url: url,
     title: Strings.DEFAULT_AUTHOR_TEXT,
     type: 'link',
     version: '1.0'
@@ -332,6 +337,10 @@ const sentryWrapper = async (event: FetchEvent, test = false): Promise<void> => 
         return await cacheWrapper(event.request, event);
       } catch (err: unknown) {
         sentry && sentry.captureException(err);
+
+        /* workaround for silly TypeScript things */
+        const error = err as Error;
+        console.error(error.stack);
 
         return new Response(Strings.ERROR_HTML, {
           headers: {

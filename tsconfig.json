@@ -8,6 +8,7 @@
     "strict": true,
     "preserveConstEnums": true,
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "allowJs": true,
     "sourceMap": true,
     "esModuleInterop": true,
