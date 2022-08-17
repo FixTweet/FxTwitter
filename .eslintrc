@@ -9,5 +9,8 @@
   "plugins": ["eslint-plugin-optimize-regex", "sonarjs"],
   "rules": {
     "sonarjs/cognitive-complexity": ["warn", 20]
+  },
+  "env": {
+    "es6": true
   }
 }
