@@ -6,8 +6,6 @@ export const renderCard = async (
 ): Promise<{ poll?: APIPoll; external_media?: APIExternalMedia }> => {
   const values = card.binding_values;
 
-  console.log('rendering card on ', card);
-
   const choices: { [label: string]: number } = {};
   let totalVotes = 0;
 
