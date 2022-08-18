@@ -150,8 +150,14 @@ export const fetchUsingGuest = async (
     }
     /* If we've generated a new token, we'll cache it */
     if (event && newTokenGenerated) {
+      const cachingResponse = new Response(await activate.clone().text(), {
+        headers: {
+          ...tokenHeaders,
+          'cache-control': 'max-age=300'
+        }
+      });
       console.log('Caching guest token');
-      event.waitUntil(cache.put(guestTokenRequestCacheDummy, activate.clone()));
+      event.waitUntil(cache.put(guestTokenRequestCacheDummy, cachingResponse));
     }
     conversation.guestToken = guestToken;
     return conversation;
