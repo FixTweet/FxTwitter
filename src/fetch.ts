@@ -1,8 +1,11 @@
 import { Constants } from './constants';
 
-export const fetchUsingGuest = async (status: string, event: FetchEvent): Promise<TimelineBlobPartial> => {
+export const fetchUsingGuest = async (
+  status: string,
+  event: FetchEvent
+): Promise<TimelineBlobPartial> => {
   let apiAttempts = 0;
-  let cachedTokenFailed = false;
+  let newTokenGenerated = false;
 
   const tokenHeaders: { [header: string]: string } = {
     Authorization: Constants.GUEST_BEARER_TOKEN,
@@ -14,11 +17,21 @@ export const fetchUsingGuest = async (status: string, event: FetchEvent): Promis
     {
       method: 'POST',
       headers: tokenHeaders,
+      body: ''
+    }
+  );
+
+  /* A dummy version of the request only used for Cloudflare caching purposes.
+     The reason it exists at all is because Cloudflare won't cache POST requests. */
+  const guestTokenRequestCacheDummy = new Request(
+    `${Constants.TWITTER_API_ROOT}/1.1/guest/activate.json`,
+    {
+      method: 'GET',
+      headers: tokenHeaders,
       cf: {
         cacheEverything: true,
-        cacheTtl: 600
-      },
-      body: ''
+        cacheTtl: 300
+      }
     }
   );
 
@@ -41,19 +54,19 @@ export const fetchUsingGuest = async (status: string, event: FetchEvent): Promis
 
     let activate: Response | null = null;
 
-    if (!cachedTokenFailed) {
-      const cachedResponse = await cache.match(guestTokenRequest);
+    if (!newTokenGenerated) {
+      const cachedResponse = await cache.match(guestTokenRequestCacheDummy);
 
       if (cachedResponse) {
         console.log('Token cache hit');
         activate = cachedResponse;
+      } else {
+        console.log('Token cache miss');
+        newTokenGenerated = true;
       }
-
-      console.log('Token cache miss');
-      cachedTokenFailed = true;
     }
 
-    if (cachedTokenFailed || activate === null) {
+    if (newTokenGenerated || activate === null) {
       /* If all goes according to plan, we have a guest token we can use to call API
         AFAIK there is no limit to how many guest tokens you can request.
 
@@ -66,14 +79,14 @@ export const fetchUsingGuest = async (status: string, event: FetchEvent): Promis
     let activateJson: { guest_token: string };
 
     try {
-      activateJson = (await activate.json()) as { guest_token: string };
+      activateJson = (await activate.clone().json()) as { guest_token: string };
     } catch (e: unknown) {
       continue;
     }
 
     const guestToken = activateJson.guest_token;
 
-    console.log('Activated guest:', activateJson);
+    console.log(newTokenGenerated ? 'Activated guest:' : 'Using guest:', activateJson);
     console.log('Guest token:', guestToken);
 
     /* Just some cookies to mimick what the Twitter Web App would send */
@@ -107,8 +120,19 @@ export const fetchUsingGuest = async (status: string, event: FetchEvent): Promis
       /* We'll usually only hit this if we get an invalid response from Twitter.
          It's uncommon, but it happens */
       console.error('Unknown error while fetching conversation from API');
-      cachedTokenFailed = true;
+      event && event.waitUntil(cache.delete(guestTokenRequestCacheDummy));
+      newTokenGenerated = true;
       continue;
+    }
+
+    const remainingRateLimit = parseInt(
+      apiRequest.headers.get('x-rate-limit-remaining') || '0'
+    );
+    console.log(`Remaining rate limit: ${remainingRateLimit} requests`);
+    /* Running out of requests within our rate limit, let's purge the cache */
+    if (remainingRateLimit < 20) {
+      console.log(`Purging token on this edge due to low rate limit remaining`);
+      event && event.waitUntil(cache.delete(guestTokenRequestCacheDummy));
     }
 
     if (
@@ -118,11 +142,14 @@ export const fetchUsingGuest = async (status: string, event: FetchEvent): Promis
           239) /* TODO: i forgot what code 239 actually is lol */
     ) {
       console.log('Failed to fetch conversation, got', conversation);
-      cachedTokenFailed = true;
+      newTokenGenerated = true;
       continue;
     }
-    /* Once we've confirmed we have a working guest token, let's cache it! */
-    event.waitUntil(cache.put(guestTokenRequest, activate.clone()));
+    console.log('Caching guest token');
+    /* If we've generated a new token, we'll cache it */
+    if (newTokenGenerated) {
+      event && event.waitUntil(cache.put(guestTokenRequestCacheDummy, activate.clone()));
+    }
     conversation.guestToken = guestToken;
     return conversation;
   }
