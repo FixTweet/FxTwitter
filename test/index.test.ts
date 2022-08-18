@@ -273,7 +273,9 @@ test('API fetch poll Tweet', async () => {
 
   const tweet = response.tweet as APITweet;
   expect(tweet).toBeTruthy();
-  expect(tweet.url).toEqual('https://twitter.com/dangeredwolf/status/1547441637739184128');
+  expect(tweet.url).toEqual(
+    'https://twitter.com/dangeredwolf/status/1547441637739184128'
+  );
   expect(tweet.id).toEqual('1547441637739184128');
   expect(tweet.text).toEqual('Poll with 4 values');
   expect(tweet.author.screen_name?.toLowerCase()).toEqual('dangeredwolf');
@@ -291,7 +293,7 @@ test('API fetch poll Tweet', async () => {
   expect(poll.ends_at).toEqual('2022-07-15T04:43:31Z');
   expect(poll.time_left_en).toEqual('Final results');
   expect(poll.total_votes).toEqual(194);
-  
+
   const choices = poll.choices as APIPollChoice[];
   expect(choices[0].label).toEqual('1');
   expect(choices[0].count).toEqual(14);
