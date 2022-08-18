@@ -17,6 +17,10 @@ export const fetchUsingGuest = async (
     {
       method: 'POST',
       headers: tokenHeaders,
+      cf: {
+        cacheEverything: true,
+        cacheTtl: 300
+      },
       body: ''
     }
   );
@@ -27,7 +31,6 @@ export const fetchUsingGuest = async (
     `${Constants.TWITTER_API_ROOT}/1.1/guest/activate.json`,
     {
       method: 'GET',
-      headers: tokenHeaders,
       cf: {
         cacheEverything: true,
         cacheTtl: 300
@@ -145,10 +148,10 @@ export const fetchUsingGuest = async (
       newTokenGenerated = true;
       continue;
     }
-    console.log('Caching guest token');
     /* If we've generated a new token, we'll cache it */
-    if (newTokenGenerated) {
-      event && event.waitUntil(cache.put(guestTokenRequestCacheDummy, activate.clone()));
+    if (event && newTokenGenerated) {
+      console.log('Caching guest token');
+      event.waitUntil(cache.put(guestTokenRequestCacheDummy, activate.clone()));
     }
     conversation.guestToken = guestToken;
     return conversation;
