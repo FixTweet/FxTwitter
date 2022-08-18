@@ -123,7 +123,7 @@ export const fetchUsingGuest = async (
       /* We'll usually only hit this if we get an invalid response from Twitter.
          It's uncommon, but it happens */
       console.error('Unknown error while fetching conversation from API');
-      event && event.waitUntil(cache.delete(guestTokenRequestCacheDummy));
+      event && event.waitUntil(cache.delete(guestTokenRequestCacheDummy.clone()));
       newTokenGenerated = true;
       continue;
     }
@@ -135,7 +135,7 @@ export const fetchUsingGuest = async (
     /* Running out of requests within our rate limit, let's purge the cache */
     if (remainingRateLimit < 20) {
       console.log(`Purging token on this edge due to low rate limit remaining`);
-      event && event.waitUntil(cache.delete(guestTokenRequestCacheDummy));
+      event && event.waitUntil(cache.delete(guestTokenRequestCacheDummy.clone()));
     }
 
     if (
