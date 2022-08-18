@@ -287,7 +287,11 @@ export const cacheWrapper = async (
       /* Store the fetched response as cacheKey
          Use waitUntil so you can return the response without blocking on
          writing to cache */
-      event && event.waitUntil(cache.put(cacheKey, response.clone()));
+      try {
+        event && event.waitUntil(cache.put(cacheKey, response.clone()));
+      } catch (error) {
+        console.error((error as Error).stack);
+      }
 
       return response;
     /* Telegram sends this from Webpage Bot, and Cloudflare sends it if we purge cache, and we respect it.
