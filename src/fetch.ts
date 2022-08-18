@@ -1,47 +1,42 @@
 import { Constants } from './constants';
 
-const invalidateTokenCache = (event: FetchEvent, cache: Cache) => {
-  console.log('Invalidating token cache');
-  event && event.waitUntil(cache.delete(guestTokenRequestCacheDummy));
-}
-
-const tokenHeaders: { [header: string]: string } = {
-  Authorization: Constants.GUEST_BEARER_TOKEN,
-  ...Constants.BASE_HEADERS
-};
-
-const guestTokenRequest = new Request(
-  `${Constants.TWITTER_API_ROOT}/1.1/guest/activate.json`,
-  {
-    method: 'POST',
-    headers: tokenHeaders,
-    cf: {
-      cacheEverything: true,
-      cacheTtl: Constants.GUEST_TOKEN_MAX_AGE
-    },
-    body: ''
-  }
-);
-
-/* A dummy version of the request only used for Cloudflare caching purposes.
-  The reason it exists at all is because Cloudflare won't cache POST requests. */
-  const guestTokenRequestCacheDummy = new Request(
-  `${Constants.TWITTER_API_ROOT}/1.1/guest/activate.json`,
-  {
-    method: 'GET',
-    cf: {
-      cacheEverything: true,
-      cacheTtl: Constants.GUEST_TOKEN_MAX_AGE
-    }
-  }
-);
-
 export const fetchUsingGuest = async (
   status: string,
   event: FetchEvent
 ): Promise<TimelineBlobPartial> => {
   let apiAttempts = 0;
   let newTokenGenerated = false;
+
+  const tokenHeaders: { [header: string]: string } = {
+    Authorization: Constants.GUEST_BEARER_TOKEN,
+    ...Constants.BASE_HEADERS
+  };
+
+  const guestTokenRequest = new Request(
+    `${Constants.TWITTER_API_ROOT}/1.1/guest/activate.json`,
+    {
+      method: 'POST',
+      headers: tokenHeaders,
+      cf: {
+        cacheEverything: true,
+        cacheTtl: Constants.GUEST_TOKEN_MAX_AGE
+      },
+      body: ''
+    }
+  );
+
+  /* A dummy version of the request only used for Cloudflare caching purposes.
+     The reason it exists at all is because Cloudflare won't cache POST requests. */
+  const guestTokenRequestCacheDummy = new Request(
+    `${Constants.TWITTER_API_ROOT}/1.1/guest/activate.json`,
+    {
+      method: 'GET',
+      cf: {
+        cacheEverything: true,
+        cacheTtl: Constants.GUEST_TOKEN_MAX_AGE
+      }
+    }
+  );
 
   const cache = caches.default;
 
@@ -80,7 +75,7 @@ export const fetchUsingGuest = async (
 
         This can effectively mean virtually unlimited (read) access to Twitter's API,
         which is very funny. */
-      activate = await fetch(guestTokenRequest.clone());
+      activate = await fetch(guestTokenRequest);
     }
 
     /* Let's grab that guest_token so we can use it */
@@ -128,7 +123,7 @@ export const fetchUsingGuest = async (
       /* We'll usually only hit this if we get an invalid response from Twitter.
          It's uncommon, but it happens */
       console.error('Unknown error while fetching conversation from API');
-      invalidateTokenCache(event, cache);
+      event && event.waitUntil(cache.delete(guestTokenRequestCacheDummy));
       newTokenGenerated = true;
       continue;
     }
@@ -140,7 +135,7 @@ export const fetchUsingGuest = async (
     /* Running out of requests within our rate limit, let's purge the cache */
     if (remainingRateLimit < 20) {
       console.log(`Purging token on this edge due to low rate limit remaining`);
-      invalidateTokenCache(event, cache);
+      event && event.waitUntil(cache.delete(guestTokenRequestCacheDummy));
     }
 
     if (
