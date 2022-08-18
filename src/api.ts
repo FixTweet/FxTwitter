@@ -138,9 +138,10 @@ const populateTweetProperties = async (
    available for free using api.fxtwitter.com. */
 export const statusAPI = async (
   status: string,
-  language: string | undefined
+  language: string | undefined,
+  event: FetchEvent
 ): Promise<APIResponse> => {
-  const conversation = await fetchUsingGuest(status);
+  const conversation = await fetchUsingGuest(status, event);
   const tweet = conversation?.globalObjects?.tweets?.[status] || {};
 
   /* Fallback for if Tweet did not load */

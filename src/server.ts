@@ -90,7 +90,8 @@ const statusRequest = async (
       mediaNumber ? parseInt(mediaNumber) : undefined,
       userAgent,
       flags,
-      language
+      language,
+      event
     );
 
     /* Complete responses are normally sent just by errors. Normal embeds send a `text` value. */

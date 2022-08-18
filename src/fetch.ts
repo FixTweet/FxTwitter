@@ -1,6 +1,6 @@
 import { Constants } from './constants';
 
-export const fetchUsingGuest = async (status: string): Promise<TimelineBlobPartial> => {
+export const fetchUsingGuest = async (status: string, event: FetchEvent): Promise<TimelineBlobPartial> => {
   let apiAttempts = 0;
   let cachedTokenFailed = false;
 
@@ -121,9 +121,8 @@ export const fetchUsingGuest = async (status: string): Promise<TimelineBlobParti
       cachedTokenFailed = true;
       continue;
     }
-
     /* Once we've confirmed we have a working guest token, let's cache it! */
-    // event.waitUntil(cache.put(guestTokenRequest, activate.clone()));
+    event.waitUntil(cache.put(guestTokenRequest, activate.clone()));
     conversation.guestToken = guestToken;
     return conversation;
   }
