@@ -19,7 +19,7 @@ export const fetchUsingGuest = async (
       headers: tokenHeaders,
       cf: {
         cacheEverything: true,
-        cacheTtl: 300
+        cacheTtl: Constants.GUEST_TOKEN_MAX_AGE
       },
       body: ''
     }
@@ -33,7 +33,7 @@ export const fetchUsingGuest = async (
       method: 'GET',
       cf: {
         cacheEverything: true,
-        cacheTtl: 300
+        cacheTtl: Constants.GUEST_TOKEN_MAX_AGE
       }
     }
   );
@@ -153,7 +153,7 @@ export const fetchUsingGuest = async (
       const cachingResponse = new Response(await activate.clone().text(), {
         headers: {
           ...tokenHeaders,
-          'cache-control': 'max-age=300'
+          'cache-control': `max-age=${Constants.GUEST_TOKEN_MAX_AGE}`
         }
       });
       console.log('Caching guest token');
