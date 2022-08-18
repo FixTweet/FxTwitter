@@ -24,12 +24,13 @@ export const handleStatus = async (
   mediaNumber?: number,
   userAgent?: string,
   flags?: InputFlags,
-  language?: string
+  language?: string,
+  event?: FetchEvent
   // eslint-disable-next-line sonarjs/cognitive-complexity
 ): Promise<StatusResponse> => {
   console.log('Direct?', flags?.direct);
 
-  const api = await statusAPI(status, language);
+  const api = await statusAPI(status, language, event as FetchEvent);
   const tweet = api?.tweet as APITweet;
 
   /* Catch this request if it's an API response */
