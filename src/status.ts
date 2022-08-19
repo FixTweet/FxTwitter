@@ -115,7 +115,7 @@ export const handleStatus = async (
             destination: translation.target_lang.toUpperCase()
           });
 
-    newText = `${translation.text}\n\n` + `${formatText}\n\n` + `${newText}`;
+    newText = `${formatText}\n\n` + `${translation.text}\n\n`;
   }
 
   /* This Tweet has a video to render.
