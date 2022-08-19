@@ -112,25 +112,25 @@ On a different note, if the person who posted a FixTweet link forgot to strip tr
 
 In many ways, FixTweet has richer embeds and does more. Here's a table comparing some of FixTweet's features compared to Twitter default embeds as well as other embedding services
 
-|                                         |              FixTweet               |         Twitter default          |        vxTwitter (BetterTwitFix)        |           Twxtter (sixFix)            |
-| --------------------------------------- | :---------------------------------: | :------------------------------: | :-------------------------------------: | :-----------------------------------: |
-| Embed Tweets / Images                   |         :heavy_check_mark:          |        :heavy_check_mark:        |           :heavy_check_mark:            |          :heavy_check_mark:           |
-| Embed profile pictures on text Tweets   |         :heavy_check_mark:          |               :x:                |           :heavy_check_mark:            |          :heavy_check_mark:           |
-| Embed Twitter Videos                    |         :heavy_check_mark:          |               :x:¹               |           :heavy_check_mark:            |          :heavy_check_mark:           |
-| Embed External Videos (YouTube, etc.)   |         :heavy_check_mark:⁵         |               :x:                |                  :x:⁴                   |                  :x:                  |
-| Embed Poll results                      |         :heavy_check_mark:          |               :x:                |                   :x:                   |                  :x:                  |
-| Embed Quote Tweets                      |         :heavy_check_mark:          |               :x:                |  :ballot_box_with_check: Without Media  | :ballot_box_with_check: Without Media |
-| Embed Multiple Images                   |         :heavy_check_mark:          | :heavy_minus_sign: Discord Only³ | :ballot_box_with_check: c.vxtwitter.com |                  :x:                  |
-| Translate Tweets                        |         :heavy_check_mark:          |               :x:                |                   :x:                   |                  :x:                  |
-| Publicly accessible embed index         |                :x:²                 |               N/A                |                  :x:²                   |          :heavy_check_mark:           |
-| Replace t.co with original links        |         :heavy_check_mark:          |               :x:                |                   :x:                   |                  :x:                  |
-| Media-based embed colors on Discord     |         :heavy_check_mark:          |               :x:                |                   :x:                   |                  :x:                  |
-| Redirect to media file (wihout embed)   |         :heavy_check_mark:          |               :x:                |                   :x:                   |          :heavy_check_mark:           |
-| Strip Twitter tracking info on redirect |         :heavy_check_mark:          |               :x:                |           :heavy_check_mark:            |          :heavy_check_mark:           |
-| Show retweet, like, reply counts        |         :heavy_check_mark:          | :heavy_minus_sign: Discord Only³ |   :ballot_box_with_check: No replies    |  :ballot_box_with_check: No replies   |
-| Discord sed replace (`s/`) friendly     | :ballot_box_with_check: twittpr.com |               N/A                |                   :x:                   |          :heavy_check_mark:           |
-| Tweet fetch API for Developers          |         :heavy_check_mark:          |               N/A                |                   :x:                   |          :heavy_check_mark:           |
-| Last commit                             |           [![][flc]][fc]            |               N/A                |             [![][vlc]][vc]              |            [![][slc]][sc]             |
+|                                         |              FixTweet               |         Twitter default          |              vxTwitter (BetterTwitFix)              |           Twxtter (sixFix)            |
+| --------------------------------------- | :---------------------------------: | :------------------------------: | :-------------------------------------------------: | :-----------------------------------: |
+| Embed Tweets / Images                   |         :heavy_check_mark:          |        :heavy_check_mark:        |                 :heavy_check_mark:                  |          :heavy_check_mark:           |
+| Embed profile pictures on text Tweets   |         :heavy_check_mark:          |               :x:                |                 :heavy_check_mark:                  |          :heavy_check_mark:           |
+| Embed Twitter Videos                    |         :heavy_check_mark:          |               :x:¹               |                 :heavy_check_mark:                  |          :heavy_check_mark:           |
+| Embed External Videos (YouTube, etc.)   |         :heavy_check_mark:⁵         |               :x:                |                        :x:⁴                         |                  :x:                  |
+| Embed Poll results                      |         :heavy_check_mark:          |               :x:                |                         :x:                         |                  :x:                  |
+| Embed Quote Tweets                      |         :heavy_check_mark:          |               :x:                |        :ballot_box_with_check: Without Media        | :ballot_box_with_check: Without Media |
+| Embed Multiple Images                   |         :heavy_check_mark:          | :heavy_minus_sign: Discord Only³ |       :ballot_box_with_check: c.vxtwitter.com       |                  :x:                  |
+| Translate Tweets                        |         :heavy_check_mark:          |               :x:                |                         :x:                         |                  :x:                  |
+| Publicly accessible embed index         |                :x:²                 |               N/A                |                        :x:²                         |          :heavy_check_mark:           |
+| Replace t.co with original links        |         :heavy_check_mark:          |               :x:                |                         :x:                         |                  :x:                  |
+| Media-based embed colors on Discord     |         :heavy_check_mark:          |               :x:                |                         :x:                         |                  :x:                  |
+| Redirect to media file (wihout embed)   |         :heavy_check_mark:          |               :x:                | :ballot_box_with_check: Subdomain broken, no images |   :ballot_box_with_check: No images   |
+| Strip Twitter tracking info on redirect |         :heavy_check_mark:          |               :x:                |                 :heavy_check_mark:                  |          :heavy_check_mark:           |
+| Show retweet, like, reply counts        |         :heavy_check_mark:          | :heavy_minus_sign: Discord Only³ |         :ballot_box_with_check: No replies          |  :ballot_box_with_check: No replies   |
+| Discord sed replace (`s/`) friendly     | :ballot_box_with_check: twittpr.com |               N/A                |                         :x:                         |          :heavy_check_mark:           |
+| Tweet fetch API for Developers          |         :heavy_check_mark:          |               N/A                |                         :x:                         |          :heavy_check_mark:           |
+| Last commit                             |           [![][flc]][fc]            |               N/A                |                   [![][vlc]][vc]                    |            [![][slc]][sc]             |
 
 [flc]: https://img.shields.io/github/last-commit/dangeredwolf/FixTweet?label
 [vlc]: https://img.shields.io/github/last-commit/dylanpdx/BetterTwitFix?label
