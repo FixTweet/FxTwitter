@@ -20,8 +20,8 @@ export const Constants = {
   TWITTER_API_ROOT: 'https://api.twitter.com',
                        /* 10 minutes */
   GUEST_TOKEN_MAX_AGE: 600, 
-  /* We used to use Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA
-  but accounts marked as 18+ wouldn't show up then */
+  /* Twitter Web App actually uses Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA
+     instead, but accounts marked as 18+ wouldn't show up then */
   GUEST_BEARER_TOKEN: `Bearer AAAAAAAAAAAAAAAAAAAAAPYXBAAAAAAACLXUNDekMxqa8h%2F40K4moUkGsoc%3DTYfbDKbT3jJPCEVnMYqilB28NHfOPqkca3qaAxGfsyKCs0wRbw`,
   GUEST_FETCH_PARAMETERS: [
     'cards_platform=Web-12',
