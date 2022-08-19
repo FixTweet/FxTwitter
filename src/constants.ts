@@ -18,8 +18,8 @@ export const Constants = {
   API_DOCS_URL: `https://github.com/dangeredwolf/FixTweet/wiki/API-Home`,
   TWITTER_ROOT: 'https://twitter.com',
   TWITTER_API_ROOT: 'https://api.twitter.com',
-                       /* 10 minutes */
-  GUEST_TOKEN_MAX_AGE: 600, 
+  /* 10 minutes */
+  GUEST_TOKEN_MAX_AGE: 600,
   /* Twitter Web App actually uses Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA
      instead, but accounts marked as 18+ wouldn't show up then */
   GUEST_BEARER_TOKEN: `Bearer AAAAAAAAAAAAAAAAAAAAAPYXBAAAAAAACLXUNDekMxqa8h%2F40K4moUkGsoc%3DTYfbDKbT3jJPCEVnMYqilB28NHfOPqkca3qaAxGfsyKCs0wRbw`,
