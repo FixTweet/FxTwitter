@@ -58,7 +58,7 @@ export const fetchUsingGuest = async (
     let activate: Response | null = null;
 
     if (!newTokenGenerated) {
-      const cachedResponse = await cache.match(guestTokenRequestCacheDummy);
+      const cachedResponse = await cache.match(guestTokenRequestCacheDummy.clone());
 
       if (cachedResponse) {
         console.log('Token cache hit');
@@ -157,7 +157,7 @@ export const fetchUsingGuest = async (
         }
       });
       console.log('Caching guest token');
-      event.waitUntil(cache.put(guestTokenRequestCacheDummy, cachingResponse));
+      event.waitUntil(cache.put(guestTokenRequestCacheDummy.clone(), cachingResponse));
     }
     conversation.guestToken = guestToken;
     return conversation;
