@@ -251,6 +251,11 @@ export const cacheWrapper = async (
     });
   }
 
+  /* Redirect Favicon to Twitter's */
+  if (cacheUrl.pathname === '/favicon.ico') {
+    return Response.redirect(`${Constants.TWITTER_ROOT}/favicon.ico`, 302);
+  }
+
   /* Some TwitFix APIs will never be available in FixTweet for privacy or
      design choice reasons. 
      
