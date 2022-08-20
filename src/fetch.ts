@@ -123,7 +123,7 @@ export const fetchUsingGuest = async (
       /* We'll usually only hit this if we get an invalid response from Twitter.
          It's uncommon, but it happens */
       console.error('Unknown error while fetching conversation from API');
-      event && event.waitUntil(cache.delete(guestTokenRequestCacheDummy.clone()));
+      event && event.waitUntil(cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true }));
       newTokenGenerated = true;
       continue;
     }
@@ -135,14 +135,14 @@ export const fetchUsingGuest = async (
     /* Running out of requests within our rate limit, let's purge the cache */
     if (remainingRateLimit < 20) {
       console.log(`Purging token on this edge due to low rate limit remaining`);
-      event && event.waitUntil(cache.delete(guestTokenRequestCacheDummy.clone()));
+      event && event.waitUntil(cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true }));
     }
 
     if (
       typeof conversation.globalObjects === 'undefined' &&
       (typeof conversation.errors === 'undefined' ||
         conversation.errors?.[0]?.code ===
-          239) /* TODO: i forgot what code 239 actually is lol */
+          239) /* Error 239 = Bad guest token */
     ) {
       console.log('Failed to fetch conversation, got', conversation);
       newTokenGenerated = true;
