@@ -6,6 +6,8 @@
   "globals": {
     "BRANDING_NAME": "FixTweet",
     "BRANDING_NAME_DISCORD": "FixTweetBrandingDiscord",
+    "BRANDING_NAME_SEMANTIC": "FixTweetSemanticTitle",
+    "DOMAIN_SEMANTIC": "FixTweetSemanticDomain",
     "DIRECT_MEDIA_DOMAINS": "d.fxtwitter.com,dl.fxtwitter.com",
     "MOSAIC_DOMAIN_LIST": "mosaic.fxtwitter.com",
     "DEPRECATED_DOMAIN_LIST": "pxtwitter.com,www.pxtwitter.com",

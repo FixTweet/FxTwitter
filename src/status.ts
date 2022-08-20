@@ -17,6 +17,14 @@ export const returnError = (error: string): StatusResponse => {
   };
 };
 
+const getBranding = (flags: InputFlags | undefined): string => {
+  if (flags?.semantic) {
+    return Constants.BRANDING_NAME_SEMANTIC;
+  } else {
+    return Constants.BRANDING_NAME;
+  }
+};
+
 /* Handler for Twitter statuses (Tweets).
    Like Twitter, we use the terminologies interchangably. */
 export const handleStatus = async (
@@ -79,8 +87,16 @@ export const handleStatus = async (
 
   let authorText = getAuthorText(tweet) || Strings.DEFAULT_AUTHOR_TEXT;
   const engagementText = authorText.replace(/ {4}/g, ' ');
-  let siteName = Constants.BRANDING_NAME;
+  let siteName = getBranding(flags);
   let newText = tweet.text;
+
+  /* Add semantic domain name to title for better search in Telegram
+     if requested by user */
+
+  let semanticPrefix = '';
+  if (flags?.semantic && userAgent?.indexOf('Telegram') !== -1) {
+    semanticPrefix = (flags?.semantic ? Constants.DOMAIN_SEMANTIC : '') + ' | ';
+  }
 
   /* Base headers included in all responses */
   const headers = [
@@ -88,7 +104,7 @@ export const handleStatus = async (
     `<meta name="twitter:card" content="${tweet.twitter_card}"/>`,
     `<meta name="twitter:site" content="@${tweet.author.screen_name}"/>`,
     `<meta name="twitter:creator" content="@${tweet.author.screen_name}"/>`,
-    `<meta name="twitter:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`
+    `<meta name="twitter:title" content="${semanticPrefix}${tweet.author.name} (@${tweet.author.screen_name})"/>`
   ];
 
   /* This little thing ensures if by some miracle a FixTweet embed is loaded in a browser,
@@ -162,10 +178,10 @@ export const handleStatus = async (
           ? videoCounter
           : `${authorText}${authorText ? '   ―   ' : ''}${videoCounter}`;
 
-      siteName = `${Constants.BRANDING_NAME} - ${videoCounter}`;
+      siteName = `${getBranding(flags)} - ${videoCounter}`;
 
       if (engagementText) {
-        siteName = `${Constants.BRANDING_NAME} - ${engagementText} - ${videoCounter}`;
+        siteName = `${getBranding(flags)} - ${engagementText} - ${videoCounter}`;
       }
     }
 
@@ -214,10 +230,10 @@ export const handleStatus = async (
           ? photoCounter
           : `${authorText}${authorText ? '   ―   ' : ''}${photoCounter}`;
 
-      siteName = `${Constants.BRANDING_NAME} - ${photoCounter}`;
+      siteName = `${getBranding(flags)} - ${photoCounter}`;
 
       if (engagementText) {
-        siteName = `${Constants.BRANDING_NAME} - ${engagementText} - ${photoCounter}`;
+        siteName = `${getBranding(flags)} - ${engagementText} - ${photoCounter}`;
       }
     }
 
@@ -298,7 +314,7 @@ export const handleStatus = async (
 
   /* Push basic headers relating to author, Tweet text, and site name */
   headers.push(
-    `<meta content="${tweet.author.name} (@${tweet.author.screen_name})" property="og:title"/>`,
+    `<meta content="${semanticPrefix}${tweet.author.name} (@${tweet.author.screen_name})" property="og:title"/>`,
     `<meta content="${sanitizeText(newText)}" property="og:description"/>`,
     `<meta content="${siteName}" property="og:site_name"/>`
   );

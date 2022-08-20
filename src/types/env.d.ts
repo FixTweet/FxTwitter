@@ -1,5 +1,7 @@
 declare const BRANDING_NAME: string;
 declare const BRANDING_NAME_DISCORD: string;
+declare const BRANDING_NAME_SEMANTIC: string;
+declare const DOMAIN_SEMANTIC: string;
 declare const DIRECT_MEDIA_DOMAINS: string;
 declare const DEPRECATED_DOMAIN_LIST: string;
 declare const DEPRECATED_DOMAIN_EPOCH: string;

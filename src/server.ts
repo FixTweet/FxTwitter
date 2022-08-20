@@ -76,6 +76,13 @@ const statusRequest = async (
     flags.api = true;
   }
 
+  /* Check if user requested for a semantic site name with a search parameter
+     This is useful for search */
+  if (url.searchParams.has('sem')) {
+    console.log('User demands a semantic site name');
+    flags.semantic = true;
+  }
+
   /* Direct media or API access bypasses bot check, returning same response regardless of UA */
   if (isBotUA || flags.direct || flags.api) {
     if (isBotUA) {

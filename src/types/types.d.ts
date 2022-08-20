@@ -6,6 +6,7 @@ type InputFlags = {
   direct?: boolean;
   api?: boolean;
   deprecated?: boolean;
+  semantic?: boolean;
 };
 
 interface StatusResponse {

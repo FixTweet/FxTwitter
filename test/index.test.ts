@@ -1,6 +1,7 @@
 import { cacheWrapper } from '../src/server';
 
 const botHeaders = { 'User-Agent': 'Discordbot/2.0' };
+const botTelegramHeaders = { 'User-Agent': 'TelegramBot (like TwitterBot)' };
 const humanHeaders = {
   'User-Agent':
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
@@ -45,6 +46,36 @@ test('Tweet response robot', async () => {
     })
   );
   expect(result.status).toEqual(200);
+});
+
+test('Branding semantic name', async () => {
+  const result = await cacheWrapper(
+    new Request('https://fxtwitter.com/jack/status/20?sem', {
+      method: 'GET',
+      headers: botHeaders
+    })
+  );
+  expect(await result.text()).toContain(BRANDING_NAME_SEMANTIC);
+});
+
+test('Tweet semantic title for Telegram', async () => {
+  const result = await cacheWrapper(
+    new Request('https://fxtwitter.com/jack/status/20?sem', {
+      method: 'GET',
+      headers: botTelegramHeaders
+    })
+  );
+  expect(await result.text()).toContain(DOMAIN_SEMANTIC);
+});
+
+test('Tweet semantic title for Telegram only', async () => {
+  const result = await cacheWrapper(
+    new Request('https://fxtwitter.com/jack/status/20?sem', {
+      method: 'GET',
+      headers: botHeaders
+    })
+  );
+  expect(await result.text()).not.toContain(DOMAIN_SEMANTIC);
 });
 
 test('API fetch basic Tweet', async () => {
