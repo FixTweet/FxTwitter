@@ -125,7 +125,7 @@ In many ways, FixTweet has richer embeds and does more. Here's a table comparing
 | Publicly accessible embed index         |                :x:²                 |               N/A                |                        :x:²                         |          :heavy_check_mark:           |
 | Replace t.co with original links        |         :heavy_check_mark:          |               :x:                |                         :x:                         |                  :x:                  |
 | Media-based embed colors on Discord     |         :heavy_check_mark:          |               :x:                |                         :x:                         |                  :x:                  |
-| Redirect to media file (without embed)   |         :heavy_check_mark:          |               :x:                | :ballot_box_with_check: Subdomain broken, no images |   :ballot_box_with_check: No images   |
+| Redirect to media file (without embed)  |         :heavy_check_mark:          |               :x:                | :ballot_box_with_check: Subdomain broken, no images |   :ballot_box_with_check: No images   |
 | Strip Twitter tracking info on redirect |         :heavy_check_mark:          |               :x:                |                 :heavy_check_mark:                  |          :heavy_check_mark:           |
 | Show retweet, like, reply counts        |         :heavy_check_mark:          | :heavy_minus_sign: Discord Only³ |         :ballot_box_with_check: No replies          |  :ballot_box_with_check: No replies   |
 | Discord sed replace (`s/`) friendly     | :ballot_box_with_check: twittpr.com |               N/A                |                         :x:                         |          :heavy_check_mark:           |
