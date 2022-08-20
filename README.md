@@ -130,7 +130,7 @@ In many ways, FixTweet has richer embeds and does more. Here's a table comparing
 | Show retweet, like, reply counts        |         :heavy_check_mark:          | :heavy_minus_sign: Discord Only³ |         :ballot_box_with_check: No replies          |  :ballot_box_with_check: No replies   |
 | Discord sed replace (`s/`) friendly     | :ballot_box_with_check: twittpr.com |               N/A                |                         :x:                         |          :heavy_check_mark:           |
 | Tweet fetch API for Developers          |         :heavy_check_mark:          |               N/A                |                         :x:                         |          :heavy_check_mark:           |
-| DDoS protection & lower latency         |         :heavy_check_mark:          |               N/A                |                         :x:                         |                  :x:                  |
+| DDoS protection & low latency globally  |         :heavy_check_mark:          |               N/A                |                         :x:                         |                  :x:                  |
 | Last commit                             |           [![][flc]][fc]            |               N/A                |                   [![][vlc]][vc]                    |            [![][slc]][sc]             |
 
 [flc]: https://img.shields.io/github/last-commit/dangeredwolf/FixTweet?label
