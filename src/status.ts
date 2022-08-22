@@ -308,7 +308,7 @@ export const handleStatus = async (
     authorText = `↪ Replying to @${tweet.replying_to}`;
     /* We'll assume it's a thread if it's a reply to themselves */
   } else if (tweet.replying_to === tweet.author.screen_name) {
-    authorText = `↪ A part @${tweet.author.screen_name}'s thread`;
+    authorText = `↪ A part of @${tweet.author.screen_name}'s thread`;
   }
 
   /* The additional oembed is pulled by Discord to enable improved embeds.

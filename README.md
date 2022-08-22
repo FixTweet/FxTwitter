@@ -66,7 +66,7 @@ Want to link directly to a Tweet's media without the embed? You can easily do th
 
 ![Image demonstrating the feature](https://cdn.discordapp.com/attachments/165560751363325952/1006338772192989194/FixTweet.png)
 
-There's a few supported ways to do this:
+There are a few supported ways to do this:
 
 - Add `d.` or `dl.` before the domain (so, `d.twittpr.com` or `dl.fxtwitter.com`)
 - Add `.mp4` to the end of videos or `.jpg` to the end of images, after the tweet ID
