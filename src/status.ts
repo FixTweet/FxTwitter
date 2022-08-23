@@ -192,11 +192,7 @@ export const handleStatus = async (
        mosaic response, we'll render it using mosaic */
     if (typeof mediaNumber !== 'number' && tweet.media.mosaic) {
       photo = {
-        /* Telegram is dumb and doesn't support webp in opengraph embeds */
-        url:
-          userAgent?.indexOf('Telegram') === -1
-            ? tweet.media.mosaic.formats.webp
-            : tweet.media.mosaic.formats.jpeg,
+        url: tweet.media.mosaic.formats.jpeg,
         width: tweet.media.mosaic.width,
         height: tweet.media.mosaic.height,
         type: 'photo'
