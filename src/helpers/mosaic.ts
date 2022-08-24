@@ -23,7 +23,9 @@ export const handleMosaic = async (
     let path = '';
 
     for (let j = 0; j < 4; j++) {
-      path += `/${mosaicMedia[j]}`;
+      if (typeof mosaicMedia[j] === 'string') {
+        path += `/${mosaicMedia[j]}`;
+      }
     }
 
     const size = calcSize(
