@@ -40,7 +40,7 @@ export const fetchUsingGuest = async (
 
   const cache = caches.default;
 
-  while (apiAttempts < 10) {
+  while (apiAttempts < 12) {
     const csrfToken = crypto
       .randomUUID()
       .replace(
@@ -162,6 +162,8 @@ export const fetchUsingGuest = async (
     conversation.guestToken = guestToken;
     return conversation;
   }
+
+  console.log('Twitter has repeatedly denied our requests, so we give up now');
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error - This is only returned if we completely failed to fetch the conversation
