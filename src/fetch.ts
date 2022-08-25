@@ -75,7 +75,7 @@ export const fetchUsingGuest = async (
 
         This can effectively mean virtually unlimited (read) access to Twitter's API,
         which is very funny. */
-      activate = await fetch(guestTokenRequest);
+      activate = await fetch(guestTokenRequest.clone());
     }
 
     /* Let's grab that guest_token so we can use it */
