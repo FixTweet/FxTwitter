@@ -1,5 +1,7 @@
 import { Constants } from './constants';
 
+const API_ATTEMPTS = 16;
+
 export const fetchUsingGuest = async (
   status: string,
   event: FetchEvent
@@ -40,7 +42,7 @@ export const fetchUsingGuest = async (
 
   const cache = caches.default;
 
-  while (apiAttempts < 12) {
+  while (apiAttempts < API_ATTEMPTS) {
     const csrfToken = crypto
       .randomUUID()
       .replace(
