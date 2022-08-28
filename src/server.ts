@@ -177,10 +177,10 @@ router.get('/owoembed', async (request: Request) => {
   const [name, url] = Object.entries(motd)[random];
 
   const test = {
-    author_name: decodeURIComponent(text),
+    author_name: text,
     author_url: `${Constants.TWITTER_ROOT}/${encodeURIComponent(
       author
-    )}/status/${encodeURIComponent(status)}`,
+    )}/status/${status}`,
     /* Change provider name if tweet is on deprecated domain. */
     provider_name:
       searchParams.get('deprecated') === 'true'
