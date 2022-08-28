@@ -117,10 +117,8 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
       <h2>Worker release: ${RELEASE_NAME}</h2>
       <br>
       <h3>Stats for nerds:</h3>
-      <h2>Edge:
-      {rtt} <img class="cf" referrerpolicy="no-referrer" src="https://cdn.discordapp.com/emojis/988895299693080616.webp?size=96&quality=lossless"> {colo}</h2>
-      <h2>Connection:
-      {httpversion} - {tlsversion}</h2>
+      <h2>Edge Connection:
+      {rtt} 📶 {httpversion} 🔒 {tlsversion} ➡ <img class="cf" referrerpolicy="no-referrer" src="https://cdn.discordapp.com/emojis/988895299693080616.webp?size=96&quality=lossless"> {colo}</h2>
       <h2>User Agent:
       {ua}</h2>
     </body>
