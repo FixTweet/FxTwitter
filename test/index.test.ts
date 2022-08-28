@@ -171,8 +171,6 @@ test('API fetch multi-photo Tweet', async () => {
   expect(photos[3].height).toEqual(418);
   expect(tweet.media?.mosaic).toBeTruthy();
   const mosaic = tweet.media?.mosaic as APIMosaicPhoto;
-  expect(mosaic.width).toEqual(1610);
-  expect(mosaic.height).toEqual(846);
   expect(mosaic.formats?.jpeg).toEqual(
     'https://mosaic.fxtwitter.com/jpeg/1554870933449482240/FZQCeMmXwAAOJTt/FZQCl-lWIAMtoW9/FZQCsQPX0AIbY6H/FZQCxmLXEAMST4q'
   );

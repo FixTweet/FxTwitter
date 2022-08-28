@@ -220,12 +220,17 @@ export const handleStatus = async (
     /* Push the raw photo-related headers */
     headers.push(
       `<meta name="twitter:image" content="${photo.url}"/>`,
-      `<meta name="twitter:image:width" content="${photo.width}"/>`,
-      `<meta name="twitter:image:height" content="${photo.height}"/>`,
       `<meta name="og:image" content="${photo.url}"/>`,
-      `<meta name="og:image:width" content="${photo.width}"/>`,
-      `<meta name="og:image:height" content="${photo.height}"/>`
     );
+
+    if (!tweet.media.mosaic) {
+      headers.push(
+        `<meta name="twitter:image:width" content="${photo.width}"/>`,
+        `<meta name="twitter:image:height" content="${photo.height}"/>`,
+        `<meta name="og:image:width" content="${photo.width}"/>`,
+        `<meta name="og:image:height" content="${photo.height}"/>`
+      );
+    }
   }
 
   /* We have external media available to us (i.e. YouTube videos) */

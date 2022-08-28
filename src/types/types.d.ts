@@ -88,8 +88,6 @@ interface APIPhoto {
 
 interface APIMosaicPhoto {
   type: 'mosaic_photo';
-  width: number;
-  height: number;
   formats: {
     webp: string;
     jpeg: string;
