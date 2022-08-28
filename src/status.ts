@@ -186,15 +186,16 @@ export const handleStatus = async (
   /* This Tweet has one or more photos to render */
   if (tweet.media?.photos) {
     const { photos } = tweet.media;
-    let photo = photos[(mediaNumber || 1) - 1];
+    let photo: APIPhoto | APIMosaicPhoto = photos[(mediaNumber || 1) - 1];
 
     /* If there isn't a specified media number and we have a
        mosaic response, we'll render it using mosaic */
     if (typeof mediaNumber !== 'number' && tweet.media.mosaic) {
       photo = {
+        /* Include dummy height/width for TypeScript reasons. We have a check to make sure we don't use these later. */
+        height: 0,
+        width: 0,
         url: tweet.media.mosaic.formats.jpeg,
-        width: tweet.media.mosaic.width,
-        height: tweet.media.mosaic.height,
         type: 'photo'
       };
       /* If mosaic isn't available or the link calls for a specific photo,
@@ -220,7 +221,7 @@ export const handleStatus = async (
     /* Push the raw photo-related headers */
     headers.push(
       `<meta name="twitter:image" content="${photo.url}"/>`,
-      `<meta name="og:image" content="${photo.url}"/>`,
+      `<meta name="og:image" content="${photo.url}"/>`
     );
 
     if (!tweet.media.mosaic) {
