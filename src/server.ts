@@ -6,6 +6,7 @@ import { handleStatus } from './status';
 import { Strings } from './strings';
 
 import motd from '../motd.json';
+import { sanitizeText } from './helpers/utils';
 
 const router = Router();
 
@@ -146,6 +147,27 @@ const profileRequest = async (request: Request) => {
   }
 };
 
+const versionRequest = async (request: Request) => {
+  return new Response(Strings.VERSION_HTML.format({
+    rtt: request.cf?.clientTcpRtt ? `🏓 ${request.cf.clientTcpRtt} ms RTT` : '',
+    colo: request.cf?.colo || '??',
+    httpversion: request.cf?.httpProtocol || 'Unknown HTTP Version',
+    tlsversion: request.cf?.tlsVersion || 'Unknown TLS Version',
+    ip: request.headers.get('x-real-ip') || request.headers.get('cf-connecting-ip') || 'Unknown IP',
+    city: request.cf?.city || 'Unknown City',
+    region: request.cf?.region || request.cf?.country || 'Unknown Region',
+    country: request.cf?.country || 'Unknown Country',
+    asn: `AS${request.cf?.asn || '??'} (${request.cf?.asOrganization || 'Unknown ASN'})`,
+    ua: sanitizeText(request.headers.get('user-agent') || 'Unknown User Agent'),
+  }), {
+    headers: {
+      ...Constants.RESPONSE_HEADERS,
+      'cache-control': 'max-age=1'
+    },
+    status: 200
+  });
+}
+
 /* TODO: is there any way to consolidate these stupid routes for itty-router?
    I couldn't find documentation allowing for regex matching */
 router.get('/:prefix?/:handle/status/:id', statusRequest);
@@ -160,6 +182,7 @@ router.get('/:prefix?/:handle/status/:id/:language', statusRequest);
 router.get('/:prefix?/:handle/statuses/:id/:language', statusRequest);
 router.get('/status/:id', statusRequest);
 router.get('/status/:id/:language', statusRequest);
+router.get('/version', versionRequest);
 
 /* Oembeds (used by Discord to enhance responses) 
 
