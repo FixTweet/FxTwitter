@@ -24,7 +24,7 @@
 [licensebadge]: https://img.shields.io/github/license/dangeredwolf/FixTweet
 [uptimebadge]: https://img.shields.io/uptimerobot/ratio/m792476277-53add6f22c4e6f4d3a2d7e98
 
-## Inspired by [Robin Universe's TwitFix](https://github.com/robinuniverse/TwitFix), rewritten in TypeScript as a Cloudflare Worker to scale, packed with even more features and best-in-class user privacy.
+## Inspired by [Robin Universe's TwitFix](https://github.com/robinuniverse/TwitFix), rewritten in TypeScript as a Cloudflare Worker to scale, packed with even more features and [best-in-class user privacy 🔒](#built-with-privacy-in-mind).
 
 ### Add `fx` before your Twitter link to make it `fxtwitter.com`
 
@@ -102,7 +102,7 @@ FixTweet doesn't save logs of what tweets you're sending, nor do we have a publi
 
 In fact, because our core embedding and API service uses Cloudflare Workers, where FixTweet can only run when you send it a request and its memory doesn't stick around, and it doesn't have a file system or database to access at all. That is how we keep our privacy promise by building it into the architecture. My goal is always to provide a good public service, and FixTweet doesn't make any money.
 
-Note: We use Cloudflare to cache FixTweet responses to make repeat access faster, which have a maximum TTL of 1 hour. Temporary real-time logging in the terminal (specifically `wrangler tail`) may be used only by the developer while the Worker is being serviced or debugged (to make sure things work as they should), however these logs are only shown in the terminal and are never saved or used for any other purpose. URLs that cause runtime errors in the script (aka Exceptions, usually exceedingly rare unless there was a faulty update pushed out) may be logged for a developer to diagnose the issue that is preventing your embed from working.
+Note: We use Cloudflare to cache FixTweet responses to make repeat access faster, which have a maximum TTL of 1 hour. Temporary real-time logging in the terminal (specifically `wrangler tail`) may be used only by the developer while the Worker is being serviced or debugged (to make sure things work as they should), however these logs are only shown in the terminal and are never saved or used for any other purpose. URLs that cause runtime errors in the script (aka Exceptions, usually exceedingly rare unless there was a faulty update pushed out or Twitter API is down) may be logged for a developer to diagnose the issue that is preventing your embed from working.
 
 On a different note, if the person who posted a FixTweet link forgot to strip tracking parameters (like `?s` and `&t`), we strip it upon redirecting to the Tweet as they are only used for Twitter telemetry and advertising.
 
