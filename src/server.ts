@@ -255,7 +255,8 @@ export const cacheWrapper = async (
       ? `${request.url}&discord`
       : request.url
   );
-
+  
+  console.log(`Hello from ⛅ ${request.cf?.colo || 'UNK'}`)
   console.log('userAgent', userAgent);
   console.log('cacheUrl', cacheUrl);
 
