@@ -33,7 +33,7 @@ const statusRequest = async (
      the http-equiv="refresh" meta tag will ensure an actual human is sent to the destination. */
   const isBotUA =
     userAgent.match(
-      /bot|facebook|embed|got|firefox\/92|curl|wget|go-http|yahoo|generator|whatsapp|preview|link|proxy|vkshare|images|analyzer|index|crawl|spider|python|cfnetwork/gi
+      /bot|facebook|embed|got|firefox\/92|curl|wget|go-http|yahoo|generator|whatsapp|preview|link|proxy|vkshare|images|analyzer|index|crawl|spider|python|cfnetwork|node/gi
     ) !== null;
 
   /* Check if domain is a direct media domain (i.e. d.fxtwitter.com),
