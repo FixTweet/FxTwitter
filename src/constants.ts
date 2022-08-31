@@ -59,6 +59,10 @@ export const Constants = {
     'x-powered-by': '🏳️‍⚧️ Trans Rights',
     'cache-control': 'max-age=3600' // Can be overriden in some cases, like poll tweets
   },
+  API_RESPONSE_HEADERS: {
+    'access-control-allow-origin': '*',
+    'content-type': 'application/json'
+  },
   POLL_TWEET_CACHE: 'max-age=60',
   DEFAULT_COLOR: '#10A3FF',
   ROBOTS_TXT: `User-agent: *

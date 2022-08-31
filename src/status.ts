@@ -37,7 +37,7 @@ export const handleStatus = async (
   if (flags?.api) {
     return {
       response: new Response(JSON.stringify(api), {
-        headers: { ...Constants.RESPONSE_HEADERS, 'content-type': 'application/json' },
+        headers: { ...Constants.RESPONSE_HEADERS, ...Constants.API_RESPONSE_HEADERS },
         status: api.code
       })
     };
