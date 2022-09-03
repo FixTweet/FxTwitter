@@ -348,7 +348,7 @@ export const cacheWrapper = async (
 const sentryWrapper = async (event: FetchEvent, test = false): Promise<void> => {
   let sentry: null | Toucan = null;
 
-  if (typeof SENTRY_DSN !== 'undefined' && !test) {
+  if (typeof SENTRY_DSN !== 'undefined' && SENTRY_DSN && !test) {
     /* We use Toucan for Sentry. Toucan is a Sentry SDK designed for Cloudflare Workers / DOs */
     sentry = new Toucan({
       dsn: SENTRY_DSN,
