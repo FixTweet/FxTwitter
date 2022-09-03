@@ -204,9 +204,8 @@ No problem! You can pick any specific photo from a Tweet using Twitter's own URL
 
 ## Things to tackle in the future
 
-- Reliable multi-image in Telegram
-- Fix guest token caching
-- Discord bot?
+- Improved support for multi-image with large height differences
+- Discord bot
 
 ## Bugs or issues?
 
