@@ -97,7 +97,6 @@ interface APIMosaicPhoto {
 interface APIVideo {
   type: 'video' | 'gif';
   url: string;
-  variants: TweetMediaFormat[];
   thumbnail_url: string;
   width: number;
   height: number;

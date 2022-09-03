@@ -14,7 +14,6 @@ export const processMedia = (media: TweetMedia): APIPhoto | APIVideo | null => {
     );
     return {
       url: bestVariant?.url || '',
-      variants: media.video_info?.variants || [],
       thumbnail_url: media.media_url_https,
       duration: (media.video_info?.duration_millis || 0) / 1000,
       width: media.original_info.width,
