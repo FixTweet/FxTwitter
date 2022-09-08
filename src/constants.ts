@@ -1,6 +1,6 @@
 /* We keep this value up-to-date for making our requests to Twitter as
    indistinguishable from normal user traffic as possible. */
-const fakeChromeVersion = '104';
+const fakeChromeVersion = '105';
 
 export const Constants = {
   /* These constants are populated by variables in .env, then set by Webpack */
