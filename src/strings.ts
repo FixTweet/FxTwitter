@@ -63,7 +63,9 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
       <h2>You hit a snag that broke ${BRANDING_NAME}. It's not your fault though&mdash;This is usually caused by a Twitter outage or a new bug.</h2>
       <p>${RELEASE_NAME}</p>
     </body>
-  </html>`.replace(/( {2})/g, '').replace(/>[\s|\n]+</g, '><'),
+  </html>`
+    .replace(/( {2})/g, '')
+    .replace(/>[\s|\n]+</g, '><'),
   VERSION_HTML: `<!DOCTYPE html>
   <html lang="en">
     <head>
@@ -122,7 +124,9 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
       <h2>User Agent:
       {ua}</h2>
     </body>
-  </html>`.replace(/( {2})/g, '').replace(/>[\s|\n]+</g, '><'),
+  </html>`
+    .replace(/( {2})/g, '')
+    .replace(/>[\s|\n]+</g, '><'),
   DEFAULT_AUTHOR_TEXT: 'Twitter',
 
   QUOTE_TEXT: `═ ↘️ Quoting {name} (@{screen_name}) ═════`,
