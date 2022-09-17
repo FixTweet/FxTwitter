@@ -1,6 +1,6 @@
 import { renderCard } from './helpers/card';
 import { Constants } from './constants';
-import { fetchUsingGuest } from './fetch';
+import { fetchConversation } from './fetch';
 import { linkFixer } from './helpers/linkFixer';
 import { handleMosaic } from './helpers/mosaic';
 import { colorFromPalette } from './helpers/palette';
@@ -141,7 +141,7 @@ export const statusAPI = async (
   language: string | undefined,
   event: FetchEvent
 ): Promise<APIResponse> => {
-  const conversation = await fetchUsingGuest(status, event);
+  const conversation = await fetchConversation(status, event);
   const tweet = conversation?.globalObjects?.tweets?.[status] || {};
 
   /* Fallback for if Tweet did not load */
