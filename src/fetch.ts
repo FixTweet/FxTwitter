@@ -136,7 +136,7 @@ export const twitterFetch = async (
     );
     console.log(`Remaining rate limit: ${remainingRateLimit} requests`);
     /* Running out of requests within our rate limit, let's purge the cache */
-    if (remainingRateLimit < 20) {
+    if (remainingRateLimit < 10) {
       console.log(`Purging token on this edge due to low rate limit remaining`);
       event &&
         event.waitUntil(
