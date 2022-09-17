@@ -2,9 +2,10 @@ import { Constants } from './constants';
 
 const API_ATTEMPTS = 16;
 
-export const fetchUsingGuest = async (
-  status: string,
-  event: FetchEvent
+export const twitterFetch = async (
+  url: string,
+  event: FetchEvent,
+  validateFunction: (response: any) => boolean,
 ): Promise<TimelineBlobPartial> => {
   let apiAttempts = 0;
   let newTokenGenerated = false;
@@ -109,22 +110,22 @@ export const fetchUsingGuest = async (
     /* We pretend to be the Twitter Web App as closely as possible,
       so we use twitter.com/i/api/2 instead of api.twitter.com/2.
       We probably don't have to do this at all. But hey, better to be consistent with Twitter Web App. */
-    let conversation: TimelineBlobPartial;
+    let response: any;
     let apiRequest;
 
     try {
       apiRequest = await fetch(
-        `${Constants.TWITTER_ROOT}/i/api/2/timeline/conversation/${status}.json?${Constants.GUEST_FETCH_PARAMETERS}`,
+        url,
         {
           method: 'GET',
           headers: headers
         }
       );
-      conversation = await apiRequest.json();
+      response = await apiRequest.json();
     } catch (e: unknown) {
       /* We'll usually only hit this if we get an invalid response from Twitter.
          It's uncommon, but it happens */
-      console.error('Unknown error while fetching conversation from API');
+      console.error('Unknown error while fetching from API');
       event &&
         event.waitUntil(
           cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true })
@@ -146,12 +147,8 @@ export const fetchUsingGuest = async (
         );
     }
 
-    if (
-      typeof conversation.globalObjects === 'undefined' &&
-      (typeof conversation.errors === 'undefined' ||
-        conversation.errors?.[0]?.code === 239) /* Error 239 = Bad guest token */
-    ) {
-      console.log('Failed to fetch conversation, got', conversation);
+    if (!validateFunction(response)) {
+      console.log('Failed to fetch response, got', response);
       newTokenGenerated = true;
       continue;
     }
@@ -166,13 +163,24 @@ export const fetchUsingGuest = async (
       console.log('Caching guest token');
       event.waitUntil(cache.put(guestTokenRequestCacheDummy.clone(), cachingResponse));
     }
-    conversation.guestToken = guestToken;
-    return conversation;
+    response.guestToken = guestToken;
+    return response;
   }
 
   console.log('Twitter has repeatedly denied our requests, so we give up now');
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error - This is only returned if we completely failed to fetch the conversation
+  // @ts-expect-error - This is only returned if we completely failed to fetch the response
   return {};
 };
+
+export const fetchUsingGuest = async (
+  status: string,
+  event: FetchEvent
+): Promise<TimelineBlobPartial> => {
+  return await twitterFetch(`${Constants.TWITTER_ROOT}/i/api/2/timeline/conversation/${status}.json?${Constants.GUEST_FETCH_PARAMETERS}`, event, (conversation: TimelineBlobPartial) => {
+    return !(typeof conversation.globalObjects === 'undefined' &&
+      (typeof conversation.errors === 'undefined' ||
+        conversation.errors?.[0]?.code === 239));
+  });
+}
