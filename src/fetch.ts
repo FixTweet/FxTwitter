@@ -5,8 +5,8 @@ const API_ATTEMPTS = 16;
 export const twitterFetch = async (
   url: string,
   event: FetchEvent,
-  validateFunction: (response: any) => boolean,
-): Promise<TimelineBlobPartial> => {
+  validateFunction: (response: unknown) => boolean
+): Promise<unknown> => {
   let apiAttempts = 0;
   let newTokenGenerated = false;
 
@@ -110,17 +110,14 @@ export const twitterFetch = async (
     /* We pretend to be the Twitter Web App as closely as possible,
       so we use twitter.com/i/api/2 instead of api.twitter.com/2.
       We probably don't have to do this at all. But hey, better to be consistent with Twitter Web App. */
-    let response: any;
+    let response: unknown;
     let apiRequest;
 
     try {
-      apiRequest = await fetch(
-        url,
-        {
-          method: 'GET',
-          headers: headers
-        }
-      );
+      apiRequest = await fetch(url, {
+        method: 'GET',
+        headers: headers
+      });
       response = await apiRequest.json();
     } catch (e: unknown) {
       /* We'll usually only hit this if we get an invalid response from Twitter.
@@ -163,24 +160,31 @@ export const twitterFetch = async (
       console.log('Caching guest token');
       event.waitUntil(cache.put(guestTokenRequestCacheDummy.clone(), cachingResponse));
     }
+
+    // @ts-expect-error - We'll pin the guest token to whatever response we have
     response.guestToken = guestToken;
     return response;
   }
 
   console.log('Twitter has repeatedly denied our requests, so we give up now');
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error - This is only returned if we completely failed to fetch the response
   return {};
 };
 
-export const fetchUsingGuest = async (
+export const fetchConversation = async (
   status: string,
   event: FetchEvent
 ): Promise<TimelineBlobPartial> => {
-  return await twitterFetch(`${Constants.TWITTER_ROOT}/i/api/2/timeline/conversation/${status}.json?${Constants.GUEST_FETCH_PARAMETERS}`, event, (conversation: TimelineBlobPartial) => {
-    return !(typeof conversation.globalObjects === 'undefined' &&
-      (typeof conversation.errors === 'undefined' ||
-        conversation.errors?.[0]?.code === 239));
-  });
-}
+  return (await twitterFetch(
+    `${Constants.TWITTER_ROOT}/i/api/2/timeline/conversation/${status}.json?${Constants.GUEST_FETCH_PARAMETERS}`,
+    event,
+    (_conversation: unknown) => {
+      const conversation = _conversation as TimelineBlobPartial;
+      return !(
+        typeof conversation.globalObjects === 'undefined' &&
+        (typeof conversation.errors === 'undefined' ||
+          conversation.errors?.[0]?.code === 239)
+      );
+    }
+  )) as TimelineBlobPartial;
+};
