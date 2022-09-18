@@ -38,7 +38,7 @@
     "wrangler": "^2.1.4"
   },
   "dependencies": {
-    "itty-router": "^2.6.1",
+    "itty-router": "^2.6.3",
     "toucan-js": "^2.6.1"
   }
 }
