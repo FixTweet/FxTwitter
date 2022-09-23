@@ -10,8 +10,8 @@ export const returnError = (error: string): StatusResponse => {
     text: Strings.BASE_HTML.format({
       lang: '',
       headers: [
-        `<meta content="${Constants.BRANDING_NAME}" property="og:title"/>`,
-        `<meta content="${error}" property="og:description"/>`
+        `<meta property="og:title" content="${Constants.BRANDING_NAME}"/>`,
+        `<meta property="og:description" content="${error}"/>`
       ].join('')
     })
   };
@@ -84,7 +84,7 @@ export const handleStatus = async (
 
   /* Base headers included in all responses */
   const headers = [
-    `<meta content="${tweet.color}" property="theme-color"/>`,
+    `<meta property="theme-color" content="${tweet.color}"/>`,
     `<meta name="twitter:card" content="${tweet.twitter_card}"/>`,
     `<meta name="twitter:site" content="@${tweet.author.screen_name}"/>`,
     `<meta name="twitter:creator" content="@${tweet.author.screen_name}"/>`,
@@ -300,9 +300,9 @@ export const handleStatus = async (
 
   /* Push basic headers relating to author, Tweet text, and site name */
   headers.push(
-    `<meta content="${tweet.author.name} (@${tweet.author.screen_name})" property="og:title"/>`,
-    `<meta content="${sanitizeText(newText)}" property="og:description"/>`,
-    `<meta content="${siteName}" property="og:site_name"/>`
+    `<meta property="og:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`,
+    `<meta property="og:description" content="${sanitizeText(newText)}"/>`,
+    `<meta property="og:site_name" content="${siteName}"/>`
   );
 
   /* Special reply handling if authorText is not overriden */
