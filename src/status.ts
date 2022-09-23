@@ -85,10 +85,10 @@ export const handleStatus = async (
   /* Base headers included in all responses */
   const headers = [
     `<meta property="theme-color" content="${tweet.color}"/>`,
-    `<meta name="twitter:card" content="${tweet.twitter_card}"/>`,
-    `<meta name="twitter:site" content="@${tweet.author.screen_name}"/>`,
-    `<meta name="twitter:creator" content="@${tweet.author.screen_name}"/>`,
-    `<meta name="twitter:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`
+    `<meta property="twitter:card" content="${tweet.twitter_card}"/>`,
+    `<meta property="twitter:site" content="@${tweet.author.screen_name}"/>`,
+    `<meta property="twitter:creator" content="@${tweet.author.screen_name}"/>`,
+    `<meta property="twitter:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`
   ];
 
   /* This little thing ensures if by some miracle a FixTweet embed is loaded in a browser,
@@ -171,15 +171,15 @@ export const handleStatus = async (
 
     /* Push the raw video-related headers */
     headers.push(
-      `<meta name="twitter:player:stream:content_type" content="${video.format}"/>`,
-      `<meta name="twitter:player:height" content="${video.height * sizeMultiplier}"/>`,
-      `<meta name="twitter:player:width" content="${video.width * sizeMultiplier}"/>`,
-      `<meta name="og:video" content="${video.url}"/>`,
-      `<meta name="og:video:secure_url" content="${video.url}"/>`,
-      `<meta name="og:video:height" content="${video.height * sizeMultiplier}"/>`,
-      `<meta name="og:video:width" content="${video.width * sizeMultiplier}"/>`,
-      `<meta name="og:video:type" content="${video.format}"/>`,
-      `<meta name="twitter:image" content="0"/>`
+      `<meta property="twitter:player:stream:content_type" content="${video.format}"/>`,
+      `<meta property="twitter:player:height" content="${video.height * sizeMultiplier}"/>`,
+      `<meta property="twitter:player:width" content="${video.width * sizeMultiplier}"/>`,
+      `<meta property="og:video" content="${video.url}"/>`,
+      `<meta property="og:video:secure_url" content="${video.url}"/>`,
+      `<meta property="og:video:height" content="${video.height * sizeMultiplier}"/>`,
+      `<meta property="og:video:width" content="${video.width * sizeMultiplier}"/>`,
+      `<meta property="og:video:type" content="${video.format}"/>`,
+      `<meta property="twitter:image" content="0"/>`
     );
   }
 
@@ -220,16 +220,16 @@ export const handleStatus = async (
 
     /* Push the raw photo-related headers */
     headers.push(
-      `<meta name="twitter:image" content="${photo.url}"/>`,
-      `<meta name="og:image" content="${photo.url}"/>`
+      `<meta property="twitter:image" content="${photo.url}"/>`,
+      `<meta property="og:image" content="${photo.url}"/>`
     );
 
     if (!tweet.media.mosaic) {
       headers.push(
-        `<meta name="twitter:image:width" content="${photo.width}"/>`,
-        `<meta name="twitter:image:height" content="${photo.height}"/>`,
-        `<meta name="og:image:width" content="${photo.width}"/>`,
-        `<meta name="og:image:height" content="${photo.height}"/>`
+        `<meta property="twitter:image:width" content="${photo.width}"/>`,
+        `<meta property="twitter:image:height" content="${photo.height}"/>`,
+        `<meta property="og:image:width" content="${photo.width}"/>`,
+        `<meta property="og:image:height" content="${photo.height}"/>`
       );
     }
   }
@@ -239,9 +239,9 @@ export const handleStatus = async (
     const { external } = tweet.media;
     authorText = newText || '';
     headers.push(
-      `<meta name="twitter:player" content="${external.url}">`,
-      `<meta name="twitter:player:width" content="${external.width}">`,
-      `<meta name="twitter:player:height" content="${external.height}">`,
+      `<meta property="twitter:player" content="${external.url}">`,
+      `<meta property="twitter:player:width" content="${external.width}">`,
+      `<meta property="twitter:player:height" content="${external.height}">`,
       `<meta property="og:type" content="video.other">`,
       `<meta property="og:video:url" content="${external.url}">`,
       `<meta property="og:video:secure_url" content="${external.url}">`,
@@ -289,7 +289,7 @@ export const handleStatus = async (
         '_normal',
         '_200x200'
       )}"/>`,
-      `<meta name="twitter:image" content="0"/>`
+      `<meta property="twitter:image" content="0"/>`
     );
   }
 

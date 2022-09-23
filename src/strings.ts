@@ -129,9 +129,9 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
     .replace(/>[\s|\n]+</g, '><'),
   DEFAULT_AUTHOR_TEXT: 'Twitter',
 
-  QUOTE_TEXT: `═ ↘️ Quoting {name} (@{screen_name}) ═════`,
-  TRANSLATE_TEXT: `═ ↘️ Translated from {language} ═════`,
-  TRANSLATE_TEXT_INTL: `═ ↘️ {source} ➡️ {destination} ═════`,
+  QUOTE_TEXT: `↘️ Quoting {name} (@{screen_name})`,
+  TRANSLATE_TEXT: `↘️ Translated from {language}`,
+  TRANSLATE_TEXT_INTL: `↘️ {source} ➡️ {destination}`,
   PHOTO_COUNT: `Photo {number} of {total}`,
   VIDEO_COUNT: `Video {number} of {total}`,
 
