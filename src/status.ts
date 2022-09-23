@@ -289,6 +289,10 @@ export const handleStatus = async (
         '_normal',
         '_200x200'
       )}"/>`,
+      `<meta property="twitter:image:width" content="100"/>`,
+      `<meta property="twitter:image:height" content="100"/>`,
+      `<meta property="og:image:width" content="100"/>`,
+      `<meta property="og:image:height" content="100"/>`,
       `<meta property="twitter:image" content="0"/>`
     );
   }
