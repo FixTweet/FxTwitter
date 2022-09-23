@@ -37,6 +37,17 @@ test('Tweet redirect human', async () => {
   expect(result.headers.get('location')).toEqual('https://twitter.com/jack/status/20');
 });
 
+test('Twitter moment redirect', async () => {
+  const result = await cacheWrapper(
+    new Request('https://fxtwitter.com/i/events/1572638642127966214?t=0UK7Ny-Jnsp-dUGzlb-M8w&s=35', {
+      method: 'GET',
+      headers: botHeaders
+    })
+  );
+  expect(result.status).toEqual(302);
+  expect(result.headers.get('location')).toEqual('https://twitter.com/i/events/1572638642127966214');
+});
+
 test('Tweet response robot', async () => {
   const result = await cacheWrapper(
     new Request('https://fxtwitter.com/jack/status/20', {

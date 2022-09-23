@@ -147,6 +147,11 @@ const profileRequest = async (request: Request) => {
   }
 };
 
+const genericTwitterRedirect = async (request: Request) => {
+  const url = new URL(request.url);
+  return Response.redirect(`${Constants.TWITTER_ROOT}${url.pathname}`, 302);
+}
+
 const versionRequest = async (request: Request) => {
   return new Response(
     Strings.VERSION_HTML.format({
@@ -237,6 +242,7 @@ router.get('/owoembed', async (request: Request) => {
    but it's something we might do. Maybe. */
 router.get('/:handle', profileRequest);
 router.get('/:handle/', profileRequest);
+router.get('/i/events/:id', genericTwitterRedirect);
 
 /* If we don't understand the route structure at all, we'll
    redirect to GitHub (normal domains) or API docs (api.fxtwitter.com) */
