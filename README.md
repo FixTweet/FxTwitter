@@ -14,14 +14,14 @@
 <!-- Links & Badges -->
 
 [icons]: https://skillicons.dev/icons?i=typescript,webpack,workers
-[webpack]: https://github.com/dangeredwolf/FixTweet/actions/workflows/webpack.yml
-[webpackbadge]: https://github.com/dangeredwolf/FixTweet/actions/workflows/webpack.yml/badge.svg
-[tests]: https://github.com/dangeredwolf/FixTweet/actions/workflows/tests.yml
-[testsbadge]: https://github.com/dangeredwolf/FixTweet/actions/workflows/tests.yml/badge.svg
+[webpack]: https://github.com/FixTweet/FixTweet/actions/workflows/webpack.yml
+[webpackbadge]: https://github.com/FixTweet/FixTweet/actions/workflows/webpack.yml/badge.svg
+[tests]: https://github.com/FixTweet/FixTweet/actions/workflows/tests.yml
+[testsbadge]: https://github.com/FixTweet/FixTweet/actions/workflows/tests.yml/badge.svg
 [discord]: https://discord.gg/6CQTTTkGaH
 [discordbadge]: https://dcbadge.vercel.app/api/server/6CQTTTkGaH?style=flat
-[license]: https://github.com/dangeredwolf/FixTweet/blob/main/LICENSE.md
-[licensebadge]: https://img.shields.io/github/license/dangeredwolf/FixTweet
+[license]: https://github.com/FixTweet/FixTweet/blob/main/LICENSE.md
+[licensebadge]: https://img.shields.io/github/license/FixTweet/FixTweet
 [uptimebadge]: https://img.shields.io/uptimerobot/ratio/m792476277-53add6f22c4e6f4d3a2d7e98
 
 ## Inspired by [Robin Universe's TwitFix](https://github.com/robinuniverse/TwitFix), rewritten in TypeScript as a Cloudflare Worker to scale, packed with even more features and [best-in-class user privacy 🔒](#built-with-privacy-in-mind).
@@ -190,10 +190,6 @@ A couple weeks later, I acquired the `fxtwitter.com` domain from RobinUniverse a
 
 Telegram's embedding servers sometimes never even send us a request to embed a URL, possibly due to their servers being overloaded. If you have a link that is broken you can try one of FixTweet's other domains (`fxtwitter.com`, `pxtwitter.com`, `twittpr.com`) or use [Webpage Bot](https://t.me/WebpageBot) to try to clear the cache of the embed.
 
-### Why doesn't multi-image doesn't work in Telegram?
-
-We've temporarily paused multi-image on Telegram due to issues with its embedding service that can cause images to sometimes not show up at all. ([#15](https://github.com/dangeredwolf/FixTweet/issues/15))
-
 ### What if I don't want FixTweet to combine my Tweet's images together with multi-image?
 
 No problem! You can pick any specific photo from a Tweet using Twitter's own URL syntax (`/photo/1` is the first photo of a tweet) and we'll render you the full-resolution original image.
@@ -209,11 +205,10 @@ No problem! You can pick any specific photo from a Tweet using Twitter's own URL
 
 ## Bugs or issues?
 
-Feel free to [open an issue](https://github.com/dangeredwolf/FixTweet/issues), or [ping me on Twitter and I'll see what I can do](https://twitter.com/dangeredwolf).
+Feel free to [open an issue](https://github.com/FixTweet/FixTweet/issues)
 
-## Credits
+## Additional Credits
 
-- Worker (Embeds + API) [dangered wolf](https://github.com/dangeredwolf)
-- [Mosaic](https://github.com/FixTweet/mosaic) Multi-image combiner [Antonio32A](https://github.com/Antonio32A)
+[Mosaic](https://github.com/FixTweet/mosaic) Multi-image combiner by [Antonio32A](https://github.com/Antonio32A)
 
 & other contributions by [Burner](https://github.com/YaBoiBurner), [Deer-Spangle](https://github.com/Deer-Spangle), [Antonio32A](https://github.com/Antonio32A)
