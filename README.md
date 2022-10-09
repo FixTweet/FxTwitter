@@ -133,10 +133,10 @@ In many ways, FixTweet has richer embeds and does more. Here's a table comparing
 | DDoS protection & low latency globally  |         :heavy_check_mark:          |               N/A                |                         :x:                         |                  :x:                  |
 | Last commit                             |           [![][flc]][fc]            |               N/A                |                   [![][vlc]][vc]                    |            [![][slc]][sc]             |
 
-[flc]: https://img.shields.io/github/last-commit/dangeredwolf/FixTweet?label
+[flc]: https://img.shields.io/github/last-commit/FixTweet/FixTweet?label
 [vlc]: https://img.shields.io/github/last-commit/dylanpdx/BetterTwitFix?label
 [slc]: https://img.shields.io/github/last-commit/Twxtter/Twxtter-main?label
-[fc]: https://github.com/dangeredwolf/FixTweet/commits
+[fc]: https://github.com/FixTweet/FixTweet/commits
 [vc]: https://github.com/dylanpdx/BetterTwitFix/commits
 [sc]: https://github.com/Twxtter/Twxtter-main/commits
 
@@ -154,7 +154,7 @@ In many ways, FixTweet has richer embeds and does more. Here's a table comparing
 
 ## Why FixTweet is nicer to develop for and deploy
 
-TwitFix and its derivatives have quite a few dependencies you need to rely on. You need to set up a server somewhere, install Python, all its dependencies, then either set up `youtube-dl` (more resource intensive) or [beg Twitter for API access](https://twitter.com/dangeredwolf/status/1438983606135832581), and optionally set up a database, otherwise it uses the file system to cache.
+TwitFix and its derivatives have quite a few dependencies you need to rely on. You need to set up a server somewhere, install Python, all its dependencies, then either set up `youtube-dl` (more resource intensive) or beg Twitter for API access, and optionally set up a database, otherwise it uses the file system to cache.
 
 FixTweet was written from the start as a lightweight, TypeScript-based Cloudflare Worker. Cloudflare Workers are completely free for up to 100,000 requests per day, per account. Cloudflare Workers are [fast to set up](https://developers.cloudflare.com/workers/get-started/guide/) and your script is distributed in their datacenters around the world for lower latency.
 
