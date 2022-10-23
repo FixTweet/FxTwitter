@@ -9,8 +9,6 @@
 [![License][licensebadge]][license]
 ![Uptime][uptimebadge]
 
-[![Join the Discord server][discordbadge]][discord]
-
 <!-- Links & Badges -->
 
 [icons]: https://skillicons.dev/icons?i=typescript,webpack,workers
@@ -18,8 +16,6 @@
 [webpackbadge]: https://github.com/FixTweet/FixTweet/actions/workflows/webpack.yml/badge.svg
 [tests]: https://github.com/FixTweet/FixTweet/actions/workflows/tests.yml
 [testsbadge]: https://github.com/FixTweet/FixTweet/actions/workflows/tests.yml/badge.svg
-[discord]: https://discord.gg/6CQTTTkGaH
-[discordbadge]: https://dcbadge.vercel.app/api/server/6CQTTTkGaH?style=flat
 [license]: https://github.com/FixTweet/FixTweet/blob/main/LICENSE.md
 [licensebadge]: https://img.shields.io/github/license/FixTweet/FixTweet
 [uptimebadge]: https://img.shields.io/uptimerobot/ratio/m792476277-53add6f22c4e6f4d3a2d7e98
