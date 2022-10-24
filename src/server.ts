@@ -38,7 +38,7 @@ const statusRequest = async (
 
   /* Check if domain is a direct media domain (i.e. d.fxtwitter.com),
      the tweet is prefixed with /dl/ or /dir/ (for TwitFix interop), or the
-     tweet ends in .mp4, .jpg, or .png
+     tweet ends in .mp4, .jpg, .jpeg, or .png
       
      Note that .png is not documented because images always redirect to a jpg,
      but it will help someone who does it mistakenly on something like Discord
@@ -46,7 +46,7 @@ const statusRequest = async (
      Also note that all we're doing here is setting the direct flag. If someone
      links a video and ends it with .jpg, it will still redirect to a .mp4! */
   if (
-    url.pathname.match(/\/status(es)?\/\d{2,20}\.(mp4|png|jpg)/g) !== null ||
+    url.pathname.match(/\/status(es)?\/\d{2,20}\.(mp4|png|jpe?g)/g) !== null ||
     Constants.DIRECT_MEDIA_DOMAINS.includes(url.hostname) ||
     prefix === 'dl' ||
     prefix === 'dir'
