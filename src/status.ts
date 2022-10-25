@@ -309,7 +309,7 @@ export const handleStatus = async (
   if (tweet.replying_to && authorText === Strings.DEFAULT_AUTHOR_TEXT) {
     authorText = `↪ Replying to @${tweet.replying_to}`;
     /* We'll assume it's a thread if it's a reply to themselves */
-  } else if (tweet.replying_to === tweet.author.screen_name) {
+  } else if (tweet.replying_to === tweet.author.screen_name && authorText === Strings.DEFAULT_AUTHOR_TEXT) {
     authorText = `↪ A part of @${tweet.author.screen_name}'s thread`;
   }
 
