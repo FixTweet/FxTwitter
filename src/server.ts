@@ -108,9 +108,15 @@ const statusRequest = async (
         return Response.redirect(`${Constants.TWITTER_ROOT}/${handle}/status/${id}`, 302);
       }
 
+      let headers = Constants.RESPONSE_HEADERS;
+
+      if (statusResponse.cacheControl) {
+        headers = { ...headers, 'cache-control': statusResponse.cacheControl };
+      }
+
       /* Return the response containing embed information */
       return new Response(statusResponse.text, {
-        headers: Constants.RESPONSE_HEADERS,
+        headers: headers,
         status: 200
       });
     } else {

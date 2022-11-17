@@ -11,6 +11,7 @@ type InputFlags = {
 interface StatusResponse {
   text?: string;
   response?: Response;
+  cacheControl?: string | null;
 }
 
 interface Request {

@@ -81,6 +81,7 @@ export const handleStatus = async (
   const engagementText = authorText.replace(/ {4}/g, ' ');
   let siteName = Constants.BRANDING_NAME;
   let newText = tweet.text;
+  let cacheControl: string | null = null;
 
   /* Base headers included in all responses */
   const headers = [
@@ -273,6 +274,11 @@ export const handleStatus = async (
     /* Finally, add the footer of the poll with # of votes and time left */
     str += `\n${poll.total_votes} votes · ${poll.time_left_en}`;
 
+    /* Check if the poll is ongoing and apply low TTL cache control */
+    if (poll.time_left_en !== 'Final results') {
+      cacheControl = Constants.POLL_TWEET_CACHE;
+    }
+
     /* And now we'll put the poll right after the Tweet text! */
     newText += `\n\n${str}`;
   }
@@ -338,6 +344,7 @@ export const handleStatus = async (
     text: Strings.BASE_HTML.format({
       lang: `lang="${lang}"`,
       headers: headers.join('')
-    })
+    }),
+    cacheControl: cacheControl
   };
 };
