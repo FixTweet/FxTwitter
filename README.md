@@ -112,7 +112,7 @@ In many ways, FixTweet has richer embeds and does more. Here's a table comparing
 | --------------------------------------- | :---------------------------------: | :------------------------------: | :-------------------------------------------------: | :-----------------------------------: |
 | Embed Tweets / Images                   |         :heavy_check_mark:          |        :heavy_check_mark:        |                 :heavy_check_mark:                  |          :heavy_check_mark:           |
 | Embed profile pictures on text Tweets   |         :heavy_check_mark:          |               :x:                |                 :heavy_check_mark:                  |          :heavy_check_mark:           |
-| Embed Twitter Videos                    |         :heavy_check_mark:          |               :x:¹               |                 :heavy_check_mark:                  |          :heavy_check_mark:           |
+| Embed Twitter Videos                    |         :heavy_check_mark:          | :heavy_minus_sign: Discord Only¹ |                 :heavy_check_mark:                  |          :heavy_check_mark:           |
 | Embed External Videos (YouTube, etc.)   |         :heavy_check_mark:⁵         |               :x:                |                        :x:⁴                         |                  :x:                  |
 | Embed Poll results                      |         :heavy_check_mark:          |               :x:                |            [:heavy_check_mark:][polladd]            |                  :x:                  |
 | Embed Quote Tweets                      |         :heavy_check_mark:          |               :x:                |        :ballot_box_with_check: Without Media        | :ballot_box_with_check: Without Media |
@@ -137,7 +137,7 @@ In many ways, FixTweet has richer embeds and does more. Here's a table comparing
 [sc]: https://github.com/Twxtter/Twxtter-main/commits
 [polladd]: https://github.com/dylanpdx/BetterTwitFix/issues/17
 
-¹ Discord will attempt to embed Twitter's video player, but it is unreliable
+¹ Discord will attempt to embed Twitter's video player, but it is unreliable and does not work on mobile
 
 ² Neither FixTweet or vxTwitter have a public embed ledger, for privacy reasons. vxTwitter still stores all responses in a database / JSON file controlled by the owner. FixTweet by contrast relies on Cloudflare caching of responses: there is no link store accessible to the owner.
 
