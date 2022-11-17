@@ -114,7 +114,7 @@ In many ways, FixTweet has richer embeds and does more. Here's a table comparing
 | Embed profile pictures on text Tweets   |         :heavy_check_mark:          |               :x:                |                 :heavy_check_mark:                  |          :heavy_check_mark:           |
 | Embed Twitter Videos                    |         :heavy_check_mark:          |               :x:¹               |                 :heavy_check_mark:                  |          :heavy_check_mark:           |
 | Embed External Videos (YouTube, etc.)   |         :heavy_check_mark:⁵         |               :x:                |                        :x:⁴                         |                  :x:                  |
-| Embed Poll results                      |         :heavy_check_mark:          |               :x:                |                   [:x:][polladd]                    |                  :x:                  |
+| Embed Poll results                      |         :heavy_check_mark:          |               :x:                |            [:heavy_check_mark:][polladd]            |                  :x:                  |
 | Embed Quote Tweets                      |         :heavy_check_mark:          |               :x:                |        :ballot_box_with_check: Without Media        | :ballot_box_with_check: Without Media |
 | Embed Multiple Images                   |         :heavy_check_mark:          | :heavy_minus_sign: Discord Only³ |       :ballot_box_with_check: c.vxtwitter.com       |                  :x:                  |
 | Translate Tweets                        |         :heavy_check_mark:          |               :x:                |                         :x:                         |                  :x:                  |
