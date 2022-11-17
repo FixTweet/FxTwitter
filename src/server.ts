@@ -31,10 +31,7 @@ const statusRequest = async (
      
      On the very rare off chance someone happens to be using specifically Firefox 92,
      the http-equiv="refresh" meta tag will ensure an actual human is sent to the destination. */
-  const isBotUA =
-    userAgent.match(
-      /bot|facebook|embed|got|firefox\/92|curl|wget|go-http|yahoo|generator|whatsapp|preview|link|proxy|vkshare|images|analyzer|index|crawl|spider|python|cfnetwork|node/gi
-    ) !== null;
+  const isBotUA = userAgent.match(Constants.BOT_UA_REGEX) !== null;
 
   /* Check if domain is a direct media domain (i.e. d.fxtwitter.com),
      the tweet is prefixed with /dl/ or /dir/ (for TwitFix interop), or the
