@@ -45,7 +45,7 @@ const statusRequest = async (
       
      Also note that all we're doing here is setting the direct flag. If someone
      links a video and ends it with .jpg, it will still redirect to a .mp4! */
-  if ( url.pathname.match(/\/status(es)?\/\d{2,20}\.(mp4|png|jpe?g)/g)) {
+  if (url.pathname.match(/\/status(es)?\/\d{2,20}\.(mp4|png|jpe?g)/g)) {
     console.log('Direct media request by extension');
     flags.direct = true;
   } else if (Constants.DIRECT_MEDIA_DOMAINS.includes(url.hostname)) {
@@ -151,7 +151,7 @@ const profileRequest = async (request: Request) => {
 const genericTwitterRedirect = async (request: Request) => {
   const url = new URL(request.url);
   return Response.redirect(`${Constants.TWITTER_ROOT}${url.pathname}`, 302);
-}
+};
 
 const versionRequest = async (request: Request) => {
   return new Response(

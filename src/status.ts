@@ -172,7 +172,9 @@ export const handleStatus = async (
     /* Push the raw video-related headers */
     headers.push(
       `<meta property="twitter:player:stream:content_type" content="${video.format}"/>`,
-      `<meta property="twitter:player:height" content="${video.height * sizeMultiplier}"/>`,
+      `<meta property="twitter:player:height" content="${
+        video.height * sizeMultiplier
+      }"/>`,
       `<meta property="twitter:player:width" content="${video.width * sizeMultiplier}"/>`,
       `<meta property="og:video" content="${video.url}"/>`,
       `<meta property="og:video:secure_url" content="${video.url}"/>`,
@@ -309,7 +311,10 @@ export const handleStatus = async (
   if (tweet.replying_to && authorText === Strings.DEFAULT_AUTHOR_TEXT) {
     authorText = `↪ Replying to @${tweet.replying_to}`;
     /* We'll assume it's a thread if it's a reply to themselves */
-  } else if (tweet.replying_to === tweet.author.screen_name && authorText === Strings.DEFAULT_AUTHOR_TEXT) {
+  } else if (
+    tweet.replying_to === tweet.author.screen_name &&
+    authorText === Strings.DEFAULT_AUTHOR_TEXT
+  ) {
     authorText = `↪ A part of @${tweet.author.screen_name}'s thread`;
   }
 

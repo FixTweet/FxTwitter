@@ -39,13 +39,18 @@ test('Tweet redirect human', async () => {
 
 test('Twitter moment redirect', async () => {
   const result = await cacheWrapper(
-    new Request('https://fxtwitter.com/i/events/1572638642127966214?t=0UK7Ny-Jnsp-dUGzlb-M8w&s=35', {
-      method: 'GET',
-      headers: botHeaders
-    })
+    new Request(
+      'https://fxtwitter.com/i/events/1572638642127966214?t=0UK7Ny-Jnsp-dUGzlb-M8w&s=35',
+      {
+        method: 'GET',
+        headers: botHeaders
+      }
+    )
   );
   expect(result.status).toEqual(302);
-  expect(result.headers.get('location')).toEqual('https://twitter.com/i/events/1572638642127966214');
+  expect(result.headers.get('location')).toEqual(
+    'https://twitter.com/i/events/1572638642127966214'
+  );
 });
 
 test('Tweet response robot', async () => {
@@ -152,9 +157,7 @@ test('API fetch multi-photo Tweet', async () => {
 
   const tweet = response.tweet as APITweet;
   expect(tweet).toBeTruthy();
-  expect(tweet.url).toEqual(
-    'https://twitter.com/Twitter/status/1445094085593866246'
-  );
+  expect(tweet.url).toEqual('https://twitter.com/Twitter/status/1445094085593866246');
   expect(tweet.id).toEqual('1445094085593866246');
   expect(tweet.text).toEqual('@netflix');
   expect(tweet.author.screen_name?.toLowerCase()).toEqual('twitter');
@@ -276,9 +279,7 @@ test('API fetch poll Tweet', async () => {
 
   const tweet = response.tweet as APITweet;
   expect(tweet).toBeTruthy();
-  expect(tweet.url).toEqual(
-    'https://twitter.com/Twitter/status/1055475950543167488'
-  );
+  expect(tweet.url).toEqual('https://twitter.com/Twitter/status/1055475950543167488');
   expect(tweet.id).toEqual('1055475950543167488');
   expect(tweet.text).toEqual('A poll:');
   expect(tweet.author.screen_name?.toLowerCase()).toEqual('twitter');
