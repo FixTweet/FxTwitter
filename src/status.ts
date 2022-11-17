@@ -253,7 +253,7 @@ export const handleStatus = async (
   /* This Tweet contains a poll, so we'll render it */
   if (tweet.poll) {
     const { poll } = tweet;
-    let barLength = 36;
+    let barLength = 32;
     let str = '';
 
     /* Telegram Embeds are smaller, so we use a smaller bar to compensate */
