@@ -247,6 +247,7 @@ router.get('/owoembed', async (request: Request) => {
 router.get('/:handle', profileRequest);
 router.get('/:handle/', profileRequest);
 router.get('/i/events/:id', genericTwitterRedirect);
+router.get('/hashtag/:hashtag', genericTwitterRedirect);
 
 /* If we don't understand the route structure at all, we'll
    redirect to GitHub (normal domains) or API docs (api.fxtwitter.com) */
