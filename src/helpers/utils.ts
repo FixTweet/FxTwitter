@@ -14,3 +14,7 @@ export const unescapeText = (text: string) => {
     .replace(/&gt;/g, '>')
     .replace(/&amp;/g, '&');
 };
+
+const numberFormat = new Intl.NumberFormat('en-US');
+
+export const formatNumber = (num: number) => numberFormat.format(num)

@@ -1,6 +1,6 @@
 import { Constants } from './constants';
 import { handleQuote } from './helpers/quote';
-import { sanitizeText } from './helpers/utils';
+import { formatNumber, sanitizeText } from './helpers/utils';
 import { Strings } from './strings';
 import { getAuthorText } from './helpers/author';
 import { statusAPI } from './api';
@@ -272,9 +272,11 @@ export const handleStatus = async (
     });
 
     /* Finally, add the footer of the poll with # of votes and time left */
-    str += `\n${poll.total_votes} votes · ${poll.time_left_en}`;
+    str += `\n${formatNumber(poll.total_votes)} votes · ${poll.time_left_en}`;
 
-    /* Check if the poll is ongoing and apply low TTL cache control */
+    /* Check if the poll is ongoing and apply low TTL cache control.
+       Yes, checking if this is a string is a hacky way to do this, but
+       it can do it in way less code than actually comparing dates */
     if (poll.time_left_en !== 'Final results') {
       cacheControl = Constants.POLL_TWEET_CACHE;
     }
