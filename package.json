@@ -22,7 +22,7 @@
     "@typescript-eslint/eslint-plugin": "^5.47.1",
     "@typescript-eslint/parser": "^5.47.1",
     "dotenv": "^16.0.3",
-    "eslint": "^8.30.0",
+    "eslint": "^8.31.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-config-typescript": "^3.0.0",
     "eslint-plugin-optimize-regex": "^1.2.1",
