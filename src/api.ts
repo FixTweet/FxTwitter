@@ -142,7 +142,11 @@ export const statusAPI = async (
   event: FetchEvent
 ): Promise<APIResponse> => {
   const conversation = await fetchConversation(status, event);
-  const tweet = conversation?.globalObjects?.tweets?.[status] || {};
+  let tweet = conversation?.globalObjects?.tweets?.[status] || {};
+
+  if (tweet.retweeted_status_id_str) {
+    tweet = conversation?.globalObjects?.tweets?.[tweet.retweeted_status_id_str] || {};
+  }
 
   /* Fallback for if Tweet did not load */
   if (typeof tweet.full_text === 'undefined') {

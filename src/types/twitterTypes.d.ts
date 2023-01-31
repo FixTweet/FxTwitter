@@ -149,6 +149,8 @@ type TweetPartial = {
   source: string;
   full_text: string;
   user_id_str: string;
+  retweeted_status_id: number;
+  retweeted_status_id_str: string;
   user?: UserPartial;
 };
 
