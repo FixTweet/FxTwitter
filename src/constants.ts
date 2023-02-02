@@ -1,7 +1,3 @@
-/* We keep this value up-to-date for making our requests to Twitter as
-   indistinguishable from normal user traffic as possible. */
-const fakeChromeVersion = '105';
-
 export const Constants = {
   /* These constants are populated by variables in .env, then set by Webpack */
   BRANDING_NAME: BRANDING_NAME,
@@ -38,12 +34,10 @@ export const Constants = {
     'simple_quoted_tweet=true'
   ].join('&'),
   BASE_HEADERS: {
-    'sec-ch-ua': `".Not/A)Brand";v="99", "Google Chrome";v="${fakeChromeVersion}", "Chromium";v="${fakeChromeVersion}"`,
     'DNT': `1`,
     'x-twitter-client-language': `en`,
     'sec-ch-ua-mobile': `?0`,
     'content-type': `application/x-www-form-urlencoded`,
-    'User-Agent': `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${fakeChromeVersion}.0.0.0 Safari/537.36`,
     'x-twitter-active-user': `yes`,
     'sec-ch-ua-platform': `"Windows"`,
     'Accept': `*/*`,

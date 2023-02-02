@@ -1,4 +1,4 @@
-import { formatNumber } from "./utils";
+import { formatNumber } from './utils';
 
 /* The embed "author" text we populate with replies, retweets, and likes unless it's a video */
 export const getAuthorText = (tweet: APITweet): string | null => {
