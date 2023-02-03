@@ -12,7 +12,7 @@ export const twitterFetch = async (
   let newTokenGenerated = false;
 
   const [userAgent, secChUa] = generateUserAgent();
-  console.log('Hello, I am', userAgent);
+  console.log(`Outgoing useragent for this request:`, userAgent);
 
   const tokenHeaders: { [header: string]: string } = {
     'Authorization': Constants.GUEST_BEARER_TOKEN,
