@@ -1,4 +1,5 @@
 import { Constants } from './constants';
+import { generateUserAgent } from './helpers/useragent';
 
 const API_ATTEMPTS = 16;
 
@@ -10,8 +11,13 @@ export const twitterFetch = async (
   let apiAttempts = 0;
   let newTokenGenerated = false;
 
+  const [userAgent, secChUa] = generateUserAgent();
+  console.log('Hello, I am', userAgent);
+
   const tokenHeaders: { [header: string]: string } = {
-    Authorization: Constants.GUEST_BEARER_TOKEN,
+    'Authorization': Constants.GUEST_BEARER_TOKEN,
+    'User-Agent': userAgent,
+    'sec-ch-ua': secChUa,
     ...Constants.BASE_HEADERS
   };
 
