@@ -74,6 +74,10 @@ export const handleStatus = async (
     tweet.twitter_card = tweet.quote.twitter_card;
   }
 
+  if (flags?.textOnly) {
+    tweet.media = undefined;
+  }
+
   /* At this point, we know we're going to have to create a
      regular embed because it's not an API or direct media request */
 
@@ -292,7 +296,7 @@ export const handleStatus = async (
   }
 
   /* If we have no media to display, instead we'll display the user profile picture in the embed */
-  if (!tweet.media?.video && !tweet.media?.photos) {
+  if (!tweet.media?.video && !tweet.media?.photos && !flags?.textOnly) {
     headers.push(
       /* Use a slightly higher resolution image for profile pics */
       `<meta property="og:image" content="${tweet.author.avatar_url?.replace(

@@ -48,6 +48,9 @@ const statusRequest = async (
   } else if (Constants.DIRECT_MEDIA_DOMAINS.includes(url.hostname)) {
     console.log('Direct media request by domain');
     flags.direct = true;
+  } else if (Constants.TEXT_ONLY_DOMAINS.includes(url.hostname)) {
+    console.log('Text-only embed request');
+    flags.textOnly = true;
   } else if (prefix === 'dl' || prefix === 'dir') {
     console.log('Direct media request by path prefix');
     flags.direct = true;
