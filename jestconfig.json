@@ -12,8 +12,8 @@
     "DEPRECATED_DOMAIN_EPOCH": "1559320000000000000",
     "API_HOST_LIST": "api.fxtwitter.com",
     "HOST_URL": "https://fxtwitter.com",
-    "REDIRECT_URL": "https://github.com/dangeredwolf/FixTweet",
-    "EMBED_URL": "https://discord.gg/6CQTTTkGaH",
+    "REDIRECT_URL": "https://github.com/FixTweet/FixTweet",
+    "EMBED_URL": "https://github.com/FixTweet/FixTweet",
     "RELEASE_NAME": "fixtweet-test",
     "TEST": true
   },
