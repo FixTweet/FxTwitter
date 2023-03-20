@@ -170,8 +170,14 @@ const versionRequest = async (request: Request) => {
         request.headers.get('x-real-ip') ||
         request.headers.get('cf-connecting-ip') ||
         'Unknown IP',
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore - @cloudflare/workers-types v4 is missing IncomingRequestCfProperties.city despite it being a real property
       city: request.cf?.city || 'Unknown City',
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore - @cloudflare/workers-types v4 is missing IncomingRequestCfProperties.country / region despite it being a real property
       region: request.cf?.region || request.cf?.country || 'Unknown Region',
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore - @cloudflare/workers-types v4 is missing IncomingRequestCfProperties.country despite it being a real property
       country: request.cf?.country || 'Unknown Country',
       asn: `AS${request.cf?.asn || '??'} (${
         request.cf?.asOrganization || 'Unknown ASN'
