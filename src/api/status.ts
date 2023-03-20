@@ -1,12 +1,12 @@
-import { renderCard } from './helpers/card';
-import { Constants } from './constants';
-import { fetchConversation } from './fetch';
-import { linkFixer } from './helpers/linkFixer';
-import { handleMosaic } from './helpers/mosaic';
-import { colorFromPalette } from './helpers/palette';
-import { translateTweet } from './helpers/translate';
-import { unescapeText } from './helpers/utils';
-import { processMedia } from './helpers/media';
+import { renderCard } from '../helpers/card';
+import { Constants } from '../constants';
+import { fetchConversation } from '../fetch';
+import { linkFixer } from '../helpers/linkFixer';
+import { handleMosaic } from '../helpers/mosaic';
+import { colorFromPalette } from '../helpers/palette';
+import { translateTweet } from '../helpers/translate';
+import { unescapeText } from '../helpers/utils';
+import { processMedia } from '../helpers/media';
 
 /* This function does the heavy lifting of processing data from Twitter API
    and using it to create FixTweet's streamlined API responses */

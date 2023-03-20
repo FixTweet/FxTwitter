@@ -3,7 +3,7 @@ import { handleQuote } from './helpers/quote';
 import { formatNumber, sanitizeText } from './helpers/utils';
 import { Strings } from './strings';
 import { getAuthorText } from './helpers/author';
-import { statusAPI } from './api';
+import { statusAPI } from './api/status';
 
 export const returnError = (error: string): StatusResponse => {
   return {
