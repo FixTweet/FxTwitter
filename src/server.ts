@@ -1,6 +1,6 @@
 import Toucan from 'toucan-js';
 
-import { Router } from 'itty-router';
+import { IRequest, Router } from 'itty-router';
 import { Constants } from './constants';
 import { handleStatus } from './status';
 import { Strings } from './strings';
@@ -12,7 +12,7 @@ const router = Router();
 
 /* Handler for status (Tweet) request */
 const statusRequest = async (
-  request: Request,
+  request: IRequest,
   event: FetchEvent,
   flags: InputFlags = {}
 ) => {
@@ -142,7 +142,7 @@ const statusRequest = async (
 
 /* Redirects to user profile when linked.
    We don't do any fancy special embeds yet, just Twitter default embeds. */
-const profileRequest = async (request: Request) => {
+const profileRequest = async (request: IRequest) => {
   const { handle } = request.params;
   const url = new URL(request.url);
 
@@ -154,12 +154,12 @@ const profileRequest = async (request: Request) => {
   }
 };
 
-const genericTwitterRedirect = async (request: Request) => {
+const genericTwitterRedirect = async (request: IRequest) => {
   const url = new URL(request.url);
   return Response.redirect(`${Constants.TWITTER_ROOT}${url.pathname}`, 302);
 };
 
-const versionRequest = async (request: Request) => {
+const versionRequest = async (request: IRequest) => {
   return new Response(
     Strings.VERSION_HTML.format({
       rtt: request.cf?.clientTcpRtt ? `🏓 ${request.cf.clientTcpRtt} ms RTT` : '',
@@ -213,7 +213,7 @@ router.get('/version', versionRequest);
 /* Oembeds (used by Discord to enhance responses) 
 
 Yes, I actually made the endpoint /owoembed. Deal with it. */
-router.get('/owoembed', async (request: Request) => {
+router.get('/owoembed', async (request: IRequest) => {
   console.log('oembed hit!');
   const { searchParams } = new URL(request.url);
 
@@ -260,7 +260,7 @@ router.get('/hashtag/:hashtag', genericTwitterRedirect);
 
 /* If we don't understand the route structure at all, we'll
    redirect to GitHub (normal domains) or API docs (api.fxtwitter.com) */
-router.get('*', async (request: Request) => {
+router.get('*', async (request: IRequest) => {
   const url = new URL(request.url);
 
   if (Constants.API_HOST_LIST.includes(url.hostname)) {
