@@ -33,7 +33,7 @@
     "ts-jest": "^29.0.5",
     "ts-loader": "^9.4.2",
     "typescript": "^5.0.3",
-    "webpack": "^5.77.0",
+    "webpack": "^5.78.0",
     "webpack-cli": "^5.0.1",
     "wrangler": "^2.13.0"
   },
