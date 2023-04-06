@@ -146,7 +146,7 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
   FINAL_POLL_RESULTS: 'Final results',
 
   ERROR_API_FAIL: 'Tweet failed to load due to an API error :(',
-  ERROR_PRIVATE: `Due to Twitter API changes, NSFW Tweets are currently being blocked in some regions. We are currently looking into a workaround. 🙏`,
+  ERROR_PRIVATE: `Sorry, we can't embed this Tweet because the user is private or suspended :(`,
   ERROR_TWEET_NOT_FOUND: `Sorry, that Tweet doesn't exist :(`,
   ERROR_UNKNOWN: `Unknown error occurred, sorry about that :(`,
 
