@@ -125,7 +125,7 @@ export const twitterFetch = async (
     } catch (e: unknown) {
       /* We'll usually only hit this if we get an invalid response from Twitter.
          It's uncommon, but it happens */
-      console.error('Unknown error while fetching from API');
+      console.error('Unknown error while fetching from API', e);
       event &&
         event.waitUntil(
           cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true })

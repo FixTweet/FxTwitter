@@ -141,7 +141,7 @@ export const statusAPI = async (
   language: string | undefined,
   event: FetchEvent
 ): Promise<APIResponse> => {
-  const conversation = await fetchConversation(status, event);
+  let conversation = await fetchConversation(status, event);
   let tweet = conversation?.globalObjects?.tweets?.[status] || {};
 
   if (tweet.retweeted_status_id_str) {
@@ -156,8 +156,8 @@ export const statusAPI = async (
     if (conversation.timeline?.instructions?.length > 0) {
       // Try request again with fallback this time
       console.log('No Tweet was found, trying fallback in case of geo-restriction');
-      const conversationFallback = await fetchConversation(status, event, true);
-      tweet = conversationFallback?.globalObjects?.tweets?.[status] || {};
+      conversation = await fetchConversation(status, event, true);
+      tweet = conversation?.globalObjects?.tweets?.[status] || {};
 
       if (typeof tweet.full_text !== 'undefined') {
         console.log('Successfully loaded Tweet, requiring fallback');
