@@ -182,7 +182,7 @@ export const fetchConversation = async (
   event: FetchEvent
 ): Promise<TimelineBlobPartial> => {
   return (await twitterFetch(
-    `${Constants.TWITTER_ROOT}/i/api/2/timeline/conversation/${status}.json?${Constants.GUEST_FETCH_PARAMETERS}`,
+    `${Constants.TWITTER_API_ROOT}/2/timeline/conversation/${status}.json?${Constants.GUEST_FETCH_PARAMETERS}`,
     event,
     (_conversation: unknown) => {
       const conversation = _conversation as TimelineBlobPartial;
