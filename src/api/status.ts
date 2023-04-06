@@ -167,7 +167,11 @@ export const statusAPI = async (
         typeof tweet.full_text === 'undefined' &&
         conversation.timeline?.instructions?.length > 0
       ) {
+        console.log('Unfortunately, this Tweet is still not accessible despite trying fallback. Conversation: ', conversation, ' Tweet: ', tweet);
         return { code: 401, message: 'PRIVATE_TWEET' };
+      } else if (typeof tweet.full_text === 'undefined') {
+        console.log('Accessing the fallback resulted in an error');
+        return { code: 500, message: 'API_FAIL' };
       }
     } else {
       /* {"errors":[{"code":34,"message":"Sorry, that page does not exist."}]} */
