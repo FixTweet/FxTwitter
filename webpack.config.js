@@ -29,7 +29,8 @@ let envVariables = [
   'API_HOST_LIST',
   'SENTRY_DSN',
   'DEPRECATED_DOMAIN_LIST',
-  'DEPRECATED_DOMAIN_EPOCH'
+  'DEPRECATED_DOMAIN_EPOCH',
+  'API_FALLBACK_DOMAIN'
 ];
 
 let plugins = [

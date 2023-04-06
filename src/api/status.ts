@@ -154,21 +154,35 @@ export const statusAPI = async (
 
     /* We've got timeline instructions, so the Tweet is probably private */
     if (conversation.timeline?.instructions?.length > 0) {
-      return { code: 401, message: 'PRIVATE_TWEET' };
-    }
+      // Try request again with fallback this time
+      console.log('No Tweet was found, trying fallback in case of geo-restriction');
+      const conversationFallback = await fetchConversation(status, event, true);
+      tweet = conversationFallback?.globalObjects?.tweets?.[status] || {};
 
-    /* {"errors":[{"code":34,"message":"Sorry, that page does not exist."}]} */
-    if (conversation.errors?.[0]?.code === 34) {
-      return { code: 404, message: 'NOT_FOUND' };
-    }
+      if (typeof tweet.full_text !== 'undefined') {
+        console.log('Successfully loaded Tweet, requiring fallback');
+      }
 
-    /* Tweets object is completely missing, smells like API failure */
-    if (typeof conversation?.globalObjects?.tweets === 'undefined') {
+      if (
+        typeof tweet.full_text === 'undefined' &&
+        conversation.timeline?.instructions?.length > 0
+      ) {
+        return { code: 401, message: 'PRIVATE_TWEET' };
+      }
+    } else {
+      /* {"errors":[{"code":34,"message":"Sorry, that page does not exist."}]} */
+      if (conversation.errors?.[0]?.code === 34) {
+        return { code: 404, message: 'NOT_FOUND' };
+      }
+
+      /* Tweets object is completely missing, smells like API failure */
+      if (typeof conversation?.globalObjects?.tweets === 'undefined') {
+        return { code: 500, message: 'API_FAIL' };
+      }
+
+      /* If we have no idea what happened then just return API error */
       return { code: 500, message: 'API_FAIL' };
     }
-
-    /* If we have no idea what happened then just return API error */
-    return { code: 500, message: 'API_FAIL' };
   }
 
   /* Creating the response objects */

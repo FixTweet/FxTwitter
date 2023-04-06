@@ -113,9 +113,6 @@ export const twitterFetch = async (
     headers['x-twitter-active-user'] = 'yes';
     headers['x-guest-token'] = guestToken;
 
-    /* We pretend to be the Twitter Web App as closely as possible,
-      so we use twitter.com/i/api/2 instead of api.twitter.com/2.
-      We probably don't have to do this at all. But hey, better to be consistent with Twitter Web App. */
     let response: unknown;
     let apiRequest;
 
@@ -179,10 +176,13 @@ export const twitterFetch = async (
 
 export const fetchConversation = async (
   status: string,
-  event: FetchEvent
+  event: FetchEvent,
+  fallback = false
 ): Promise<TimelineBlobPartial> => {
   return (await twitterFetch(
-    `${Constants.TWITTER_API_ROOT}/2/timeline/conversation/${status}.json?${Constants.GUEST_FETCH_PARAMETERS}`,
+    `${
+      fallback ? Constants.API_FALLBACK_DOMAIN : Constants.TWITTER_API_ROOT
+    }/2/timeline/conversation/${status}.json?${Constants.GUEST_FETCH_PARAMETERS}`,
     event,
     (_conversation: unknown) => {
       const conversation = _conversation as TimelineBlobPartial;
