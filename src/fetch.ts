@@ -6,11 +6,10 @@ const API_ATTEMPTS = 16;
 export const twitterFetch = async (
   url: string,
   event: FetchEvent,
-  fallback = false,
   validateFunction: (response: unknown) => boolean
 ): Promise<unknown> => {
   let apiAttempts = 0;
-  let newTokenGenerated = fallback;
+  let newTokenGenerated = false;
 
   const [userAgent, secChUa] = generateUserAgent();
   console.log(`Outgoing useragent for this request:`, userAgent);
@@ -23,7 +22,7 @@ export const twitterFetch = async (
   };
 
   const guestTokenRequest = new Request(
-    `${fallback ? Constants.API_FALLBACK_DOMAIN : Constants.TWITTER_API_ROOT}/1.1/guest/activate.json`,
+    `${Constants.TWITTER_API_ROOT}/1.1/guest/activate.json`,
     {
       method: 'POST',
       headers: tokenHeaders,
@@ -99,7 +98,6 @@ export const twitterFetch = async (
 
     const guestToken = activateJson.guest_token;
 
-    console.log(guestTokenRequest);
     console.log(newTokenGenerated ? 'Activated guest:' : 'Using guest:', activateJson);
     console.log('Guest token:', guestToken);
 
@@ -186,7 +184,6 @@ export const fetchConversation = async (
       fallback ? Constants.API_FALLBACK_DOMAIN : Constants.TWITTER_API_ROOT
     }/2/timeline/conversation/${status}.json?${Constants.GUEST_FETCH_PARAMETERS}`,
     event,
-    fallback,
     (_conversation: unknown) => {
       const conversation = _conversation as TimelineBlobPartial;
       return !(
