@@ -100,6 +100,13 @@ const populateTweetProperties = async (
     }
   }
 
+  // Add Tweet source but remove the link HTML tag
+  if (tweet.source) {
+    apiTweet.source = tweet.source
+      .replace(/<a href="(.+?)" rel="nofollow">(.+?)<\/a>/, '$2')
+  }
+
+
   /* Populate a Twitter card */
   if (tweet.card) {
     const card = await renderCard(tweet.card);

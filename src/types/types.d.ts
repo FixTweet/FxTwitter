@@ -135,5 +135,7 @@ interface APITweet {
   lang: string | null;
   replying_to: string | null;
 
+  source: string;
+
   twitter_card: 'tweet' | 'summary' | 'summary_large_image' | 'player';
 }
