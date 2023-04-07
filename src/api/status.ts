@@ -102,7 +102,7 @@ const populateTweetProperties = async (
 
   // Add Tweet source but remove the link HTML tag
   if (tweet.source) {
-    apiTweet.source = tweet.source
+    apiTweet.source = (tweet.source || '')
       .replace(/<a href="(.+?)" rel="nofollow">(.+?)<\/a>/, '$2')
   }
 
