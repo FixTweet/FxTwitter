@@ -32,7 +32,7 @@
     "prettier": "^2.8.7",
     "ts-jest": "^29.1.0",
     "ts-loader": "^9.4.2",
-    "typescript": "^5.0.3",
+    "typescript": "^5.0.4",
     "webpack": "^5.78.0",
     "webpack-cli": "^5.0.1",
     "wrangler": "^2.14.0"
