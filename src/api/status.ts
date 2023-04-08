@@ -30,7 +30,7 @@ const populateTweetProperties = async (
   /* Populating a lot of the basics */
   apiTweet.url = `${Constants.TWITTER_ROOT}/${screenName}/status/${tweet.id_str}`;
   apiTweet.id = tweet.id_str;
-  apiTweet.text = unescapeText(linkFixer(tweet, tweet.full_text));
+  apiTweet.text = unescapeText(linkFixer(tweet, tweet.full_text || ''));
   apiTweet.author = {
     name: name,
     screen_name: screenName,

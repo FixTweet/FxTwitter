@@ -48,7 +48,7 @@ export const Constants = {
     'Sec-Fetch-Mode': `cors`,
     'Sec-Fetch-Dest': `empty`,
     'Referer': `https://twitter.com/`,
-    'Accept-Encoding': `gzip, deflate, br`,
+    'Accept-Encoding': `gzip, deflate`,
     'Accept-Language': `en`
   },
   RESPONSE_HEADERS: {
