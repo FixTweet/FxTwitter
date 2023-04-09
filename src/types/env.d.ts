@@ -9,9 +9,10 @@ declare const EMBED_URL: string;
 declare const REDIRECT_URL: string;
 declare const MOSAIC_DOMAIN_LIST: string;
 declare const API_HOST_LIST: string;
-declare const API_FALLBACK_DOMAIN: string;
 
 declare const SENTRY_DSN: string;
 declare const RELEASE_NAME: string;
 
 declare const TEST: boolean | undefined;
+
+declare const TwitterProxy: { fetch: (input: RequestInfo<unknown, CfProperties<unknown>>, init?: RequestInit<RequestInitCfProperties> | undefined) => Promise<Response> };

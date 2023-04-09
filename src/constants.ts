@@ -15,7 +15,6 @@ export const Constants = {
   API_DOCS_URL: `https://github.com/dangeredwolf/FixTweet/wiki/API-Home`,
   TWITTER_ROOT: 'https://twitter.com',
   TWITTER_API_ROOT: 'https://api.twitter.com',
-  API_FALLBACK_DOMAIN: API_FALLBACK_DOMAIN,
   BOT_UA_REGEX:
     /bot|facebook|embed|got|firefox\/92|firefox\/38|curl|wget|go-http|yahoo|generator|whatsapp|preview|link|proxy|vkshare|images|analyzer|index|crawl|spider|python|cfnetwork|node/gi,
   /* 3 hours */

@@ -155,25 +155,23 @@ export const statusAPI = async (
     tweet = conversation?.globalObjects?.tweets?.[tweet.retweeted_status_id_str] || {};
   }
 
-  /* Fallback for if Tweet did not load */
+  /* Fallback for if Tweet did not load (i.e. NSFW) */
   if (typeof tweet.full_text === 'undefined') {
     console.log('Invalid status, got tweet ', tweet, ' conversation ', conversation);
 
-    /* We've got timeline instructions, so the Tweet is probably private */
     if (conversation.timeline?.instructions?.length > 0) {
-      // Try request again with fallback this time
-      console.log('No Tweet was found, trying fallback in case of geo-restriction');
+      /* Try again using elongator API proxy */
+      console.log('No Tweet was found, loading again from elongator');
       conversation = await fetchConversation(status, event, true);
       tweet = conversation?.globalObjects?.tweets?.[status] || {};
 
       if (typeof tweet.full_text !== 'undefined') {
-        console.log('Successfully loaded Tweet, requiring fallback');
-      }
-
-      if (
+        console.log('Successfully loaded Tweet using elongator');
+      } else if (
         typeof tweet.full_text === 'undefined' &&
         conversation.timeline?.instructions?.length > 0
       ) {
+        console.log('Tweet could not be accessed with elongator, must be private/suspended');
         return { code: 401, message: 'PRIVATE_TWEET' };
       }
     } else {

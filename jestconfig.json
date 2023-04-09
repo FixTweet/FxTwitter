@@ -16,7 +16,6 @@
     "REDIRECT_URL": "https://github.com/FixTweet/FixTweet",
     "EMBED_URL": "https://github.com/FixTweet/FixTweet",
     "RELEASE_NAME": "fixtweet-test",
-    "API_FALLBACK_DOMAIN": "",
     "TEST": true
   },
   "testRegex": "/test/.*\\.test\\.ts$",

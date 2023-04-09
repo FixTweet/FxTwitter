@@ -3,6 +3,9 @@ account_id = "[CLOUDFLARE_ACCOUNT_ID]"
 main = "./dist/worker.js"
 compatibility_date = "2022-08-17"
 send_metrics = false
+services = [
+  { binding = "TwitterProxy", service = "elongator" }
+]
 
 [build]
 command = "npm run build"

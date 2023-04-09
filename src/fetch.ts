@@ -6,6 +6,7 @@ const API_ATTEMPTS = 16;
 export const twitterFetch = async (
   url: string,
   event: FetchEvent,
+  useElongator = false,
   validateFunction: (response: unknown) => boolean
 ): Promise<unknown> => {
   let apiAttempts = 0;
@@ -84,14 +85,18 @@ export const twitterFetch = async (
 
         This can effectively mean virtually unlimited (read) access to Twitter's API,
         which is very funny. */
-      activate = await fetch(guestTokenRequest.clone());
+      // if (useElongator) {
+      //   activate = await TwitterProxy.fetch(guestTokenRequest.clone());
+      // } else {
+        activate = await fetch(guestTokenRequest.clone());
+      // }
     }
 
     /* Let's grab that guest_token so we can use it */
     let activateJson: { guest_token: string };
 
     try {
-      activateJson = (await activate.clone().json()) as { guest_token: string };
+      activateJson = (await activate?.clone().json()) as { guest_token: string };
     } catch (e: unknown) {
       continue;
     }
@@ -117,11 +122,20 @@ export const twitterFetch = async (
     let apiRequest;
 
     try {
-      apiRequest = await fetch(url, {
-        method: 'GET',
-        headers: headers
-      });
-      response = await apiRequest.json();
+      if (useElongator && typeof TwitterProxy !== 'undefined') {
+        console.log('Fetching using elongator');
+        apiRequest = await TwitterProxy.fetch(url, {
+          method: 'GET',
+          headers: headers
+        });
+      } else {
+        apiRequest = await fetch(url, {
+          method: 'GET',
+          headers: headers
+        });
+      }
+      
+      response = await apiRequest?.json();
     } catch (e: unknown) {
       /* We'll usually only hit this if we get an invalid response from Twitter.
          It's uncommon, but it happens */
@@ -177,13 +191,12 @@ export const twitterFetch = async (
 export const fetchConversation = async (
   status: string,
   event: FetchEvent,
-  fallback = false
+  useElongator = false
 ): Promise<TimelineBlobPartial> => {
   return (await twitterFetch(
-    `${
-      fallback ? Constants.API_FALLBACK_DOMAIN : Constants.TWITTER_API_ROOT
-    }/2/timeline/conversation/${status}.json?${Constants.GUEST_FETCH_PARAMETERS}`,
+    `${Constants.TWITTER_API_ROOT}/2/timeline/conversation/${status}.json?${Constants.GUEST_FETCH_PARAMETERS}`,
     event,
+    useElongator,
     (_conversation: unknown) => {
       const conversation = _conversation as TimelineBlobPartial;
       return !(
