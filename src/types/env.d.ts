@@ -15,4 +15,9 @@ declare const RELEASE_NAME: string;
 
 declare const TEST: boolean | undefined;
 
-declare const TwitterProxy: { fetch: (input: RequestInfo<unknown, CfProperties<unknown>>, init?: RequestInit<RequestInitCfProperties> | undefined) => Promise<Response> };
+declare const TwitterProxy: {
+  fetch: (
+    input: RequestInfo<unknown, CfProperties<unknown>>,
+    init?: RequestInit<RequestInitCfProperties> | undefined
+  ) => Promise<Response>;
+};

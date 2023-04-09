@@ -88,7 +88,7 @@ export const twitterFetch = async (
       // if (useElongator) {
       //   activate = await TwitterProxy.fetch(guestTokenRequest.clone());
       // } else {
-        activate = await fetch(guestTokenRequest.clone());
+      activate = await fetch(guestTokenRequest.clone());
       // }
     }
 
@@ -134,7 +134,7 @@ export const twitterFetch = async (
           headers: headers
         });
       }
-      
+
       response = await apiRequest?.json();
     } catch (e: unknown) {
       /* We'll usually only hit this if we get an invalid response from Twitter.

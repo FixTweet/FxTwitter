@@ -102,10 +102,11 @@ const populateTweetProperties = async (
 
   // Add Tweet source but remove the link HTML tag
   if (tweet.source) {
-    apiTweet.source = (tweet.source || '')
-      .replace(/<a href="(.+?)" rel="nofollow">(.+?)<\/a>/, '$2')
+    apiTweet.source = (tweet.source || '').replace(
+      /<a href="(.+?)" rel="nofollow">(.+?)<\/a>/,
+      '$2'
+    );
   }
-
 
   /* Populate a Twitter card */
   if (tweet.card) {
@@ -171,7 +172,9 @@ export const statusAPI = async (
         typeof tweet.full_text === 'undefined' &&
         conversation.timeline?.instructions?.length > 0
       ) {
-        console.log('Tweet could not be accessed with elongator, must be private/suspended');
+        console.log(
+          'Tweet could not be accessed with elongator, must be private/suspended'
+        );
         return { code: 401, message: 'PRIVATE_TWEET' };
       }
     } else {
