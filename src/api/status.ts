@@ -34,7 +34,7 @@ const populateTweetProperties = async (
   apiTweet.author = {
     name: name,
     screen_name: screenName,
-    avatar_url: user?.profile_image_url_https.replace('_normal', '_200x200') || '',
+    avatar_url: (user?.profile_image_url_https || '').replace('_normal', '_200x200') || '',
     avatar_color: colorFromPalette(
       tweet.user?.profile_image_extensions_media_color?.palette || []
     ),
