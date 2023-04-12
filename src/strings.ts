@@ -28,7 +28,7 @@ export const Strings = {
 ███      ███  ███  ███ ███   ▐█████████▌    ▐████    ▐████    ▐████
 ███
 ███   A better Tweet embedding service
-███   by @dangeredwolf, et al.
+███   by dangered wolf, et al.
 
 --><head>{headers}</head>
 <!-- Worker build ${RELEASE_NAME} -->`,
@@ -115,7 +115,7 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
     </head>
     <body>
       <h1>${BRANDING_NAME}</h1>
-      <h3>A better Tweet embedding service, by <a href="https://twitter.com/dangeredwolf">@dangeredwolf</a>, et al.</h2>
+      <h3>A better Tweet embedding service, by dangered wolf, et al.</h2>
       <h2>Worker release: ${RELEASE_NAME}</h2>
       <br>
       <h3>Stats for nerds:</h3>
