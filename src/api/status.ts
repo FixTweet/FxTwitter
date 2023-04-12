@@ -55,6 +55,7 @@ const populateTweetProperties = async (
   }
 
   apiTweet.replying_to = tweet.in_reply_to_screen_name || null;
+  apiTweet.replying_to_status = tweet.in_reply_to_status_id_str || null;
 
   const mediaList = Array.from(
     tweet.extended_entities?.media || tweet.entities?.media || []
