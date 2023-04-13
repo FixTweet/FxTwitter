@@ -161,6 +161,9 @@ const writeDataPoint = (event: FetchEvent, language: string | undefined, nsfw: b
       ],
       doubles: [
         nsfw ? 1 : 0 /* NSFW media = 1, No NSFW Media = 0 */
+      ],
+      indexes: [
+        event.request.headers.get('cf-ray') ?? '', /* CF Ray */
       ]
     });
   }
