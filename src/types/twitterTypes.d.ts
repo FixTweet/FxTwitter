@@ -128,6 +128,14 @@ type TweetEntities = {
   media?: TweetMedia[];
 };
 
+/* TODO: Are there more states for ext_views?
+   Legacy Tweets use Enabled but have no count, while newer tweets have EnabledWithCount
+   and count is populated with a string. */
+type ExtViews = {
+  state: 'Enabled' | 'EnabledWithCount',
+  count?: string
+}
+
 type TweetPartial = {
   card?: TweetCard;
   conversation_id_str: string;
@@ -135,6 +143,7 @@ type TweetPartial = {
   display_text_range: [number, number];
   entities: TweetEntities;
   extended_entities: TweetEntities;
+  ext_views?: ExtViews;
   favorite_count: number;
   in_reply_to_screen_name?: string;
   in_reply_to_status_id_str?: string;

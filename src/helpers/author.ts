@@ -14,6 +14,9 @@ export const getAuthorText = (tweet: APITweet): string | null => {
     if (tweet.likes > 0) {
       authorText += `${formatNumber(tweet.likes)} ❤️    `;
     }
+    if (tweet.views && tweet.views > 0) {
+      authorText += `${formatNumber(tweet.views)} 👁️    `;
+    }
     authorText = authorText.trim();
 
     return authorText;

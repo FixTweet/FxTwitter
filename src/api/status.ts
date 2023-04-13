@@ -49,6 +49,12 @@ const populateTweetProperties = async (
   apiTweet.created_at = tweet.created_at;
   apiTweet.created_timestamp = new Date(tweet.created_at).getTime() / 1000;
 
+  if (tweet.ext_views?.state === 'EnabledWithCount') {
+    apiTweet.views = parseInt(tweet.ext_views.count || '0') ?? null;
+  } else {
+    apiTweet.views = null;
+  }
+
   if (tweet.lang !== 'unk') {
     apiTweet.lang = tweet.lang;
   } else {

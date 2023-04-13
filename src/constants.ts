@@ -26,6 +26,7 @@ export const Constants = {
     'cards_platform=Web-12',
     'include_cards=1',
     'include_ext_alt_text=true',
+    'include_ext_views=true',
     'include_quote_count=true',
     'include_reply_count=1',
     'tweet_mode=extended',

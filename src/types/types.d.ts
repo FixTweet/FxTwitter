@@ -116,6 +116,7 @@ interface APITweet {
   likes: number;
   retweets: number;
   replies: number;
+  views?: number | null;
 
   color: string;
 
