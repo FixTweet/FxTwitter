@@ -132,9 +132,9 @@ type TweetEntities = {
    Legacy Tweets use Enabled but have no count, while newer tweets have EnabledWithCount
    and count is populated with a string. */
 type ExtViews = {
-  state: 'Enabled' | 'EnabledWithCount',
-  count?: string
-}
+  state: 'Enabled' | 'EnabledWithCount';
+  count?: string;
+};
 
 type TweetPartial = {
   card?: TweetCard;
