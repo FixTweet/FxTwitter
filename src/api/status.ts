@@ -150,8 +150,6 @@ const writeDataPoint = (event: FetchEvent, language: string | undefined, nsfw: b
     // @ts-expect-error - TypeScript doesn't like iterating over the keys, but that's OK
       .filter(flag => flags?.[flag])[0] || 'standard';
 
-    console.log(flagString)
-
     AnalyticsEngine.writeDataPoint({
       blobs: [
         event.request.cf?.colo as string, /* Datacenter location */
