@@ -149,31 +149,35 @@ const populateTweetProperties = async (
   return apiTweet;
 };
 
-const writeDataPoint = (event: FetchEvent, language: string | undefined, nsfw: boolean, returnCode: string, flags?: InputFlags) => {
+const writeDataPoint = (
+  event: FetchEvent,
+  language: string | undefined,
+  nsfw: boolean,
+  returnCode: string,
+  flags?: InputFlags
+) => {
   console.log('Writing data point...');
   if (typeof AnalyticsEngine !== 'undefined') {
-    const flagString = Object.keys(flags || {})
-    // @ts-expect-error - TypeScript doesn't like iterating over the keys, but that's OK
-      .filter(flag => flags?.[flag])[0] || 'standard';
+    const flagString =
+      Object.keys(flags || {})
+        // @ts-expect-error - TypeScript doesn't like iterating over the keys, but that's OK
+        .filter(flag => flags?.[flag])[0] || 'standard';
 
     AnalyticsEngine.writeDataPoint({
       blobs: [
-        event.request.cf?.colo as string, /* Datacenter location */
-        event.request.cf?.country as string, /* Country code */
-        event.request.headers.get('user-agent') ?? '', /* User agent (for aggregating bots calling) */
-        returnCode, /* Return code */
-        flagString, /* Type of request */
-        language ?? '', /* For translate feature */
+        event.request.cf?.colo as string /* Datacenter location */,
+        event.request.cf?.country as string /* Country code */,
+        event.request.headers.get('user-agent') ??
+          '' /* User agent (for aggregating bots calling) */,
+        returnCode /* Return code */,
+        flagString /* Type of request */,
+        language ?? '' /* For translate feature */
       ],
-      doubles: [
-        nsfw ? 1 : 0 /* NSFW media = 1, No NSFW Media = 0 */
-      ],
-      indexes: [
-        event.request.headers.get('cf-ray') ?? '', /* CF Ray */
-      ]
+      doubles: [nsfw ? 1 : 0 /* NSFW media = 1, No NSFW Media = 0 */],
+      indexes: [event.request.headers.get('cf-ray') ?? '' /* CF Ray */]
     });
   }
-}
+};
 
 /* API for Twitter statuses (Tweets)
    Used internally by FixTweet's embed service, or
@@ -195,8 +199,6 @@ export const statusAPI = async (
 
   /* Fallback for if Tweet did not load (i.e. NSFW) */
   if (typeof tweet.full_text === 'undefined') {
-    console.log('Invalid status, got tweet ', tweet, ' conversation ', conversation);
-
     if (conversation.timeline?.instructions?.length > 0) {
       /* Try again using elongator API proxy */
       console.log('No Tweet was found, loading again from elongator');
@@ -211,8 +213,12 @@ export const statusAPI = async (
         conversation.timeline?.instructions?.length > 0
       ) {
         console.log(
-          'Tweet could not be accessed with elongator, must be private/suspended'
+          'Tweet could not be accessed with elongator, must be private/suspende, got tweet ',
+          tweet,
+          ' conversation ',
+          conversation
         );
+
         writeDataPoint(event, language, wasMediaBlockedNSFW, 'PRIVATE_TWEET', flags);
         return { code: 401, message: 'PRIVATE_TWEET' };
       }
