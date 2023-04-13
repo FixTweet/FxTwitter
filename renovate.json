@@ -1,6 +1,7 @@
 {
   "extends": ["config:base"],
   "rangeStrategy": "bump",
+  "platformAutomerge": true,
   "lockFileMaintenance": {
     "enabled": true,
     "automerge": true,
