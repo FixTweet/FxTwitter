@@ -143,16 +143,44 @@ const populateTweetProperties = async (
   return apiTweet;
 };
 
+const writeDataPoint = (event: FetchEvent, language: string | undefined, nsfw: boolean, returnCode: string, flags?: InputFlags) => {
+  console.log('Writing data point...');
+  if (typeof AnalyticsEngine !== 'undefined') {
+    const flagString = Object.keys(flags || {})
+    // @ts-expect-error - TypeScript doesn't like iterating over the keys, but that's OK
+      .filter(flag => flags?.[flag])[0] || 'standard';
+
+    console.log(flagString)
+
+    AnalyticsEngine.writeDataPoint({
+      blobs: [
+        event.request.cf?.colo as string, /* Datacenter location */
+        event.request.cf?.country as string, /* Country code */
+        event.request.headers.get('user-agent') ?? '', /* User agent (for aggregating bots calling) */
+        returnCode, /* Return code */
+        flagString, /* Type of request */
+        language ?? '', /* For translate feature */
+      ],
+      doubles: [
+        nsfw ? 1 : 0 /* NSFW media = 1, No NSFW Media = 0 */
+      ]
+    });
+  }
+}
+
 /* API for Twitter statuses (Tweets)
    Used internally by FixTweet's embed service, or
    available for free using api.fxtwitter.com. */
 export const statusAPI = async (
   status: string,
   language: string | undefined,
-  event: FetchEvent
+  event: FetchEvent,
+  flags?: InputFlags
 ): Promise<APIResponse> => {
   let conversation = await fetchConversation(status, event);
   let tweet = conversation?.globalObjects?.tweets?.[status] || {};
+
+  let wasMediaBlockedNSFW = false;
 
   if (tweet.retweeted_status_id_str) {
     tweet = conversation?.globalObjects?.tweets?.[tweet.retweeted_status_id_str] || {};
@@ -170,6 +198,7 @@ export const statusAPI = async (
 
       if (typeof tweet.full_text !== 'undefined') {
         console.log('Successfully loaded Tweet using elongator');
+        wasMediaBlockedNSFW = true;
       } else if (
         typeof tweet.full_text === 'undefined' &&
         conversation.timeline?.instructions?.length > 0
@@ -177,20 +206,24 @@ export const statusAPI = async (
         console.log(
           'Tweet could not be accessed with elongator, must be private/suspended'
         );
+        writeDataPoint(event, language, wasMediaBlockedNSFW, 'PRIVATE_TWEET', flags);
         return { code: 401, message: 'PRIVATE_TWEET' };
       }
     } else {
       /* {"errors":[{"code":34,"message":"Sorry, that page does not exist."}]} */
       if (conversation.errors?.[0]?.code === 34) {
+        writeDataPoint(event, language, wasMediaBlockedNSFW, 'NOT_FOUND', flags);
         return { code: 404, message: 'NOT_FOUND' };
       }
 
       /* Tweets object is completely missing, smells like API failure */
       if (typeof conversation?.globalObjects?.tweets === 'undefined') {
+        writeDataPoint(event, language, wasMediaBlockedNSFW, 'API_FAIL', flags);
         return { code: 500, message: 'API_FAIL' };
       }
 
       /* If we have no idea what happened then just return API error */
+      writeDataPoint(event, language, wasMediaBlockedNSFW, 'API_FAIL', flags);
       return { code: 500, message: 'API_FAIL' };
     }
   }
@@ -216,6 +249,8 @@ export const statusAPI = async (
 
   /* Finally, staple the Tweet to the response and return it */
   response.tweet = apiTweet;
+
+  writeDataPoint(event, language, wasMediaBlockedNSFW, 'OK', flags);
 
   return response;
 };

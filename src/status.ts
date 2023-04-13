@@ -30,7 +30,7 @@ export const handleStatus = async (
 ): Promise<StatusResponse> => {
   console.log('Direct?', flags?.direct);
 
-  const api = await statusAPI(status, language, event as FetchEvent);
+  const api = await statusAPI(status, language, event as FetchEvent, flags);
   const tweet = api?.tweet as APITweet;
 
   /* Catch this request if it's an API response */

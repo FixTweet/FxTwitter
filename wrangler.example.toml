@@ -6,6 +6,9 @@ send_metrics = false
 services = [
   { binding = "TwitterProxy", service = "elongator" }
 ]
+analytics_engine_datasets = [
+  { binding = "AnalyticsEngine" }
+]
 
 [build]
 command = "npm run build"
