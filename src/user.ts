@@ -1,8 +1,5 @@
 import { Constants } from './constants';
-import { handleQuote } from './helpers/quote';
-import { formatNumber, sanitizeText } from './helpers/utils';
 import { Strings } from './strings';
-import { getAuthorText } from './helpers/author';
 import { userAPI } from './api/user';
 
 export const returnError = (error: string): StatusResponse => {
@@ -32,7 +29,7 @@ export const handleProfile = async (
 
   /* Catch this request if it's an API response */
   // For now we just always return the API response while testing
-  if (flags?.api || true) {
+  if (flags?.api) {
     return {
       response: new Response(JSON.stringify(api), {
         headers: { ...Constants.RESPONSE_HEADERS, ...Constants.API_RESPONSE_HEADERS },
@@ -42,7 +39,7 @@ export const handleProfile = async (
   }
 
   /* If there was any errors fetching the User, we'll return it */
-  switch (api.code || true) {
+  switch (api.code) {
     case 401:
       return returnError(Strings.ERROR_PRIVATE);
     case 404:
@@ -50,4 +47,20 @@ export const handleProfile = async (
     case 500:
       return returnError(Strings.ERROR_API_FAIL);
   }
+
+  /* Base headers included in all responses */
+  const headers = [
+    `<meta property="twitter:site" content="@${user.screen_name}"/>`,
+  ];
+
+  // TODO Add card creation logic here
+
+  /* Finally, after all that work we return the response HTML! */
+  return {
+    text: Strings.BASE_HTML.format({
+      lang: `lang="en"`,
+      headers: headers.join('')
+    }),
+    cacheControl: null
+  };
 };
