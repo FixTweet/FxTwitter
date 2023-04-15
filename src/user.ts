@@ -19,12 +19,11 @@ export const handleProfile = async (
   username: string,
   userAgent?: string,
   flags?: InputFlags,
-  language?: string,
   event?: FetchEvent
 ): Promise<StatusResponse> => {
   console.log('Direct?', flags?.direct);
 
-  const api = await userAPI(username, language, event as FetchEvent);
+  const api = await userAPI(username, event as FetchEvent);
   const user = api?.user as APIUser;
 
   /* Catch this request if it's an API response */

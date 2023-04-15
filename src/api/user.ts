@@ -4,8 +4,7 @@ import { fetchUser } from '../fetch';
 /* This function does the heavy lifting of processing data from Twitter API
    and using it to create FixTweet's streamlined API responses */
 const populateUserProperties = async (
-  response: GraphQLUserResponse,
-  language: string | undefined
+  response: GraphQLUserResponse
   // eslint-disable-next-line sonarjs/cognitive-complexity
 ): Promise<APIUser> => {
   const apiUser = {} as APIUser;
@@ -22,7 +21,20 @@ const populateUserProperties = async (
   apiUser.screen_name = user.legacy.screen_name;
   apiUser.description = user.legacy.description;
   apiUser.location = user.legacy.location;
-  apiUser.verified = user.legacy.verified;
+  if (user.is_blue_verified) {
+    apiUser.verified = 'blue';
+  } else if (user.legacy.verified) {
+    if (user.legacy.verified_type === 'Business') {
+      apiUser.verified = 'business';
+    } else if (user.legacy.verified_type === 'Government') {
+      apiUser.verified = 'government';
+    } else {
+      apiUser.verified = 'legacy';
+    }
+  }
+  if (apiUser.verified === 'government') {
+    apiUser.verified_lable = user.affiliates_highlighted_label?.label?.description || '';
+  }
   apiUser.avatar_url = user.legacy.profile_image_url_https;
   apiUser.joined = user.legacy.created_at;
   if (user.legacy_extended_profile?.birthdate) {
@@ -36,41 +48,11 @@ const populateUserProperties = async (
   return apiUser;
 };
 
-const writeDataPoint = (
-  event: FetchEvent,
-  language: string | undefined,
-  returnCode: string,
-  flags?: InputFlags
-) => {
-  console.log('Writing data point...');
-  if (typeof AnalyticsEngine !== 'undefined') {
-    const flagString =
-      Object.keys(flags || {})
-        // @ts-expect-error - TypeScript doesn't like iterating over the keys, but that's OK
-        .filter(flag => flags?.[flag])[0] || 'standard';
-
-    AnalyticsEngine.writeDataPoint({
-      blobs: [
-        event.request.cf?.colo as string /* Datacenter location */,
-        event.request.cf?.country as string /* Country code */,
-        event.request.headers.get('user-agent') ??
-          '' /* User agent (for aggregating bots calling) */,
-        returnCode /* Return code */,
-        flagString /* Type of request */,
-        language ?? '' /* For translate feature */
-      ],
-      doubles: [0 /* NSFW media = 1, No NSFW Media = 0 */],
-      indexes: [event.request.headers.get('cf-ray') ?? '' /* CF Ray */]
-    });
-  }
-};
-
 /* API for Twitter profiles (Users)
    Used internally by FixTweet's embed service, or
    available for free using api.fxtwitter.com. */
 export const userAPI = async (
   username: string,
-  language: string | undefined,
   event: FetchEvent,
   flags?: InputFlags
 ): Promise<UserAPIResponse> => {
@@ -80,13 +62,10 @@ export const userAPI = async (
   const response: UserAPIResponse = { code: 200, message: 'OK' } as UserAPIResponse;
   const apiUser: APIUser = (await populateUserProperties(
     userResponse,
-    language
   )) as APIUser;
 
   /* Finally, staple the User to the response and return it */
   response.user = apiUser;
-
-  writeDataPoint(event, language, 'OK', flags);
 
   return response;
 };

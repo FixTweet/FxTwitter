@@ -315,7 +315,7 @@ test('API fetch poll Tweet', async () => {
 
 test('API fetch user', async () => {
   const result = await cacheWrapper(
-    new Request('https://api.fxtwitter.com/wazbat', {
+    new Request('https://api.fxtwitter.com/twitter', {
       method: 'GET',
       headers: botHeaders
     })
@@ -328,19 +328,17 @@ test('API fetch user', async () => {
 
   const user = response.user as APIUser;
   expect(user).toBeTruthy();
-  expect(user.url).toEqual('https://twitter.com/wazbat');
-  expect(user.id).toEqual('157658332');
-  expect(user.name).toEqual('Wazbat');
-  expect(user.screen_name).toEqual('wazbat');
-  expect(user.location).toEqual('Behind you');
-  expect(user.followers).toBeGreaterThanOrEqual(1_000);
-  expect(user.followers).toBeLessThanOrEqual(100_000);
-  expect(user.following).toBeGreaterThanOrEqual(10);
-  expect(user.following).toBeLessThanOrEqual(1_000);
-  expect(user.likes).toBeGreaterThanOrEqual(10_000);
-  expect(user.verified).toEqual(false);
-  expect(user.joined).toEqual('Sun Jun 20 13:29:36 +0000 2010');
-  expect(user.birthday.day).toEqual(14);
-  expect(user.birthday.month).toEqual(7);
+  expect(user.url).toEqual('https://twitter.com/Twitter');
+  expect(user.id).toEqual('783214');
+  expect(user.screen_name).toEqual('Twitter');
+  expect(user.followers).toEqual(expect.any(Number));
+  expect(user.following).toEqual(expect.any(Number));
+  // The official twitter account will never be following as many people as it has followers
+  expect(user.following).not.toEqual(user.followers);
+  expect(user.likes).toEqual(expect.any(Number));
+  expect(user.verified).toEqual('business');
+  expect(user.joined).toEqual('Tue Feb 20 14:35:54 +0000 2007');
+  expect(user.birthday.day).toEqual(21);
+  expect(user.birthday.month).toEqual(3);
   expect(user.birthday.year).toBeUndefined();
 });

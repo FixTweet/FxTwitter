@@ -148,7 +148,7 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
   ERROR_API_FAIL: 'Tweet failed to load due to an API error :(',
   ERROR_PRIVATE: `Due to Twitter API changes, some NSFW Tweets are currently being blocked. We are currently looking into a workaround. 🙏`,
   ERROR_TWEET_NOT_FOUND: `Sorry, that Tweet doesn't exist :(`,
-  ERROR_USER_NOT_FOUND: `Sorry, that User doesn't exist :(`,
+  ERROR_USER_NOT_FOUND: `Sorry, that user doesn't exist :(`,
   ERROR_UNKNOWN: `Unknown error occurred, sorry about that :(`,
 
   TWITFIX_API_SUNSET: `The original TwitFix API has been sunset. To learn more about the FixTweet API, check out <a href="https://${

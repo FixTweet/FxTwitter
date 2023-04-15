@@ -202,26 +202,41 @@ type GraphQLUserResponse = {
 }
 
 type GraphQLUser = {
-  __typename: "User",
-  id: string; // "VXNlcjozNzg0MTMxMzIy",
-  rest_id: string; // "3784131322",
-  affiliates_highlighted_label: Record<string, unknown>; // {},
+  __typename: "User";
+  id: string; // "VXNlcjo3ODMyMTQ="
+  rest_id: string; // "783214",
+  affiliates_highlighted_label: {
+    label?: {
+      badge?: {
+        url?: string; // "https://pbs.twimg.com/semantic_core_img/1290392753013002240/mWq1iE5L?format=png&name=orig"
+      }
+      description?: string; // "United States government organization"
+      url?: {
+        url?: string; // "https://help.twitter.com/rules-and-policies/state-affiliated"
+        urlType: string; // "DeepLink"
+      }
+    }
+  }
+  business_account: {
+    affiliates_count?: 20
+  }
   is_blue_verified: boolean; // false,
-  profile_image_shape: 'Circle' | 'Square'; // "Circle",
+  profile_image_shape: 'Circle' | 'Square'|'Hexagon'; // "Circle",
+  has_nft_avatar: boolean; // false,
   legacy: {
-    created_at: string; // "Sat Sep 26 17:20:55 +0000 2015",
+    created_at: string; // "Tue Feb 20 14:35:54 +0000 2007",
     default_profile: boolean // false,
     default_profile_image: boolean // false,
-    description: string; // "dangered wolf#3621 https://t.co/eBTS4kksMw",
+    description: string; // "What's happening?!",
     entities: {
-      description: {
-        urls: {
-          display_url: string; // "t.me/dangeredwolf",
-          expanded_url: string; // "http://t.me/dangeredwolf",
-          url: string; // "https://t.co/eBTS4kksMw",
+      description?: {
+        urls?: {
+          display_url: string; // "about.twitter.com",
+          expanded_url: string; // "https://about.twitter.com/",
+          url: string; // "https://t.co/DAtOo6uuHk",
           indices: [
-            19,
-            42
+            0,
+            23
           ]
         }[]
       }
@@ -232,29 +247,30 @@ type GraphQLUser = {
     friends_count: number; // 2125,
     has_custom_timelines: boolean; // true,
     is_translator: boolean; // false,
-    listed_count: number; // 69,
-    location: string; // "they/them",
+    listed_count: number; // 88165,
+    location: string; // "everywhere",
     media_count: number; // 20839,
-    name: string; // "dangered wolf",
-    normal_followers_count: number; // 4996,
-    pinned_tweet_ids_str: string[]; // Array of tweet ids
+    name: string; // "Twitter",
+    normal_followers_count: number; // 65669107,
+    pinned_tweet_ids_str: string[]; // Array of tweet ids, usually one. Empty if no pinned tweet
     possibly_sensitive: boolean; // false,
-    profile_banner_url: string; // "https://pbs.twimg.com/profile_banners/3784131322/1658599775",
-    profile_image_url_https: string; // "https://pbs.twimg.com/profile_images/1555638673705783299/3gaaetxC_normal.jpg",
+    profile_banner_url: string; // "https://pbs.twimg.com/profile_banners/783214/1646075315",
+    profile_image_url_https: string; // "https://pbs.twimg.com/profile_images/1488548719062654976/u6qfBBkF_normal.jpg",
     profile_interstitial_type: string; // "",
-    screen_name: string; // "dangeredwolf",
-    statuses_count: number; // 108222,
-    translator_type: string; // "regular",
-    verified: boolean; // false,
+    screen_name: string; // "Twitter",
+    statuses_count: number; // 15047
+    translator_type: string; // "regular"
+    verified: boolean; // false
+    verified_type: 'Business'|'Government';
     withheld_in_countries: []
   },
   professional: {
-    rest_id: string; // "1508134739420536845",
+    rest_id: string; // "1503055759638159366",
     professional_type: string; // "Creator",
     category: [
       {
         id: number; // 354,
-        name: string // "Fish & Chips Restaurant",
+        name: string // "Community",
         icon_name: string; // "IconBriefcaseStroke"
       }
     ]
@@ -268,7 +284,7 @@ type GraphQLUser = {
       year_visibility: string; // "Public"
     };
     profile_image_shape: string; // "Circle",
-    rest_id: string; // "3784131322",
+    rest_id: string; // "783214",
   },
   is_profile_translatable: false,
   verification_info: {
@@ -282,10 +298,9 @@ type GraphQLUser = {
           };
           to_index: number; // 108
         }[];
-        text: string; // "This account is verified because it’s subscribed to Twitter Blue or is a legacy verified account. Learn more"
+        text?: 'This account is verified because it’s subscribed to Twitter Blue or is a legacy verified account. Learn more'|'This account is verified because it\'s an official organisation on Twitter. Learn more';
       }
     }
-  },
-  business_account: Record<string, unknown>; // {},
+  }
 
 }

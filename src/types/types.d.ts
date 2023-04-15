@@ -159,7 +159,8 @@ interface APIUser {
   location: string;
   url: string;
   protected: boolean;
-  verified: boolean;
+  verified: 'legacy' | 'blue'| 'business' | 'government';
+  verified_lable: string;
   followers: number;
   following: number;
   tweets: number;

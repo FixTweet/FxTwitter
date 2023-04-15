@@ -144,7 +144,7 @@ const statusRequest = async (
 /* Handler for User Profiles */
 const profileRequest = async (request: IRequest, event: FetchEvent,
   flags: InputFlags = {}) => {
-  const { handle, language } = request.params;
+  const { handle } = request.params;
   const url = new URL(request.url);
   const userAgent = request.headers.get('User-Agent') || '';
 
@@ -166,21 +166,14 @@ const profileRequest = async (request: IRequest, event: FetchEvent,
     return Response.redirect(Constants.REDIRECT_URL, 302);
   }
   const username = handle.match(/\w{1,15}/gi)?.[0] as string;
-  /* Check if request is to api.fxtwitter.com, or the tweet is appended with .json
-     Note that unlike TwitFix, FixTweet will never generate embeds for .json, and
-     in fact we only support .json because it's what people using TwitFix API would
-     be used to.
-  */
-  if (
-    url.pathname.match(/\/status(es)?\/\d{2,20}\.(json)/g) !== null ||
-    Constants.API_HOST_LIST.includes(url.hostname)
-  ) {
+  /* Check if request is to api.fxtwitter.com */
+  if (Constants.API_HOST_LIST.includes(url.hostname)) {
     console.log('JSON API request');
     flags.api = true;
   }
   
   /* Direct media or API access bypasses bot check, returning same response regardless of UA */
-  if (isBotUA || flags.direct || flags.api) {
+  if (isBotUA || flags.api) {
     if (isBotUA) {
       console.log(`Matched bot UA ${userAgent}`);
     } else {
@@ -192,7 +185,6 @@ const profileRequest = async (request: IRequest, event: FetchEvent,
       username,
       userAgent,
       flags,
-      language,
       event
     );
 
@@ -336,7 +328,7 @@ router.get('/owoembed', async (request: IRequest) => {
    We don't currently have custom profile cards yet,
    but it's something we might do. Maybe. */
 router.get('/:handle', profileRequest);
-router.get('/:handle/:language', profileRequest);
+router.get('/:handle/', profileRequest);
 router.get('/i/events/:id', genericTwitterRedirect);
 router.get('/hashtag/:hashtag', genericTwitterRedirect);
 
