@@ -40,10 +40,16 @@ interface VerticalSize {
   secondHeight: number;
 }
 
-interface APIResponse {
+interface TweetAPIResponse {
   code: number;
   message: string;
   tweet?: APITweet;
+}
+
+interface UserAPIResponse {
+  code: number;
+  message: string;
+  user?: APIUser;
 }
 
 interface APITranslate {
@@ -140,4 +146,23 @@ interface APITweet {
   source: string;
 
   twitter_card: 'tweet' | 'summary' | 'summary_large_image' | 'player';
+}
+
+interface APIUser {
+  id: string;
+  name: string;
+  screen_name: string;
+  avatar_url: string;
+  banner_url: string;
+  avatar_color: string;
+  description: string;
+  location: string;
+  url: string;
+  protected: boolean;
+  verified: boolean;
+  followers: number;
+  following: number;
+  tweets: number;
+  likes: number;
+  joined: string;
 }

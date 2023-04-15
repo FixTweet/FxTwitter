@@ -203,3 +203,40 @@ export const fetchConversation = async (
     }
   )) as TimelineBlobPartial;
 };
+
+export const fetchUser = async (
+  username: string,
+  event: FetchEvent,
+  useElongator = false
+): Promise<GraphQLUserResponse> => {
+  return (await twitterFetch(
+    `${Constants.TWITTER_ROOT}/i/api/graphql/sLVLhk0bGj3MVFEKTdax1w/UserByScreenName?variables=${
+      encodeURIComponent(
+        JSON.stringify({
+          screen_name: username,
+          withSafetyModeUserFields: true
+        })
+      )
+    }&features=${encodeURIComponent(
+      JSON.stringify({
+        blue_business_profile_image_shape_enabled: true,
+        responsive_web_graphql_exclude_directive_enabled: true,
+        verified_phone_label_enabled: true
+        })
+      )}`,
+    event,
+    useElongator,
+    // Validator function
+    (_res: unknown) => {
+      const response = _res as GraphQLUserResponse;
+      return !(response?.data?.user?.result?.__typename !== 'User' || typeof response.data.user.result.legacy === 'undefined');
+      /*
+      return !(
+        typeof conversation.globalObjects === 'undefined' &&
+        (typeof conversation.errors === 'undefined' ||
+          conversation.errors?.[0]?.code === 239)
+      );
+      */
+    }
+  )) as GraphQLUserResponse;
+};

@@ -192,3 +192,100 @@ type TranslationPartial = {
   translation: string;
   entities: TweetEntities;
 };
+
+type GraphQLUserResponse = {
+  data: {
+    user: {
+      result: GraphQLUser;
+    }
+  }
+}
+
+type GraphQLUser = {
+  __typename: "User",
+  id: string; // "VXNlcjozNzg0MTMxMzIy",
+  "rest_id": string; // "3784131322",
+  "affiliates_highlighted_label": Record<string, unknown>; // {},
+  "is_blue_verified": boolean; // false,
+  "profile_image_shape": 'Circle' | 'Square'; // "Circle",
+  "legacy": {
+    "created_at": string; // "Sat Sep 26 17:20:55 +0000 2015",
+    "default_profile": boolean // false,
+    "default_profile_image": boolean // false,
+    "description": string; // "dangered wolf#3621 https://t.co/eBTS4kksMw",
+    "entities": {
+      "description": {
+        "urls": {
+          "display_url": string; // "t.me/dangeredwolf",
+          "expanded_url": string; // "http://t.me/dangeredwolf",
+          "url": string; // "https://t.co/eBTS4kksMw",
+          "indices": [
+            19,
+            42
+          ]
+        }[]
+      }
+    },
+    "fast_followers_count": 0,
+    "favourites_count": number; // 126708,
+    "followers_count": number; // 4996,
+    "friends_count": number; // 2125,
+    "has_custom_timelines": boolean; // true,
+    "is_translator": boolean; // false,
+    "listed_count": number; // 69,
+    "location": string; // "they/them",
+    "media_count": number; // 20839,
+    "name": string; // "dangered wolf",
+    "normal_followers_count": number; // 4996,
+    "pinned_tweet_ids_str": string[]; // Array of tweet ids
+    "possibly_sensitive": boolean; // false,
+    "profile_banner_url": string; // "https://pbs.twimg.com/profile_banners/3784131322/1658599775",
+    "profile_image_url_https": string; // "https://pbs.twimg.com/profile_images/1555638673705783299/3gaaetxC_normal.jpg",
+    "profile_interstitial_type": string; // "",
+    "screen_name": string; // "dangeredwolf",
+    "statuses_count": number; // 108222,
+    "translator_type": string; // "regular",
+    "verified": boolean; // false,
+    "withheld_in_countries": []
+  },
+  "professional": {
+    "rest_id": string; // "1508134739420536845",
+    "professional_type": string; // "Creator",
+    "category": [
+      {
+        "id": number; // 354,
+        "name": string // "Fish & Chips Restaurant",
+        "icon_name": string; // "IconBriefcaseStroke"
+      }
+    ]
+  },
+  "legacy_extended_profile": {
+    birthdate?: {
+      day: number; // 7,
+      month: number; // 1,
+      visibility: string; // "Public"
+      year: number; // 2000
+      year_visibility: string; // "Public"
+    };
+    profile_image_shape: string; // "Circle",
+    rest_id: string; // "3784131322",
+  },
+  "is_profile_translatable": false,
+  "verification_info": {
+    reason: {
+      description: {
+        entities: {
+          from_index: number; // 98,
+          ref: {
+            url: string; // "https://help.twitter.com/managing-your-account/about-twitter-verified-accounts",
+            url_type: string; // "ExternalUrl"
+          };
+          to_index: number; // 108
+        }[];
+        text: string; // "This account is verified because it’s subscribed to Twitter Blue or is a legacy verified account. Learn more"
+      }
+    }
+  },
+  "business_account": {}
+
+}

@@ -312,3 +312,52 @@ test('API fetch poll Tweet', async () => {
   expect(choices[3].count).toEqual(31706);
   expect(choices[3].percentage).toEqual(58);
 });
+
+test('API fetch user', async () => {
+  const result = await cacheWrapper(
+    new Request('https://api.fxtwitter.com/wazbat', {
+      method: 'GET',
+      headers: botHeaders
+    })
+  );
+  expect(result.status).toEqual(200);
+  const response = (await result.json()) as APIResponse;
+  expect(response).toBeTruthy();
+  expect(response.code).toEqual(200);
+  expect(response.message).toEqual('OK');
+
+  const tweet = response.tweet as APITweet;
+  expect(tweet).toBeTruthy();
+  expect(tweet.url).toEqual('https://twitter.com/Twitter/status/1055475950543167488');
+  expect(tweet.id).toEqual('1055475950543167488');
+  expect(tweet.text).toEqual('A poll:');
+  expect(tweet.author.screen_name?.toLowerCase()).toEqual('twitter');
+  expect(tweet.author.name).toBeTruthy();
+  expect(tweet.author.avatar_url).toBeTruthy();
+  expect(tweet.author.banner_url).toBeTruthy();
+  expect(tweet.author.avatar_color).toBeTruthy();
+  expect(tweet.twitter_card).toEqual('tweet');
+  expect(tweet.created_at).toEqual('Thu Oct 25 15:07:31 +0000 2018');
+  expect(tweet.created_timestamp).toEqual(1540480051);
+  expect(tweet.lang).toEqual('en');
+  expect(tweet.replying_to).toBeNull();
+  expect(tweet.poll).toBeTruthy();
+  const poll = tweet.poll as APIPoll;
+  expect(poll.ends_at).toEqual('2018-10-26T03:07:30Z');
+  expect(poll.time_left_en).toEqual('Final results');
+  expect(poll.total_votes).toEqual(54703);
+
+  const choices = poll.choices as APIPollChoice[];
+  expect(choices[0].label).toEqual('Yesssss');
+  expect(choices[0].count).toEqual(14773);
+  expect(choices[0].percentage).toEqual(27);
+  expect(choices[1].label).toEqual('No');
+  expect(choices[1].count).toEqual(3618);
+  expect(choices[1].percentage).toEqual(6.6);
+  expect(choices[2].label).toEqual('Maybe?');
+  expect(choices[2].count).toEqual(4606);
+  expect(choices[2].percentage).toEqual(8.4);
+  expect(choices[3].label).toEqual('Just show me the results');
+  expect(choices[3].count).toEqual(31706);
+  expect(choices[3].percentage).toEqual(58);
+});

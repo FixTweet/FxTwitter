@@ -187,7 +187,7 @@ export const statusAPI = async (
   language: string | undefined,
   event: FetchEvent,
   flags?: InputFlags
-): Promise<APIResponse> => {
+): Promise<TweetAPIResponse> => {
   let conversation = await fetchConversation(status, event);
   let tweet = conversation?.globalObjects?.tweets?.[status] || {};
 
@@ -242,7 +242,7 @@ export const statusAPI = async (
   }
 
   /* Creating the response objects */
-  const response: APIResponse = { code: 200, message: 'OK' } as APIResponse;
+  const response: TweetAPIResponse = { code: 200, message: 'OK' } as TweetAPIResponse;
   const apiTweet: APITweet = (await populateTweetProperties(
     tweet,
     conversation,
