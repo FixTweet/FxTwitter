@@ -165,76 +165,75 @@ const profileRequest = async (request: IRequest, event: FetchEvent,
   if (handle.match(/\w{1,15}/gi)?.[0] !== handle) {
     return Response.redirect(Constants.REDIRECT_URL, 302);
   }
-  const username = handle.match(/\w{1,15}/gi)?.[0];
+  const username = handle.match(/\w{1,15}/gi)?.[0] as string;
   /* Check if request is to api.fxtwitter.com, or the tweet is appended with .json
      Note that unlike TwitFix, FixTweet will never generate embeds for .json, and
      in fact we only support .json because it's what people using TwitFix API would
-     be used to. */
-     if (
-      url.pathname.match(/\/status(es)?\/\d{2,20}\.(json)/g) !== null ||
-      Constants.API_HOST_LIST.includes(url.hostname)
-    ) {
-      console.log('JSON API request');
-      flags.api = true;
-    }
+     be used to.
+  */
+  if (
+    url.pathname.match(/\/status(es)?\/\d{2,20}\.(json)/g) !== null ||
+    Constants.API_HOST_LIST.includes(url.hostname)
+  ) {
+    console.log('JSON API request');
+    flags.api = true;
+  }
   
-    /* Direct media or API access bypasses bot check, returning same response regardless of UA */
-    if (isBotUA || flags.direct || flags.api) {
-      if (isBotUA) {
-        console.log(`Matched bot UA ${userAgent}`);
-      } else {
-        console.log('Bypass bot check');
-      }
-  
-      /* This throws the necessary data to handleStatus (in status.ts) */
-      const profileResponse = await handleProfile(
-        handle.match(/\w{1,15}/gi)?.[0] || '',
-        userAgent,
-        flags,
-        language,
-        event
-      );
-  
-      /* Complete responses are normally sent just by errors. Normal embeds send a `text` value. */
-      if (profileResponse.response) {
-        console.log('handleProfile sent response');
-        return profileResponse.response;
-      } else if (profileResponse.text) {
-        console.log('handleProfile sent embed');
-        /* TODO This check has purpose in the original handleStatus handler, but I'm not sure if this edge case can happen here */
-        if (!isBotUA) {
-          return Response.redirect(`${Constants.TWITTER_ROOT}/${handle}`, 302);
-        }
-  
-        let headers = Constants.RESPONSE_HEADERS;
-  
-        if (profileResponse.cacheControl) {
-          headers = { ...headers, 'cache-control': profileResponse.cacheControl };
-        }
-  
-        /* Return the response containing embed information */
-        return new Response(profileResponse.text, {
-          headers: headers,
-          status: 200
-        });
-      } else {
-        /* Somehow handleStatus sent us nothing. This should *never* happen, but we have a case for it. */
-        return new Response(Strings.ERROR_UNKNOWN, {
-          headers: Constants.RESPONSE_HEADERS,
-          status: 500
-        });
-      }
+  /* Direct media or API access bypasses bot check, returning same response regardless of UA */
+  if (isBotUA || flags.direct || flags.api) {
+    if (isBotUA) {
+      console.log(`Matched bot UA ${userAgent}`);
     } else {
-      /* A human has clicked a fxtwitter.com/:screen_name link!
-         Obviously we just need to redirect to the user directly.*/
-      console.log('Matched human UA', userAgent);
-      return Response.redirect(
-        `${Constants.TWITTER_ROOT}/${handle}`,
-        302
-      );
+      console.log('Bypass bot check');
     }
-    
-  
+
+    /* This throws the necessary data to handleStatus (in status.ts) */
+    const profileResponse = await handleProfile(
+      username,
+      userAgent,
+      flags,
+      language,
+      event
+    );
+
+    /* Complete responses are normally sent just by errors. Normal embeds send a `text` value. */
+    if (profileResponse.response) {
+      console.log('handleProfile sent response');
+      return profileResponse.response;
+    } else if (profileResponse.text) {
+      console.log('handleProfile sent embed');
+      /* TODO This check has purpose in the original handleStatus handler, but I'm not sure if this edge case can happen here */
+      if (!isBotUA) {
+        return Response.redirect(`${Constants.TWITTER_ROOT}/${handle}`, 302);
+      }
+
+      let headers = Constants.RESPONSE_HEADERS;
+
+      if (profileResponse.cacheControl) {
+        headers = { ...headers, 'cache-control': profileResponse.cacheControl };
+      }
+
+      /* Return the response containing embed information */
+      return new Response(profileResponse.text, {
+        headers: headers,
+        status: 200
+      });
+    } else {
+      /* Somehow handleStatus sent us nothing. This should *never* happen, but we have a case for it. */
+      return new Response(Strings.ERROR_UNKNOWN, {
+        headers: Constants.RESPONSE_HEADERS,
+        status: 500
+      });
+    }
+  } else {
+    /* A human has clicked a fxtwitter.com/:screen_name link!
+        Obviously we just need to redirect to the user directly.*/
+    console.log('Matched human UA', userAgent);
+    return Response.redirect(
+      `${Constants.TWITTER_ROOT}/${handle}`,
+      302
+    );
+  }
 };
 
 const genericTwitterRedirect = async (request: IRequest) => {
@@ -337,7 +336,7 @@ router.get('/owoembed', async (request: IRequest) => {
    We don't currently have custom profile cards yet,
    but it's something we might do. Maybe. */
 router.get('/:handle', profileRequest);
-router.get('/:handle/', profileRequest);
+router.get('/:handle/:language', profileRequest);
 router.get('/i/events/:id', genericTwitterRedirect);
 router.get('/hashtag/:hashtag', genericTwitterRedirect);
 
