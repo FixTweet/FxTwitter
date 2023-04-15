@@ -20,7 +20,7 @@ const populateUserProperties = async (
   const user = response.data.user.result;
   /* Populating a lot of the basics */
   apiUser.url = `${Constants.TWITTER_ROOT}/${user.legacy.screen_name}`;
-  apiUser.id = user.id;
+  apiUser.id = user.rest_id;
   apiUser.followers = user.legacy.followers_count;
   apiUser.following = user.legacy.friends_count;
   apiUser.likes = user.legacy.favourites_count;
@@ -31,6 +31,14 @@ const populateUserProperties = async (
   apiUser.location = user.legacy.location;
   apiUser.verified = user.legacy.verified;
   apiUser.avatar_url = user.legacy.profile_image_url_https;
+  apiUser.joined = user.legacy.created_at;
+  if (user.legacy_extended_profile?.birthdate) {
+    const { birthdate } = user.legacy_extended_profile;
+    apiUser.birthday = {};
+    if (typeof birthdate.day === 'number') apiUser.birthday.day = birthdate.day;
+    if (typeof birthdate.month === 'number') apiUser.birthday.month = birthdate.month;
+    if (typeof birthdate.year === 'number') apiUser.birthday.year = birthdate.year;
+  }
 
   return apiUser;
 };
@@ -77,13 +85,13 @@ export const userAPI = async (
 
   /* Creating the response objects */
   const response: UserAPIResponse = { code: 200, message: 'OK' } as UserAPIResponse;
-  const apiTweet: APIUser = (await populateUserProperties(
+  const apiUser: APIUser = (await populateUserProperties(
     userResponse,
     language
   )) as APIUser;
 
   /* Finally, staple the User to the response and return it */
-  response.user = apiTweet;
+  response.user = apiUser;
 
   writeDataPoint(event, language, 'OK', flags);
 

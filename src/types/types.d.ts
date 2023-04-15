@@ -165,4 +165,9 @@ interface APIUser {
   tweets: number;
   likes: number;
   joined: string;
+  birthday: {
+    day?: number;
+    month?: number;
+    year?: number
+  }
 }
