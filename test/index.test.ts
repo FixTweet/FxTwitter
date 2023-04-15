@@ -313,7 +313,7 @@ test('API fetch poll Tweet', async () => {
   expect(choices[3].percentage).toEqual(58);
 });
 
-test('API fetch user', async () => {
+test.only('API fetch user', async () => {
   const result = await cacheWrapper(
     new Request('https://api.fxtwitter.com/wazbat', {
       method: 'GET',
