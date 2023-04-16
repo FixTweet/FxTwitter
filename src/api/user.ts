@@ -33,7 +33,7 @@ const populateUserProperties = async (
     }
   }
   if (apiUser.verified === 'government') {
-    apiUser.verified_lable = user.affiliates_highlighted_label?.label?.description || '';
+    apiUser.verified_label = user.affiliates_highlighted_label?.label?.description || '';
   }
   apiUser.avatar_url = user.legacy.profile_image_url_https;
   apiUser.joined = user.legacy.created_at;

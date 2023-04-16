@@ -160,7 +160,7 @@ interface APIUser {
   url: string;
   protected: boolean;
   verified: 'legacy' | 'blue'| 'business' | 'government';
-  verified_lable: string;
+  verified_label: string;
   followers: number;
   following: number;
   tweets: number;
