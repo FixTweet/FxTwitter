@@ -219,8 +219,8 @@ router.get('/owoembed', async (request: IRequest) => {
 
   /* Fallbacks */
   const text = searchParams.get('text') || 'Twitter';
-  const author = searchParams.get('author') || 'dangeredwolf';
-  const status = searchParams.get('status') || '1547514042146865153';
+  const author = searchParams.get('author') || 'jack';
+  const status = searchParams.get('status') || '20';
 
   const random = Math.floor(Math.random() * Object.keys(motd).length);
   const [name, url] = Object.entries(motd)[random];
