@@ -63,7 +63,11 @@ export const Constants = {
   },
   POLL_TWEET_CACHE: 'max-age=60',
   DEFAULT_COLOR: '#10A3FF',
-  ROBOTS_TXT: `User-agent: *
+  ROBOTS_TXT: `# Yandex crawls far, far heavier than Googlebot and Bingbot combined
+User-agent: YandexBot
+Disallow: /
+
+User-agent: *
 Allow: /$
 Allow: /*/status
 Allow: /*/status/
