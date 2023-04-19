@@ -59,6 +59,7 @@ interface APITranslate {
   target_lang: string;
 }
 interface BaseUser {
+  id?: string;
   name?: string;
   screen_name?: string;
   avatar_url?: string;
@@ -150,7 +151,6 @@ interface APITweet {
 }
 
 interface APIUser extends BaseUser {
-  id: string;
   description: string;
   location: string;
   url: string;

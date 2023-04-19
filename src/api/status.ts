@@ -32,6 +32,7 @@ const populateTweetProperties = async (
   apiTweet.id = tweet.id_str;
   apiTweet.text = unescapeText(linkFixer(tweet, tweet.full_text || ''));
   apiTweet.author = {
+    id: tweet.user_id_str,
     name: name,
     screen_name: screenName,
     avatar_url:
