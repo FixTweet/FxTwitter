@@ -62,20 +62,7 @@ export const Constants = {
     'content-type': 'application/json'
   },
   POLL_TWEET_CACHE: 'max-age=60',
-  DEFAULT_COLOR: '#10A3FF',
-  ROBOTS_TXT: `# Yandex crawls far, far heavier than Googlebot and Bingbot combined
-User-agent: YandexBot
-Disallow: /
-
-User-agent: *
-Allow: /$
-Allow: /*/status
-Allow: /*/status/
-Allow: /owoembed
-Allow: /owoembed/
-Allow: /watch?v=dQw4w9WgXcQ
-Disallow: /doing-harm-to-others
-Disallow: /taking-over-the-world`
+  DEFAULT_COLOR: '#10A3FF'
 };
 
 if (typeof TEST !== 'undefined') {

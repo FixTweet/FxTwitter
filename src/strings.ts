@@ -153,5 +153,19 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
     API_HOST_LIST.split(',')[0]
   }">${API_HOST_LIST.split(',')[0]}</a>`,
   DEPRECATED_DOMAIN_NOTICE: `We've moved! ➡ fxtwitter.com`,
-  DEPRECATED_DOMAIN_NOTICE_DISCORD: `We've moved! ➡ fxtwitter.com`
+  DEPRECATED_DOMAIN_NOTICE_DISCORD: `We've moved! ➡ fxtwitter.com`,
+
+  ROBOTS_TXT: `# Yandex crawls far, far heavier than Googlebot and Bingbot combined
+User-agent: YandexBot
+Disallow: /
+
+User-agent: *
+Allow: /$
+Allow: /*/status
+Allow: /*/status/
+Allow: /owoembed
+Allow: /owoembed/
+Allow: /watch?v=dQw4w9WgXcQ
+Disallow: /doing-harm-to-others
+Disallow: /taking-over-the-world`
 };
