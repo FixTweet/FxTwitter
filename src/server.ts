@@ -294,7 +294,7 @@ export const cacheWrapper = async (
   /* Itty-router doesn't seem to like routing file names because whatever,
      so we just handle it in the caching layer instead. Kinda hacky, but whatever. */
   if (cacheUrl.pathname === '/robots.txt') {
-    return new Response(Constants.ROBOTS_TXT, {
+    return new Response(Strings.ROBOTS_TXT, {
       headers: {
         ...Constants.RESPONSE_HEADERS,
         'content-type': 'text/plain'
