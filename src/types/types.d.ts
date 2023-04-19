@@ -58,13 +58,14 @@ interface APITranslate {
   source_lang_en: string;
   target_lang: string;
 }
-
-interface APIAuthor {
+interface BaseUser {
   name?: string;
   screen_name?: string;
   avatar_url?: string;
-  avatar_color: string;
   banner_url?: string;
+}
+interface APITweetAuthor extends BaseUser {
+  avatar_color: string;
 }
 
 interface APIExternalMedia {
@@ -129,7 +130,7 @@ interface APITweet {
   quote?: APITweet;
   poll?: APIPoll;
   translation?: APITranslate;
-  author: APIAuthor;
+  author: APITweetAuthor;
 
   media?: {
     external?: APIExternalMedia;
@@ -148,13 +149,8 @@ interface APITweet {
   twitter_card: 'tweet' | 'summary' | 'summary_large_image' | 'player';
 }
 
-interface APIUser {
+interface APIUser extends BaseUser {
   id: string;
-  name: string;
-  screen_name: string;
-  avatar_url: string;
-  banner_url: string;
-  avatar_color: string;
   description: string;
   location: string;
   url: string;
