@@ -161,6 +161,7 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
 #     /_______________/  |
 #    |  ___________  | / |
 #    | |          |  | / |
+#    | |          |  | / |
 #    | |  gaming  |  | / |
 #    | |__________|  | / |
 #    |               | / |
@@ -168,8 +169,9 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
 #    | _____________ |  /
 #     |_____________| /
 
-# Do you breathe air? Are you a human? Do you know how to write code? Did you know we have a fetch API you can use?
+# Do you breathe air? Are you a human? Do you know how to write code? Did you know we have a fetch API you can use for free, no API keys required?
 # Check out the docs at https://${API_HOST_LIST.split(',')[0]} to learn how to use it
+# Checkmate Elon Musk
 
 # Have fun and try not to take over the world
 
