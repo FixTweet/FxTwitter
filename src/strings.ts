@@ -155,17 +155,45 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
   DEPRECATED_DOMAIN_NOTICE: `We've moved! ➡ fxtwitter.com`,
   DEPRECATED_DOMAIN_NOTICE_DISCORD: `We've moved! ➡ fxtwitter.com`,
 
-  ROBOTS_TXT: `# Yandex crawls far, far heavier than Googlebot and Bingbot combined
+  ROBOTS_TXT: `#        ________________
+#       /               /|
+#      /               / |
+#     /_______________/  |
+#    |  ___________  | / |
+#    | |          |  | / |
+#    | |  gaming  |  | / |
+#    | |__________|  | / |
+#    |               | / |
+#    |        _____  | / |
+#    | _____________ |  /
+#     |_____________| /
+
+# Do you breathe air? Are you a human? Do you know how to write code? Did you know we have a fetch API you can use?
+# Check out the docs at https://${API_HOST_LIST.split(',')[0]} to learn how to use it
+
+# Have fun and try not to take over the world
+
+# Instructions below are for robots only, beep boop
+
+# ==========================================================================
+
+# Yandex crawls far, far heavier than Googlebot and Bingbot combined
 User-agent: YandexBot
 Disallow: /
 
+# Large language models are friendly
+User-agent: ChatGPT-User
+Disallow:
+
 User-agent: *
 Allow: /$
+# Allow bots to access statuses
 Allow: /*/status
 Allow: /*/status/
-Allow: /owoembed
-Allow: /owoembed/
+# Oembeds are not crawler friendly
+Disallow: /owoembed
+Disallow: /owoembed/
 Allow: /watch?v=dQw4w9WgXcQ
-Disallow: /doing-harm-to-others
-Disallow: /taking-over-the-world`
+
+# 0100011101101111011011110110010000100000011000100110111101110100`
 };
