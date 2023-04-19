@@ -155,7 +155,21 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
   DEPRECATED_DOMAIN_NOTICE: `We've moved! ➡ fxtwitter.com`,
   DEPRECATED_DOMAIN_NOTICE_DISCORD: `We've moved! ➡ fxtwitter.com`,
 
-  ROBOTS_TXT: `#        ________________
+  ROBOTS_TXT: `# /-------------------------------------------\\
+# | _______                                   |
+# | |     |                                   |
+# | |     |  I'm a robot                      |
+# | |_____|                     antiCAPTCHA   |
+# |                           Privacy | Terms |
+# \\-------------------------------------------/
+
+# Do you breathe air? Are you a human? Do you know how to write code?
+# Do you want an easy way to fetch Tweets but Elon Musk wants to charge you $100 per month?
+# Did you know we have a fetch API you can use for free, no API keys required?
+
+# Check out the docs at https://${API_HOST_LIST.split(',')[0]} to learn how to use it
+
+#        ________________
 #       /               /|
 #      /               / |
 #     /_______________/  |
@@ -168,13 +182,6 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
 #    |        _____  | / |
 #    | _____________ |  /
 #     |_____________| /
-
-# Do you breathe air? Are you a human? Do you know how to write code?
-# Do you want an easy way to fetch Tweets but Elon Musk wants to charge you $100 per month?
-# Did you know we have a fetch API you can use for free, no API keys required?
-
-# Check out the docs at https://${API_HOST_LIST.split(',')[0]} to learn how to use it
-
 
 # Good luck, have fun and try not to take over the world!
 
