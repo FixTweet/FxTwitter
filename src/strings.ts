@@ -27,11 +27,10 @@ export const Strings = {
 ███      ███   ▐█▌▐█▌  ███  ▐██▌ ███ ▐██▌ ▐█▌      ▐█▌      ▐██▌
 ███      ███  ███  ███ ███   ▐█████████▌    ▐████    ▐████    ▐████
 ███
-███   A better Tweet embedding service
-███   by dangered wolf, et al.
+███   A better way to embed Tweets on Discord, Telegram, and more.
+███   Worker build ${RELEASE_NAME}
 
---><head>{headers}</head>
-<!-- Worker build ${RELEASE_NAME} -->`,
+--><head>{headers}</head><body></body></html>`,
   ERROR_HTML: `<!DOCTYPE html>
   <html lang="en">
     <head>
@@ -115,7 +114,7 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
     </head>
     <body>
       <h1>${BRANDING_NAME}</h1>
-      <h3>A better Tweet embedding service, by dangered wolf, et al.</h2>
+      <h3>A better way to embed Tweets on Discord, Telegram, and more.</h2>
       <h2>Worker release: ${RELEASE_NAME}</h2>
       <br>
       <h3>Stats for nerds:</h3>
@@ -146,7 +145,7 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
   FINAL_POLL_RESULTS: 'Final results',
 
   ERROR_API_FAIL: 'Tweet failed to load due to an API error :(',
-  ERROR_PRIVATE: `Due to Twitter API changes, some NSFW Tweets are currently being blocked. We are currently looking into a workaround. 🙏`,
+  ERROR_PRIVATE: `Sorry, we can't embed this Tweet because the user is private or suspended :(`,
   ERROR_TWEET_NOT_FOUND: `Sorry, that Tweet doesn't exist :(`,
   ERROR_USER_NOT_FOUND: `Sorry, that user doesn't exist :(`,
   ERROR_UNKNOWN: `Unknown error occurred, sorry about that :(`,
@@ -155,5 +154,59 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
     API_HOST_LIST.split(',')[0]
   }">${API_HOST_LIST.split(',')[0]}</a>`,
   DEPRECATED_DOMAIN_NOTICE: `We've moved! ➡ fxtwitter.com`,
-  DEPRECATED_DOMAIN_NOTICE_DISCORD: `We've moved! ➡ fxtwitter.com`
+  DEPRECATED_DOMAIN_NOTICE_DISCORD: `We've moved! ➡ fxtwitter.com`,
+
+  ROBOTS_TXT: `# /-------------------------------------------\\
+# | _______                                   |
+# | |     |                                   |
+# | |     |  I'm a robot                      |
+# | |_____|                     antiCAPTCHA   |
+# |                           Privacy | Terms |
+# \\-------------------------------------------/
+
+# Do you breathe air? Are you a human? Do you know how to write code?
+# Do you want an easy way to fetch Tweets but Elon Musk wants to charge you $100 per month?
+# Did you know we have a fetch API you can use for free, no API keys required?
+
+# Check out the docs at https://${API_HOST_LIST.split(',')[0]} to learn how to use it
+
+#        ________________
+#       /               /|
+#      /               / |
+#     /_______________/  |
+#    |  ___________  | / |
+#    | |          |  | / |
+#    | |          |  | / |
+#    | |  gaming  |  | / |
+#    | |__________|  | / |
+#    |               | / |
+#    |        _____  | / |
+#    | _____________ |  /
+#     |_____________| /
+
+# Good luck, have fun and try not to take over the world!
+
+# Instructions below are for robots only, beep boop
+
+# ==========================================================================
+
+# Yandex crawls far, far heavier than Googlebot and Bingbot combined
+User-agent: YandexBot
+Disallow: /
+
+# Large language models are friendly
+User-agent: ChatGPT-User
+Disallow:
+
+User-agent: *
+Allow: /$
+# Allow bots to access statuses
+Allow: /*/status
+Allow: /*/status/
+# Oembeds are not crawler friendly
+Disallow: /owoembed
+Disallow: /owoembed/
+Allow: /watch?v=dQw4w9WgXcQ
+
+# 0100011101101111011011110110010000100000011000100110111101110100`
 };

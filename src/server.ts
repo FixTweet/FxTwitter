@@ -293,8 +293,8 @@ router.get('/owoembed', async (request: IRequest) => {
 
   /* Fallbacks */
   const text = searchParams.get('text') || 'Twitter';
-  const author = searchParams.get('author') || 'dangeredwolf';
-  const status = searchParams.get('status') || '1547514042146865153';
+  const author = searchParams.get('author') || 'jack';
+  const status = searchParams.get('status') || '20';
 
   const random = Math.floor(Math.random() * Object.keys(motd).length);
   const [name, url] = Object.entries(motd)[random];
@@ -368,7 +368,7 @@ export const cacheWrapper = async (
   /* Itty-router doesn't seem to like routing file names because whatever,
      so we just handle it in the caching layer instead. Kinda hacky, but whatever. */
   if (cacheUrl.pathname === '/robots.txt') {
-    return new Response(Constants.ROBOTS_TXT, {
+    return new Response(Strings.ROBOTS_TXT, {
       headers: {
         ...Constants.RESPONSE_HEADERS,
         'content-type': 'text/plain'

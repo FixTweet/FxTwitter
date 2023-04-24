@@ -89,6 +89,7 @@ export const handleStatus = async (
 
   /* Base headers included in all responses */
   const headers = [
+    `<link rel="canonical" href="https://twitter.com/${tweet.author.screen_name}/status/${tweet.id}"/>`,
     `<meta property="theme-color" content="${tweet.color}"/>`,
     `<meta property="twitter:card" content="${tweet.twitter_card}"/>`,
     `<meta property="twitter:site" content="@${tweet.author.screen_name}"/>`,

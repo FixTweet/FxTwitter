@@ -84,14 +84,6 @@ const populateTweetProperties = async (
         apiTweet.media.video = mediaObject as APIVideo;
         apiTweet.media.videos = apiTweet.media.videos || [];
         apiTweet.media.videos.push(mediaObject);
-
-        apiTweet.media.video = {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-expect-error Temporary warning
-          WARNING:
-            'video is deprecated and will be removed. Please use videos[0] instead.',
-          ...mediaObject
-        };
       }
     }
   });

@@ -29,9 +29,6 @@ export const handleMosaic = async (
     }
 
     return {
-      WARNING: 'height and width of mosaic photos are deprecated and will be removed.',
-      height: 0,
-      width: 0,
       formats: {
         jpeg: `${baseUrl}jpeg/${id}${path}`,
         webp: `${baseUrl}webp/${id}${path}`
