@@ -155,8 +155,8 @@ interface APIUser extends BaseUser {
   location: string;
   url: string;
   protected: boolean;
-  verified: 'legacy' | 'blue'| 'business' | 'government';
-  verified_label: string;
+  // verified: 'legacy' | 'blue'| 'business' | 'government';
+  // verified_label: string;
   followers: number;
   following: number;
   tweets: number;

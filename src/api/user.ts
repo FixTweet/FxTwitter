@@ -21,6 +21,7 @@ const populateUserProperties = async (
   apiUser.screen_name = user.legacy.screen_name;
   apiUser.description = user.legacy.description;
   apiUser.location = user.legacy.location;
+  /*
   if (user.is_blue_verified) {
     apiUser.verified = 'blue';
   } else if (user.legacy.verified) {
@@ -32,9 +33,11 @@ const populateUserProperties = async (
       apiUser.verified = 'legacy';
     }
   }
+  
   if (apiUser.verified === 'government') {
     apiUser.verified_label = user.affiliates_highlighted_label?.label?.description || '';
   }
+  */
   apiUser.avatar_url = user.legacy.profile_image_url_https;
   apiUser.joined = user.legacy.created_at;
   if (user.legacy_extended_profile?.birthdate) {
