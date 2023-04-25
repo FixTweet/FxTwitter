@@ -80,7 +80,6 @@ const populateTweetProperties = async (
       } else if (mediaObject.type === 'video' || mediaObject.type === 'gif') {
         apiTweet.twitter_card = 'player';
         apiTweet.media = apiTweet.media || {};
-        apiTweet.media.video = mediaObject as APIVideo;
         apiTweet.media.videos = apiTweet.media.videos || [];
         apiTweet.media.videos.push(mediaObject);
       }
