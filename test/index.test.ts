@@ -129,7 +129,6 @@ test('API fetch video Tweet', async () => {
   expect(tweet.created_timestamp).toEqual(1492543804);
   expect(tweet.lang).toEqual('en');
   expect(tweet.replying_to).toBeNull();
-  expect(tweet.media?.video).toBeTruthy();
   const video = tweet.media?.videos?.[0] as APIVideo;
   expect(video.url).toEqual(
     'https://video.twimg.com/amplify_video/854415175776059393/vid/720x720/dNEi0crU-jA4mTtr.mp4'

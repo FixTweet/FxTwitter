@@ -128,7 +128,6 @@ interface APITweet {
   media?: {
     external?: APIExternalMedia;
     photos?: APIPhoto[];
-    video?: APIVideo;
     videos?: APIVideo[];
     mosaic?: APIMosaicPhoto;
   };
