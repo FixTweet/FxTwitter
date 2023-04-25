@@ -96,7 +96,7 @@ We use Twitter's color data for either the first image/video of the tweet, or th
 
 FixTweet doesn't save logs of what tweets you're sending, nor do we have a public record of what tweets are being embedded by FixTweet.
 
-In fact, because our core embedding and API service uses Cloudflare Workers, FixTweet can only run when you send it a request. Its memory doesn't stick around, and it doesn't have a file system or database to access at all. That is how we keep our privacy promise by building it into the architecture. My goal is always to provide a good public service, and FixTweet doesn't have any ads or tracking to make money off of, nor do we sell data (or even have data _to_ sell).
+In fact, because our core embedding and API service uses Cloudflare Workers, FixTweet can only run when you send it a request. Its memory doesn't stick around, and it doesn't have a file system or database to read from at all. That is how we keep our privacy promise by building it into the architecture. We use Cloudflare Analytics Engine to aggregate basic, anonymous statistics, which do not include information that could identify individual users or Tweets. My goal is always to provide a good public service, and FixTweet doesn't have any ads or tracking to make money off of, nor do we sell data.
 
 Note: We use Cloudflare to cache FixTweet responses to make repeat access faster, which have a maximum TTL of 1 hour. Temporary real-time logging in the terminal (specifically `wrangler tail`) may be used only by the developer while the Worker is being serviced or debugged (to make sure things work as they should), however these logs are only shown in the terminal and are never saved or used for any other purpose. URLs that cause runtime errors in the script (aka Exceptions, usually exceedingly rare unless there was a faulty update pushed out or Twitter API is down) may be logged for a developer to diagnose the issue that is preventing your embed from working.
 
@@ -166,6 +166,8 @@ Clone the repo, install [Node.js](https://nodejs.org/) and run `npm install` in 
 Once you're set up with your worker on `*.workers.dev`, [add your worker to your custom domain](https://developers.cloudflare.com/workers/platform/routing/custom-domains/).
 
 Populate Sentry details in your `.env` to use Sentry in your product to catch exceptions.
+
+In 2023, Twitter began blocking Tweets with NSFW media from the guest API. We use a service binding code-named [elongator](https://github.com/FixTweet/elongator), which use empty Twitter accounts to make these requests successfully. This is an optional component and is only necessary for those who plan to support embedding NSFW media. This method also means you never have to pay Elon Musk to use Twitter's official API.
 
 ---
 
