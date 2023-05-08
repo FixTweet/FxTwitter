@@ -86,6 +86,7 @@ interface APIPhoto {
   url: string;
   width: number;
   height: number;
+  altText: string;
 }
 
 interface APIMosaicPhoto {
