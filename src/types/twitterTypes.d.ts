@@ -71,6 +71,7 @@ type TweetMedia = {
   ext_media_color?: {
     palette?: MediaPlaceholderColor[];
   };
+  ext_alt_text?: string;
   id_str: string;
   indices: [number, number];
   media_key: string;

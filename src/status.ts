@@ -204,7 +204,8 @@ export const handleStatus = async (
         height: 0,
         width: 0,
         url: tweet.media.mosaic.formats.jpeg,
-        type: 'photo'
+        type: 'photo',
+        altText: ''
       };
       /* If mosaic isn't available or the link calls for a specific photo,
          we'll indicate which photo it is out of the total */
