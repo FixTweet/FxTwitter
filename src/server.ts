@@ -2,7 +2,7 @@ import Toucan from 'toucan-js';
 
 import { IRequest, Router } from 'itty-router';
 import { Constants } from './constants';
-import { handleStatus } from './status';
+import { handleStatus } from './embed/status';
 import { Strings } from './strings';
 
 import motd from '../motd.json';

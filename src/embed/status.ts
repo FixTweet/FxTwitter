@@ -1,9 +1,9 @@
-import { Constants } from './constants';
-import { handleQuote } from './helpers/quote';
-import { formatNumber, sanitizeText } from './helpers/utils';
-import { Strings } from './strings';
-import { getAuthorText } from './helpers/author';
-import { statusAPI } from './api/status';
+import { Constants } from '../constants';
+import { handleQuote } from '../helpers/quote';
+import { formatNumber, sanitizeText } from '../helpers/utils';
+import { Strings } from '../strings';
+import { getAuthorText } from '../helpers/author';
+import { statusAPI } from '../api/status';
 
 export const returnError = (error: string): StatusResponse => {
   return {
