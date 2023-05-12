@@ -6,21 +6,21 @@ FixTweet
 
    :caption: 📓 User Guide
 
-   /user
+   user/index
 
 .. toctree::
    :maxdepth: 2
 
    :caption: 🧑‍💻 API Reference
 
-   /api
+   api/index
 
 .. toctree::
    :maxdepth: 2
 
    :caption: 🚀 Deployment Guide
 
-   /deploy
+   deploy/index
 
 
 .. note::
