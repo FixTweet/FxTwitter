@@ -19,6 +19,7 @@ const statusRequest = async (
 ) => {
   const { handle, id, mediaNumber, language, prefix } = request.params;
   const url = new URL(request.url);
+  // eslint-disable-next-line sonarjs/no-duplicate-string
   const userAgent = request.headers.get('User-Agent') || '';
 
   /* User Agent matching for embed generators, bots, crawlers, and other automated

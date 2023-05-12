@@ -58,6 +58,7 @@ interface APITranslate {
   source_lang_en: string;
   target_lang: string;
 }
+
 interface BaseUser {
   id?: string;
   name?: string;
@@ -65,6 +66,7 @@ interface BaseUser {
   avatar_url?: string;
   banner_url?: string;
 }
+
 interface APITweetAuthor extends BaseUser {
   avatar_color: string;
 }
