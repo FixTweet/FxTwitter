@@ -3,25 +3,24 @@ FixTweet
 
 .. toctree::
    :maxdepth: 2
-
    :caption: 📓 User Guide
 
-   user/index
+   user/*
+   :glob:
 
 .. toctree::
    :maxdepth: 2
-
    :caption: 🧑‍💻 API Reference
 
-   api/index
+   api/*
+   :glob:
 
 .. toctree::
    :maxdepth: 2
-
    :caption: 🚀 Deployment Guide
 
-   deploy/index
-
+   deploy/*
+   :glob:
 
 .. note::
 
