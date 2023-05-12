@@ -165,6 +165,6 @@ interface APIUser extends BaseUser {
   birthday: {
     day?: number;
     month?: number;
-    year?: number
-  }
+    year?: number;
+  };
 }

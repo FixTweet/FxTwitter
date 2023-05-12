@@ -191,7 +191,6 @@ test('API fetch multi-photo Tweet', async () => {
   );
 });
 
-
 test('API fetch poll Tweet', async () => {
   const result = await cacheWrapper(
     new Request('https://api.fxtwitter.com/status/1055475950543167488', {

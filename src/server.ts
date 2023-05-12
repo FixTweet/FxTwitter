@@ -142,8 +142,11 @@ const statusRequest = async (
 };
 
 /* Handler for User Profiles */
-const profileRequest = async (request: IRequest, event: FetchEvent,
-  flags: InputFlags = {}) => {
+const profileRequest = async (
+  request: IRequest,
+  event: FetchEvent,
+  flags: InputFlags = {}
+) => {
   const { handle } = request.params;
   const url = new URL(request.url);
   const userAgent = request.headers.get('User-Agent') || '';
@@ -171,7 +174,7 @@ const profileRequest = async (request: IRequest, event: FetchEvent,
     console.log('JSON API request');
     flags.api = true;
   }
-  
+
   /* Direct media or API access bypasses bot check, returning same response regardless of UA */
   if (isBotUA || flags.api) {
     if (isBotUA) {
@@ -181,12 +184,7 @@ const profileRequest = async (request: IRequest, event: FetchEvent,
     }
 
     /* This throws the necessary data to handleStatus (in status.ts) */
-    const profileResponse = await handleProfile(
-      username,
-      userAgent,
-      flags,
-      event
-    );
+    const profileResponse = await handleProfile(username, userAgent, flags, event);
 
     /* Complete responses are normally sent just by errors. Normal embeds send a `text` value. */
     if (profileResponse.response) {
@@ -221,10 +219,7 @@ const profileRequest = async (request: IRequest, event: FetchEvent,
     /* A human has clicked a fxtwitter.com/:screen_name link!
         Obviously we just need to redirect to the user directly.*/
     console.log('Matched human UA', userAgent);
-    return Response.redirect(
-      `${Constants.TWITTER_ROOT}/${handle}`,
-      302
-    );
+    return Response.redirect(`${Constants.TWITTER_ROOT}/${handle}`, 302);
   }
 };
 

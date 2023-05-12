@@ -48,9 +48,7 @@ export const handleProfile = async (
   }
 
   /* Base headers included in all responses */
-  const headers = [
-    `<meta property="twitter:site" content="@${user.screen_name}"/>`,
-  ];
+  const headers = [`<meta property="twitter:site" content="@${user.screen_name}"/>`];
 
   // TODO Add card creation logic here
 

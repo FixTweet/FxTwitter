@@ -63,9 +63,7 @@ export const userAPI = async (
 
   /* Creating the response objects */
   const response: UserAPIResponse = { code: 200, message: 'OK' } as UserAPIResponse;
-  const apiUser: APIUser = (await populateUserProperties(
-    userResponse,
-  )) as APIUser;
+  const apiUser: APIUser = (await populateUserProperties(userResponse)) as APIUser;
 
   /* Finally, staple the User to the response and return it */
   response.user = apiUser;

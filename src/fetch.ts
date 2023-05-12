@@ -210,28 +210,31 @@ export const fetchUser = async (
   useElongator = false
 ): Promise<GraphQLUserResponse> => {
   return (await twitterFetch(
-    `${Constants.TWITTER_ROOT}/i/api/graphql/sLVLhk0bGj3MVFEKTdax1w/UserByScreenName?variables=${
-      encodeURIComponent(
-        JSON.stringify({
-          screen_name: username,
-          withSafetyModeUserFields: true
-        })
-      )
-    }&features=${encodeURIComponent(
+    `${
+      Constants.TWITTER_ROOT
+    }/i/api/graphql/sLVLhk0bGj3MVFEKTdax1w/UserByScreenName?variables=${encodeURIComponent(
+      JSON.stringify({
+        screen_name: username,
+        withSafetyModeUserFields: true
+      })
+    )}&features=${encodeURIComponent(
       JSON.stringify({
         blue_business_profile_image_shape_enabled: true,
         responsive_web_graphql_exclude_directive_enabled: true,
         responsive_web_graphql_skip_user_profile_image_extensions_enabled: false,
         responsive_web_graphql_timeline_navigation_enabled: false,
         verified_phone_label_enabled: true
-        })
-      )}`,
+      })
+    )}`,
     event,
     useElongator,
     // Validator function
     (_res: unknown) => {
       const response = _res as GraphQLUserResponse;
-      return !(response?.data?.user?.result?.__typename !== 'User' || typeof response.data.user.result.legacy === 'undefined');
+      return !(
+        response?.data?.user?.result?.__typename !== 'User' ||
+        typeof response.data.user.result.legacy === 'undefined'
+      );
       /*
       return !(
         typeof conversation.globalObjects === 'undefined' &&
