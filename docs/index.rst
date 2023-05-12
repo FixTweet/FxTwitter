@@ -4,18 +4,21 @@ FixTweet
 .. toctree::
    :maxdepth: 2
    :caption: 📓 User Guide
+   :hidden:
 
    user/index
 
 .. toctree::
    :maxdepth: 2
    :caption: 🧑‍💻 API Reference
+   :hidden:
 
    api/index
 
 .. toctree::
    :maxdepth: 2
    :caption: 🚀 Deployment Guide
+   :hidden:
 
    deploy/index
 
