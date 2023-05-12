@@ -32,6 +32,7 @@ const populateTweetProperties = async (
   apiTweet.id = tweet.id_str;
   apiTweet.text = unescapeText(linkFixer(tweet, tweet.full_text || ''));
   apiTweet.author = {
+    id: tweet.user_id_str,
     name: name,
     screen_name: screenName,
     avatar_url:
@@ -178,7 +179,7 @@ export const statusAPI = async (
   language: string | undefined,
   event: FetchEvent,
   flags?: InputFlags
-): Promise<APIResponse> => {
+): Promise<TweetAPIResponse> => {
   let conversation = await fetchConversation(status, event);
   let tweet = conversation?.globalObjects?.tweets?.[status] || {};
 
@@ -233,7 +234,7 @@ export const statusAPI = async (
   }
 
   /* Creating the response objects */
-  const response: APIResponse = { code: 200, message: 'OK' } as APIResponse;
+  const response: TweetAPIResponse = { code: 200, message: 'OK' } as TweetAPIResponse;
   const apiTweet: APITweet = (await populateTweetProperties(
     tweet,
     conversation,

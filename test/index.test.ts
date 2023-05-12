@@ -71,7 +71,7 @@ test('API fetch basic Tweet', async () => {
     })
   );
   expect(result.status).toEqual(200);
-  const response = (await result.json()) as APIResponse;
+  const response = (await result.json()) as TweetAPIResponse;
   expect(response).toBeTruthy();
   expect(response.code).toEqual(200);
   expect(response.message).toEqual('OK');
@@ -82,6 +82,7 @@ test('API fetch basic Tweet', async () => {
   expect(tweet.id).toEqual('20');
   expect(tweet.text).toEqual('just setting up my twttr');
   expect(tweet.author.screen_name?.toLowerCase()).toEqual('jack');
+  expect(tweet.author.id).toEqual('12');
   expect(tweet.author.name).toBeTruthy();
   expect(tweet.author.avatar_url).toBeTruthy();
   expect(tweet.author.banner_url).toBeTruthy();
@@ -104,7 +105,7 @@ test('API fetch video Tweet', async () => {
     })
   );
   expect(result.status).toEqual(200);
-  const response = (await result.json()) as APIResponse;
+  const response = (await result.json()) as TweetAPIResponse;
   expect(response).toBeTruthy();
   expect(response.code).toEqual(200);
   expect(response.message).toEqual('OK');
@@ -117,6 +118,7 @@ test('API fetch video Tweet', async () => {
     'Get the sauces ready, #NuggsForCarter has 3 million+ Retweets.'
   );
   expect(tweet.author.screen_name?.toLowerCase()).toEqual('twitter');
+  expect(tweet.author.id).toEqual('783214');
   expect(tweet.author.name).toBeTruthy();
   expect(tweet.author.avatar_url).toBeTruthy();
   expect(tweet.author.banner_url).toBeTruthy();
@@ -149,7 +151,7 @@ test('API fetch multi-photo Tweet', async () => {
     })
   );
   expect(result.status).toEqual(200);
-  const response = (await result.json()) as APIResponse;
+  const response = (await result.json()) as TweetAPIResponse;
   expect(response).toBeTruthy();
   expect(response.code).toEqual(200);
   expect(response.message).toEqual('OK');
@@ -160,6 +162,7 @@ test('API fetch multi-photo Tweet', async () => {
   expect(tweet.id).toEqual('1445094085593866246');
   expect(tweet.text).toEqual('@netflix');
   expect(tweet.author.screen_name?.toLowerCase()).toEqual('twitter');
+  expect(tweet.author.id).toEqual('783214');
   expect(tweet.author.name).toBeTruthy();
   expect(tweet.author.avatar_url).toBeTruthy();
   expect(tweet.author.banner_url).toBeTruthy();
@@ -188,82 +191,6 @@ test('API fetch multi-photo Tweet', async () => {
   );
 });
 
-// test('API fetch multi-video Tweet', async () => {
-//   const result = await cacheWrapper(
-//     new Request('https://api.fxtwitter.com/dangeredwolf/status/1557914172763127808', {
-//       method: 'GET',
-//       headers: botHeaders
-//     })
-//   );
-//   expect(result.status).toEqual(200);
-//   const response = (await result.json()) as APIResponse;
-//   expect(response).toBeTruthy();
-//   expect(response.code).toEqual(200);
-//   expect(response.message).toEqual('OK');
-
-//   const tweet = response.tweet as APITweet;
-//   expect(tweet).toBeTruthy();
-//   expect(tweet.url).toEqual(
-//     'https://twitter.com/dangeredwolf/status/1557914172763127808'
-//   );
-//   expect(tweet.id).toEqual('1557914172763127808');
-//   expect(tweet.text).toEqual('');
-//   expect(tweet.author.screen_name?.toLowerCase()).toEqual('dangeredwolf');
-//   expect(tweet.author.name).toBeTruthy();
-//   expect(tweet.author.avatar_url).toBeTruthy();
-//   expect(tweet.author.banner_url).toBeTruthy();
-//   expect(tweet.author.avatar_color).toBeTruthy();
-//   expect(tweet.twitter_card).toEqual('player');
-//   expect(tweet.created_at).toEqual('Fri Aug 12 02:17:38 +0000 2022');
-//   expect(tweet.created_timestamp).toEqual(1660270658);
-//   expect(tweet.replying_to).toBeNull();
-//   expect(tweet.media?.videos).toBeTruthy();
-//   const videos = tweet.media?.videos as APIVideo[];
-//   expect(videos[0].url).toEqual(
-//     'https://video.twimg.com/ext_tw_video/1539029945124528130/pu/vid/1662x1080/ZQP4eoQhnGnKcLEb.mp4?tag=14'
-//   );
-//   expect(videos[0].thumbnail_url).toEqual(
-//     'https://pbs.twimg.com/ext_tw_video_thumb/1539029945124528130/pu/img/6Z1MXMliums60j03.jpg'
-//   );
-//   expect(videos[0].width).toEqual(3548);
-//   expect(videos[0].height).toEqual(2304);
-//   expect(videos[0].duration).toEqual(37.75);
-//   expect(videos[0].format).toEqual('video/mp4');
-//   expect(videos[0].type).toEqual('video');
-//   expect(videos[1].url).toEqual(
-//     'https://video.twimg.com/ext_tw_video/1543316856697769984/pu/vid/1920x1080/3fo7b4EnWv2WO8Z1.mp4?tag=14'
-//   );
-//   expect(videos[1].thumbnail_url).toEqual(
-//     'https://pbs.twimg.com/ext_tw_video_thumb/1543316856697769984/pu/img/eCl67JRWO8r4r8A4.jpg'
-//   );
-//   expect(videos[1].width).toEqual(1920);
-//   expect(videos[1].height).toEqual(1080);
-//   expect(videos[1].duration).toEqual(71.855);
-//   expect(videos[1].format).toEqual('video/mp4');
-//   expect(videos[1].type).toEqual('video');
-//   expect(videos[2].url).toEqual(
-//     'https://video.twimg.com/ext_tw_video/1543797953105625088/pu/vid/1920x1080/GHSLxzBrwiDLhLYD.mp4?tag=14'
-//   );
-//   expect(videos[2].thumbnail_url).toEqual(
-//     'https://pbs.twimg.com/ext_tw_video_thumb/1543797953105625088/pu/img/2eX2QQkd7b2S1YDl.jpg'
-//   );
-//   expect(videos[2].width).toEqual(1920);
-//   expect(videos[2].height).toEqual(1080);
-//   expect(videos[2].duration).toEqual(22.018);
-//   expect(videos[2].format).toEqual('video/mp4');
-//   expect(videos[2].type).toEqual('video');
-//   expect(videos[3].url).toEqual(
-//     'https://video.twimg.com/ext_tw_video/1548602342488129536/pu/vid/720x1280/I_D3svYfjBl7_xGS.mp4?tag=14'
-//   );
-//   expect(videos[3].thumbnail_url).toEqual(
-//     'https://pbs.twimg.com/ext_tw_video_thumb/1548602342488129536/pu/img/V_1u5Nv5BwKBynwv.jpg'
-//   );
-//   expect(videos[3].width).toEqual(720);
-//   expect(videos[3].height).toEqual(1280);
-//   expect(videos[3].duration).toEqual(25.133);
-//   expect(videos[3].format).toEqual('video/mp4');
-//   expect(videos[3].type).toEqual('video');
-// });
 
 test('API fetch poll Tweet', async () => {
   const result = await cacheWrapper(
@@ -273,7 +200,7 @@ test('API fetch poll Tweet', async () => {
     })
   );
   expect(result.status).toEqual(200);
-  const response = (await result.json()) as APIResponse;
+  const response = (await result.json()) as TweetAPIResponse;
   expect(response).toBeTruthy();
   expect(response.code).toEqual(200);
   expect(response.message).toEqual('OK');
@@ -284,6 +211,7 @@ test('API fetch poll Tweet', async () => {
   expect(tweet.id).toEqual('1055475950543167488');
   expect(tweet.text).toEqual('A poll:');
   expect(tweet.author.screen_name?.toLowerCase()).toEqual('twitter');
+  expect(tweet.author.id).toEqual('783214');
   expect(tweet.author.name).toBeTruthy();
   expect(tweet.author.avatar_url).toBeTruthy();
   expect(tweet.author.banner_url).toBeTruthy();
@@ -312,4 +240,34 @@ test('API fetch poll Tweet', async () => {
   expect(choices[3].label).toEqual('Just show me the results');
   expect(choices[3].count).toEqual(31706);
   expect(choices[3].percentage).toEqual(58);
+});
+
+test('API fetch user', async () => {
+  const result = await cacheWrapper(
+    new Request('https://api.fxtwitter.com/twitter', {
+      method: 'GET',
+      headers: botHeaders
+    })
+  );
+  expect(result.status).toEqual(200);
+  const response = (await result.json()) as UserAPIResponse;
+  expect(response).toBeTruthy();
+  expect(response.code).toEqual(200);
+  expect(response.message).toEqual('OK');
+
+  const user = response.user as APIUser;
+  expect(user).toBeTruthy();
+  expect(user.url).toEqual('https://twitter.com/Twitter');
+  expect(user.id).toEqual('783214');
+  expect(user.screen_name).toEqual('Twitter');
+  expect(user.followers).toEqual(expect.any(Number));
+  expect(user.following).toEqual(expect.any(Number));
+  // The official twitter account will never be following as many people as it has followers
+  expect(user.following).not.toEqual(user.followers);
+  expect(user.likes).toEqual(expect.any(Number));
+  // expect(user.verified).toEqual('business');
+  expect(user.joined).toEqual('Tue Feb 20 14:35:54 +0000 2007');
+  expect(user.birthday.day).toEqual(21);
+  expect(user.birthday.month).toEqual(3);
+  expect(user.birthday.year).toBeUndefined();
 });

@@ -193,3 +193,115 @@ type TranslationPartial = {
   translation: string;
   entities: TweetEntities;
 };
+
+type GraphQLUserResponse = {
+  data: {
+    user: {
+      result: GraphQLUser;
+    }
+  }
+}
+
+type GraphQLUser = {
+  __typename: "User";
+  id: string; // "VXNlcjo3ODMyMTQ="
+  rest_id: string; // "783214",
+  affiliates_highlighted_label: {
+    label?: {
+      badge?: {
+        url?: string; // "https://pbs.twimg.com/semantic_core_img/1290392753013002240/mWq1iE5L?format=png&name=orig"
+      }
+      description?: string; // "United States government organization"
+      url?: {
+        url?: string; // "https://help.twitter.com/rules-and-policies/state-affiliated"
+        urlType: string; // "DeepLink"
+      }
+    }
+  }
+  business_account: {
+    affiliates_count?: 20
+  }
+  is_blue_verified: boolean; // false,
+  profile_image_shape: 'Circle' | 'Square'|'Hexagon'; // "Circle",
+  has_nft_avatar: boolean; // false,
+  legacy: {
+    created_at: string; // "Tue Feb 20 14:35:54 +0000 2007",
+    default_profile: boolean // false,
+    default_profile_image: boolean // false,
+    description: string; // "What's happening?!",
+    entities: {
+      description?: {
+        urls?: {
+          display_url: string; // "about.twitter.com",
+          expanded_url: string; // "https://about.twitter.com/",
+          url: string; // "https://t.co/DAtOo6uuHk",
+          indices: [
+            0,
+            23
+          ]
+        }[]
+      }
+    },
+    fast_followers_count: 0,
+    favourites_count: number; // 126708,
+    followers_count: number; // 4996,
+    friends_count: number; // 2125,
+    has_custom_timelines: boolean; // true,
+    is_translator: boolean; // false,
+    listed_count: number; // 88165,
+    location: string; // "everywhere",
+    media_count: number; // 20839,
+    name: string; // "Twitter",
+    normal_followers_count: number; // 65669107,
+    pinned_tweet_ids_str: string[]; // Array of tweet ids, usually one. Empty if no pinned tweet
+    possibly_sensitive: boolean; // false,
+    profile_banner_url: string; // "https://pbs.twimg.com/profile_banners/783214/1646075315",
+    profile_image_url_https: string; // "https://pbs.twimg.com/profile_images/1488548719062654976/u6qfBBkF_normal.jpg",
+    profile_interstitial_type: string; // "",
+    screen_name: string; // "Twitter",
+    statuses_count: number; // 15047
+    translator_type: string; // "regular"
+    verified: boolean; // false
+    verified_type: 'Business'|'Government';
+    withheld_in_countries: []
+  },
+  professional: {
+    rest_id: string; // "1503055759638159366",
+    professional_type: string; // "Creator",
+    category: [
+      {
+        id: number; // 354,
+        name: string // "Community",
+        icon_name: string; // "IconBriefcaseStroke"
+      }
+    ]
+  },
+  legacy_extended_profile: {
+    birthdate?: {
+      day: number; // 7,
+      month: number; // 1,
+      visibility: string; // "Public"
+      year: number; // 2000
+      year_visibility: string; // "Public"
+    };
+    profile_image_shape: string; // "Circle",
+    rest_id: string; // "783214",
+  },
+  is_profile_translatable: false,
+  verification_info: {
+    reason: {
+      description: {
+        entities: {
+          from_index: number; // 98,
+          ref: {
+            url: string; // "https://help.twitter.com/managing-your-account/about-twitter-verified-accounts",
+            url_type: string; // "ExternalUrl"
+          };
+          to_index: number; // 108
+        }[];
+        text?: 'This account is verified because it’s subscribed to Twitter Blue or is a legacy verified account. Learn more'|'This account is verified because it\'s an official organisation on Twitter. Learn more';
+      }
+    }
+  }
+
+}

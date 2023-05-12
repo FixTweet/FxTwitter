@@ -40,10 +40,16 @@ interface VerticalSize {
   secondHeight: number;
 }
 
-interface APIResponse {
+interface TweetAPIResponse {
   code: number;
   message: string;
   tweet?: APITweet;
+}
+
+interface UserAPIResponse {
+  code: number;
+  message: string;
+  user?: APIUser;
 }
 
 interface APITranslate {
@@ -52,13 +58,15 @@ interface APITranslate {
   source_lang_en: string;
   target_lang: string;
 }
-
-interface APIAuthor {
+interface BaseUser {
+  id?: string;
   name?: string;
   screen_name?: string;
   avatar_url?: string;
-  avatar_color: string;
   banner_url?: string;
+}
+interface APITweetAuthor extends BaseUser {
+  avatar_color: string;
 }
 
 interface APIExternalMedia {
@@ -124,7 +132,7 @@ interface APITweet {
   quote?: APITweet;
   poll?: APIPoll;
   translation?: APITranslate;
-  author: APIAuthor;
+  author: APITweetAuthor;
 
   media?: {
     external?: APIExternalMedia;
@@ -140,4 +148,23 @@ interface APITweet {
   source: string;
 
   twitter_card: 'tweet' | 'summary' | 'summary_large_image' | 'player';
+}
+
+interface APIUser extends BaseUser {
+  description: string;
+  location: string;
+  url: string;
+  protected: boolean;
+  // verified: 'legacy' | 'blue'| 'business' | 'government';
+  // verified_label: string;
+  followers: number;
+  following: number;
+  tweets: number;
+  likes: number;
+  joined: string;
+  birthday: {
+    day?: number;
+    month?: number;
+    year?: number
+  }
 }
