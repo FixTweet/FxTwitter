@@ -3,7 +3,6 @@ FixTweet
 
 .. toctree::
    :maxdepth: 2
-   :hidden:
 
    :caption: 📓 User Guide
 
@@ -11,13 +10,11 @@ FixTweet
 
 .. toctree::
    :maxdepth: 2
-   :hidden:
 
    :caption: 🧑‍💻 API Reference
 
 .. toctree::
    :maxdepth: 2
-   :hidden:
 
    :caption: 🚀 Deployment Guide
 
