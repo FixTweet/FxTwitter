@@ -204,7 +204,8 @@ export const handleStatus = async (
         height: 0,
         width: 0,
         url: tweet.media.mosaic.formats.jpeg,
-        type: 'photo'
+        type: 'photo',
+        altText: ''
       };
       /* If mosaic isn't available or the link calls for a specific photo,
          we'll indicate which photo it is out of the total */
@@ -297,7 +298,7 @@ export const handleStatus = async (
   }
 
   /* If we have no media to display, instead we'll display the user profile picture in the embed */
-  if (!tweet.media?.video && !tweet.media?.photos && !flags?.textOnly) {
+  if (!tweet.media?.videos && !tweet.media?.photos && !flags?.textOnly) {
     headers.push(
       /* Use a slightly higher resolution image for profile pics */
       `<meta property="og:image" content="${tweet.author.avatar_url?.replace(

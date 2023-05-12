@@ -94,6 +94,7 @@ interface APIPhoto {
   url: string;
   width: number;
   height: number;
+  altText: string;
 }
 
 interface APIMosaicPhoto {
@@ -136,7 +137,6 @@ interface APITweet {
   media?: {
     external?: APIExternalMedia;
     photos?: APIPhoto[];
-    video?: APIVideo;
     videos?: APIVideo[];
     mosaic?: APIMosaicPhoto;
   };

@@ -5,7 +5,8 @@ export const processMedia = (media: TweetMedia): APIPhoto | APIVideo | null => {
       type: 'photo',
       url: media.media_url_https,
       width: media.original_info.width,
-      height: media.original_info.height
+      height: media.original_info.height,
+      altText: media.ext_alt_text || ''
     };
   } else if (media.type === 'video' || media.type === 'animated_gif') {
     /* Find the variant with the highest bitrate */
