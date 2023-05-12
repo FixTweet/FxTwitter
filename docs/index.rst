@@ -15,5 +15,27 @@ Contents
 --------
 
 .. toctree::
+   :maxdepth: 2
+   :hidden:
 
-   api
+   :caption: 📓 User Guide
+   
+   /user
+
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+
+   :caption: 🧑‍💻 API Reference
+
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+
+   :caption: 🚀 Deployment Guide
+
+
+
+
+
+   
