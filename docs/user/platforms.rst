@@ -23,7 +23,7 @@ Some platforms also have limitations, for instance:
 
 
 .. _OpenGraph: https://ogp.me/
-.. _Twitter Card: https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/abouts-cards.html
+.. _Twitter Cards: https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/abouts-cards.html
 .. _Oembed: https://oembed.com/
 .. _investigating workarounds and fixes: https://github.com/FixTweet/FixTweet/issues/39
 .. _accept pull requests: https://github.com/FixTweet/FixTweet/pulls
