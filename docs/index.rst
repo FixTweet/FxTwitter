@@ -6,7 +6,7 @@ FixTweet
    :caption: 📓 User Guide
    :hidden:
 
-   user/index
+   user/platforms
 
 .. toctree::
    :maxdepth: 2
