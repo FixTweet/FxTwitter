@@ -76,11 +76,11 @@ Other than the reasons outlined on the homepage, FixTweet tries to offer the mos
      - ❌
      - ✔️
      - ✔️
-   * - Show retweet, like, reply counts
+   * - Show retweet, like, reply, view counts
      - ✔️
-     - ➖ Discord Only³
-     - ☑️ No replies
-     - ☑️ No replies
+     - ➖ Discord Only, no views³
+     - ☑️ No replies or views
+     - ☑️ No replies or views
    * - Discord sed replace (`s/`) friendly
      - ☑️ twittpr.com
      - N/A
