@@ -6,6 +6,7 @@ FixTweet
    :caption: 📓 User Guide
    :hidden:
 
+   user/why
    user/platforms
 
 .. toctree::
@@ -20,8 +21,8 @@ FixTweet
    :caption: 🚀 Deployment Guide
    :hidden:
 
-   deploy/index
    deploy/why
+   deploy/index
 
 .. note::
 
@@ -35,7 +36,7 @@ FixTweet (fxtwitter.com) supercharges your Twitter embeds on platforms like Disc
 How can I use it?
 -----------------
 
-Just add **fx** before your Tweet URL. https://**twitter**.com/user/status/XXX becomes https://**fxtwitter**.com/user/status/XXX.
+Just add **fx** before your Tweet URL. https&nbsp;://**twitter**.com/user/status/XXX becomes https&nbsp;://**fxtwitter**.com/user/status/XXX.
 
 We also have another domain **twittpr.com** that you can use if you prefer easy sed replacement on Discord. Send a Tweet, then send `s/e/p` afterwards and the domain will be changed.
 
