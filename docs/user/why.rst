@@ -31,6 +31,7 @@ Other than the reasons outlined on the homepage, FixTweet tries to offer the mos
 | Redirect to media file (without embed)  |       :heavy_check_mark:        |             :x:               |        :ballot_box_with_check: Subdomain broken, no images |   :ballot_box_with_check: No images   |
 +---------------------------------------+---------------------------+-----------------------------+---------------------------------------------------+-------------------------------------+
 | Strip Twitter tracking info on redirect |       :heavy_check_mark:        |             :x:               |                :heavy_check_mark:                 |          :
++---------------------------------------+---------------------------+-----------------------------+---------------------------------------------------+-------------------------------------+
 
 ¹ Discord will attempt to embed Twitter's video player, but it is unreliable and does not work on mobile
 
