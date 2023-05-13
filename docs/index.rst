@@ -20,7 +20,7 @@ FixTweet
    :caption: 🚀 Deployment Guide
    :hidden:
 
-   deploy/index
+   deploy/why
 
 .. note::
 
