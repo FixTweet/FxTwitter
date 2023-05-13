@@ -7,10 +7,10 @@ Other than the reasons outlined on the homepage, FixTweet tries to offer the mos
    :header-rows: 1
 
    * - 
-     - `FixTweet <https://github.com/FixTweet/FixTweet/commits>`_ |br| |fc|
+     - `FixTweet <https://github.com/FixTweet/FixTweet/commits>`_ 
      - `Twitter default`
-     - `vxTwitter (BetterTwitFix) <https://github.com/dylanpdx/BetterTwitFix/commits>`_ |br| |vc|
-     - `Twxtter (sixFix) <https://github.com/Twxtter/Twxtter-main/commits>`_ |br| |sc|
+     - `vxTwitter (BetterTwitFix) <https://github.com/dylanpdx/BetterTwitFix/commits>`_ 
+     - `Twxtter (sixFix) <https://github.com/Twxtter/Twxtter-main/commits>`_
    * - Embed Tweets / Images
      - ✔️
      - ✔️
