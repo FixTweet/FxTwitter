@@ -96,11 +96,12 @@ Other than the reasons outlined on the homepage, FixTweet tries to offer the mos
      - N/A
      - ❌
      - ❌
-   * - Last commit
-     - 
+   * - Last commit 
+     - |fc|
      - N/A
-     - 
-     - 
+     - |vc|
+     - |sc|
+
 
 .. |fc| image:: https://img.shields.io/github/last-commit/FixTweet/FixTweet?label
 .. |vc| image:: https://img.shields.io/github/last-commit/dylanpdx/BetterTwitFix?label
