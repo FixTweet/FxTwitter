@@ -34,7 +34,7 @@ How to deploy FixTweet:
   9. Set up elongator, see below.
 
 Potential Pitfalls
-==================
+-----------------------
 
 In 2023, Twitter started blocking tweets with NSFW media from the guest API. To overcome this, FixTweet uses a service binding called `elongator <https://github.com/FixTweet/elongator>`_, which utilizes empty Twitter accounts to successfully make these requests. However, this is optional and only necessary for those planning to support embedding NSFW media. This method means you can bypass Twitter's official API and avoid any associated costs.
 Please ensure you modify the URLs to match your actual repository and hosting details.
