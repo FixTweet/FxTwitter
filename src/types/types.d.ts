@@ -144,6 +144,8 @@ interface APITweet {
   };
 
   lang: string | null;
+  possibly_sensitive: boolean;
+  
   replying_to: string | null;
   replying_to_status: string | null;
 

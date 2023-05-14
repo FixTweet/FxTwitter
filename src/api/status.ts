@@ -50,6 +50,8 @@ const populateTweetProperties = async (
   apiTweet.created_at = tweet.created_at;
   apiTweet.created_timestamp = new Date(tweet.created_at).getTime() / 1000;
 
+  apiTweet.possibly_sensitive = tweet.possibly_sensitive;
+
   if (tweet.ext_views?.state === 'EnabledWithCount') {
     apiTweet.views = parseInt(tweet.ext_views.count || '0') ?? null;
   } else {

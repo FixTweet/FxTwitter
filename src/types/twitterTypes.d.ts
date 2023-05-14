@@ -151,6 +151,7 @@ type TweetPartial = {
   in_reply_to_user_id_str?: string;
   id_str: string;
   lang: string;
+  possibly_sensitive: boolean;
   possibly_sensitive_editable: boolean;
   retweet_count: number;
   quote_count: number;
