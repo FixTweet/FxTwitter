@@ -60,7 +60,7 @@ The container of all the information for a User
 - ``tweets`` number - Number of tweets (including retweets) issued by the user
 - ``likes`` number - Number of tweets this user has liked
 - ``joined`` string - The date when the user joined Twitter
-- ``birthday`` object - User's birthday, if provided. Can include day, month, and year, but these are all optional.
+- ``birthday`` object - User's birthday. Can include ``day``, ``month``, and ``year``. These are all considered optional due to different birthday privacy settings, except ``day`` and ``month`` will both be present if one is.
 
 UserAPIResponse
 ---------------
@@ -69,4 +69,4 @@ Response from the User Fetch API
 
 - ``code`` number - HTTP response code
 - ``message`` string - A message accompanying the response code
-- ``user?`` [APIUser](#apiuser) - User details, if applicable
+- ``user?`` [APIUser](#apiuser) - User details, if response is ``OK``
