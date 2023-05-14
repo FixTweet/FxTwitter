@@ -22,6 +22,7 @@ FixTweet
    :hidden:
 
    deploy/why
+   deploy/architecture
    deploy/index
 
 .. note::
