@@ -131,7 +131,7 @@ We are committed to both privacy and transparency about what we do and don't do 
 
   - Temporary, real-time logging in the terminal (using ``wrangler tail``) is employed only for debugging and servicing by the developer, and is never saved or used for other purposes.
 
-  - We use Cloudflare Analytics Engine to collect anonymous, aggregated statistics without user or Tweet identification data.
+  - We use Cloudflare Analytics Engine to collect anonymous, aggregated statistics without user or Tweet identification data. This data includes the country of your IP address, your user agent, whether the request was successful or not, and whether the Tweet is likely SFW or NSFW. 
 
   - In rare cases, Tweet URLs causing runtime errors (exceptions) may be logged to flag down issues causing your embed to break. We use `Sentry <https://sentry.io>`_ to do so.
 
