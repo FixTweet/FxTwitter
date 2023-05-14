@@ -14,7 +14,8 @@ FixTweet
    :caption: 🧑‍💻 API Reference
    :hidden:
 
-   api/index
+   api/status
+   api/user
 
 .. toctree::
    :maxdepth: 2
