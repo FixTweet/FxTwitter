@@ -3,8 +3,6 @@ Tweet (Status) Fetch API
 
 This is the main FixTweet API. It provides anyone access to the same exact data we use to generate FixTweet embeds for users, but in an easy-to-digest format for working with your existing scripts. It includes information based on Twitter APIs, including some data not accessible using Twitter's public API. Furthermore, unlike Twitter you don't need an API key, and there are no strict rate limits (but please be nice!)
 
-.. note:: This documentation has been converted from the GitHub Wiki version and may contain formatting errors
-
 All options appended with ``?`` are optional.
 
 Status API Endpoint
