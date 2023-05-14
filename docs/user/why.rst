@@ -1,6 +1,9 @@
 Why use FixTweet?
 ===================================
 
+Features
+-----------------------
+
 Other than the reasons outlined on the homepage, FixTweet tries to offer the most features possible within the confines of our embeds. 
 
 .. list-table::
@@ -18,7 +21,7 @@ Other than the reasons outlined on the homepage, FixTweet tries to offer the mos
      - ✔️
    * - Embed profile pictures on text Tweets
      - ✔️
-     - ❌
+     - ➖ Discord Only¹
      - ✔️
      - ✔️
    * - Embed Twitter Videos
@@ -116,3 +119,20 @@ Other than the reasons outlined on the homepage, FixTweet tries to offer the mos
 ⁴ On GitHub, BetterTwitFix (vxTwitter) claims to support this feature, however in my testing as of mid-July 2022, this does not seem to work.
 
 ⁵ External media requiring web containers, such as YouTube, won't embed in Telegram because Telegram doesn't support it. Plain media will work in Telegram, and it works either way inside Discord.
+
+Our Privacy-First Approach
+-----------------------
+
+FixTweet was architected around user privacy from the very beginning. We don't log, save, or publicly disclose Tweets that are sent or embedded. It is built on Cloudflare Workers, a decentralized and serverless platform, and only operates on-demand - when a request is sent. In fact, it has no persistent memory, file system, or Tweet database to speak of.
+
+We are committed to both privacy and transparency about what we do and don't do with user data:
+
+  - We use Cloudflare for caching FixTweet responses to expedite repeated access, with a maximum Time to Live (TTL) of 1 hour.
+
+  - Temporary, real-time logging in the terminal (using ``wrangler tail``) is employed only for debugging and servicing by the developer, and is never saved or used for other purposes.
+
+  - We use Cloudflare Analytics Engine to collect anonymous, aggregated statistics without user or Tweet identification data.
+
+  - In rare cases, Tweet URLs causing runtime errors (exceptions) may be logged to flag down issues causing your embed to break. We use `Sentry <https://sentry.io>`_ to do so.
+
+Plus, even if you don't do so, FixTweet automatically removes Twitter's tracking parameters (like ?s and &t) when you click on fxtwitter links, as these are exclusively used for Twitter telemetry.
