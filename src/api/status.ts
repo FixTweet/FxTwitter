@@ -207,7 +207,7 @@ export const statusAPI = async (
         conversation.timeline?.instructions?.length > 0
       ) {
         console.log(
-          'Tweet could not be accessed with elongator, must be private/suspende, got tweet ',
+          'Tweet could not be accessed with elongator, must be private/suspended, got tweet ',
           tweet,
           ' conversation ',
           conversation
