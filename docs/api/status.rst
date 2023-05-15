@@ -100,9 +100,9 @@ Embeds
 
     media? { - Containing object containing references to photos, videos, or external media
         external? APIExternalMedia - Refers to external media, such as YouTube embeds
-        photos? APIPhoto[] - An Array of photos from a Tweet
-        videos? APIVideo[] - An Array of videos from a Tweet
-        mosaic? APIMosaicPhoto - Corresponding Mosaic information for a Tweet
+        photos? `APIPhoto`_​[] - An Array of photos from a Tweet
+        videos? `APIVideo`_​[] - An Array of videos from a Tweet
+        mosaic? `APIMosaicPhoto`_ - Corresponding Mosaic information for a Tweet
     }
 
 APIAuthor
@@ -141,7 +141,7 @@ APIPoll
 
 Data for a poll on a given Tweet
 
-- ``choices`` `APIPollChoice`_[] - Array of the poll choices
+- ``choices`` `APIPollChoice`_​[] - Array of the poll choices
 - ``total_votes`` number - Total votes in poll
 - ``ends_at`` string - Date of which the poll ends
 - ``time_left_en`` string - Time remaining counter in English (i.e. **9 hours left**)
