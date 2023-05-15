@@ -8,9 +8,9 @@ This API provides access to user-specific data from FixTweet. It includes user-r
 User API Endpoint
 -----------------
 
-`https://api.fxtwitter.com/:screen_name`
+``https://api.fxtwitter.com/:screen_name``
 
-`screen_name` - The screen name (@ handle) of the user.
+``screen_name`` - The screen name (@ handle) of the user.
 
 Returns a JSON object. Here is a sample:
 
@@ -39,7 +39,7 @@ Returns a JSON object. Here is a sample:
         }
     }
 
-Code will normally return 200 (message: ``OK``), but can return 401 (message ``PRIVATE_TWEET``), 404 (message ``NOT_FOUND``), or 500 (message ``API_FAIL``)
+If it's successful, it will return 200 (message: ``OK``), but can return 404 (message ``NOT_FOUND``), or 500 (message ``API_FAIL``)
 
 APIUser
 -------

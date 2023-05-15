@@ -58,7 +58,7 @@ Returns a JSON object. Here is a sample:
         }
     }
 
-Code will normally return 200 (message: ``OK``), but can return 401 (message ``PRIVATE_TWEET``), 404 (message ``NOT_FOUND``), or 500 (message ``API_FAIL``)
+If it's successful, it will return 200 (message: ``OK``), but can return 401 (message ``PRIVATE_TWEET``), 404 (message ``NOT_FOUND``), or 500 (message ``API_FAIL``)
 
 APITweet
 --------
