@@ -33,6 +33,8 @@ export const handleStatus = async (
   const api = await statusAPI(status, language, event as FetchEvent, flags);
   const tweet = api?.tweet as APITweet;
 
+  let ivbody = "";
+
   /* Catch this request if it's an API response */
   if (flags?.api) {
     return {
@@ -105,8 +107,19 @@ export const handleStatus = async (
     headers.push(
       `<meta http-equiv="refresh" content="0;url=https://twitter.com/${tweet.author.screen_name}/status/${tweet.id}"/>`
     );
-  }
+  } else {
+    /* Include Instant-View related headers. This is an unfinished project. Thanks to https://nikstar.me/post/instant-view/ for the help! */
+    headers.push(
+      `<meta property="al:android:app_name" content="Medium"/>`,
+      `<meta property="article:published_time" content="2999-04-20T12:00:00.000Z"/>` /* TODO: Replace with real date */
+    )
 
+    ivbody = `<article><h1>${tweet.author.name} (@${tweet.author.screen_name})</h1><p>Instant View (✨ Beta)</p>
+      <blockquote class="twitter-tweet" data-dnt="true"><p lang="en" dir="ltr"> <a href="${tweet.url}">_</a></blockquote>
+    </article>
+    `;
+  }
+  
   /* This Tweet has a translation attached to it, so we'll render it. */
   if (tweet.translation) {
     const { translation } = tweet;
@@ -351,7 +364,8 @@ export const handleStatus = async (
   return {
     text: Strings.BASE_HTML.format({
       lang: `lang="${lang}"`,
-      headers: headers.join('')
+      headers: headers.join(''),
+      body: ivbody
     }),
     cacheControl: cacheControl
   };

@@ -30,7 +30,7 @@ export const Strings = {
 ███   A better way to embed Tweets on Discord, Telegram, and more.
 ███   Worker build ${RELEASE_NAME}
 
---><head>{headers}</head><body></body></html>`,
+--><head>{headers}</head><body>{body}</body></html>`,
   ERROR_HTML: `<!DOCTYPE html>
   <html lang="en">
     <head>
