@@ -15,6 +15,22 @@ interface StatusResponse {
   cacheControl?: string | null;
 }
 
+interface ResponseInstructions {
+  addHeaders: string[];
+  authorText?: string;
+  siteName?: string;
+  engagementText?: string;
+}
+
+interface RenderProperties {
+  tweet: APITweet;
+  siteText?: string;
+  authorText?: string;
+  engagementText?: string;
+  isOverrideMedia?: boolean;
+  userAgent?: string;
+}
+
 interface Request {
   params: {
     [param: string]: string;
@@ -91,30 +107,31 @@ interface APIPoll {
   time_left_en: string;
 }
 
-interface APIPhoto {
-  type: 'photo';
+interface APIMedia {
+  type: string;
   url: string;
   width: number;
   height: number;
+}
+
+interface APIPhoto extends APIMedia {
+  type: 'photo';
   altText: string;
 }
 
-interface APIMosaicPhoto {
+interface APIVideo extends APIMedia {
+  type: 'video' | 'gif';
+  thumbnail_url: string;
+  format: string;
+  duration: number;
+}
+
+interface APIMosaicPhoto extends APIMedia {
   type: 'mosaic_photo';
   formats: {
     webp: string;
     jpeg: string;
   };
-}
-
-interface APIVideo {
-  type: 'video' | 'gif';
-  url: string;
-  thumbnail_url: string;
-  width: number;
-  height: number;
-  format: string;
-  duration: number;
 }
 
 interface APITweet {
@@ -140,7 +157,7 @@ interface APITweet {
     external?: APIExternalMedia;
     photos?: APIPhoto[];
     videos?: APIVideo[];
-    all?: (APIPhoto | APIVideo)[];
+    all?: APIMedia[];
     mosaic?: APIMosaicPhoto;
   };
 

@@ -4,6 +4,7 @@ import { formatNumber, sanitizeText } from '../helpers/utils';
 import { Strings } from '../strings';
 import { getAuthorText } from '../helpers/author';
 import { statusAPI } from '../api/status';
+import { renderPhoto } from '../render/photo';
 
 export const returnError = (error: string): StatusResponse => {
   return {
@@ -43,7 +44,7 @@ export const handleStatus = async (
     };
   }
 
-  let overrideMedia: APIPhoto | APIVideo | undefined;
+  let overrideMedia: APIMedia | undefined;
 
   // Check if mediaNumber exists, and if that media exists in tweet.media.all. If it does, we'll store overrideMedia variable
   if (mediaNumber && tweet.media && tweet.media.all && tweet.media.all[mediaNumber - 1]) {
@@ -140,20 +141,36 @@ export const handleStatus = async (
     newText = `${formatText}\n\n` + `${translation.text}\n\n`;
   }
 
-  /* This Tweet has a video to render.
+  console.log('overrideMedia', JSON.stringify(overrideMedia));
 
-     Twitter supports multiple videos in a Tweet now. But we have no mechanism to embed more than one.
-     You can still use /video/:number to get a specific video. Otherwise, it'll pick the first. */
-  if (tweet.media?.videos || overrideMedia?.type === 'video') {
-    authorText = newText || '';
+  if (overrideMedia) {
+    let instructions: ResponseInstructions;
 
-    if (tweet?.translation) {
-      authorText = tweet.translation?.text || '';
+    switch (overrideMedia.type) {
+      case 'photo':
+        /* This Tweet has a photo to render. */
+        instructions = renderPhoto( {tweet: tweet, authorText: authorText, engagementText: engagementText, isOverrideMedia: true, userAgent: userAgent }, overrideMedia as APIPhoto );
+        headers.push(...instructions.addHeaders);
+        if (instructions.authorText) {
+          authorText = instructions.authorText;
+        }
+        if (instructions.siteName) {
+          siteName = instructions.siteName;
+        }
+        break;
+      case 'video':
+        /* This Tweet has a video to render. */
+        break;
     }
+  } else if (tweet.media?.mosaic) {
+    const instructions = renderPhoto( {tweet: tweet, authorText: authorText, engagementText: engagementText, userAgent: userAgent }, tweet.media?.mosaic );
+    headers.push(...instructions.addHeaders);
+  } else if (tweet.media?.videos) {
+    authorText = tweet.translation?.text || newText || '';
 
     const videos = tweet.media?.videos;
     const all = tweet.media?.all || [];
-    const video = overrideMedia as APIVideo || videos?.[(mediaNumber || 1) - 1];
+    const video = videos?.[0];
 
     /* This fix is specific to Discord not wanting to render videos that are too large,
        or rendering low quality videos too small.
@@ -206,62 +223,7 @@ export const handleStatus = async (
       `<meta property="og:video:type" content="${video.format}"/>`,
       `<meta property="twitter:image" content="0"/>`
     );
-  }
-
-  /* This Tweet has one or more photos to render */
-  if (tweet.media?.photos || overrideMedia?.type === 'photo') {
-    let photo: APIPhoto | APIMosaicPhoto = overrideMedia as APIPhoto || tweet.media?.photos?.[0];
-
-    /* If there isn't a specified media number and we have a
-       mosaic response, we'll render it using mosaic */
-    if (!overrideMedia && tweet.media?.mosaic) {
-      photo = {
-        /* Include dummy height/width for TypeScript reasons. We have a check to make sure we don't use these later. */
-        height: 0,
-        width: 0,
-        url: tweet.media.mosaic.formats.jpeg,
-        type: 'photo',
-        altText: ''
-      };
-      /* If mosaic isn't available or the link calls for a specific photo,
-         we'll indicate which photo it is out of the total */
-    } else if (tweet.media?.all && tweet.media.all.length > 1) {
-      const { all } = tweet.media;
-      const photoCounter = Strings.PHOTO_COUNT.format({
-        number: String(all.indexOf(photo) + 1),
-        total: String(all.length)
-      });
-
-      authorText =
-        authorText === Strings.DEFAULT_AUTHOR_TEXT
-          ? photoCounter
-          : `${authorText}${authorText ? '   ―   ' : ''}${photoCounter}`;
-
-      siteName = `${Constants.BRANDING_NAME} - ${photoCounter}`;
-
-      if (engagementText) {
-        siteName = `${Constants.BRANDING_NAME} - ${engagementText} - ${photoCounter}`;
-      }
-    }
-
-    /* Push the raw photo-related headers */
-    headers.push(
-      `<meta property="twitter:image" content="${photo.url}"/>`,
-      `<meta property="og:image" content="${photo.url}"/>`
-    );
-
-    if (!tweet.media?.mosaic) {
-      headers.push(
-        `<meta property="twitter:image:width" content="${photo.width}"/>`,
-        `<meta property="twitter:image:height" content="${photo.height}"/>`,
-        `<meta property="og:image:width" content="${photo.width}"/>`,
-        `<meta property="og:image:height" content="${photo.height}"/>`
-      );
-    }
-  }
-
-  /* We have external media available to us (i.e. YouTube videos) */
-  if (tweet.media?.external) {
+  } else if (tweet.media?.external) {
     const { external } = tweet.media;
     authorText = newText || '';
     headers.push(

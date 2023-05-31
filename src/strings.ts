@@ -131,8 +131,9 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
   QUOTE_TEXT: `↘️ Quoting {name} (@{screen_name})`,
   TRANSLATE_TEXT: `↘️ Translated from {language}`,
   TRANSLATE_TEXT_INTL: `↘️ {source} ➡️ {destination}`,
-  PHOTO_COUNT: `Photo {number} of {total}`,
-  VIDEO_COUNT: `Video {number} of {total}`,
+  PHOTO_COUNT: `Photo {number} / {total}`,
+  VIDEO_COUNT: `Video {number} / {total}`,
+  MEDIA_COUNT: `Media {number} / {total}`,
 
   SINGULAR_DAY_LEFT: 'day left',
   PLURAL_DAYS_LEFT: 'days left',
