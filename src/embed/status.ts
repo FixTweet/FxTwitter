@@ -206,6 +206,17 @@ export const handleStatus = async (
     if (instructions.siteName) {
       siteName = instructions.siteName;
     }
+  } else if (tweet.media?.photos) {
+    const instructions = renderPhoto(
+      {
+        tweet: tweet,
+        authorText: authorText,
+        engagementText: engagementText,
+        userAgent: userAgent
+      },
+      tweet.media?.photos[0]
+    );
+    headers.push(...instructions.addHeaders);
   } else if (tweet.media?.external) {
     const { external } = tweet.media;
     authorText = newText || '';

@@ -8,7 +8,10 @@ export const renderPhoto = (
   const { tweet, engagementText, authorText, isOverrideMedia, userAgent } = properties;
   const instructions: ResponseInstructions = { addHeaders: [] };
 
-  if (!tweet.media?.mosaic || isOverrideMedia) {
+  if (
+    (tweet.media?.photos?.length || 0) > 1 &&
+    (!tweet.media?.mosaic || isOverrideMedia)
+  ) {
     photo = photo as APIPhoto;
 
     const all = tweet.media?.all as APIMedia[];
