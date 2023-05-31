@@ -80,7 +80,7 @@ export const handleStatus = async (
     } else if (all.length > 0) {
       redirectUrl = all[0].url;
     }
-    
+
     if (redirectUrl) {
       return { response: Response.redirect(redirectUrl, 302) };
     }
@@ -150,7 +150,16 @@ export const handleStatus = async (
     switch (overrideMedia.type) {
       case 'photo':
         /* This Tweet has a photo to render. */
-        instructions = renderPhoto( {tweet: tweet, authorText: authorText, engagementText: engagementText, userAgent: userAgent, isOverrideMedia: true }, overrideMedia as APIPhoto );
+        instructions = renderPhoto(
+          {
+            tweet: tweet,
+            authorText: authorText,
+            engagementText: engagementText,
+            userAgent: userAgent,
+            isOverrideMedia: true
+          },
+          overrideMedia as APIPhoto
+        );
         headers.push(...instructions.addHeaders);
         if (instructions.authorText) {
           authorText = instructions.authorText;
@@ -160,7 +169,10 @@ export const handleStatus = async (
         }
         break;
       case 'video':
-        instructions = renderVideo( {tweet: tweet, userAgent: userAgent, text: newText, isOverrideMedia: true }, overrideMedia as APIVideo );
+        instructions = renderVideo(
+          { tweet: tweet, userAgent: userAgent, text: newText, isOverrideMedia: true },
+          overrideMedia as APIVideo
+        );
         headers.push(...instructions.addHeaders);
         if (instructions.authorText) {
           authorText = instructions.authorText;
@@ -172,10 +184,21 @@ export const handleStatus = async (
         break;
     }
   } else if (tweet.media?.mosaic) {
-    const instructions = renderPhoto( {tweet: tweet, authorText: authorText, engagementText: engagementText, userAgent: userAgent }, tweet.media?.mosaic );
+    const instructions = renderPhoto(
+      {
+        tweet: tweet,
+        authorText: authorText,
+        engagementText: engagementText,
+        userAgent: userAgent
+      },
+      tweet.media?.mosaic
+    );
     headers.push(...instructions.addHeaders);
   } else if (tweet.media?.videos) {
-    const instructions = renderVideo( {tweet: tweet, userAgent: userAgent, text: newText }, tweet.media?.videos[0] );
+    const instructions = renderVideo(
+      { tweet: tweet, userAgent: userAgent, text: newText },
+      tweet.media?.videos[0]
+    );
     headers.push(...instructions.addHeaders);
     if (instructions.authorText) {
       authorText = instructions.authorText;

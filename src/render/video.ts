@@ -1,7 +1,10 @@
-import { Constants } from "../constants";
-import { Strings } from "../strings";
+import { Constants } from '../constants';
+import { Strings } from '../strings';
 
-export const renderVideo = (properties: RenderProperties, video: APIVideo): ResponseInstructions => {
+export const renderVideo = (
+  properties: RenderProperties,
+  video: APIVideo
+): ResponseInstructions => {
   const { tweet, userAgent, text } = properties;
   const instructions: ResponseInstructions = { addHeaders: [] };
 
@@ -27,7 +30,10 @@ export const renderVideo = (properties: RenderProperties, video: APIVideo): Resp
   /* Like photos when picking a specific one (not using mosaic),
       we'll put an indicator if there are more than one video */
   if (all && all.length > 1 && (userAgent?.indexOf('Telegram') ?? 0) > -1) {
-    const baseString = all.length === tweet.media?.videos?.length ? Strings.VIDEO_COUNT : Strings.MEDIA_COUNT;
+    const baseString =
+      all.length === tweet.media?.videos?.length
+        ? Strings.VIDEO_COUNT
+        : Strings.MEDIA_COUNT;
     const videoCounter = baseString.format({
       number: String(all.indexOf(video) + 1),
       total: String(all.length)
@@ -41,9 +47,7 @@ export const renderVideo = (properties: RenderProperties, video: APIVideo): Resp
   /* Push the raw video-related headers */
   instructions.addHeaders = [
     `<meta property="twitter:player:stream:content_type" content="${video.format}"/>`,
-    `<meta property="twitter:player:height" content="${
-      video.height * sizeMultiplier
-    }"/>`,
+    `<meta property="twitter:player:height" content="${video.height * sizeMultiplier}"/>`,
     `<meta property="twitter:player:width" content="${video.width * sizeMultiplier}"/>`,
     `<meta property="og:video" content="${video.url}"/>`,
     `<meta property="og:video:secure_url" content="${video.url}"/>`,
@@ -54,4 +58,4 @@ export const renderVideo = (properties: RenderProperties, video: APIVideo): Resp
   ];
 
   return instructions;
-}
+};
