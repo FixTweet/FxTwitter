@@ -5,9 +5,10 @@
   "main": "dist/worker.js",
   "scripts": {
     "build": "webpack",
-    "publish": "wrangler publish",
+    "publish": "wrangler deploy",
+    "deploy": "wrangler deploy",
     "log": "wrangler tail",
-    "reload": "wrangler publish && wrangler tail",
+    "reload": "wrangler deploy && wrangler tail",
     "prettier": "prettier --write .",
     "lint:eslint": "eslint --max-warnings=0 src",
     "test": "jest --config jestconfig.json --verbose"

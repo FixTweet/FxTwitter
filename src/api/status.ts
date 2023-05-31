@@ -71,18 +71,22 @@ const populateTweetProperties = async (
     tweet.extended_entities?.media || tweet.entities?.media || []
   );
 
+  // console.log('tweet', JSON.stringify(tweet));
+
   /* Populate this Tweet's media */
   mediaList.forEach(media => {
     const mediaObject = processMedia(media);
     if (mediaObject) {
+      apiTweet.media = apiTweet.media || {};
+      apiTweet.media.all = apiTweet.media?.all || [];
+      apiTweet.media.all.push(mediaObject);
+
       if (mediaObject.type === 'photo') {
         apiTweet.twitter_card = 'summary_large_image';
-        apiTweet.media = apiTweet.media || {};
         apiTweet.media.photos = apiTweet.media.photos || [];
         apiTweet.media.photos.push(mediaObject);
       } else if (mediaObject.type === 'video' || mediaObject.type === 'gif') {
         apiTweet.twitter_card = 'player';
-        apiTweet.media = apiTweet.media || {};
         apiTweet.media.videos = apiTweet.media.videos || [];
         apiTweet.media.videos.push(mediaObject);
       }
@@ -207,7 +211,7 @@ export const statusAPI = async (
         conversation.timeline?.instructions?.length > 0
       ) {
         console.log(
-          'Tweet could not be accessed with elongator, must be private/suspende, got tweet ',
+          'Tweet could not be accessed with elongator, must be private/suspended, got tweet ',
           tweet,
           ' conversation ',
           conversation
@@ -223,11 +227,13 @@ export const statusAPI = async (
         return { code: 404, message: 'NOT_FOUND' };
       }
 
+      /* Commented this the part below out for now since it seems like atm this check doesn't actually do anything */
+
       /* Tweets object is completely missing, smells like API failure */
-      if (typeof conversation?.globalObjects?.tweets === 'undefined') {
-        writeDataPoint(event, language, wasMediaBlockedNSFW, 'API_FAIL', flags);
-        return { code: 500, message: 'API_FAIL' };
-      }
+      // if (typeof conversation?.globalObjects?.tweets === 'undefined') {
+      //   writeDataPoint(event, language, wasMediaBlockedNSFW, 'API_FAIL', flags);
+      //   return { code: 500, message: 'API_FAIL' };
+      // }
 
       /* If we have no idea what happened then just return API error */
       writeDataPoint(event, language, wasMediaBlockedNSFW, 'API_FAIL', flags);
