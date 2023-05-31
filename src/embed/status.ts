@@ -32,6 +32,8 @@ export const handleStatus = async (
 
   const api = await statusAPI(status, language, event as FetchEvent, flags);
   const tweet = api?.tweet as APITweet;
+  const isTelegram = (userAgent || '').indexOf('Telegram') > -1;
+  const useIV = isTelegram && !tweet.possibly_sensitive && !flags?.direct && (tweet.media?.photos || tweet.media?.videos);
 
   let ivbody = "";
 
@@ -103,18 +105,22 @@ export const handleStatus = async (
      it will gracefully redirect to the destination instead of just seeing a blank screen.
 
      Telegram is dumb and it just gets stuck if this is included, so we never include it for Telegram UAs. */
-  if (userAgent?.indexOf('Telegram') === -1) {
+  if (!isTelegram) {
     headers.push(
       `<meta http-equiv="refresh" content="0;url=https://twitter.com/${tweet.author.screen_name}/status/${tweet.id}"/>`
     );
-  } else {
+  }
+  
+  if (useIV) {
+    // Convert JS date to ISO date
+    const date = new Date(tweet.created_at).toISOString();
     /* Include Instant-View related headers. This is an unfinished project. Thanks to https://nikstar.me/post/instant-view/ for the help! */
     headers.push(
       `<meta property="al:android:app_name" content="Medium"/>`,
-      `<meta property="article:published_time" content="2999-04-20T12:00:00.000Z"/>` /* TODO: Replace with real date */
+      `<meta property="article:published_time" content="${date}"/>` /* TODO: Replace with real date */
     )
 
-    ivbody = `<article><h1>${tweet.author.name} (@${tweet.author.screen_name})</h1><p>Instant View (✨ Beta)</p>
+    ivbody = `<section class="section-backgroundImage"><figure class="graf--layoutFillWidth"></figure></section><article><h1>${tweet.author.name} (@${tweet.author.screen_name})</h1><p>Instant View (✨ Beta)</p>
       <blockquote class="twitter-tweet" data-dnt="true"><p lang="en" dir="ltr"> <a href="${tweet.url}">_</a></blockquote>
     </article>
     `;
@@ -279,7 +285,7 @@ export const handleStatus = async (
     let str = '';
 
     /* Telegram Embeds are smaller, so we use a smaller bar to compensate */
-    if (userAgent?.indexOf('Telegram') !== -1) {
+    if (isTelegram) {
       barLength = 24;
     }
 
@@ -312,25 +318,42 @@ export const handleStatus = async (
 
   /* If we have no media to display, instead we'll display the user profile picture in the embed */
   if (!tweet.media?.videos && !tweet.media?.photos && !flags?.textOnly) {
-    headers.push(
-      /* Use a slightly higher resolution image for profile pics */
-      `<meta property="og:image" content="${tweet.author.avatar_url?.replace(
-        '_normal',
-        '_200x200'
-      )}"/>`,
-      `<meta property="twitter:image" content="0"/>`
-    );
+    const avatar = tweet.author.avatar_url?.replace(
+      '_200x200',
+      '_normal'
+    )
+    if (!useIV) {
+      headers.push(
+        /* Use a slightly higher resolution image for profile pics */
+        `<meta property="og:image" content="${avatar}"/>`,
+        `<meta property="twitter:image" content="0"/>`
+      );
+    } else {
+      headers.push(
+        /* Use a slightly higher resolution image for profile pics */
+        `<meta property="twitter:image" content="${avatar}"/>`
+      );
+    }
   }
 
   /* Notice that user is using deprecated domain */
   if (flags?.deprecated) {
     siteName = Strings.DEPRECATED_DOMAIN_NOTICE;
   }
+  /* For supporting Telegram IV, we have to replace newlines with <br> within the og:description <meta> tag because of its weird (undocumented?) behavior.
+     If you don't use IV, it uses newlines just fine. Just like Discord and others. But with IV, suddenly newlines don't actually break the line anymore.
+
+     This is incredibly stupid, and you'd think this weird behavior would not be the case. You'd also think embedding a <br> inside the quotes inside
+     a meta tag shouldn't work, because that's stupid, but alas it does.
+     
+     A possible explanation for this weird behavior is due to the Medium template we are forced to use because Telegram IV is not an open platform
+     and we have to pretend to be Medium in order to get working IV, but haven't figured if the template is causing issues.  */
+  const text = useIV ? sanitizeText(newText).replace(/\n/g, '<br>') : sanitizeText(newText);
 
   /* Push basic headers relating to author, Tweet text, and site name */
   headers.push(
     `<meta property="og:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`,
-    `<meta property="og:description" content="${sanitizeText(newText)}"/>`,
+    `<meta property="og:description" content="${text}"/>`,
     `<meta property="og:site_name" content="${siteName}"/>`
   );
 
