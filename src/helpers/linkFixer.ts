@@ -2,7 +2,12 @@
 export const linkFixer = (tweet: TweetPartial, text: string): string => {
   if (typeof tweet.entities?.urls !== 'undefined') {
     tweet.entities?.urls.forEach((url: TcoExpansion) => {
-      text = text.replace(url.url, url.expanded_url);
+      let newURL = url.expanded_url;
+
+      if (newURL.match(/^https:\/\/twitter\.com\/i\/web\/status\/\w+/g) !== null) {
+        newURL = '';
+      }
+      text = text.replace(url.url, newURL);
     });
 
     /* Remove any link with unavailable original.
