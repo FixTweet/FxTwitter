@@ -58,7 +58,5 @@ export const renderPhoto = (
     ];
   }
 
-  console.log('Photo render instructions', JSON.stringify(instructions));
-
   return instructions;
 };
