@@ -19,7 +19,6 @@ require('dotenv').config();
 
 let envVariables = [
   'BRANDING_NAME',
-  'BRANDING_NAME_DISCORD',
   'DIRECT_MEDIA_DOMAINS',
   'TEXT_ONLY_DOMAINS',
   'HOST_URL',

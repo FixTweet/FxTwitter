@@ -1,7 +1,6 @@
 export const Constants = {
   /* These constants are populated by variables in .env, then set by Webpack */
   BRANDING_NAME: BRANDING_NAME,
-  BRANDING_NAME_DISCORD: BRANDING_NAME_DISCORD,
   DIRECT_MEDIA_DOMAINS: DIRECT_MEDIA_DOMAINS.split(','),
   TEXT_ONLY_DOMAINS: TEXT_ONLY_DOMAINS.split(','),
   DEPRECATED_DOMAIN_LIST: DEPRECATED_DOMAIN_LIST.split(','),

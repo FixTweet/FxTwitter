@@ -5,7 +5,6 @@
   },
   "globals": {
     "BRANDING_NAME": "FixTweet",
-    "BRANDING_NAME_DISCORD": "FixTweetBrandingDiscord",
     "TEXT_ONLY_DOMAINS": "t.fxtwitter.com,t.twittpr.com",
     "DIRECT_MEDIA_DOMAINS": "d.fxtwitter.com,dl.fxtwitter.com",
     "MOSAIC_DOMAIN_LIST": "mosaic.fxtwitter.com",
