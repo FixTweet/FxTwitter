@@ -1,6 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
-const SentryWebpackPlugin = require('@sentry/webpack-plugin');
+const { sentryWebpackPlugin } = require('@sentry/webpack-plugin');
 
 const gitCommit = require('child_process')
   .execSync('git rev-parse --short HEAD')
@@ -45,7 +45,7 @@ let plugins = [
 
 if (process.env.SENTRY_AUTH_TOKEN) {
   plugins.push(
-    new SentryWebpackPlugin({
+    sentryWebpackPlugin({
       release: releaseName,
       include: './dist',
       urlPrefix: '~/',
