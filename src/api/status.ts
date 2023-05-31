@@ -227,11 +227,13 @@ export const statusAPI = async (
         return { code: 404, message: 'NOT_FOUND' };
       }
 
+      /* Commented this the part below out for now since it seems like atm this check doesn't actually do anything */
+
       /* Tweets object is completely missing, smells like API failure */
-      if (typeof conversation?.globalObjects?.tweets === 'undefined') {
-        writeDataPoint(event, language, wasMediaBlockedNSFW, 'API_FAIL', flags);
-        return { code: 500, message: 'API_FAIL' };
-      }
+      // if (typeof conversation?.globalObjects?.tweets === 'undefined') {
+      //   writeDataPoint(event, language, wasMediaBlockedNSFW, 'API_FAIL', flags);
+      //   return { code: 500, message: 'API_FAIL' };
+      // }
 
       /* If we have no idea what happened then just return API error */
       writeDataPoint(event, language, wasMediaBlockedNSFW, 'API_FAIL', flags);
