@@ -5,6 +5,7 @@ import { Strings } from '../strings';
 import { getAuthorText } from '../helpers/author';
 import { statusAPI } from '../api/status';
 import { renderPhoto } from '../render/photo';
+import { renderVideo } from '../render/video';
 
 export const returnError = (error: string): StatusResponse => {
   return {
@@ -149,7 +150,7 @@ export const handleStatus = async (
     switch (overrideMedia.type) {
       case 'photo':
         /* This Tweet has a photo to render. */
-        instructions = renderPhoto( {tweet: tweet, authorText: authorText, engagementText: engagementText, isOverrideMedia: true, userAgent: userAgent }, overrideMedia as APIPhoto );
+        instructions = renderPhoto( {tweet: tweet, authorText: authorText, engagementText: engagementText, userAgent: userAgent, isOverrideMedia: true }, overrideMedia as APIPhoto );
         headers.push(...instructions.addHeaders);
         if (instructions.authorText) {
           authorText = instructions.authorText;
@@ -159,6 +160,14 @@ export const handleStatus = async (
         }
         break;
       case 'video':
+        instructions = renderVideo( {tweet: tweet, userAgent: userAgent, text: newText, isOverrideMedia: true }, overrideMedia as APIVideo );
+        headers.push(...instructions.addHeaders);
+        if (instructions.authorText) {
+          authorText = instructions.authorText;
+        }
+        if (instructions.siteName) {
+          siteName = instructions.siteName;
+        }
         /* This Tweet has a video to render. */
         break;
     }
@@ -166,63 +175,14 @@ export const handleStatus = async (
     const instructions = renderPhoto( {tweet: tweet, authorText: authorText, engagementText: engagementText, userAgent: userAgent }, tweet.media?.mosaic );
     headers.push(...instructions.addHeaders);
   } else if (tweet.media?.videos) {
-    authorText = tweet.translation?.text || newText || '';
-
-    const videos = tweet.media?.videos;
-    const all = tweet.media?.all || [];
-    const video = videos?.[0];
-
-    /* This fix is specific to Discord not wanting to render videos that are too large,
-       or rendering low quality videos too small.
-       
-       Basically, our solution is to cut the dimensions in half if the video is too big (> 1080p),
-       or double them if it's too small. (<400p)
-       
-       We check both height and width so we can apply this to both horizontal and vertical videos equally*/
-
-    let sizeMultiplier = 1;
-
-    if (video.width > 1920 || video.height > 1920) {
-      sizeMultiplier = 0.5;
+    const instructions = renderVideo( {tweet: tweet, userAgent: userAgent, text: newText }, tweet.media?.videos[0] );
+    headers.push(...instructions.addHeaders);
+    if (instructions.authorText) {
+      authorText = instructions.authorText;
     }
-    if (video.width < 400 && video.height < 400) {
-      sizeMultiplier = 2;
+    if (instructions.siteName) {
+      siteName = instructions.siteName;
     }
-
-    /* Like photos when picking a specific one (not using mosaic),
-       we'll put an indicator if there are more than one video */
-    if (all && all.length > 1) {
-      const videoCounter = Strings.VIDEO_COUNT.format({
-        number: String(all.indexOf(video) + 1),
-        total: String(all.length)
-      });
-
-      authorText =
-        authorText === Strings.DEFAULT_AUTHOR_TEXT
-          ? videoCounter
-          : `${authorText}${authorText ? '   ―   ' : ''}${videoCounter}`;
-
-      siteName = `${Constants.BRANDING_NAME} - ${videoCounter}`;
-
-      if (engagementText) {
-        siteName = `${Constants.BRANDING_NAME} - ${engagementText} - ${videoCounter}`;
-      }
-    }
-
-    /* Push the raw video-related headers */
-    headers.push(
-      `<meta property="twitter:player:stream:content_type" content="${video.format}"/>`,
-      `<meta property="twitter:player:height" content="${
-        video.height * sizeMultiplier
-      }"/>`,
-      `<meta property="twitter:player:width" content="${video.width * sizeMultiplier}"/>`,
-      `<meta property="og:video" content="${video.url}"/>`,
-      `<meta property="og:video:secure_url" content="${video.url}"/>`,
-      `<meta property="og:video:height" content="${video.height * sizeMultiplier}"/>`,
-      `<meta property="og:video:width" content="${video.width * sizeMultiplier}"/>`,
-      `<meta property="og:video:type" content="${video.format}"/>`,
-      `<meta property="twitter:image" content="0"/>`
-    );
   } else if (tweet.media?.external) {
     const { external } = tweet.media;
     authorText = newText || '';

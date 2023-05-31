@@ -71,6 +71,8 @@ const populateTweetProperties = async (
     tweet.extended_entities?.media || tweet.entities?.media || []
   );
 
+  console.log('tweet', JSON.stringify(tweet))
+
   /* Populate this Tweet's media */
   mediaList.forEach(media => {
     const mediaObject = processMedia(media);

@@ -29,10 +29,13 @@ export const Constants = {
     'include_quote_count=true',
     'include_reply_count=1',
     'tweet_mode=extended',
+    'include_entities=true',
     'include_ext_media_color=true',
     'include_ext_media_availability=true',
     'include_ext_sensitive_media_warning=true',
-    'simple_quoted_tweet=true'
+    'include_ext_has_birdwatch_notes=true',
+    'simple_quoted_tweet=true',
+    'ext=mediaStats%2ChighlightedLabel'
   ].join('&'),
   BASE_HEADERS: {
     'DNT': `1`,

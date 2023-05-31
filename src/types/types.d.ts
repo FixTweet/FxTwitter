@@ -20,6 +20,7 @@ interface ResponseInstructions {
   authorText?: string;
   siteName?: string;
   engagementText?: string;
+  text?: string;
 }
 
 interface RenderProperties {
@@ -29,6 +30,7 @@ interface RenderProperties {
   engagementText?: string;
   isOverrideMedia?: boolean;
   userAgent?: string;
+  text?: string;
 }
 
 interface Request {
