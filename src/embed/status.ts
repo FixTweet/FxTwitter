@@ -43,6 +43,13 @@ export const handleStatus = async (
     };
   }
 
+  let overrideMedia: APIPhoto | APIVideo | undefined;
+
+  // Check if mediaNumber exists, and if that media exists in tweet.media.all. If it does, we'll store overrideMedia variable
+  if (mediaNumber && tweet.media && tweet.media.all && tweet.media.all[mediaNumber - 1]) {
+    overrideMedia = tweet.media.all[mediaNumber - 1];
+  }
+
   /* If there was any errors fetching the Tweet, we'll return it */
   switch (api.code) {
     case 401:
@@ -56,13 +63,22 @@ export const handleStatus = async (
   /* Catch direct media request (d.fxtwitter.com, or .mp4 / .jpg) */
   if (flags?.direct && tweet.media) {
     let redirectUrl: string | null = null;
-    if (tweet.media.videos) {
-      const { videos } = tweet.media;
-      redirectUrl = (videos[(mediaNumber || 1) - 1] || videos[0]).url;
-    } else if (tweet.media.photos) {
-      const { photos } = tweet.media;
-      redirectUrl = (photos[(mediaNumber || 1) - 1] || photos[0]).url;
+    const all = tweet.media.all || [];
+    // if (tweet.media.videos) {
+    //   const { videos } = tweet.media;
+    //   redirectUrl = (videos[(mediaNumber || 1) - 1] || videos[0]).url;
+    // } else if (tweet.media.photos) {
+    //   const { photos } = tweet.media;
+    //   redirectUrl = (photos[(mediaNumber || 1) - 1] || photos[0]).url;
+    // }
+
+    const selectedMedia = all[(mediaNumber || 1) - 1];
+    if (selectedMedia) {
+      redirectUrl = selectedMedia.url;
+    } else if (all.length > 0) {
+      redirectUrl = all[0].url;
     }
+    
     if (redirectUrl) {
       return { response: Response.redirect(redirectUrl, 302) };
     }
@@ -128,15 +144,16 @@ export const handleStatus = async (
 
      Twitter supports multiple videos in a Tweet now. But we have no mechanism to embed more than one.
      You can still use /video/:number to get a specific video. Otherwise, it'll pick the first. */
-  if (tweet.media?.videos) {
+  if (tweet.media?.videos || overrideMedia?.type === 'video') {
     authorText = newText || '';
 
     if (tweet?.translation) {
       authorText = tweet.translation?.text || '';
     }
 
-    const { videos } = tweet.media;
-    const video = videos[(mediaNumber || 1) - 1];
+    const videos = tweet.media?.videos;
+    const all = tweet.media?.all || [];
+    const video = overrideMedia as APIVideo || videos?.[(mediaNumber || 1) - 1];
 
     /* This fix is specific to Discord not wanting to render videos that are too large,
        or rendering low quality videos too small.
@@ -157,10 +174,10 @@ export const handleStatus = async (
 
     /* Like photos when picking a specific one (not using mosaic),
        we'll put an indicator if there are more than one video */
-    if (videos.length > 1) {
+    if (all && all.length > 1) {
       const videoCounter = Strings.VIDEO_COUNT.format({
-        number: String(videos.indexOf(video) + 1),
-        total: String(videos.length)
+        number: String(all.indexOf(video) + 1),
+        total: String(all.length)
       });
 
       authorText =
@@ -192,13 +209,12 @@ export const handleStatus = async (
   }
 
   /* This Tweet has one or more photos to render */
-  if (tweet.media?.photos) {
-    const { photos } = tweet.media;
-    let photo: APIPhoto | APIMosaicPhoto = photos[(mediaNumber || 1) - 1];
+  if (tweet.media?.photos || overrideMedia?.type === 'photo') {
+    let photo: APIPhoto | APIMosaicPhoto = overrideMedia as APIPhoto || tweet.media?.photos?.[0];
 
     /* If there isn't a specified media number and we have a
        mosaic response, we'll render it using mosaic */
-    if (typeof mediaNumber !== 'number' && tweet.media.mosaic) {
+    if (!overrideMedia && tweet.media?.mosaic) {
       photo = {
         /* Include dummy height/width for TypeScript reasons. We have a check to make sure we don't use these later. */
         height: 0,
@@ -209,10 +225,11 @@ export const handleStatus = async (
       };
       /* If mosaic isn't available or the link calls for a specific photo,
          we'll indicate which photo it is out of the total */
-    } else if (photos.length > 1) {
+    } else if (tweet.media?.all && tweet.media.all.length > 1) {
+      const { all } = tweet.media;
       const photoCounter = Strings.PHOTO_COUNT.format({
-        number: String(photos.indexOf(photo) + 1),
-        total: String(photos.length)
+        number: String(all.indexOf(photo) + 1),
+        total: String(all.length)
       });
 
       authorText =
@@ -233,7 +250,7 @@ export const handleStatus = async (
       `<meta property="og:image" content="${photo.url}"/>`
     );
 
-    if (!tweet.media.mosaic) {
+    if (!tweet.media?.mosaic) {
       headers.push(
         `<meta property="twitter:image:width" content="${photo.width}"/>`,
         `<meta property="twitter:image:height" content="${photo.height}"/>`,

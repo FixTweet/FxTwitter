@@ -140,6 +140,7 @@ interface APITweet {
     external?: APIExternalMedia;
     photos?: APIPhoto[];
     videos?: APIVideo[];
+    all?: (APIPhoto | APIVideo)[];
     mosaic?: APIMosaicPhoto;
   };
 

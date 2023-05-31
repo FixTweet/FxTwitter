@@ -75,14 +75,17 @@ const populateTweetProperties = async (
   mediaList.forEach(media => {
     const mediaObject = processMedia(media);
     if (mediaObject) {
+
+      apiTweet.media = apiTweet.media || {};
+      apiTweet.media.all = apiTweet.media?.all || [];
+      apiTweet.media.all.push(mediaObject);
+
       if (mediaObject.type === 'photo') {
         apiTweet.twitter_card = 'summary_large_image';
-        apiTweet.media = apiTweet.media || {};
         apiTweet.media.photos = apiTweet.media.photos || [];
         apiTweet.media.photos.push(mediaObject);
       } else if (mediaObject.type === 'video' || mediaObject.type === 'gif') {
         apiTweet.twitter_card = 'player';
-        apiTweet.media = apiTweet.media || {};
         apiTweet.media.videos = apiTweet.media.videos || [];
         apiTweet.media.videos.push(mediaObject);
       }
