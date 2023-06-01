@@ -1,6 +1,5 @@
 import Toucan from 'toucan-js';
 
-import { IRequest, Router } from 'itty-router';
 import { Constants } from './constants';
 import { handleStatus } from './embed/status';
 import { Strings } from './strings';
@@ -9,18 +8,24 @@ import motd from '../motd.json';
 import { sanitizeText } from './helpers/utils';
 import { handleProfile } from './user';
 
-const router = Router();
+import { Context, Hono } from 'hono';
+
+const app = new Hono();
 
 /* Handler for status (Tweet) request */
-const statusRequest = async (
-  request: IRequest,
-  event: FetchEvent,
-  flags: InputFlags = {}
-) => {
-  const { handle, id, mediaNumber, language, prefix } = request.params;
+const statusRequest = async (context: Context) => {
+  const request = context.req;
+  const event = context.event;
+  /* TODO: Does Hono really not have a better way to do this??? */
+  const handle = request.param('handle');
+  const id = request.param('id');
+  const mediaNumber = request.param('mediaNumber');
+  const language = request.param('language');
+  const prefix = request.param('prefix');
   const url = new URL(request.url);
   // eslint-disable-next-line sonarjs/no-duplicate-string
   const userAgent = request.headers.get('User-Agent') || '';
+  const flags: InputFlags = {};
 
   /* User Agent matching for embed generators, bots, crawlers, and other automated
      tools. It's pretty all-encompassing. Note that Firefox/92 is in here because 
@@ -144,13 +149,13 @@ const statusRequest = async (
 
 /* Handler for User Profiles */
 const profileRequest = async (
-  request: IRequest,
-  event: FetchEvent,
-  flags: InputFlags = {}
+  context: Context
 ) => {
-  const { handle } = request.params;
+  const request = context.req;
+  const handle = request.param('handle');	
   const url = new URL(request.url);
   const userAgent = request.headers.get('User-Agent') || '';
+  const flags: InputFlags = {};
 
   /* User Agent matching for embed generators, bots, crawlers, and other automated
      tools. It's pretty all-encompassing. Note that Firefox/92 is in here because 
@@ -185,7 +190,7 @@ const profileRequest = async (
     }
 
     /* This throws the necessary data to handleStatus (in status.ts) */
-    const profileResponse = await handleProfile(username, userAgent, flags, event);
+    const profileResponse = await handleProfile(username, userAgent, flags, context.event);
 
     /* Complete responses are normally sent just by errors. Normal embeds send a `text` value. */
     if (profileResponse.response) {
@@ -224,12 +229,15 @@ const profileRequest = async (
   }
 };
 
-const genericTwitterRedirect = async (request: IRequest) => {
+const genericTwitterRedirect = async (ctx: Context) => {
+  const request = ctx.req;
   const url = new URL(request.url);
   return Response.redirect(`${Constants.TWITTER_ROOT}${url.pathname}`, 302);
 };
 
-const versionRequest = async (request: IRequest) => {
+const versionRequest = async (ctx: Context) => {
+  const request = ctx.req;
+
   return new Response(
     Strings.VERSION_HTML.format({
       rtt: request.cf?.clientTcpRtt ? `🏓 ${request.cf.clientTcpRtt} ms RTT` : '',
@@ -266,25 +274,26 @@ const versionRequest = async (request: IRequest) => {
 
 /* TODO: is there any way to consolidate these stupid routes for itty-router?
    I couldn't find documentation allowing for regex matching */
-router.get('/:prefix?/:handle/status/:id', statusRequest);
-router.get('/:prefix?/:handle/status/:id/photo/:mediaNumber', statusRequest);
-router.get('/:prefix?/:handle/status/:id/photos/:mediaNumber', statusRequest);
-router.get('/:prefix?/:handle/status/:id/video/:mediaNumber', statusRequest);
-router.get('/:prefix?/:handle/statuses/:id', statusRequest);
-router.get('/:prefix?/:handle/statuses/:id/photo/:mediaNumber', statusRequest);
-router.get('/:prefix?/:handle/statuses/:id/photos/:mediaNumber', statusRequest);
-router.get('/:prefix?/:handle/statuses/:id/video/:mediaNumber', statusRequest);
-router.get('/:prefix?/:handle/status/:id/:language', statusRequest);
-router.get('/:prefix?/:handle/statuses/:id/:language', statusRequest);
-router.get('/status/:id', statusRequest);
-router.get('/status/:id/:language', statusRequest);
-router.get('/version', versionRequest);
+app.get('/:prefix?/:handle/status/:id', statusRequest);
+app.get('/:prefix?/:handle/status/:id/photo/:mediaNumber', statusRequest);
+app.get('/:prefix?/:handle/status/:id/photos/:mediaNumber', statusRequest);
+app.get('/:prefix?/:handle/status/:id/video/:mediaNumber', statusRequest);
+app.get('/:prefix?/:handle/statuses/:id', statusRequest);
+app.get('/:prefix?/:handle/statuses/:id/photo/:mediaNumber', statusRequest);
+app.get('/:prefix?/:handle/statuses/:id/photos/:mediaNumber', statusRequest);
+app.get('/:prefix?/:handle/statuses/:id/video/:mediaNumber', statusRequest);
+app.get('/:prefix?/:handle/status/:id/:language', statusRequest);
+app.get('/:prefix?/:handle/statuses/:id/:language', statusRequest);
+app.get('/status/:id', statusRequest);
+app.get('/status/:id/:language', statusRequest);
+app.get('/version', versionRequest);
 
 /* Oembeds (used by Discord to enhance responses) 
 
 Yes, I actually made the endpoint /owoembed. Deal with it. */
-router.get('/owoembed', async (request: IRequest) => {
+app.get('/owoembed', async (context: Context) => {
   console.log('oembed hit!');
+  const request = context.req;
   const { searchParams } = new URL(request.url);
 
   /* Fallbacks */
@@ -323,15 +332,15 @@ router.get('/owoembed', async (request: IRequest) => {
 /* Pass through profile requests to Twitter.
    We don't currently have custom profile cards yet,
    but it's something we might do. Maybe. */
-router.get('/:handle', profileRequest);
-router.get('/:handle/', profileRequest);
-router.get('/i/events/:id', genericTwitterRedirect);
-router.get('/hashtag/:hashtag', genericTwitterRedirect);
+app.get('/:handle', profileRequest);
+app.get('/:handle/', profileRequest);
+app.get('/i/events/:id', genericTwitterRedirect);
+app.get('/hashtag/:hashtag', genericTwitterRedirect);
 
 /* If we don't understand the route structure at all, we'll
    redirect to GitHub (normal domains) or API docs (api.fxtwitter.com) */
-router.get('*', async (request: IRequest) => {
-  const url = new URL(request.url);
+app.get('*', async (context: Context) => {
+  const url = new URL(context.req.url);
 
   if (Constants.API_HOST_LIST.includes(url.hostname)) {
     return Response.redirect(Constants.API_DOCS_URL, 302);
@@ -405,7 +414,7 @@ export const cacheWrapper = async (
 
       /* Literally do not know what the hell eslint is complaining about */
       // eslint-disable-next-line no-case-declarations
-      const response = await router.handle(request, event);
+      const response = await app.use(request, event);
 
       /* Store the fetched response as cacheKey
          Use waitUntil so you can return the response without blocking on

@@ -39,6 +39,7 @@
     "wrangler": "^3.0.1"
   },
   "dependencies": {
+    "hono": "^3.2.3",
     "itty-router": "^3.0.12",
     "toucan-js": "^2.7.0"
   }
