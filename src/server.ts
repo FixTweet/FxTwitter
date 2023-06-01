@@ -233,9 +233,9 @@ const versionRequest = async (request: IRequest) => {
   return new Response(
     Strings.VERSION_HTML.format({
       rtt: request.cf?.clientTcpRtt ? `🏓 ${request.cf.clientTcpRtt} ms RTT` : '',
-      colo: request.cf?.colo || '??',
-      httpversion: request.cf?.httpProtocol || 'Unknown HTTP Version',
-      tlsversion: request.cf?.tlsVersion || 'Unknown TLS Version',
+      colo: request.cf?.colo as string || '??',
+      httpversion: request.cf?.httpProtocol as string || 'Unknown HTTP Version',
+      tlsversion: request.cf?.tlsVersion as string || 'Unknown TLS Version',
       ip:
         request.headers.get('x-real-ip') ||
         request.headers.get('cf-connecting-ip') ||

@@ -1,7 +1,12 @@
 {
   "testEnvironment": "miniflare",
   "transform": {
-    "^.+\\.(t|j)sx?$": "ts-jest"
+    "^.+\\.(t|j)sx?$": [
+      "ts-jest",
+      {
+        "useESM": true
+      }
+    ]
   },
   "globals": {
     "BRANDING_NAME": "FixTweet",
