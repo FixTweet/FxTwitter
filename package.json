@@ -22,7 +22,7 @@
     "@types/jest": "^29.5.2",
     "@typescript-eslint/eslint-plugin": "^5.59.11",
     "@typescript-eslint/parser": "^5.59.11",
-    "dotenv": "^16.1.4",
+    "dotenv": "^16.2.0",
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-config-typescript": "^3.0.0",
