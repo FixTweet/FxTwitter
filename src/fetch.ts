@@ -231,6 +231,10 @@ export const fetchUser = async (
     // Validator function
     (_res: unknown) => {
       const response = _res as GraphQLUserResponse;
+      // If _res.data is an empty object, we have no user
+      if (!Object.keys(response?.data).length) {
+        return false;
+      }
       return !(
         response?.data?.user?.result?.__typename !== 'User' ||
         typeof response.data.user.result.legacy === 'undefined'

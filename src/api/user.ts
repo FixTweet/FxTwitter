@@ -60,7 +60,12 @@ export const userAPI = async (
   flags?: InputFlags
 ): Promise<UserAPIResponse> => {
   const userResponse = await fetchUser(username, event);
-
+  if (!userResponse || !Object.keys(userResponse).length) {
+    return {
+      code: 404,
+      message: 'User not found'
+    };
+  }
   /* Creating the response objects */
   const response: UserAPIResponse = { code: 200, message: 'OK' } as UserAPIResponse;
   const apiUser: APIUser = (await populateUserProperties(userResponse)) as APIUser;
