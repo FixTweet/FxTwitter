@@ -271,7 +271,7 @@ test('API fetch user', async () => {
   expect(user.birthday.year).toBeUndefined();
 });
 
-test.only('API fetch user that does not exist', async () => {
+test('API fetch user that does not exist', async () => {
   const result = await cacheWrapper(
     new Request('https://api.fxtwitter.com/usesaahah123', {
       method: 'GET',
