@@ -1,5 +1,6 @@
 import { Constants } from './constants';
 import { generateUserAgent } from './helpers/useragent';
+import { isGraphQLTweetNotFoundResponse } from './utils/graphql';
 
 const API_ATTEMPTS = 16;
 
@@ -130,7 +131,12 @@ export const twitterFetch = async (
           headers: headers
         });
       }
-
+      /*
+      If the tweet is nsfw, the body is empty and status is 404
+      const raw = await apiRequest?.clone().text();
+      console.log('Raw response:', raw);
+      console.log('Response code:', apiRequest?.status);
+      */
       response = await apiRequest?.json();
     } catch (e: unknown) {
       /* We'll usually only hit this if we get an invalid response from Twitter.
@@ -188,20 +194,71 @@ export const fetchConversation = async (
   status: string,
   event: FetchEvent,
   useElongator = false
-): Promise<TimelineBlobPartial> => {
+): Promise<GraphQLTweetDetailResponse> => {
   return (await twitterFetch(
-    `${Constants.TWITTER_API_ROOT}/2/timeline/conversation/${status}.json?${Constants.GUEST_FETCH_PARAMETERS}`,
+    `${
+      Constants.TWITTER_ROOT
+    }/i/api/graphql/TuC3CinYecrqAyqccUyFhw/TweetDetail?variables=${encodeURIComponent(
+      JSON.stringify({
+        focalTweetId: status,
+        referrer: 'messages',
+        with_rux_injections:false,
+        includePromotedContent:true,
+        withCommunity:true,
+        withQuickPromoteEligibilityTweetFields:true,
+        withArticleRichContent:false,
+        withBirdwatchNotes:true,
+        withVoice:true,
+        withV2Timeline:true
+      })
+    )}&features=${encodeURIComponent(
+      JSON.stringify({
+        rweb_lists_timeline_redesign_enabled:true,
+        responsive_web_graphql_exclude_directive_enabled:true,
+        verified_phone_label_enabled:false,
+        creator_subscriptions_tweet_preview_api_enabled:true,
+        responsive_web_graphql_timeline_navigation_enabled:true,
+        responsive_web_graphql_skip_user_profile_image_extensions_enabled:false,
+        tweetypie_unmention_optimization_enabled:true,
+        responsive_web_edit_tweet_api_enabled:true,
+        graphql_is_translatable_rweb_tweet_is_translatable_enabled:true,
+        view_counts_everywhere_api_enabled:true,
+        longform_notetweets_consumption_enabled:true,
+        responsive_web_twitter_article_tweet_consumption_enabled:false,
+        tweet_awards_web_tipping_enabled:false,
+        freedom_of_speech_not_reach_fetch_enabled:true,
+        standardized_nudges_misinfo:true,
+        tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled:true,
+        longform_notetweets_rich_text_read_enabled:true,
+        longform_notetweets_inline_media_enabled:true,
+        responsive_web_media_download_video_enabled:false,
+        responsive_web_enhance_cards_enabled:false
+      })
+    )}&fieldToggles=${encodeURIComponent(
+      JSON.stringify({
+        // TODO Figure out what this property does
+        withArticleRichContentState: false
+      })
+    )}`,
     event,
     useElongator,
     (_conversation: unknown) => {
-      const conversation = _conversation as TimelineBlobPartial;
-      return !(
-        typeof conversation.globalObjects === 'undefined' &&
-        (typeof conversation.errors === 'undefined' ||
-          conversation.errors?.[0]?.code === 239)
-      );
+      const conversation = _conversation as GraphQLTweetDetailResponse;
+      // If we get a not found error it's still a valid response
+      if (isGraphQLTweetNotFoundResponse(conversation)) return true;
+      const instructions = conversation?.data?.threaded_conversation_with_injections_v2?.instructions;
+      if (!Array.isArray(instructions)) return false;
+      const timelineAddEntries = instructions.find((e): e is TimeLineAddEntriesInstruction => e?.type === 'TimelineAddEntries');
+      if (!timelineAddEntries) return false;
+      const graphQLTimelineTweetEntry = timelineAddEntries.entries
+      .find((e): e is GraphQLTimelineTweetEntry =>
+      // TODO Fix this idk what's up with the typings
+      !!(e && typeof e === 'object' && ('entryId' in e) && e?.entryId === `tweet-${status}`));
+      if (!graphQLTimelineTweetEntry) return false;
+      const tweet = graphQLTimelineTweetEntry?.content?.itemContent?.tweet_results?.result;
+      return !!tweet;
     }
-  )) as TimelineBlobPartial;
+  )) as GraphQLTweetDetailResponse;
 };
 
 export const fetchUser = async (

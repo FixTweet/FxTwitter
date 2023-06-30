@@ -1,15 +1,8 @@
 import { Constants } from '../constants';
 import { fetchUser } from '../fetch';
 
-/* This function does the heavy lifting of processing data from Twitter API
-   and using it to create FixTweet's streamlined API responses */
-const populateUserProperties = async (
-  response: GraphQLUserResponse
-  // eslint-disable-next-line sonarjs/cognitive-complexity
-): Promise<APIUser> => {
+export const convertToApiUser = (user: GraphQLUser): APIUser => {
   const apiUser = {} as APIUser;
-
-  const user = response.data.user.result;
   /* Populating a lot of the basics */
   apiUser.url = `${Constants.TWITTER_ROOT}/${user.legacy.screen_name}`;
   apiUser.id = user.rest_id;
@@ -49,6 +42,16 @@ const populateUserProperties = async (
   }
 
   return apiUser;
+};
+
+/* This function does the heavy lifting of processing data from Twitter API
+   and using it to create FixTweet's streamlined API responses */
+const populateUserProperties = async (
+  response: GraphQLUserResponse
+  // eslint-disable-next-line sonarjs/cognitive-complexity
+): Promise<APIUser> => {
+  const user = response.data.user.result;
+  return convertToApiUser(user);
 };
 
 /* API for Twitter profiles (Users)

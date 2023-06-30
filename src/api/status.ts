@@ -7,12 +7,14 @@ import { colorFromPalette } from '../helpers/palette';
 import { translateTweet } from '../helpers/translate';
 import { unescapeText } from '../helpers/utils';
 import { processMedia } from '../helpers/media';
+import { convertToApiUser } from './user';
+import { isGraphQLTweet, isGraphQLTweetNotFoundResponse } from '../utils/graphql';
 
 /* This function does the heavy lifting of processing data from Twitter API
    and using it to create FixTweet's streamlined API responses */
 const populateTweetProperties = async (
-  tweet: TweetPartial,
-  conversation: TimelineBlobPartial,
+  tweet: GraphQLTweet,
+  conversation: any, // TimelineBlobPartial,
   language: string | undefined
   // eslint-disable-next-line sonarjs/cognitive-complexity
 ): Promise<APITweet> => {
@@ -21,54 +23,51 @@ const populateTweetProperties = async (
   /* With v2 conversation API we re-add the user object ot the tweet because
      Twitter stores it separately in the conversation API. This is to consolidate
      it in case a user appears multiple times in a thread. */
-  tweet.user = conversation?.globalObjects?.users?.[tweet.user_id_str] || {};
-
-  const user = tweet.user as UserPartial;
-  const screenName = user?.screen_name || '';
-  const name = user?.name || '';
+  const graphQLUser = tweet.core.user_results.result;
+  const apiUser = convertToApiUser(graphQLUser);
 
   /* Populating a lot of the basics */
-  apiTweet.url = `${Constants.TWITTER_ROOT}/${screenName}/status/${tweet.id_str}`;
-  apiTweet.id = tweet.id_str;
-  apiTweet.text = unescapeText(linkFixer(tweet, tweet.full_text || ''));
+  apiTweet.url = `${Constants.TWITTER_ROOT}/${apiUser.screen_name}/status/${tweet.rest_id}`;
+  apiTweet.id = tweet.rest_id;
+  apiTweet.text = unescapeText(linkFixer(tweet, tweet.legacy.full_text || ''));
   apiTweet.author = {
-    id: tweet.user_id_str,
-    name: name,
-    screen_name: screenName,
+    id: apiUser.id,
+    name: apiUser.name,
+    screen_name: apiUser.screen_name,
     avatar_url:
-      (user?.profile_image_url_https || '').replace('_normal', '_200x200') || '',
-    avatar_color: colorFromPalette(
+      (apiUser.avatar_url || '').replace('_normal', '_200x200') || '',
+    avatar_color: '0000FF' /* colorFromPalette(
       tweet.user?.profile_image_extensions_media_color?.palette || []
-    ),
-    banner_url: user?.profile_banner_url || ''
+    ),*/,
+    banner_url: apiUser.banner_url || ''
   };
-  apiTweet.replies = tweet.reply_count;
-  apiTweet.retweets = tweet.retweet_count;
-  apiTweet.likes = tweet.favorite_count;
+  apiTweet.replies = tweet.legacy.reply_count;
+  apiTweet.retweets = tweet.legacy.retweet_count;
+  apiTweet.likes = tweet.legacy.favorite_count;
   apiTweet.color = apiTweet.author.avatar_color;
   apiTweet.twitter_card = 'tweet';
-  apiTweet.created_at = tweet.created_at;
-  apiTweet.created_timestamp = new Date(tweet.created_at).getTime() / 1000;
+  apiTweet.created_at = tweet.legacy.created_at;
+  apiTweet.created_timestamp = new Date(tweet.legacy.created_at).getTime() / 1000;
 
-  apiTweet.possibly_sensitive = tweet.possibly_sensitive;
+  apiTweet.possibly_sensitive = tweet.legacy.possibly_sensitive;
 
-  if (tweet.ext_views?.state === 'EnabledWithCount') {
-    apiTweet.views = parseInt(tweet.ext_views.count || '0') ?? null;
+  if (tweet.views.state === 'EnabledWithCount') {
+    apiTweet.views = parseInt(tweet.views.count || '0') ?? null;
   } else {
     apiTweet.views = null;
   }
 
-  if (tweet.lang !== 'unk') {
-    apiTweet.lang = tweet.lang;
+  if (tweet.legacy.lang !== 'unk') {
+    apiTweet.lang = tweet.legacy.lang;
   } else {
     apiTweet.lang = null;
   }
 
-  apiTweet.replying_to = tweet.in_reply_to_screen_name || null;
-  apiTweet.replying_to_status = tweet.in_reply_to_status_id_str || null;
-
+  apiTweet.replying_to = tweet.legacy?.in_reply_to_screen_name || null;
+  apiTweet.replying_to_status = tweet.legacy?.in_reply_to_status_id_str || null;
+  
   const mediaList = Array.from(
-    tweet.extended_entities?.media || tweet.entities?.media || []
+    tweet.legacy.extended_entities?.media || tweet.legacy.entities?.media || []
   );
 
   // console.log('tweet', JSON.stringify(tweet));
@@ -94,13 +93,15 @@ const populateTweetProperties = async (
   });
 
   /* Grab color palette data */
+  /*
   if (mediaList[0]?.ext_media_color?.palette) {
     apiTweet.color = colorFromPalette(mediaList[0].ext_media_color.palette);
   }
+  */
 
   /* Handle photos and mosaic if available */
   if ((apiTweet.media?.photos?.length || 0) > 1) {
-    const mosaic = await handleMosaic(apiTweet.media?.photos || [], tweet.id_str);
+    const mosaic = await handleMosaic(apiTweet.media?.photos || [], tweet.rest_id);
     if (typeof apiTweet.media !== 'undefined' && mosaic !== null) {
       apiTweet.media.mosaic = mosaic;
     }
@@ -115,6 +116,7 @@ const populateTweetProperties = async (
   }
 
   /* Populate a Twitter card */
+  
   if (tweet.card) {
     const card = await renderCard(tweet.card);
     if (card.external_media) {
@@ -128,7 +130,7 @@ const populateTweetProperties = async (
   }
 
   /* If a language is specified in API or by user, let's try translating it! */
-  if (typeof language === 'string' && language.length === 2 && language !== tweet.lang) {
+  if (typeof language === 'string' && language.length === 2 && language !== tweet.legacy.lang) {
     const translateAPI = await translateTweet(
       tweet,
       conversation.guestToken || '',
@@ -186,59 +188,62 @@ export const statusAPI = async (
   event: FetchEvent,
   flags?: InputFlags
 ): Promise<TweetAPIResponse> => {
-  let conversation = await fetchConversation(status, event);
-  let tweet = conversation?.globalObjects?.tweets?.[status] || {};
-
   let wasMediaBlockedNSFW = false;
-
+  let conversation = await fetchConversation(status, event);
+  let tweet: GraphQLTweet | TweetTombstone;
+  if (isGraphQLTweetNotFoundResponse(conversation)) { 
+      writeDataPoint(event, language, wasMediaBlockedNSFW, 'NOT_FOUND', flags);
+      return { code: 404, message: 'NOT_FOUND' };
+  }
+  /* Fallback for if Tweet did not load (i.e. NSFW) */
+  if (Object.keys(conversation).length === 0) {
+    // Try again using elongator API proxy
+    console.log('No Tweet was found, loading again from elongator');
+    conversation = await fetchConversation(status, event, true);
+    if (Object.keys(conversation).length === 0) {
+      writeDataPoint(event, language, wasMediaBlockedNSFW, 'NOT_FOUND', flags);
+      return { code: 404, message: 'NOT_FOUND' };
+    }
+    // If the tweet now loads, it was probably NSFW
+    wasMediaBlockedNSFW = true;
+  }
+  // Find this specific tweet in the conversation
+  try {
+    const instructions = conversation?.data?.threaded_conversation_with_injections_v2?.instructions;
+    if (!Array.isArray(instructions)) {
+      console.log(JSON.stringify(conversation, null, 2));
+      throw new Error('Invalid instructions');
+    }
+    const timelineAddEntries = instructions.find((e): e is TimeLineAddEntriesInstruction => e?.type === 'TimelineAddEntries');
+    if (!timelineAddEntries) throw new Error('No valid timeline entries');
+    const graphQLTimelineTweetEntry = timelineAddEntries.entries
+    .find((e): e is GraphQLTimelineTweetEntry =>
+    // TODO Fix this idk what's up with the typings
+    !!(e && typeof e === 'object' && ('entryId' in e) && e?.entryId === `tweet-${status}`));
+    if (!graphQLTimelineTweetEntry) throw new Error('No tweet entry with');
+    tweet = graphQLTimelineTweetEntry?.content?.itemContent?.tweet_results?.result;
+    if (!tweet) throw new Error('No tweet in timeline entry');
+  } catch (e) {
+    // Api failure at parsing status
+    console.log('Tweet could not be accessed, got conversation ', conversation);
+    writeDataPoint(event, language, wasMediaBlockedNSFW, 'API_FAIL', flags);
+    return { code: 500, message: 'API_FAIL' };
+  }
+  // If the tweet is not a graphQL tweet it's a tombstone, return the error to the user
+  if (!isGraphQLTweet(tweet)) {
+    console.log('Tweet was not a valid tweet', tweet);
+    writeDataPoint(event, language, wasMediaBlockedNSFW, 'PRIVATE_TWEET', flags);
+    return { code: 401, message: 'PRIVATE_TWEET' };
+  }
+  
+  /*
   if (tweet.retweeted_status_id_str) {
     tweet = conversation?.globalObjects?.tweets?.[tweet.retweeted_status_id_str] || {};
   }
+  */
 
-  /* Fallback for if Tweet did not load (i.e. NSFW) */
-  if (typeof tweet.full_text === 'undefined') {
-    if (conversation.timeline?.instructions?.length > 0) {
-      /* Try again using elongator API proxy */
-      console.log('No Tweet was found, loading again from elongator');
-      conversation = await fetchConversation(status, event, true);
-      tweet = conversation?.globalObjects?.tweets?.[status] || {};
-
-      if (typeof tweet.full_text !== 'undefined') {
-        console.log('Successfully loaded Tweet using elongator');
-        wasMediaBlockedNSFW = true;
-      } else if (
-        typeof tweet.full_text === 'undefined' &&
-        conversation.timeline?.instructions?.length > 0
-      ) {
-        console.log(
-          'Tweet could not be accessed with elongator, must be private/suspended, got tweet ',
-          tweet,
-          ' conversation ',
-          conversation
-        );
-
-        writeDataPoint(event, language, wasMediaBlockedNSFW, 'PRIVATE_TWEET', flags);
-        return { code: 401, message: 'PRIVATE_TWEET' };
-      }
-    } else {
-      /* {"errors":[{"code":34,"message":"Sorry, that page does not exist."}]} */
-      if (conversation.errors?.[0]?.code === 34) {
-        writeDataPoint(event, language, wasMediaBlockedNSFW, 'NOT_FOUND', flags);
-        return { code: 404, message: 'NOT_FOUND' };
-      }
-
-      /* Commented this the part below out for now since it seems like atm this check doesn't actually do anything */
-
-      /* Tweets object is completely missing, smells like API failure */
-      // if (typeof conversation?.globalObjects?.tweets === 'undefined') {
-      //   writeDataPoint(event, language, wasMediaBlockedNSFW, 'API_FAIL', flags);
-      //   return { code: 500, message: 'API_FAIL' };
-      // }
-
-      /* If we have no idea what happened then just return API error */
-      writeDataPoint(event, language, wasMediaBlockedNSFW, 'API_FAIL', flags);
-      return { code: 500, message: 'API_FAIL' };
-    }
+  if (!tweet) {
+    return { code: 404, message: 'NOT_FOUND' };
   }
 
   /* Creating the response objects */
@@ -250,8 +255,7 @@ export const statusAPI = async (
   )) as APITweet;
 
   /* We found a quote tweet, let's process that too */
-  const quoteTweet =
-    conversation.globalObjects?.tweets?.[tweet.quoted_status_id_str || '0'] || null;
+  const quoteTweet = tweet.quoted_status_result;
   if (quoteTweet) {
     apiTweet.quote = (await populateTweetProperties(
       quoteTweet,
