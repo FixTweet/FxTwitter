@@ -201,15 +201,15 @@ export const fetchConversation = async (
     }/i/api/graphql/TuC3CinYecrqAyqccUyFhw/TweetDetail?variables=${encodeURIComponent(
       JSON.stringify({
         focalTweetId: status,
-        referrer: 'messages',
-        with_rux_injections:false,
-        includePromotedContent:true,
-        withCommunity:true,
-        withQuickPromoteEligibilityTweetFields:true,
-        withArticleRichContent:false,
-        withBirdwatchNotes:true,
-        withVoice:true,
-        withV2Timeline:true
+        referrer: 'home',
+        with_rux_injections: false,
+        includePromotedContent: true,
+        withCommunity: true,
+        withQuickPromoteEligibilityTweetFields: true,
+        withArticleRichContent: false,
+        withBirdwatchNotes: true,
+        withVoice: true,
+        withV2Timeline: true
       })
     )}&features=${encodeURIComponent(
       JSON.stringify({

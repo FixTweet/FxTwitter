@@ -118,7 +118,7 @@ const populateTweetProperties = async (
   /* Populate a Twitter card */
   
   if (tweet.card) {
-    const card = await renderCard(tweet.card);
+    const card = renderCard(tweet.card);
     if (card.external_media) {
       apiTweet.twitter_card = 'summary_large_image';
       apiTweet.media = apiTweet.media || {};
