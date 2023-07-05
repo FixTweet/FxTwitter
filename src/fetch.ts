@@ -131,11 +131,6 @@ export const twitterFetch = async (
           headers: headers
         });
       }
-      if (apiRequest.status !== 200) {
-        const raw = await apiRequest?.clone().text();
-        console.log('Raw response:', raw);
-        console.log('Response code:', apiRequest?.status);
-      }
       
       response = await apiRequest?.json();
     } catch (e: unknown) {
