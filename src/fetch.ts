@@ -1,6 +1,6 @@
 import { Constants } from './constants';
 import { generateUserAgent } from './helpers/useragent';
-import { isGraphQLTweet, isGraphQLTweetNotFoundResponse } from './utils/graphql';
+import { isGraphQLTweet } from './utils/graphql';
 
 const API_ATTEMPTS = 16;
 
@@ -242,10 +242,11 @@ export const fetchConversation = async (
       if (tweet?.__typename === 'TweetUnavailable' && tweet.reason === 'NsfwLoggedOut') {
         return true;
       }
-      if (Array.isArray(conversation.errors)) {
+      if (tweet?.__typename === 'TweetUnavailable') {
         return true;
       }
-      return false;
+      // Final clause for checking if it's valid is if there's errors
+      return Array.isArray(conversation.errors)
     }
   )) as TweetResultsByRestIdResult;
 };
