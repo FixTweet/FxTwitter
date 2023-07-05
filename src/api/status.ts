@@ -189,51 +189,35 @@ export const statusAPI = async (
   flags?: InputFlags
 ): Promise<TweetAPIResponse> => {
   let wasMediaBlockedNSFW = false;
-  let conversation = await fetchConversation(status, event);
-  let tweet: GraphQLTweet | TweetTombstone;
-  if (isGraphQLTweetNotFoundResponse(conversation)) { 
-      writeDataPoint(event, language, wasMediaBlockedNSFW, 'NOT_FOUND', flags);
-      return { code: 404, message: 'NOT_FOUND' };
+  let res = await fetchConversation(status, event);
+  const tweet = res.data?.tweetResult?.result;
+  if (!tweet) {
+    return { code: 404, message: 'NOT_FOUND' };
   }
-  /* Fallback for if Tweet did not load (i.e. NSFW) */
-  if (Object.keys(conversation).length === 0) {
-    // Try again using elongator API proxy
-    console.log('No Tweet was found, loading again from elongator');
-    conversation = await fetchConversation(status, event, true);
-    if (Object.keys(conversation).length === 0) {
-      writeDataPoint(event, language, wasMediaBlockedNSFW, 'NOT_FOUND', flags);
-      return { code: 404, message: 'NOT_FOUND' };
-    }
-    // If the tweet now loads, it was probably NSFW
+  if (tweet.__typename === 'TweetUnavailable' && tweet.reason === 'NsfwLoggedOut') {
     wasMediaBlockedNSFW = true;
+    res = await fetchConversation(status, event, true);
   }
-  // Find this specific tweet in the conversation
-  try {
-    const instructions = conversation?.data?.threaded_conversation_with_injections_v2?.instructions;
-    if (!Array.isArray(instructions)) {
-      console.log(JSON.stringify(conversation, null, 2));
-      throw new Error('Invalid instructions');
+  
+  if (tweet.__typename === 'TweetUnavailable') {
+    if (tweet.reason === 'Protected') {
+      writeDataPoint(event, language, wasMediaBlockedNSFW, 'PRIVATE_TWEET', flags);
+      return { code: 401, message: 'PRIVATE_TWEET' };
+    } else if (tweet.reason === 'NsfwLoggedOut') {
+      // API failure as elongator should have handled this
+      writeDataPoint(event, language, wasMediaBlockedNSFW, 'API_FAIL', flags);
+      return { code: 500, message: 'API_FAIL' };
+    } else {
+      // Api failure at parsing status
+      writeDataPoint(event, language, wasMediaBlockedNSFW, 'API_FAIL', flags);
+      return { code: 500, message: 'API_FAIL' };
     }
-    const timelineAddEntries = instructions.find((e): e is TimeLineAddEntriesInstruction => e?.type === 'TimelineAddEntries');
-    if (!timelineAddEntries) throw new Error('No valid timeline entries');
-    const graphQLTimelineTweetEntry = timelineAddEntries.entries
-    .find((e): e is GraphQLTimelineTweetEntry =>
-    // TODO Fix this idk what's up with the typings
-    !!(e && typeof e === 'object' && ('entryId' in e) && e?.entryId === `tweet-${status}`));
-    if (!graphQLTimelineTweetEntry) throw new Error('No tweet entry with');
-    tweet = graphQLTimelineTweetEntry?.content?.itemContent?.tweet_results?.result;
-    if (!tweet) throw new Error('No tweet in timeline entry');
-  } catch (e) {
-    // Api failure at parsing status
-    console.log('Tweet could not be accessed, got conversation ', conversation);
-    writeDataPoint(event, language, wasMediaBlockedNSFW, 'API_FAIL', flags);
-    return { code: 500, message: 'API_FAIL' };
   }
-  // If the tweet is not a graphQL tweet it's a tombstone, return the error to the user
+  // If the tweet is not a graphQL tweet something went wrong
   if (!isGraphQLTweet(tweet)) {
     console.log('Tweet was not a valid tweet', tweet);
-    writeDataPoint(event, language, wasMediaBlockedNSFW, 'PRIVATE_TWEET', flags);
-    return { code: 401, message: 'PRIVATE_TWEET' };
+    writeDataPoint(event, language, wasMediaBlockedNSFW, 'API_FAIL', flags);
+    return { code: 500, message: 'API_FAIL' };
   }
   
   /*
@@ -245,7 +229,7 @@ export const statusAPI = async (
   if (!tweet) {
     return { code: 404, message: 'NOT_FOUND' };
   }
-
+  const conversation: any[] = [];
   /* Creating the response objects */
   const response: TweetAPIResponse = { code: 200, message: 'OK' } as TweetAPIResponse;
   const apiTweet: APITweet = (await populateTweetProperties(

@@ -115,7 +115,7 @@ test('API fetch video Tweet', async () => {
   expect(tweet.url).toEqual('https://twitter.com/Twitter/status/854416760933556224');
   expect(tweet.id).toEqual('854416760933556224');
   expect(tweet.text).toEqual(
-    'Get the sauces ready, #NuggsForCarter has 3 million+ Retweets.'
+    'Get the sauces ready, #NuggsForCarter has 3 million+ Retweets. https://t.co/ydLBtfK3Z3'
   );
   expect(tweet.author.screen_name?.toLowerCase()).toEqual('twitter');
   expect(tweet.author.id).toEqual('783214');
@@ -160,7 +160,7 @@ test('API fetch multi-photo Tweet', async () => {
   expect(tweet).toBeTruthy();
   expect(tweet.url).toEqual('https://twitter.com/Twitter/status/1445094085593866246');
   expect(tweet.id).toEqual('1445094085593866246');
-  expect(tweet.text).toEqual('@netflix');
+  expect(tweet.text).toEqual('@netflix https://t.co/W0XPnj2qLP');
   expect(tweet.author.screen_name?.toLowerCase()).toEqual('twitter');
   expect(tweet.author.id).toEqual('783214');
   expect(tweet.author.name).toBeTruthy();

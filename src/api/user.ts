@@ -14,6 +14,7 @@ export const convertToApiUser = (user: GraphQLUser): APIUser => {
   apiUser.screen_name = user.legacy.screen_name;
   apiUser.description = user.legacy.description;
   apiUser.location = user.legacy.location;
+  apiUser.banner_url = user.legacy.profile_banner_url;
   /*
   if (user.is_blue_verified) {
     apiUser.verified = 'blue';

@@ -456,4 +456,14 @@ type GraphQLTweetFoundResponse = {
     }
   }
 }
-type GraphQLTweetDetailResponse = GraphQLTweetFoundResponse | GraphQLTweetNotFoundResponse;
+type TweetResultsByRestIdResult = {
+  errors?: unknown[];
+  data?: {
+    tweetResult?: {
+      result?: {
+        __typename: 'TweetUnavailable';
+        reason: 'NsfwLoggedOut'|'Protected';
+      }|GraphQLTweet
+    }
+  }
+}
