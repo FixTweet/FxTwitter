@@ -2,7 +2,13 @@ import { Constants } from './constants';
 import { generateUserAgent } from './helpers/useragent';
 import { isGraphQLTweet } from './utils/graphql';
 
-const API_ATTEMPTS = 16;
+const API_ATTEMPTS = 3;
+
+function generateCSRFToken() {
+  const randomBytes = new Uint8Array(160/2);
+  crypto.getRandomValues(randomBytes);
+  return Array.from(randomBytes, byte => byte.toString(16).padStart(2, '0')).join('');
+}
 
 export const twitterFetch = async (
   url: string,
@@ -52,12 +58,9 @@ export const twitterFetch = async (
   const cache = caches.default;
 
   while (apiAttempts < API_ATTEMPTS) {
-    const csrfToken = crypto
-      .randomUUID()
-      .replace(
-        /-/g,
-        ''
-      ); /* Generate a random CSRF token, this doesn't matter, Twitter just cares that header and cookie match */
+    /* Generate a random CSRF token, Twitter just cares that header and cookie match,
+    REST can use shorter csrf tokens (32 bytes) but graphql prefers 160 bytes */
+    const csrfToken = generateCSRFToken();
 
     const headers: Record<string, string> = {
       Authorization: Constants.GUEST_BEARER_TOKEN,

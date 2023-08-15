@@ -59,6 +59,7 @@ export const handleStatus = async (
     case 404:
       return returnError(Strings.ERROR_TWEET_NOT_FOUND);
     case 500:
+      console.log(api);
       return returnError(Strings.ERROR_API_FAIL);
   }
 
