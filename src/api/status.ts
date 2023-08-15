@@ -198,6 +198,8 @@ export const statusAPI = async (
     wasMediaBlockedNSFW = true;
     res = await fetchConversation(status, event, true);
   }
+
+  console.log(JSON.stringify(tweet))
   
   if (tweet.__typename === 'TweetUnavailable') {
     if (tweet.reason === 'Protected') {
