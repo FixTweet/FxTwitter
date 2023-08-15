@@ -1,7 +1,10 @@
 /* Helps replace t.co links with their originals */
-export const linkFixer = (tweet: TweetPartial, text: string): string => {
-  if (typeof tweet.entities?.urls !== 'undefined') {
-    tweet.entities?.urls.forEach((url: TcoExpansion) => {
+export const linkFixer = (tweet: GraphQLTweet, text: string): string => {
+  console.log('got entites', {
+    entities: tweet.legacy.entities,
+  })
+  if (Array.isArray(tweet.legacy.entities?.urls) && tweet.legacy.entities.urls.length) {
+    tweet.legacy.entities.urls.forEach((url: TcoExpansion) => {
       let newURL = url.expanded_url;
 
       if (newURL.match(/^https:\/\/twitter\.com\/i\/web\/status\/\w+/g) !== null) {

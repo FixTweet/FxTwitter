@@ -1,15 +1,8 @@
 import { Constants } from '../constants';
 import { fetchUser } from '../fetch';
 
-/* This function does the heavy lifting of processing data from Twitter API
-   and using it to create FixTweet's streamlined API responses */
-const populateUserProperties = async (
-  response: GraphQLUserResponse
-  // eslint-disable-next-line sonarjs/cognitive-complexity
-): Promise<APIUser> => {
+export const convertToApiUser = (user: GraphQLUser): APIUser => {
   const apiUser = {} as APIUser;
-
-  const user = response.data.user.result;
   /* Populating a lot of the basics */
   apiUser.url = `${Constants.TWITTER_ROOT}/${user.legacy.screen_name}`;
   apiUser.id = user.rest_id;
@@ -21,6 +14,7 @@ const populateUserProperties = async (
   apiUser.screen_name = user.legacy.screen_name;
   apiUser.description = user.legacy.description;
   apiUser.location = user.legacy.location;
+  apiUser.banner_url = user.legacy.profile_banner_url;
   /*
   if (user.is_blue_verified) {
     apiUser.verified = 'blue';
@@ -51,6 +45,16 @@ const populateUserProperties = async (
   return apiUser;
 };
 
+/* This function does the heavy lifting of processing data from Twitter API
+   and using it to create FixTweet's streamlined API responses */
+const populateUserProperties = async (
+  response: GraphQLUserResponse
+  // eslint-disable-next-line sonarjs/cognitive-complexity
+): Promise<APIUser> => {
+  const user = response.data.user.result;
+  return convertToApiUser(user);
+};
+
 /* API for Twitter profiles (Users)
    Used internally by FixTweet's embed service, or
    available for free using api.fxtwitter.com. */
@@ -60,7 +64,12 @@ export const userAPI = async (
   flags?: InputFlags
 ): Promise<UserAPIResponse> => {
   const userResponse = await fetchUser(username, event);
-
+  if (!userResponse || !Object.keys(userResponse).length) {
+    return {
+      code: 404,
+      message: 'User not found'
+    };
+  }
   /* Creating the response objects */
   const response: UserAPIResponse = { code: 200, message: 'OK' } as UserAPIResponse;
   const apiUser: APIUser = (await populateUserProperties(userResponse)) as APIUser;
