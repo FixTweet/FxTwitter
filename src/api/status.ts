@@ -18,6 +18,12 @@ const populateTweetProperties = async (
 ): Promise<APITweet> => {
   const apiTweet = {} as APITweet;
 
+  if (typeof tweet.core === 'undefined' && typeof tweet.result !== 'undefined') {
+    tweet = tweet.result;
+  } else {
+    console.log('tweet core exists');
+  }
+
   /* With v2 conversation API we re-add the user object ot the tweet because
      Twitter stores it separately in the conversation API. This is to consolidate
      it in case a user appears multiple times in a thread. */
