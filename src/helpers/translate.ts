@@ -2,7 +2,7 @@ import { Constants } from '../constants';
 
 /* Handles translating Tweets when asked! */
 export const translateTweet = async (
-  tweet: TweetPartial,
+  tweet: GraphQLTweet,
   guestToken: string,
   language: string
 ): Promise<TranslationPartial | null> => {
@@ -29,7 +29,7 @@ export const translateTweet = async (
 
   try {
     apiRequest = await fetch(
-      `${Constants.TWITTER_ROOT}/i/api/1.1/strato/column/None/tweetId=${tweet.id_str},destinationLanguage=None,translationSource=Some(Google),feature=None,timeout=None,onlyCached=None/translation/service/translateTweet`,
+      `${Constants.TWITTER_ROOT}/i/api/1.1/strato/column/None/tweetId=${tweet.rest_id},destinationLanguage=None,translationSource=Some(Google),feature=None,timeout=None,onlyCached=None/translation/service/translateTweet`,
       {
         method: 'GET',
         headers: headers
