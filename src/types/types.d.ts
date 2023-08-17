@@ -172,6 +172,8 @@ interface APITweet {
 
   source: string;
 
+  is_note_tweet: boolean;
+
   twitter_card: 'tweet' | 'summary' | 'summary_large_image' | 'player';
 }
 
