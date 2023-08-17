@@ -282,12 +282,14 @@ export const handleStatus = async (
       `<meta property="twitter:image" content="0"/>`
     );
   }
+  
+  if (!flags?.isXDomain) {
+    siteName = Strings.X_DOMAIN_NOTICE;
+  }
 
   /* Notice that user is using deprecated domain */
   if (flags?.deprecated) {
     siteName = Strings.DEPRECATED_DOMAIN_NOTICE;
-  } else if (!flags?.isXDomainTemp) {
-    siteName = Strings.X_DOMAIN_NOTICE;
   }
 
   /* Push basic headers relating to author, Tweet text, and site name */
@@ -317,7 +319,7 @@ export const handleStatus = async (
       status
     )}&author=${encodeURIComponent(
       tweet.author?.screen_name || ''
-    )}" type="application/json+oembed" title="${tweet.author.name}">`
+    )}&useXbranding=${flags?.isXDomain ? 'true' : 'false'}" type="application/json+oembed" title="${tweet.author.name}">`
   );
 
   /* When dealing with a Tweet of unknown lang, fall back to en */

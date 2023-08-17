@@ -210,5 +210,5 @@ Disallow: /owoembed/
 Allow: /watch?v=dQw4w9WgXcQ
 
 # 0100011101101111011011110110010000100000011000100110111101110100`,
-  X_DOMAIN_NOTICE: 'FixTweet - 🆕 Fix x.com links with fixupx.com!'
+  X_DOMAIN_NOTICE: 'FixTweet - 🆕 x.com link? Try fixupx.com'
 };
