@@ -12,12 +12,12 @@ export const linkFixer = (tweet: GraphQLTweet, text: string): string => {
       }
       text = text.replace(url.url, newURL);
     });
-
-    /* Remove any link with unavailable original.
-       This means that stuff like the t.co link to pic.twitter.com
-       will get removed in image/video Tweets */
-    text = text.replace(/ ?https:\/\/t\.co\/\w{10}/g, '');
   }
+
+  /* Remove any link with unavailable original.
+     This means that stuff like the t.co link to pic.twitter.com
+     will get removed in image/video Tweets */
+  text = text.replace(/ ?https:\/\/t\.co\/\w{10}/g, '');
 
   return text;
 };
