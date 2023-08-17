@@ -105,9 +105,6 @@ const populateTweetProperties = async (
   }
   */
   console.log('note_tweet', JSON.stringify(tweet.note_tweet));
-  console.log('note tweet text', tweet.note_tweet?.note_tweet_results?.result?.text)
-  console.log('mediaList.length <= 0', mediaList.length <= 0)
-  console.log('tweet.legacy.entities?.urls?.length <= 0', tweet.legacy.entities?.urls?.length <= 0)
   const noteTweetText = tweet.note_tweet?.note_tweet_results?.result?.text;
   /* For now, don't include note tweets */
   if (noteTweetText && mediaList.length <= 0 && tweet.legacy.entities?.urls?.length <= 0) {
