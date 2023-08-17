@@ -212,7 +212,7 @@ export const statusAPI = async (
     res = await fetchConversation(status, event, true);
   }
 
-  console.log(JSON.stringify(tweet))
+  // console.log(JSON.stringify(tweet))
   
   if (tweet.__typename === 'TweetUnavailable') {
     if (tweet.reason === 'Protected') {

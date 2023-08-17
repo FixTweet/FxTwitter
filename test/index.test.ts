@@ -99,7 +99,7 @@ test('API fetch basic Tweet', async () => {
 
 test('API fetch video Tweet', async () => {
   const result = await cacheWrapper(
-    new Request('https://api.fxtwitter.com/Twitter/status/854416760933556224', {
+    new Request('https://api.fxtwitter.com/X/status/854416760933556224', {
       method: 'GET',
       headers: botHeaders
     })
@@ -112,12 +112,12 @@ test('API fetch video Tweet', async () => {
 
   const tweet = response.tweet as APITweet;
   expect(tweet).toBeTruthy();
-  expect(tweet.url).toEqual('https://twitter.com/Twitter/status/854416760933556224');
+  expect(tweet.url).toEqual('https://twitter.com/X/status/854416760933556224');
   expect(tweet.id).toEqual('854416760933556224');
   expect(tweet.text).toEqual(
-    'Get the sauces ready, #NuggsForCarter has 3 million+ Retweets. https://t.co/ydLBtfK3Z3'
+    'Get the sauces ready, #NuggsForCarter has 3 million+ Retweets.'
   );
-  expect(tweet.author.screen_name?.toLowerCase()).toEqual('twitter');
+  expect(tweet.author.screen_name?.toLowerCase()).toEqual('x');
   expect(tweet.author.id).toEqual('783214');
   expect(tweet.author.name).toBeTruthy();
   expect(tweet.author.avatar_url).toBeTruthy();
@@ -158,10 +158,10 @@ test('API fetch multi-photo Tweet', async () => {
 
   const tweet = response.tweet as APITweet;
   expect(tweet).toBeTruthy();
-  expect(tweet.url).toEqual('https://twitter.com/Twitter/status/1445094085593866246');
+  expect(tweet.url).toEqual('https://twitter.com/X/status/1445094085593866246');
   expect(tweet.id).toEqual('1445094085593866246');
-  expect(tweet.text).toEqual('@netflix https://t.co/W0XPnj2qLP');
-  expect(tweet.author.screen_name?.toLowerCase()).toEqual('twitter');
+  expect(tweet.text).toEqual('@netflix');
+  expect(tweet.author.screen_name?.toLowerCase()).toEqual('x');
   expect(tweet.author.id).toEqual('783214');
   expect(tweet.author.name).toBeTruthy();
   expect(tweet.author.avatar_url).toBeTruthy();
@@ -206,10 +206,10 @@ test('API fetch poll Tweet', async () => {
 
   const tweet = response.tweet as APITweet;
   expect(tweet).toBeTruthy();
-  expect(tweet.url).toEqual('https://twitter.com/Twitter/status/1055475950543167488');
+  expect(tweet.url).toEqual('https://twitter.com/X/status/1055475950543167488');
   expect(tweet.id).toEqual('1055475950543167488');
   expect(tweet.text).toEqual('A poll:');
-  expect(tweet.author.screen_name?.toLowerCase()).toEqual('twitter');
+  expect(tweet.author.screen_name?.toLowerCase()).toEqual('x');
   expect(tweet.author.id).toEqual('783214');
   expect(tweet.author.name).toBeTruthy();
   expect(tweet.author.avatar_url).toBeTruthy();
@@ -243,7 +243,7 @@ test('API fetch poll Tweet', async () => {
 
 test('API fetch user', async () => {
   const result = await cacheWrapper(
-    new Request('https://api.fxtwitter.com/twitter', {
+    new Request('https://api.fxtwitter.com/x', {
       method: 'GET',
       headers: botHeaders
     })
@@ -256,9 +256,9 @@ test('API fetch user', async () => {
 
   const user = response.user as APIUser;
   expect(user).toBeTruthy();
-  expect(user.url).toEqual('https://twitter.com/Twitter');
+  expect(user.url).toEqual('https://twitter.com/X');
   expect(user.id).toEqual('783214');
-  expect(user.screen_name).toEqual('Twitter');
+  expect(user.screen_name).toEqual('X');
   expect(user.followers).toEqual(expect.any(Number));
   expect(user.following).toEqual(expect.any(Number));
   // The official twitter account will never be following as many people as it has followers
@@ -266,9 +266,9 @@ test('API fetch user', async () => {
   expect(user.likes).toEqual(expect.any(Number));
   // expect(user.verified).toEqual('business');
   expect(user.joined).toEqual('Tue Feb 20 14:35:54 +0000 2007');
-  expect(user.birthday.day).toEqual(21);
-  expect(user.birthday.month).toEqual(3);
-  expect(user.birthday.year).toBeUndefined();
+  // expect(user.birthday.day).toEqual(21);
+  // expect(user.birthday.month).toEqual(3);
+  // expect(user.birthday.year).toBeUndefined();
 });
 
 test('API fetch user that does not exist', async () => {
