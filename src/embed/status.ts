@@ -6,6 +6,7 @@ import { getAuthorText } from '../helpers/author';
 import { statusAPI } from '../api/status';
 import { renderPhoto } from '../render/photo';
 import { renderVideo } from '../render/video';
+import { renderInstantView } from '../render/instantview';
 
 export const returnError = (error: string): StatusResponse => {
   return {
@@ -35,9 +36,9 @@ export const handleStatus = async (
   const api = await statusAPI(status, language, event as FetchEvent, flags);
   const tweet = api?.tweet as APITweet;
   const isTelegram = (userAgent || '').indexOf('Telegram') > -1;
-  const useIV = isTelegram && !tweet.possibly_sensitive && !flags?.direct && (tweet.media?.photos || tweet.media?.videos);
+  const useIV = isTelegram && tweet.is_note_tweet; //!tweet.possibly_sensitive && !flags?.direct && (tweet.media?.photos || tweet.media?.videos);
 
-  let ivbody = "";
+  let ivbody = '';
 
   /* Catch this request if it's an API response */
   if (flags?.api) {
@@ -129,22 +130,16 @@ export const handleStatus = async (
       `<meta http-equiv="refresh" content="0;url=https://twitter.com/${tweet.author.screen_name}/status/${tweet.id}"/>`
     );
   }
-  
-  if (useIV) {
-    // Convert JS date to ISO date
-    const date = new Date(tweet.created_at).toISOString();
-    /* Include Instant-View related headers. This is an unfinished project. Thanks to https://nikstar.me/post/instant-view/ for the help! */
-    headers.push(
-      `<meta property="al:android:app_name" content="Medium"/>`,
-      `<meta property="article:published_time" content="${date}"/>` /* TODO: Replace with real date */
-    )
 
-    ivbody = `<section class="section-backgroundImage"><figure class="graf--layoutFillWidth"></figure></section><article><h1>${tweet.author.name} (@${tweet.author.screen_name})</h1><p>Instant View (✨ Beta)</p>
-      <blockquote class="twitter-tweet" data-dnt="true"><p lang="en" dir="ltr"> <a href="${tweet.url}">_</a></blockquote>
-    </article>
-    `;
+  if (useIV) {
+    const instructions = renderInstantView({ tweet: tweet, text: newText });
+    headers.push(...instructions.addHeaders);
+    if (instructions.authorText) {
+      authorText = instructions.authorText;
+    }
+    ivbody = instructions.text || '';
   }
-  
+
   /* This Tweet has a translation attached to it, so we'll render it. */
   if (tweet.translation) {
     const { translation } = tweet;
@@ -292,10 +287,7 @@ export const handleStatus = async (
 
   /* If we have no media to display, instead we'll display the user profile picture in the embed */
   if (!tweet.media?.videos && !tweet.media?.photos && !flags?.textOnly) {
-    const avatar = tweet.author.avatar_url?.replace(
-      '_200x200',
-      '_normal'
-    )
+    const avatar = tweet.author.avatar_url?.replace('_200x200', '_normal');
     if (!useIV) {
       headers.push(
         /* Use a slightly higher resolution image for profile pics */
@@ -309,7 +301,7 @@ export const handleStatus = async (
       );
     }
   }
-  
+
   if (!flags?.isXDomain) {
     siteName = Strings.X_DOMAIN_NOTICE;
   }
@@ -326,12 +318,14 @@ export const handleStatus = async (
      
      A possible explanation for this weird behavior is due to the Medium template we are forced to use because Telegram IV is not an open platform
      and we have to pretend to be Medium in order to get working IV, but haven't figured if the template is causing issues.  */
-  const text = useIV ? sanitizeText(newText).replace(/\n/g, '<br>') : sanitizeText(newText);
+  const text = useIV
+    ? sanitizeText(newText).replace(/\n/g, '<br>')
+    : sanitizeText(newText);
 
   /* Push basic headers relating to author, Tweet text, and site name */
   headers.push(
     `<meta property="og:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`,
-    `<meta property="og:description" content="${sanitizeText(newText).replace(/\n/g, '<br>')}"/>`,
+    `<meta property="og:description" content="${text}"/>`,
     `<meta property="og:site_name" content="${siteName}"/>`
   );
 
@@ -353,9 +347,9 @@ export const handleStatus = async (
       authorText.substring(0, 200)
     )}${flags?.deprecated ? '&deprecated=true' : ''}&status=${encodeURIComponent(
       status
-    )}&author=${encodeURIComponent(
-      tweet.author?.screen_name || ''
-    )}&useXbranding=${flags?.isXDomain ? 'true' : 'false'}" type="application/json+oembed" title="${tweet.author.name}">`
+    )}&author=${encodeURIComponent(tweet.author?.screen_name || '')}&useXbranding=${
+      flags?.isXDomain ? 'true' : 'false'
+    }" type="application/json+oembed" title="${tweet.author.name}">`
   );
 
   /* When dealing with a Tweet of unknown lang, fall back to en */
