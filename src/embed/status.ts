@@ -295,7 +295,7 @@ export const handleStatus = async (
   /* Push basic headers relating to author, Tweet text, and site name */
   headers.push(
     `<meta property="og:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`,
-    `<meta property="og:description" content="${sanitizeText(newText)}"/>`,
+    `<meta property="og:description" content="${sanitizeText(newText).replace(/\n/g, '<br>')}"/>`,
     `<meta property="og:site_name" content="${siteName}"/>`
   );
 

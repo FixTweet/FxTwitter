@@ -366,6 +366,19 @@ type GraphQLTweet = {
       media: TweetMedia[]
     }
   }
+  note_tweet: {
+    is_expandable: boolean;
+    entity_set: {
+      hashtags: unknown[];
+      urls: unknown[];
+      user_mentions: unknown[];
+    },
+    note_tweet_results: {
+      result: {
+        text: string;
+      }
+    }
+  };
   card: {
     rest_id: string; // "card://1674824189176590336",
     legacy: {

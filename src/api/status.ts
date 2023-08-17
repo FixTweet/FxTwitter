@@ -104,6 +104,16 @@ const populateTweetProperties = async (
     apiTweet.color = colorFromPalette(mediaList[0].ext_media_color.palette);
   }
   */
+  console.log('note_tweet', JSON.stringify(tweet.note_tweet));
+  console.log('note tweet text', tweet.note_tweet?.note_tweet_results?.result?.text)
+  console.log('mediaList.length <= 0', mediaList.length <= 0)
+  console.log('tweet.legacy.entities?.urls?.length <= 0', tweet.legacy.entities?.urls?.length <= 0)
+  const noteTweetText = tweet.note_tweet?.note_tweet_results?.result?.text;
+  /* For now, don't include note tweets */
+  if (noteTweetText && mediaList.length <= 0 && tweet.legacy.entities?.urls?.length <= 0) {
+    console.log('We meet the conditions to use new note tweets');
+    apiTweet.text = unescapeText(noteTweetText);
+  }
 
   /* Handle photos and mosaic if available */
   if ((apiTweet.media?.photos?.length || 0) > 1) {
@@ -211,10 +221,10 @@ export const statusAPI = async (
     if (tweet.reason === 'Protected') {
       writeDataPoint(event, language, wasMediaBlockedNSFW, 'PRIVATE_TWEET', flags);
       return { code: 401, message: 'PRIVATE_TWEET' };
-    } else if (tweet.reason === 'NsfwLoggedOut') {
-      // API failure as elongator should have handled this
-      writeDataPoint(event, language, wasMediaBlockedNSFW, 'API_FAIL', flags);
-      return { code: 500, message: 'API_FAIL' };
+    // } else if (tweet.reason === 'NsfwLoggedOut') {
+    //   // API failure as elongator should have handled this
+    //   writeDataPoint(event, language, wasMediaBlockedNSFW, 'API_FAIL', flags);
+    //   return { code: 500, message: 'API_FAIL' };
     } else {
       // Api failure at parsing status
       writeDataPoint(event, language, wasMediaBlockedNSFW, 'API_FAIL', flags);
