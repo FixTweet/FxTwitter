@@ -36,7 +36,7 @@
     "typescript": "^5.1.6",
     "webpack": "^5.88.1",
     "webpack-cli": "^5.1.4",
-    "wrangler": "^3.1.1"
+    "wrangler": "^3.5.1"
   },
   "dependencies": {
     "itty-router": "^3.0.12",
