@@ -313,7 +313,9 @@ router.get('/owoembed', async (request: IRequest) => {
     provider_name:
       searchParams.get('deprecated') === 'true'
         ? Strings.DEPRECATED_DOMAIN_NOTICE_DISCORD
-        : (useXbranding ? name : Strings.X_DOMAIN_NOTICE),
+        : useXbranding
+        ? name
+        : Strings.X_DOMAIN_NOTICE,
     provider_url: url,
     title: Strings.DEFAULT_AUTHOR_TEXT,
     type: 'link',

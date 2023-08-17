@@ -6,7 +6,10 @@ export const renderCard = (
 ): { poll?: APIPoll; external_media?: APIExternalMedia } => {
   // We convert the binding_values array into an object with the legacy format
   // TODO Clean this up
-  const binding_values: Record<string, { string_value?: string; boolean_value?: boolean }> = {};
+  const binding_values: Record<
+    string,
+    { string_value?: string; boolean_value?: boolean }
+  > = {};
   if (Array.isArray(card.legacy.binding_values)) {
     card.legacy.binding_values.forEach(value => {
       if (value.key && value.value) {
@@ -14,7 +17,6 @@ export const renderCard = (
       }
     });
   }
-      
 
   console.log('rendering card');
 
@@ -56,7 +58,10 @@ export const renderCard = (
         });
 
       return { poll: poll };
-    } else if (typeof binding_values.player_url !== 'undefined' && binding_values.player_url.string_value) {
+    } else if (
+      typeof binding_values.player_url !== 'undefined' &&
+      binding_values.player_url.string_value
+    ) {
       /* Oh good, a non-Twitter video URL! This enables YouTube embeds and stuff to just work */
       return {
         external_media: {
