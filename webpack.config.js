@@ -1,6 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
-const SentryWebpackPlugin = require('@sentry/webpack-plugin');
+const { sentryWebpackPlugin } = require('@sentry/webpack-plugin');
 
 const gitCommit = require('child_process')
   .execSync('git rev-parse --short HEAD')
@@ -19,7 +19,6 @@ require('dotenv').config();
 
 let envVariables = [
   'BRANDING_NAME',
-  'BRANDING_NAME_DISCORD',
   'DIRECT_MEDIA_DOMAINS',
   'TEXT_ONLY_DOMAINS',
   'HOST_URL',
@@ -45,7 +44,7 @@ let plugins = [
 
 if (process.env.SENTRY_AUTH_TOKEN) {
   plugins.push(
-    new SentryWebpackPlugin({
+    sentryWebpackPlugin({
       release: releaseName,
       include: './dist',
       urlPrefix: '~/',

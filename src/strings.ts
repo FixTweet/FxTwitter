@@ -131,8 +131,9 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
   QUOTE_TEXT: `↘️ Quoting {name} (@{screen_name})`,
   TRANSLATE_TEXT: `↘️ Translated from {language}`,
   TRANSLATE_TEXT_INTL: `↘️ {source} ➡️ {destination}`,
-  PHOTO_COUNT: `Photo {number} of {total}`,
-  VIDEO_COUNT: `Video {number} of {total}`,
+  PHOTO_COUNT: `Photo {number} / {total}`,
+  VIDEO_COUNT: `Video {number} / {total}`,
+  MEDIA_COUNT: `Media {number} / {total}`,
 
   SINGULAR_DAY_LEFT: 'day left',
   PLURAL_DAYS_LEFT: 'days left',
@@ -144,7 +145,7 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
   PLURAL_SECONDS_LEFT: 'seconds left',
   FINAL_POLL_RESULTS: 'Final results',
 
-  ERROR_API_FAIL: 'Tweet failed to load due to an API error :(',
+  ERROR_API_FAIL: 'Tweet failed to load due to an API error. This is most common with NSFW Tweets as Twitter / X currently blocks us from fetching them. We\'re still working on a fix for that.🙏',
   ERROR_PRIVATE: `Sorry, we can't embed this Tweet because the user is private or suspended :(`,
   ERROR_TWEET_NOT_FOUND: `Sorry, that Tweet doesn't exist :(`,
   ERROR_USER_NOT_FOUND: `Sorry, that user doesn't exist :(`,
@@ -208,5 +209,6 @@ Disallow: /owoembed
 Disallow: /owoembed/
 Allow: /watch?v=dQw4w9WgXcQ
 
-# 0100011101101111011011110110010000100000011000100110111101110100`
+# 0100011101101111011011110110010000100000011000100110111101110100`,
+  X_DOMAIN_NOTICE: 'FixTweet - 🆕 x.com link? Try fixupx.com'
 };

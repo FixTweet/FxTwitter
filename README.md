@@ -1,6 +1,6 @@
-# FixTweet <img src="https://abs-0.twimg.com/emoji/v2/svg/1f527.svg" height="28">
+# FixTweet / FixupX <img src="https://abs-0.twimg.com/emoji/v2/svg/1f527.svg" height="28">
 
-## Embed Twitter videos, polls, translations, & more on Discord and Telegram!
+## Embed X / Twitter videos, polls, translations, & more on Discord and Telegram!
 
 ![][icons]
 
@@ -20,11 +20,14 @@
 [licensebadge]: https://img.shields.io/github/license/FixTweet/FixTweet
 [uptimebadge]: https://img.shields.io/uptimerobot/ratio/m792476277-53add6f22c4e6f4d3a2d7e98
 
-## Inspired by [Robin Universe's TwitFix](https://github.com/robinuniverse/TwitFix), rewritten in TypeScript as a Cloudflare Worker to scale, packed with even more features and [best-in-class user privacy 🔒](#built-with-privacy-in-mind).
+## Written in TypeScript as a Cloudflare Worker to scale, packed with more features and [best-in-class user privacy 🔒](#built-with-privacy-in-mind).
 
-### Add `fx` before your Twitter link to make it `fxtwitter.com`
+### Add `fx` before your `twitter.com` link to make it `fxtwitter.com`, OR
+### Change `x.com` to `fixupx.com` in your link
 
-### In a hurry? On Discord, send a Twitter link and type `s/e/p` to make `twittpr.com`.
+### For Twitter links on Discord, send a Twitter link and type `s/e/p` to make `twittpr.com`.
+
+### ℹ️ Note: Some extra features described may currently broken due to recent Twitter/X API changes. [Tracking thread for the API changes](https://github.com/FixTweet/FixTweet/issues/333)
 
 <img src="https://cdn.discordapp.com/attachments/165560751363325952/1006346785985417307/fixtweet.webp">
 

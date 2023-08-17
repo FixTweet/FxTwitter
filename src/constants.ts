@@ -1,7 +1,6 @@
 export const Constants = {
   /* These constants are populated by variables in .env, then set by Webpack */
   BRANDING_NAME: BRANDING_NAME,
-  BRANDING_NAME_DISCORD: BRANDING_NAME_DISCORD,
   DIRECT_MEDIA_DOMAINS: DIRECT_MEDIA_DOMAINS.split(','),
   TEXT_ONLY_DOMAINS: TEXT_ONLY_DOMAINS.split(','),
   DEPRECATED_DOMAIN_LIST: DEPRECATED_DOMAIN_LIST.split(','),
@@ -21,7 +20,7 @@ export const Constants = {
   GUEST_TOKEN_MAX_AGE: 3 * 60 * 60,
   /* Twitter Web App actually uses Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA
      instead, but accounts marked as 18+ wouldn't show up then */
-  GUEST_BEARER_TOKEN: `Bearer AAAAAAAAAAAAAAAAAAAAAPYXBAAAAAAACLXUNDekMxqa8h%2F40K4moUkGsoc%3DTYfbDKbT3jJPCEVnMYqilB28NHfOPqkca3qaAxGfsyKCs0wRbw`,
+  GUEST_BEARER_TOKEN: `Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA`,
   GUEST_FETCH_PARAMETERS: [
     'cards_platform=Web-12',
     'include_cards=1',
@@ -30,10 +29,13 @@ export const Constants = {
     'include_quote_count=true',
     'include_reply_count=1',
     'tweet_mode=extended',
+    'include_entities=true',
     'include_ext_media_color=true',
     'include_ext_media_availability=true',
     'include_ext_sensitive_media_warning=true',
-    'simple_quoted_tweet=true'
+    'include_ext_has_birdwatch_notes=true',
+    'simple_quoted_tweet=true',
+    'ext=mediaStats%2ChighlightedLabel'
   ].join('&'),
   BASE_HEADERS: {
     'DNT': `1`,

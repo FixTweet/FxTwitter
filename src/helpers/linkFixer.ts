@@ -1,15 +1,23 @@
 /* Helps replace t.co links with their originals */
-export const linkFixer = (tweet: TweetPartial, text: string): string => {
-  if (typeof tweet.entities?.urls !== 'undefined') {
-    tweet.entities?.urls.forEach((url: TcoExpansion) => {
-      text = text.replace(url.url, url.expanded_url);
-    });
+export const linkFixer = (tweet: GraphQLTweet, text: string): string => {
+  console.log('got entites', {
+    entities: tweet.legacy.entities,
+  })
+  if (Array.isArray(tweet.legacy.entities?.urls) && tweet.legacy.entities.urls.length) {
+    tweet.legacy.entities.urls.forEach((url: TcoExpansion) => {
+      let newURL = url.expanded_url;
 
-    /* Remove any link with unavailable original.
-       This means that stuff like the t.co link to pic.twitter.com
-       will get removed in image/video Tweets */
-    text = text.replace(/ ?https:\/\/t\.co\/\w{10}/g, '');
+      if (newURL.match(/^https:\/\/twitter\.com\/i\/web\/status\/\w+/g) !== null) {
+        newURL = '';
+      }
+      text = text.replace(url.url, newURL);
+    });
   }
+
+  /* Remove any link with unavailable original.
+     This means that stuff like the t.co link to pic.twitter.com
+     will get removed in image/video Tweets */
+  text = text.replace(/ ?https:\/\/t\.co\/\w{10}/g, '');
 
   return text;
 };

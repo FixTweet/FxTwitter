@@ -29,10 +29,11 @@ export const handleMosaic = async (
     }
 
     return {
+      type: 'mosaic_photo',
       formats: {
         jpeg: `${baseUrl}jpeg/${id}${path}`,
         webp: `${baseUrl}webp/${id}${path}`
       }
-    } as unknown as APIMosaicPhoto;
+    } as APIMosaicPhoto;
   }
 };

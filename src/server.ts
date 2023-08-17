@@ -68,6 +68,14 @@ const statusRequest = async (
     flags.deprecated = true;
   }
 
+  /* TODO: Figure out what we're doing with FixTweet / FixupX branding in future */
+  if (/fixup/g.test(url.href)) {
+    console.log(`We're using x domain`);
+    flags.isXDomain = true;
+  } else {
+    console.log(`We're using twitter domain`);
+  }
+
   /* Check if request is to api.fxtwitter.com, or the tweet is appended with .json
      Note that unlike TwitFix, FixTweet will never generate embeds for .json, and
      in fact we only support .json because it's what people using TwitFix API would
@@ -291,6 +299,7 @@ router.get('/owoembed', async (request: IRequest) => {
   const text = searchParams.get('text') || 'Twitter';
   const author = searchParams.get('author') || 'jack';
   const status = searchParams.get('status') || '20';
+  const useXbranding = searchParams.get('useXbranding') === 'true';
 
   const random = Math.floor(Math.random() * Object.keys(motd).length);
   const [name, url] = Object.entries(motd)[random];
@@ -304,7 +313,7 @@ router.get('/owoembed', async (request: IRequest) => {
     provider_name:
       searchParams.get('deprecated') === 'true'
         ? Strings.DEPRECATED_DOMAIN_NOTICE_DISCORD
-        : name,
+        : (useXbranding ? name : Strings.X_DOMAIN_NOTICE),
     provider_url: url,
     title: Strings.DEFAULT_AUTHOR_TEXT,
     type: 'link',
