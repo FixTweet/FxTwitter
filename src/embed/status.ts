@@ -286,6 +286,8 @@ export const handleStatus = async (
   /* Notice that user is using deprecated domain */
   if (flags?.deprecated) {
     siteName = Strings.DEPRECATED_DOMAIN_NOTICE;
+  } else if (!flags?.isXDomainTemp) {
+    siteName = Strings.X_DOMAIN_NOTICE;
   }
 
   /* Push basic headers relating to author, Tweet text, and site name */

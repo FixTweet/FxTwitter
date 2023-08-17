@@ -7,6 +7,7 @@ type InputFlags = {
   api?: boolean;
   deprecated?: boolean;
   textOnly?: boolean;
+  isXDomainTemp?: boolean;
 };
 
 interface StatusResponse {

@@ -68,6 +68,10 @@ const statusRequest = async (
     flags.deprecated = true;
   }
 
+  if (/fixup/g.test(url.hostname)) {
+    flags.isXDomainTemp = true;
+  }
+
   /* Check if request is to api.fxtwitter.com, or the tweet is appended with .json
      Note that unlike TwitFix, FixTweet will never generate embeds for .json, and
      in fact we only support .json because it's what people using TwitFix API would
