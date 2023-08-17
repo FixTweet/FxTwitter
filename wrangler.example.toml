@@ -1,7 +1,7 @@
 name = "fixtweet"
 account_id = "[CLOUDFLARE_ACCOUNT_ID]"
 main = "./dist/worker.js"
-compatibility_date = "2023-05-31"
+compatibility_date = "2023-08-15"
 send_metrics = false
 services = [
   { binding = "TwitterProxy", service = "elongator" }
