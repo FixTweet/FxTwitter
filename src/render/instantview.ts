@@ -50,6 +50,14 @@ const htmlifyLinks = (input: string): string => {
   });
 }
 
+const htmlifyHashtags = (input: string): string => {
+  const hashtagPattern = /#([a-zA-Z_]\w*)/g;
+  return input.replace(hashtagPattern, (match, hashtag) => {
+      const encodedHashtag = encodeURIComponent(hashtag);
+      return `<a href="https://twitter.com/hashtag/${encodedHashtag}?src=hashtag_click">${match}</a>`;
+  });
+}
+
 export const renderInstantView = (properties: RenderProperties): ResponseInstructions => {
   console.log('Generating Instant View (placeholder)...');
   const { tweet } = properties;
@@ -64,8 +72,9 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
   ];
 
   let text = sanitizeText(tweet.text).replace(/\n/g, '<br>');
-  text = populateUserLinks(tweet, text);
   text = htmlifyLinks(text);
+  text = htmlifyHashtags(text);
+  text = populateUserLinks(tweet, text);
 
   instructions.text = `
   <section class="section-backgroundImage">
