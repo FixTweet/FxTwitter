@@ -114,7 +114,7 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
     </head>
     <body>
       <h1>${BRANDING_NAME}</h1>
-      <h3>A better way to embed Tweets on Discord, Telegram, and more.</h2>
+      <h3>A better way to embed X / Twitter posts on Discord, Telegram, and more.</h2>
       <h2>Worker release: ${RELEASE_NAME}</h2>
       <br>
       <h3>Stats for nerds:</h3>
@@ -146,9 +146,9 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
   FINAL_POLL_RESULTS: 'Final results',
 
   ERROR_API_FAIL:
-    "Tweet failed to load due to an API error. This is most common with NSFW Tweets as Twitter / X currently blocks us from fetching them. We're still working on a fix for that.🙏",
-  ERROR_PRIVATE: `Sorry, we can't embed this Tweet because the user is private or suspended :(`,
-  ERROR_TWEET_NOT_FOUND: `Sorry, that Tweet doesn't exist :(`,
+    "Post failed to load due to an API error. This is most common with NSFW Posts as Twitter / X currently blocks us from fetching them. We're still working on a fix for that.🙏",
+  ERROR_PRIVATE: `Sorry, we can't embed this post because the user is private or suspended :(`,
+  ERROR_TWEET_NOT_FOUND: `Sorry, that post doesn't exist :(`,
   ERROR_USER_NOT_FOUND: `Sorry, that user doesn't exist :(`,
   ERROR_UNKNOWN: `Unknown error occurred, sorry about that :(`,
 
@@ -167,7 +167,7 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
 # \\-------------------------------------------/
 
 # Do you breathe air? Are you a human? Do you know how to write code?
-# Do you want an easy way to fetch Tweets but Elon Musk wants to charge you $100 per month?
+# Do you want an easy way to fetch posts but Elon Musk wants to charge you $100 per month?
 # Did you know we have a fetch API you can use for free, no API keys required?
 
 # Check out the docs at https://${API_HOST_LIST.split(',')[0]} to learn how to use it

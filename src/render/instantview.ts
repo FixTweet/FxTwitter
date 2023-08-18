@@ -1,10 +1,10 @@
-import { Constants } from "../constants";
-import { getSocialTextIV } from "../helpers/author";
-import { sanitizeText } from "../helpers/utils";
+import { Constants } from '../constants';
+import { getSocialTextIV } from '../helpers/author';
+import { sanitizeText } from '../helpers/utils';
 
 const populateUserLinks = (tweet: APITweet, text: string): string => {
   /* TODO: Maybe we can add username splices to our API so only genuinely valid users are linked? */
-  text.match(/@(\w{1,15})/g)?.forEach((match) => {
+  text.match(/@(\w{1,15})/g)?.forEach(match => {
     const username = match.replace('@', '');
     text = text.replace(
       match,
@@ -12,13 +12,13 @@ const populateUserLinks = (tweet: APITweet, text: string): string => {
     );
   });
   return text;
-}
+};
 
 const generateTweetMedia = (tweet: APITweet): string => {
   let media = '';
   if (tweet.media?.all?.length) {
-    tweet.media.all.forEach((mediaItem) => {
-      switch(mediaItem.type) {
+    tweet.media.all.forEach(mediaItem => {
+      switch (mediaItem.type) {
         case 'photo':
           media += `<img src="${mediaItem.url}" alt="${tweet.author.name}'s photo" />`;
           break;
@@ -32,7 +32,7 @@ const generateTweetMedia = (tweet: APITweet): string => {
     });
   }
   return media;
-}
+};
 
 // const formatDateTime = (date: Date): string => {
 //   const yyyy = date.getFullYear();
@@ -45,18 +45,18 @@ const generateTweetMedia = (tweet: APITweet): string => {
 
 const htmlifyLinks = (input: string): string => {
   const urlPattern = /\bhttps?:\/\/\S+/g;
-  return input.replace(urlPattern, (url) => {
-      return `<a href="${url}">${url}</a>`;
+  return input.replace(urlPattern, url => {
+    return `<a href="${url}">${url}</a>`;
   });
-}
+};
 
 const htmlifyHashtags = (input: string): string => {
   const hashtagPattern = /#([a-zA-Z_]\w*)/g;
   return input.replace(hashtagPattern, (match, hashtag) => {
-      const encodedHashtag = encodeURIComponent(hashtag);
-      return `<a href="https://twitter.com/hashtag/${encodedHashtag}?src=hashtag_click">${match}</a>`;
+    const encodedHashtag = encodeURIComponent(hashtag);
+    return `<a href="https://twitter.com/hashtag/${encodedHashtag}?src=hashtag_click">${match}</a>`;
   });
-}
+};
 
 export const renderInstantView = (properties: RenderProperties): ResponseInstructions => {
   console.log('Generating Instant View (placeholder)...');
@@ -81,13 +81,17 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
     <figure class="graf--layoutFillWidth"></figure>
   </section>
   <section class="section--first" style="font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 64px;">
-    If you can see this, your browser is doing something weird with your user agent. <a href="${tweet.url}">View original post</a>
+    If you can see this, your browser is doing something weird with your user agent. <a href="${
+      tweet.url
+    }">View original post</a>
   </section>
   <article>
   <h1>${tweet.author.name} (@${tweet.author.screen_name})</h1>
   <p>Instant View (✨ Beta) - <a href="${tweet.url}">View original</a></p> 
 
-  <!--blockquote class="twitter-tweet" data-dnt="true"><p lang="en" dir="ltr"> <a href="${tweet.url}">_</a></blockquote-->
+  <!--blockquote class="twitter-tweet" data-dnt="true"><p lang="en" dir="ltr"> <a href="${
+    tweet.url
+  }">_</a></blockquote-->
 
   <!-- Embed profile picture, display name, and screen name in table -->
   <table>
