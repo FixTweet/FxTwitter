@@ -56,13 +56,6 @@ export const handleStatus = async (
     };
   }
 
-  let overrideMedia: APIMedia | undefined;
-
-  // Check if mediaNumber exists, and if that media exists in tweet.media.all. If it does, we'll store overrideMedia variable
-  if (mediaNumber && tweet.media && tweet.media.all && tweet.media.all[mediaNumber - 1]) {
-    overrideMedia = tweet.media.all[mediaNumber - 1];
-  }
-
   /* If there was any errors fetching the Tweet, we'll return it */
   switch (api.code) {
     case 401:
@@ -72,6 +65,13 @@ export const handleStatus = async (
     case 500:
       console.log(api);
       return returnError(Strings.ERROR_API_FAIL);
+  }
+
+  let overrideMedia: APIMedia | undefined;
+
+  // Check if mediaNumber exists, and if that media exists in tweet.media.all. If it does, we'll store overrideMedia variable
+  if (mediaNumber && tweet.media && tweet.media.all && tweet.media.all[mediaNumber - 1]) {
+    overrideMedia = tweet.media.all[mediaNumber - 1];
   }
 
   /* Catch direct media request (d.fxtwitter.com, or .mp4 / .jpg) */
