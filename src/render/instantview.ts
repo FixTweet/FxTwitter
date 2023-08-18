@@ -90,7 +90,8 @@ const generateTweet = (tweet: APITweet, isQuote = false): string => {
   ${
     isQuote
       ? `
-    <h4>Quoting <a href="${Constants.TWITTER_ROOT}/${tweet.author.screen_name}">${tweet.author.name}</a> (@${tweet.author.screen_name})</h4>
+    <h4><a href="${tweet.url}">Quoting</a> ${tweet.author.name}
+    (<a href="${Constants.TWITTER_ROOT}/${tweet.author.screen_name}">@${tweet.author.screen_name}</a>)</h4>
   `
       : ''
   }
