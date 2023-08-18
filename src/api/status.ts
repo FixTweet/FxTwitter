@@ -110,7 +110,7 @@ const populateTweetProperties = async (
     noteTweetText /*&& mediaList.length <= 0 && tweet.legacy.entities?.urls?.length <= 0*/
   ) {
     console.log('We meet the conditions to use new note tweets');
-    apiTweet.text = unescapeText(noteTweetText);
+    apiTweet.text = unescapeText(linkFixer(tweet, noteTweetText));
     apiTweet.is_note_tweet = true;
   } else {
     apiTweet.is_note_tweet = false;
