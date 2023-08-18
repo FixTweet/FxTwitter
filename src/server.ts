@@ -396,7 +396,7 @@ export const cacheWrapper = async (
   ) {
     return new Response(Strings.TWITFIX_API_SUNSET, {
       headers: Constants.RESPONSE_HEADERS,
-      status: 404
+      status: 410
     });
   }
 
