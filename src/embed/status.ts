@@ -35,10 +35,14 @@ export const handleStatus = async (
 
   const api = await statusAPI(status, language, event as FetchEvent, flags);
   const tweet = api?.tweet as APITweet;
-  
+
   const isTelegram = (userAgent || '').indexOf('Telegram') > -1;
   /* Should sensitive posts be allowed Instant View? */
-  const useIV = isTelegram /*&& !tweet.possibly_sensitive*/ && !flags?.direct && !flags?.api && (tweet.media?.mosaic || tweet.is_note_tweet);
+  const useIV =
+    isTelegram /*&& !tweet.possibly_sensitive*/ &&
+    !flags?.direct &&
+    !flags?.api &&
+    (tweet.media?.mosaic || tweet.is_note_tweet || tweet.quote);
 
   let ivbody = '';
 
@@ -297,9 +301,7 @@ export const handleStatus = async (
         `<meta property="twitter:image" content="0"/>`
       );
     } else {
-      headers.push(
-        `<meta property="twitter:image" content="${avatar}"/>`
-      );
+      headers.push(`<meta property="twitter:image" content="${avatar}"/>`);
     }
   }
 
