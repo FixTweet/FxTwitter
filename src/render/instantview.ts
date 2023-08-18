@@ -83,11 +83,12 @@ const generateTweet = (tweet: APITweet, isQuote = false): string => {
   ${isQuote ? '</blockquote>' : ''}
   ${generateTweetMedia(tweet)} 
   ${(!isQuote && tweet.quote) ? generateTweet(tweet.quote, true) : ''}
-  <a href="${tweet.url}">View original</a>`
+  <br>${(!isQuote ? `<a href="${tweet.url}">View original</a>` : '')}
+  `
 }
 
 export const renderInstantView = (properties: RenderProperties): ResponseInstructions => {
-  console.log('Generating Instant View (placeholder)...');
+  console.log('Generating Instant View...');
   const { tweet } = properties;
   const instructions: ResponseInstructions = { addHeaders: [] };
   /* Use ISO date for Medium template */
