@@ -40,8 +40,7 @@ const populateTweetProperties = async (
     id: apiUser.id,
     name: apiUser.name,
     screen_name: apiUser.screen_name,
-    avatar_url:
-      (apiUser.avatar_url || '').replace('_normal', '_200x200') || '',
+    avatar_url: (apiUser.avatar_url || '').replace('_normal', '_200x200') || '',
     avatar_color: '0000FF' /* colorFromPalette(
       tweet.user?.profile_image_extensions_media_color?.palette || []
     ),*/,
@@ -71,7 +70,7 @@ const populateTweetProperties = async (
 
   apiTweet.replying_to = tweet.legacy?.in_reply_to_screen_name || null;
   apiTweet.replying_to_status = tweet.legacy?.in_reply_to_status_id_str || null;
-  
+
   const mediaList = Array.from(
     tweet.legacy.extended_entities?.media || tweet.legacy.entities?.media || []
   );
@@ -107,9 +106,14 @@ const populateTweetProperties = async (
   console.log('note_tweet', JSON.stringify(tweet.note_tweet));
   const noteTweetText = tweet.note_tweet?.note_tweet_results?.result?.text;
   /* For now, don't include note tweets */
-  if (noteTweetText && mediaList.length <= 0 && tweet.legacy.entities?.urls?.length <= 0) {
+  if (
+    noteTweetText /*&& mediaList.length <= 0 && tweet.legacy.entities?.urls?.length <= 0*/
+  ) {
     console.log('We meet the conditions to use new note tweets');
-    apiTweet.text = unescapeText(noteTweetText);
+    apiTweet.text = unescapeText(linkFixer(tweet, noteTweetText));
+    apiTweet.is_note_tweet = true;
+  } else {
+    apiTweet.is_note_tweet = false;
   }
 
   /* Handle photos and mosaic if available */
@@ -129,7 +133,7 @@ const populateTweetProperties = async (
   }
 
   /* Populate a Twitter card */
-  
+
   if (tweet.card) {
     const card = renderCard(tweet.card);
     if (card.external_media) {
@@ -143,7 +147,11 @@ const populateTweetProperties = async (
   }
 
   /* If a language is specified in API or by user, let's try translating it! */
-  if (typeof language === 'string' && language.length === 2 && language !== tweet.legacy.lang) {
+  if (
+    typeof language === 'string' &&
+    language.length === 2 &&
+    language !== tweet.legacy.lang
+  ) {
     const translateAPI = await translateTweet(
       tweet,
       conversation.guestToken || '',
@@ -213,15 +221,15 @@ export const statusAPI = async (
   }
 
   // console.log(JSON.stringify(tweet))
-  
+
   if (tweet.__typename === 'TweetUnavailable') {
     if (tweet.reason === 'Protected') {
       writeDataPoint(event, language, wasMediaBlockedNSFW, 'PRIVATE_TWEET', flags);
       return { code: 401, message: 'PRIVATE_TWEET' };
-    // } else if (tweet.reason === 'NsfwLoggedOut') {
-    //   // API failure as elongator should have handled this
-    //   writeDataPoint(event, language, wasMediaBlockedNSFW, 'API_FAIL', flags);
-    //   return { code: 500, message: 'API_FAIL' };
+      // } else if (tweet.reason === 'NsfwLoggedOut') {
+      //   // API failure as elongator should have handled this
+      //   writeDataPoint(event, language, wasMediaBlockedNSFW, 'API_FAIL', flags);
+      //   return { code: 500, message: 'API_FAIL' };
     } else {
       // Api failure at parsing status
       writeDataPoint(event, language, wasMediaBlockedNSFW, 'API_FAIL', flags);
@@ -234,7 +242,7 @@ export const statusAPI = async (
     writeDataPoint(event, language, wasMediaBlockedNSFW, 'API_FAIL', flags);
     return { code: 500, message: 'API_FAIL' };
   }
-  
+
   /*
   if (tweet.retweeted_status_id_str) {
     tweet = conversation?.globalObjects?.tweets?.[tweet.retweeted_status_id_str] || {};

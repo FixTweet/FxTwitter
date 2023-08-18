@@ -4,8 +4,8 @@ export const processMedia = (media: TweetMedia): APIPhoto | APIVideo | null => {
     return {
       type: 'photo',
       url: media.media_url_https,
-      width: media.original_info.width,
-      height: media.original_info.height,
+      width: media.original_info?.width,
+      height: media.original_info?.height,
       altText: media.ext_alt_text || ''
     };
   } else if (media.type === 'video' || media.type === 'animated_gif') {
@@ -17,8 +17,8 @@ export const processMedia = (media: TweetMedia): APIPhoto | APIVideo | null => {
       url: bestVariant?.url || '',
       thumbnail_url: media.media_url_https,
       duration: (media.video_info?.duration_millis || 0) / 1000,
-      width: media.original_info.width,
-      height: media.original_info.height,
+      width: media.original_info?.width,
+      height: media.original_info?.height,
       format: bestVariant?.content_type || '',
       type: media.type === 'animated_gif' ? 'gif' : 'video'
     };

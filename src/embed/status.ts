@@ -6,6 +6,7 @@ import { getAuthorText } from '../helpers/author';
 import { statusAPI } from '../api/status';
 import { renderPhoto } from '../render/photo';
 import { renderVideo } from '../render/video';
+import { renderInstantView } from '../render/instantview';
 
 export const returnError = (error: string): StatusResponse => {
   return {
@@ -34,6 +35,12 @@ export const handleStatus = async (
 
   const api = await statusAPI(status, language, event as FetchEvent, flags);
   const tweet = api?.tweet as APITweet;
+  
+  const isTelegram = (userAgent || '').indexOf('Telegram') > -1;
+  /* Should sensitive posts be allowed Instant View? */
+  const useIV = isTelegram /*&& !tweet.possibly_sensitive*/ && !flags?.direct && !flags?.api && (tweet.media?.mosaic || tweet.is_note_tweet);
+
+  let ivbody = '';
 
   /* Catch this request if it's an API response */
   if (flags?.api) {
@@ -120,10 +127,19 @@ export const handleStatus = async (
      it will gracefully redirect to the destination instead of just seeing a blank screen.
 
      Telegram is dumb and it just gets stuck if this is included, so we never include it for Telegram UAs. */
-  if (userAgent?.indexOf('Telegram') === -1) {
+  if (!isTelegram) {
     headers.push(
       `<meta http-equiv="refresh" content="0;url=https://twitter.com/${tweet.author.screen_name}/status/${tweet.id}"/>`
     );
+  }
+
+  if (useIV) {
+    const instructions = renderInstantView({ tweet: tweet, text: newText });
+    headers.push(...instructions.addHeaders);
+    if (instructions.authorText) {
+      authorText = instructions.authorText;
+    }
+    ivbody = instructions.text || '';
   }
 
   /* This Tweet has a translation attached to it, so we'll render it. */
@@ -240,7 +256,7 @@ export const handleStatus = async (
     let str = '';
 
     /* Telegram Embeds are smaller, so we use a smaller bar to compensate */
-    if (userAgent?.indexOf('Telegram') !== -1) {
+    if (isTelegram) {
       barLength = 24;
     }
 
@@ -273,16 +289,21 @@ export const handleStatus = async (
 
   /* If we have no media to display, instead we'll display the user profile picture in the embed */
   if (!tweet.media?.videos && !tweet.media?.photos && !flags?.textOnly) {
-    headers.push(
-      /* Use a slightly higher resolution image for profile pics */
-      `<meta property="og:image" content="${tweet.author.avatar_url?.replace(
-        '_normal',
-        '_200x200'
-      )}"/>`,
-      `<meta property="twitter:image" content="0"/>`
-    );
+    const avatar = tweet.author.avatar_url?.replace('_200x200', '_normal');
+    if (!useIV) {
+      headers.push(
+        /* Use a slightly higher resolution image for profile pics */
+        `<meta property="og:image" content="${avatar}"/>`,
+        `<meta property="twitter:image" content="0"/>`
+      );
+    } else {
+      headers.push(
+        /* Use a slightly higher resolution image for profile pics */
+        `<meta property="twitter:image" content="${avatar}"/>`
+      );
+    }
   }
-  
+
   if (!flags?.isXDomain) {
     siteName = Strings.X_DOMAIN_NOTICE;
   }
@@ -291,11 +312,22 @@ export const handleStatus = async (
   if (flags?.deprecated) {
     siteName = Strings.DEPRECATED_DOMAIN_NOTICE;
   }
+  /* For supporting Telegram IV, we have to replace newlines with <br> within the og:description <meta> tag because of its weird (undocumented?) behavior.
+     If you don't use IV, it uses newlines just fine. Just like Discord and others. But with IV, suddenly newlines don't actually break the line anymore.
+
+     This is incredibly stupid, and you'd think this weird behavior would not be the case. You'd also think embedding a <br> inside the quotes inside
+     a meta tag shouldn't work, because that's stupid, but alas it does.
+     
+     A possible explanation for this weird behavior is due to the Medium template we are forced to use because Telegram IV is not an open platform
+     and we have to pretend to be Medium in order to get working IV, but haven't figured if the template is causing issues.  */
+  const text = useIV
+    ? sanitizeText(newText).replace(/\n/g, '<br>')
+    : sanitizeText(newText);
 
   /* Push basic headers relating to author, Tweet text, and site name */
   headers.push(
     `<meta property="og:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`,
-    `<meta property="og:description" content="${sanitizeText(newText).replace(/\n/g, '<br>')}"/>`,
+    `<meta property="og:description" content="${text}"/>`,
     `<meta property="og:site_name" content="${siteName}"/>`
   );
 
@@ -317,9 +349,9 @@ export const handleStatus = async (
       authorText.substring(0, 200)
     )}${flags?.deprecated ? '&deprecated=true' : ''}&status=${encodeURIComponent(
       status
-    )}&author=${encodeURIComponent(
-      tweet.author?.screen_name || ''
-    )}&useXbranding=${flags?.isXDomain ? 'true' : 'false'}" type="application/json+oembed" title="${tweet.author.name}">`
+    )}&author=${encodeURIComponent(tweet.author?.screen_name || '')}&useXbranding=${
+      flags?.isXDomain ? 'true' : 'false'
+    }" type="application/json+oembed" title="${tweet.author.name}">`
   );
 
   /* When dealing with a Tweet of unknown lang, fall back to en */
@@ -329,7 +361,8 @@ export const handleStatus = async (
   return {
     text: Strings.BASE_HTML.format({
       lang: `lang="${lang}"`,
-      headers: headers.join('')
+      headers: headers.join(''),
+      body: ivbody
     }),
     cacheControl: cacheControl
   };

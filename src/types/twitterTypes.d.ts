@@ -310,19 +310,19 @@ type GraphQLTweet = {
   result: GraphQLTweet;
   __typename: 'Tweet';
   rest_id: string; // "1674824189176590336",
-  has_birdwatch_notes: false,
+  has_birdwatch_notes: false;
   core: {
     user_results: {
       result: GraphQLUser;
-    }
-  }
-  edit_control: unknown,
-  edit_perspective: unknown,
-  is_translatable: false,
+    };
+  };
+  edit_control: unknown;
+  edit_perspective: unknown;
+  is_translatable: false;
   views: {
     count: string; // "562"
     state: string; // "EnabledWithCount"
-  }
+  };
   source: string; // "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Web App</a>"
   quoted_status_result?: GraphQLTweet;
   legacy: {
@@ -356,45 +356,54 @@ type GraphQLTweet = {
         indices: [number, number]; // [number, number]
         media_url_https: string; // "https://pbs.twimg.com/media/FAKESCREENSHOT.jpg" With videos appears to be the thumbnail
         type: string; // "photo" Seems to be photo even with videos
-      }[]
+      }[];
       user_mentions: unknown[];
       urls: TcoExpansion[];
       hashtags: unknown[];
       symbols: unknown[];
-    }
+    };
     extended_entities: {
-      media: TweetMedia[]
-    }
-  }
+      media: TweetMedia[];
+    };
+  };
   note_tweet: {
     is_expandable: boolean;
     entity_set: {
       hashtags: unknown[];
       urls: unknown[];
       user_mentions: unknown[];
-    },
+    };
     note_tweet_results: {
       result: {
         text: string;
-      }
-    }
+      };
+    };
   };
   card: {
     rest_id: string; // "card://1674824189176590336",
     legacy: {
       binding_values: {
-        key: `choice${1|2|3|4}_label`|'counts_are_final'|`choice${1|2|3|4}_count`|'last_updated_datetime_utc'|'duration_minutes'|'api'|'card_url'
-        value: {
-          string_value: string; // "Option text"
-          type: 'STRING'
-        }|{
-          boolean_value: boolean; // true
-          type: 'BOOLEAN'
-        }
-      }[]
-    }
-  }
-}
+        key:
+          | `choice${1 | 2 | 3 | 4}_label`
+          | 'counts_are_final'
+          | `choice${1 | 2 | 3 | 4}_count`
+          | 'last_updated_datetime_utc'
+          | 'duration_minutes'
+          | 'api'
+          | 'card_url';
+        value:
+          | {
+              string_value: string; // "Option text"
+              type: 'STRING';
+            }
+          | {
+              boolean_value: boolean; // true
+              type: 'BOOLEAN';
+            };
+      }[];
+    };
+  };
+};
 type TweetTombstone = {
   __typename: 'TweetTombstone';
   tombstone: {
@@ -403,82 +412,91 @@ type TweetTombstone = {
       rtl: boolean; // false;
       text: string; // "You’re unable to view this Tweet because this account owner limits who can view their Tweets. Learn more"
       entities: unknown[];
-    }
-  }
-}
+    };
+  };
+};
 type GraphQLTimelineTweetEntry = {
   /** The entryID contains the tweet ID */
   entryId: `tweet-${number}`; // "tweet-1674824189176590336"
   sortIndex: string;
   content: {
-    entryType: 'TimelineTimelineItem',
-    __typename: 'TimelineTimelineItem',
+    entryType: 'TimelineTimelineItem';
+    __typename: 'TimelineTimelineItem';
     itemContent: {
-      item: 'TimelineTweet',
-      __typename: 'TimelineTweet',
+      item: 'TimelineTweet';
+      __typename: 'TimelineTweet';
       tweet_results: {
-        result: GraphQLTweet|TweetTombstone;
-      }
-    }
-  }
-}
+        result: GraphQLTweet | TweetTombstone;
+      };
+    };
+  };
+};
 type GraphQLConversationThread = {
   entryId: `conversationthread-${number}`; // "conversationthread-1674824189176590336"
   sortIndex: string;
-}
+};
 
-type GraphQLTimelineEntry = GraphQLTimelineTweetEntry|GraphQLConversationThread|unknown;
+type GraphQLTimelineEntry =
+  | GraphQLTimelineTweetEntry
+  | GraphQLConversationThread
+  | unknown;
 
-type V2ThreadInstruction = TimeLineAddEntriesInstruction | TimeLineTerminateTimelineInstruction;
+type V2ThreadInstruction =
+  | TimeLineAddEntriesInstruction
+  | TimeLineTerminateTimelineInstruction;
 
 type TimeLineAddEntriesInstruction = {
   type: 'TimelineAddEntries';
   entries: GraphQLTimelineEntry[];
-}
+};
 
 type TimeLineTerminateTimelineInstruction = {
   type: 'TimelineTerminateTimeline';
   direction: 'Top';
-}
+};
 type GraphQLTweetNotFoundResponse = {
-  errors: [{
-    message: string; // "_Missing: No status found with that ID"
-    locations: unknown[];
-    path: string[]; // ["threaded_conversation_with_injections_v2"]
-    extensions: {
-      name: string; // "GenericError"
-      source: string; // "Server"
+  errors: [
+    {
+      message: string; // "_Missing: No status found with that ID"
+      locations: unknown[];
+      path: string[]; // ["threaded_conversation_with_injections_v2"]
+      extensions: {
+        name: string; // "GenericError"
+        source: string; // "Server"
+        code: number; // 144
+        kind: string; // "NonFatal"
+        tracing: {
+          trace_id: string; // "2e39ff747de237db"
+        };
+      };
       code: number; // 144
       kind: string; // "NonFatal"
+      name: string; // "GenericError"
+      source: string; // "Server"
       tracing: {
         trace_id: string; // "2e39ff747de237db"
-      }
+      };
     }
-    code: number; // 144
-    kind: string; // "NonFatal"
-    name: string; // "GenericError"
-    source: string; // "Server"
-    tracing: {
-      trace_id: string; // "2e39ff747de237db"
-    }
-  }]
+  ];
   data: Record<string, never>;
-}
+};
 type GraphQLTweetFoundResponse = {
   data: {
     threaded_conversation_with_injections_v2: {
-      instructions: V2ThreadInstruction[]
-    }
-  }
-}
+      instructions: V2ThreadInstruction[];
+    };
+  };
+};
 type TweetResultsByRestIdResult = {
   errors?: unknown[];
   data?: {
     tweetResult?: {
-      result?: {
-        __typename: 'TweetUnavailable';
-        reason: 'NsfwLoggedOut'|'Protected';
-      }|GraphQLTweet
-    }
-  }
-}
+      result?:
+        | {
+            __typename: 'TweetUnavailable';
+            reason: 'NsfwLoggedOut' | 'Protected';
+          }
+        | GraphQLTweet;
+    };
+  };
+};

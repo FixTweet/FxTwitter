@@ -30,7 +30,7 @@ export const Strings = {
 ███   A better way to embed Tweets on Discord, Telegram, and more.
 ███   Worker build ${RELEASE_NAME}
 
---><head>{headers}</head><body></body></html>`,
+--><head>{headers}</head><body>{body}</body></html>`,
   ERROR_HTML: `<!DOCTYPE html>
   <html lang="en">
     <head>
@@ -145,7 +145,8 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
   PLURAL_SECONDS_LEFT: 'seconds left',
   FINAL_POLL_RESULTS: 'Final results',
 
-  ERROR_API_FAIL: 'Tweet failed to load due to an API error. This is most common with NSFW Tweets as Twitter / X currently blocks us from fetching them. We\'re still working on a fix for that.🙏',
+  ERROR_API_FAIL:
+    "Tweet failed to load due to an API error. This is most common with NSFW Tweets as Twitter / X currently blocks us from fetching them. We're still working on a fix for that.🙏",
   ERROR_PRIVATE: `Sorry, we can't embed this Tweet because the user is private or suspended :(`,
   ERROR_TWEET_NOT_FOUND: `Sorry, that Tweet doesn't exist :(`,
   ERROR_USER_NOT_FOUND: `Sorry, that user doesn't exist :(`,
