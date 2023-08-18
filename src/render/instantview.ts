@@ -110,7 +110,11 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
   /* Use ISO date for Medium template */
   const postDate = new Date(tweet.created_at).toISOString();
 
-  /* Include Instant-View related headers. This is an unfinished project. Thanks to https://nikstar.me/post/instant-view/ for the help! */
+  /* Pretend to be Medium to allow Instant View to work.
+     Thanks to https://nikstar.me/post/instant-view/ for the help!
+    
+     If you work for Telegram and want to let us build our own templates
+     contact me https://t.me/dangeredwolf */
   instructions.addHeaders = [
     `<meta property="al:android:app_name" content="Medium"/>`,
     `<meta property="article:published_time" content="${postDate}"/>`
