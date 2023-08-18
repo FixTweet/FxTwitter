@@ -35,8 +35,10 @@ export const handleStatus = async (
 
   const api = await statusAPI(status, language, event as FetchEvent, flags);
   const tweet = api?.tweet as APITweet;
+  
   const isTelegram = (userAgent || '').indexOf('Telegram') > -1;
-  const useIV = isTelegram && tweet.is_note_tweet; //!tweet.possibly_sensitive && !flags?.direct && (tweet.media?.photos || tweet.media?.videos);
+  /* Should sensitive posts be allowed Instant View? */
+  const useIV = isTelegram /*&& !tweet.possibly_sensitive*/ && !flags?.direct && !flags?.api && (tweet.media?.mosaic || tweet.is_note_tweet);
 
   let ivbody = '';
 
