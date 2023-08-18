@@ -80,7 +80,7 @@ const generateTweet = (tweet: APITweet, isQuote = false): string => {
   ${
     !isQuote
       ? `<table>
-    <img src="${tweet.author.avatar_url}" alt="${tweet.author.name}'s profile picture" />
+    <img src="${tweet.author.avatar_url?.replace('_200x200', '_400x400')}" alt="${tweet.author.name}'s profile picture" />
     <h2>${tweet.author.name}</h2>
     <p>@${tweet.author.screen_name}</p>
     <p>${getSocialTextIV(tweet)}</p>
