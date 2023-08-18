@@ -58,34 +58,50 @@ const htmlifyHashtags = (input: string): string => {
   });
 };
 
+function paragraphify(text: string, isQuote = false): string {
+  const tag = isQuote ? 'blockquote' : 'p';
+  return text
+    .split('\n')
+    .map(line => line.trim())
+    .filter(line => line.length > 0)
+    .map(line => `<${tag}>${line}</${tag}>`)
+    .join('\n');
+}
+
 /* TODO: maybe refactor so all tweets pull from this */
 const generateTweet = (tweet: APITweet, isQuote = false): string => {
-  let text = sanitizeText(tweet.text).replace(/\n/g, '<br>');
+  let text = paragraphify(sanitizeText(tweet.text));
   text = htmlifyLinks(text);
   text = htmlifyHashtags(text);
   text = populateUserLinks(tweet, text);
 
   return `
   <!-- Embed profile picture, display name, and screen name in table -->
-  ${!isQuote ? `<table>
+  ${
+    !isQuote
+      ? `<table>
     <img src="${tweet.author.avatar_url}" alt="${tweet.author.name}'s profile picture" />
     <h2>${tweet.author.name}</h2>
     <p>@${tweet.author.screen_name}</p>
     <p>${getSocialTextIV(tweet)}</p>
-  </table>` : ''}
-  ${isQuote ? `
+  </table>`
+      : ''
+  }
+  ${
+    isQuote
+      ? `
     <h4>Quoting <a href="${Constants.TWITTER_ROOT}/${tweet.author.screen_name}">${tweet.author.name}</a> (@${tweet.author.screen_name})</h4>
-  ` : ''}
+  `
+      : ''
+  }
 
   <!-- Embed Tweet text -->
-  ${isQuote ? '<blockquote>' : ''}
   ${text}
-  ${isQuote ? '</blockquote>' : ''}
   ${generateTweetMedia(tweet)} 
-  ${(!isQuote && tweet.quote) ? generateTweet(tweet.quote, true) : ''}
-  <br>${(!isQuote ? `<a href="${tweet.url}">View original</a>` : '')}
-  `
-}
+  ${!isQuote && tweet.quote ? generateTweet(tweet.quote, true) : ''}
+  <br>${!isQuote ? `<a href="${tweet.url}">View original</a>` : ''}
+  `;
+};
 
 export const renderInstantView = (properties: RenderProperties): ResponseInstructions => {
   console.log('Generating Instant View...');

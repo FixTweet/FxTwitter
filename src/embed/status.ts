@@ -75,7 +75,7 @@ export const handleStatus = async (
   }
 
   /* Catch direct media request (d.fxtwitter.com, or .mp4 / .jpg) */
-  if (flags?.direct && tweet.media) {
+  if (flags?.direct && !flags?.textOnly && tweet.media) {
     let redirectUrl: string | null = null;
     const all = tweet.media.all || [];
     // if (tweet.media.videos) {
@@ -98,16 +98,6 @@ export const handleStatus = async (
     }
   }
 
-  /* Use quote media if there is no media in this Tweet */
-  if (!tweet.media && tweet.quote?.media) {
-    tweet.media = tweet.quote.media;
-    tweet.twitter_card = tweet.quote.twitter_card;
-  }
-
-  if (flags?.textOnly) {
-    tweet.media = undefined;
-  }
-
   /* At this point, we know we're going to have to create a
      regular embed because it's not an API or direct media request */
 
@@ -121,7 +111,9 @@ export const handleStatus = async (
   const headers = [
     `<link rel="canonical" href="https://twitter.com/${tweet.author.screen_name}/status/${tweet.id}"/>`,
     `<meta property="theme-color" content="${tweet.color}"/>`,
-    `<meta property="twitter:card" content="${tweet.twitter_card}"/>`,
+    `<meta property="twitter:card" content="${
+      tweet.quote?.twitter_card || tweet.twitter_card
+    }"/>`,
     `<meta property="twitter:site" content="@${tweet.author.screen_name}"/>`,
     `<meta property="twitter:creator" content="@${tweet.author.screen_name}"/>`,
     `<meta property="twitter:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`
@@ -165,92 +157,95 @@ export const handleStatus = async (
 
   console.log('overrideMedia', JSON.stringify(overrideMedia));
 
-  if (overrideMedia) {
-    let instructions: ResponseInstructions;
+  if (!flags?.textOnly) {
+    const media = tweet.media || tweet.quote?.media;
+    if (overrideMedia) {
+      let instructions: ResponseInstructions;
 
-    switch (overrideMedia.type) {
-      case 'photo':
-        /* This Tweet has a photo to render. */
-        instructions = renderPhoto(
-          {
-            tweet: tweet,
-            authorText: authorText,
-            engagementText: engagementText,
-            userAgent: userAgent,
-            isOverrideMedia: true
-          },
-          overrideMedia as APIPhoto
-        );
-        headers.push(...instructions.addHeaders);
-        if (instructions.authorText) {
-          authorText = instructions.authorText;
-        }
-        if (instructions.siteName) {
-          siteName = instructions.siteName;
-        }
-        break;
-      case 'video':
-        instructions = renderVideo(
-          { tweet: tweet, userAgent: userAgent, text: newText, isOverrideMedia: true },
-          overrideMedia as APIVideo
-        );
-        headers.push(...instructions.addHeaders);
-        if (instructions.authorText) {
-          authorText = instructions.authorText;
-        }
-        if (instructions.siteName) {
-          siteName = instructions.siteName;
-        }
-        /* This Tweet has a video to render. */
-        break;
+      switch (overrideMedia.type) {
+        case 'photo':
+          /* This Tweet has a photo to render. */
+          instructions = renderPhoto(
+            {
+              tweet: tweet,
+              authorText: authorText,
+              engagementText: engagementText,
+              userAgent: userAgent,
+              isOverrideMedia: true
+            },
+            overrideMedia as APIPhoto
+          );
+          headers.push(...instructions.addHeaders);
+          if (instructions.authorText) {
+            authorText = instructions.authorText;
+          }
+          if (instructions.siteName) {
+            siteName = instructions.siteName;
+          }
+          break;
+        case 'video':
+          instructions = renderVideo(
+            { tweet: tweet, userAgent: userAgent, text: newText, isOverrideMedia: true },
+            overrideMedia as APIVideo
+          );
+          headers.push(...instructions.addHeaders);
+          if (instructions.authorText) {
+            authorText = instructions.authorText;
+          }
+          if (instructions.siteName) {
+            siteName = instructions.siteName;
+          }
+          /* This Tweet has a video to render. */
+          break;
+      }
+    } else if (media?.mosaic) {
+      const instructions = renderPhoto(
+        {
+          tweet: tweet,
+          authorText: authorText,
+          engagementText: engagementText,
+          userAgent: userAgent
+        },
+        media.mosaic
+      );
+      headers.push(...instructions.addHeaders);
+    } else if (media?.videos) {
+      const instructions = renderVideo(
+        { tweet: tweet, userAgent: userAgent, text: newText },
+        media.videos[0]
+      );
+      headers.push(...instructions.addHeaders);
+      if (instructions.authorText) {
+        authorText = instructions.authorText;
+      }
+      if (instructions.siteName) {
+        siteName = instructions.siteName;
+      }
+    } else if (media?.photos) {
+      const instructions = renderPhoto(
+        {
+          tweet: tweet,
+          authorText: authorText,
+          engagementText: engagementText,
+          userAgent: userAgent
+        },
+        media.photos[0]
+      );
+      headers.push(...instructions.addHeaders);
+    } else if (media?.external) {
+      const { external } = media;
+      authorText = newText || '';
+      headers.push(
+        `<meta property="twitter:player" content="${external.url}">`,
+        `<meta property="twitter:player:width" content="${external.width}">`,
+        `<meta property="twitter:player:height" content="${external.height}">`,
+        `<meta property="og:type" content="video.other">`,
+        `<meta property="og:video:url" content="${external.url}">`,
+        `<meta property="og:video:secure_url" content="${external.url}">`,
+        `<meta property="og:video:width" content="${external.width}">`,
+        `<meta property="og:video:height" content="${external.height}">`
+      );
     }
-  } else if (tweet.media?.mosaic) {
-    const instructions = renderPhoto(
-      {
-        tweet: tweet,
-        authorText: authorText,
-        engagementText: engagementText,
-        userAgent: userAgent
-      },
-      tweet.media?.mosaic
-    );
-    headers.push(...instructions.addHeaders);
-  } else if (tweet.media?.videos) {
-    const instructions = renderVideo(
-      { tweet: tweet, userAgent: userAgent, text: newText },
-      tweet.media?.videos[0]
-    );
-    headers.push(...instructions.addHeaders);
-    if (instructions.authorText) {
-      authorText = instructions.authorText;
-    }
-    if (instructions.siteName) {
-      siteName = instructions.siteName;
-    }
-  } else if (tweet.media?.photos) {
-    const instructions = renderPhoto(
-      {
-        tweet: tweet,
-        authorText: authorText,
-        engagementText: engagementText,
-        userAgent: userAgent
-      },
-      tweet.media?.photos[0]
-    );
-    headers.push(...instructions.addHeaders);
-  } else if (tweet.media?.external) {
-    const { external } = tweet.media;
-    authorText = newText || '';
-    headers.push(
-      `<meta property="twitter:player" content="${external.url}">`,
-      `<meta property="twitter:player:width" content="${external.width}">`,
-      `<meta property="twitter:player:height" content="${external.height}">`,
-      `<meta property="og:type" content="video.other">`,
-      `<meta property="og:video:url" content="${external.url}">`,
-      `<meta property="og:video:secure_url" content="${external.url}">`,
-      `<meta property="og:video:width" content="${external.width}">`,
-      `<meta property="og:video:height" content="${external.height}">`
-    );
   }
 
   /* This Tweet contains a poll, so we'll render it */
@@ -292,7 +287,13 @@ export const handleStatus = async (
   }
 
   /* If we have no media to display, instead we'll display the user profile picture in the embed */
-  if (!tweet.media?.videos && !tweet.media?.photos && !flags?.textOnly) {
+  if (
+    !tweet.media?.videos &&
+    !tweet.media?.photos &&
+    !tweet.quote?.media?.photos &&
+    !tweet.quote?.media?.videos &&
+    !flags?.textOnly
+  ) {
     /* Use a slightly higher resolution image for profile pics */
     const avatar = tweet.author.avatar_url;
     if (!useIV) {
