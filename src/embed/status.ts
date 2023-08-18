@@ -289,16 +289,15 @@ export const handleStatus = async (
 
   /* If we have no media to display, instead we'll display the user profile picture in the embed */
   if (!tweet.media?.videos && !tweet.media?.photos && !flags?.textOnly) {
-    const avatar = tweet.author.avatar_url?.replace('_200x200', '_normal');
+    /* Use a slightly higher resolution image for profile pics */
+    const avatar = tweet.author.avatar_url;
     if (!useIV) {
       headers.push(
-        /* Use a slightly higher resolution image for profile pics */
         `<meta property="og:image" content="${avatar}"/>`,
         `<meta property="twitter:image" content="0"/>`
       );
     } else {
       headers.push(
-        /* Use a slightly higher resolution image for profile pics */
         `<meta property="twitter:image" content="${avatar}"/>`
       );
     }
