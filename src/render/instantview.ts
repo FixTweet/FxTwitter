@@ -70,7 +70,7 @@ function paragraphify(text: string, isQuote = false): string {
 
 /* TODO: maybe refactor so all tweets pull from this */
 const generateTweet = (tweet: APITweet, isQuote = false): string => {
-  let text = paragraphify(sanitizeText(tweet.text));
+  let text = paragraphify(sanitizeText(tweet.text), isQuote);
   text = htmlifyLinks(text);
   text = htmlifyHashtags(text);
   text = populateUserLinks(tweet, text);
