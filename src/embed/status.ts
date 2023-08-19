@@ -125,7 +125,7 @@ export const handleStatus = async (
      Telegram is dumb and it just gets stuck if this is included, so we never include it for Telegram UAs. */
   if (!isTelegram) {
     headers.push(
-      `<meta http-equiv="refresh" content="0;url=https://twitter.com/${tweet.author.screen_name}/status/${tweet.id}"/>`
+      `<meta http-equiv="refresh" content="0;url=${Constants.TWITTER_ROOT}/${tweet.author.screen_name}/status/${tweet.id}"/>`
     );
   }
 
