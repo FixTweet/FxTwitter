@@ -152,6 +152,7 @@ const populateTweetProperties = async (
     language.length === 2 &&
     language !== tweet.legacy.lang
   ) {
+    console.log(`Attempting to translate Tweet to ${language}...`);
     const translateAPI = await translateTweet(
       tweet,
       conversation.guestToken || '',
@@ -252,12 +253,11 @@ export const statusAPI = async (
   if (!tweet) {
     return { code: 404, message: 'NOT_FOUND' };
   }
-  const conversation: any[] = [];
   /* Creating the response objects */
   const response: TweetAPIResponse = { code: 200, message: 'OK' } as TweetAPIResponse;
   const apiTweet: APITweet = (await populateTweetProperties(
     tweet,
-    conversation,
+    res,
     language
   )) as APITweet;
 
@@ -266,7 +266,7 @@ export const statusAPI = async (
   if (quoteTweet) {
     apiTweet.quote = (await populateTweetProperties(
       quoteTweet,
-      conversation,
+      res,
       language
     )) as APITweet;
   }
