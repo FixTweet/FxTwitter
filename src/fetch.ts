@@ -1,8 +1,10 @@
 import { Constants } from './constants';
+import { Experiment, experimentCheck } from './experiments';
 import { generateUserAgent } from './helpers/useragent';
 import { isGraphQLTweet } from './utils/graphql';
 
 const API_ATTEMPTS = 3;
+let wasElongatorDisabled = false;
 
 function generateCSRFToken() {
   const randomBytes = new Uint8Array(160 / 2);
@@ -13,7 +15,7 @@ function generateCSRFToken() {
 export const twitterFetch = async (
   url: string,
   event: FetchEvent,
-  useElongator = false,
+  useElongator = typeof TwitterProxy !== 'undefined' && experimentCheck(Experiment.ELONGATOR_BY_DEFAULT),
   validateFunction: (response: unknown) => boolean
 ): Promise<unknown> => {
   let apiAttempts = 0;
@@ -129,6 +131,7 @@ export const twitterFetch = async (
           headers: headers
         });
         console.log('Elongator request successful');
+        throw 'asdhasdhbsa';
       } else {
         apiRequest = await fetch(url, {
           method: 'GET',
@@ -142,16 +145,21 @@ export const twitterFetch = async (
       /* We'll usually only hit this if we get an invalid response from Twitter.
          It's uncommon, but it happens */
       console.error('Unknown error while fetching from API', e);
-      event &&
+      !useElongator && event &&
         event.waitUntil(
           cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true })
         );
+      if (useElongator) {
+        console.log('Elongator request failed, trying again without it');
+        wasElongatorDisabled = true;
+      }
       newTokenGenerated = true;
+      useElongator = false;
       continue;
     }
 
     // @ts-expect-error This is safe due to optional chaining
-    if ((response as TweetResultsByRestIdResult)?.data?.tweetResult?.result?.reason === 'NsfwLoggedOut') {
+    if (!wasElongatorDisabled && !useElongator && typeof TwitterProxy !== 'undefined' && (response as TweetResultsByRestIdResult)?.data?.tweetResult?.result?.reason === 'NsfwLoggedOut') {
       console.log(`nsfw tweet detected, it's elongator time`);
       useElongator = true;
       continue;
@@ -162,7 +170,7 @@ export const twitterFetch = async (
     );
     console.log(`Remaining rate limit: ${remainingRateLimit} requests`);
     /* Running out of requests within our rate limit, let's purge the cache */
-    if (remainingRateLimit < 10 && !useElongator) {
+    if (!useElongator && remainingRateLimit < 10) {
       console.log(`Purging token on this edge due to low rate limit remaining`);
       event &&
         event.waitUntil(
@@ -172,6 +180,11 @@ export const twitterFetch = async (
 
     if (!validateFunction(response)) {
       console.log('Failed to fetch response, got', response);
+      if (useElongator) {
+        console.log('Elongator request failed to validate, trying again without it');
+        wasElongatorDisabled = true;
+      }
+      useElongator = false;
       newTokenGenerated = true;
       continue;
     }
@@ -201,7 +214,7 @@ export const twitterFetch = async (
 export const fetchConversation = async (
   status: string,
   event: FetchEvent,
-  useElongator = false
+  useElongator = typeof TwitterProxy !== 'undefined' && experimentCheck(Experiment.ELONGATOR_BY_DEFAULT)
 ): Promise<TweetResultsByRestIdResult> => {
   return (await twitterFetch(
     `${
