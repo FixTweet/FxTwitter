@@ -92,7 +92,7 @@ function getTranslatedText(tweet: APITweet, isQuote = false): string | null {
 }
 
 const notApplicableComment = '<!-- N/A -->';
-/* TODO: maybe refactor so all tweets pull from this */
+
 const generateTweet = (tweet: APITweet, isQuote = false): string => {
   let text = paragraphify(sanitizeText(tweet.text), isQuote);
   text = htmlifyLinks(text);
