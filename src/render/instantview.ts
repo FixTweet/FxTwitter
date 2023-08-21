@@ -21,13 +21,13 @@ const generateTweetMedia = (tweet: APITweet): string => {
     tweet.media.all.forEach(mediaItem => {
       switch (mediaItem.type) {
         case 'photo':
-          media += `<img src="${mediaItem.url}" alt="${tweet.author.name}'s photo" />`;
+          media += `<img src="${mediaItem.url}" alt="${tweet.author.name}'s photo"/>`;
           break;
         case 'video':
-          media += `<video src="${mediaItem.url}" alt="${tweet.author.name}'s video" />`;
+          media += `<video src="${mediaItem.url}" alt="${tweet.author.name}'s video"/>`;
           break;
         case 'gif':
-          media += `<video src="${mediaItem.url}" alt="${tweet.author.name}'s gif" />`;
+          media += `<video src="${mediaItem.url}" alt="${tweet.author.name}'s gif"/>`;
           break;
       }
     });
@@ -91,6 +91,7 @@ function getTranslatedText(tweet: APITweet, isQuote = false): string | null {
   return `<h4>${formatText}</h4>${text}<h4>Original</h4>`;
 }
 
+const notApplicableComment = '<!-- N/A -->';
 /* TODO: maybe refactor so all tweets pull from this */
 const generateTweet = (tweet: APITweet, isQuote = false): string => {
   let text = paragraphify(sanitizeText(tweet.text), isQuote);
@@ -100,7 +101,7 @@ const generateTweet = (tweet: APITweet, isQuote = false): string => {
 
   const translatedText = getTranslatedText(tweet, isQuote);
 
-  return `
+  return `<!-- Telegram Instant View -->
   <!-- Embed profile picture, display name, and screen name in table -->
   ${
     !isQuote
@@ -120,12 +121,15 @@ const generateTweet = (tweet: APITweet, isQuote = false): string => {
   `
       : ''
   }
+  <!-- Translated text (if applicable) -->
+  ${translatedText ? translatedText : notApplicableComment}
   <!-- Embed Tweet text -->
-  ${translatedText ? translatedText : ''}
   ${text}
+  <!-- Embed Tweet media -->
   ${generateTweetMedia(tweet)} 
-  ${!isQuote && tweet.quote ? generateTweet(tweet.quote, true) : ''}
-  <br>${!isQuote ? `<a href="${tweet.url}">View original</a>` : ''}
+  <!-- Embedded quote tweet -->
+  ${!isQuote && tweet.quote ? generateTweet(tweet.quote, true) : notApplicableComment}
+  <br>${!isQuote ? `<a href="${tweet.url}">View original</a>` : notApplicableComment}
   `;
 };
 
@@ -147,25 +151,20 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
   ];
 
   instructions.text = `
-  <section class="section-backgroundImage">
-    <figure class="graf--layoutFillWidth"></figure>
-  </section>
-  <section class="section--first" style="font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 64px;">
-    If you can see this, your browser is doing something weird with your user agent. <a href="${
-      tweet.url
-    }">View original post</a>
-  </section>
-  <article>
-  <h1>${tweet.author.name} (@${tweet.author.screen_name})</h1>
-  <p>Instant View (✨ Beta) - <a href="${tweet.url}">View original</a></p> 
+    <section class="section-backgroundImage">
+      <figure class="graf--layoutFillWidth"></figure>
+    </section>
+    <section class="section--first" style="font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 64px;">${''
+        }If you can see this, your browser is doing something weird with your user agent.<a href="${
+        tweet.url
+      }">View original post</a>
+    </section>
+    <article>
+    <h1>${tweet.author.name} (@${tweet.author.screen_name})</h1>
+    <p>Instant View (✨ Beta) - <a href="${tweet.url}">View original</a></p>
 
-  <!--blockquote class="twitter-tweet" data-dnt="true"><p lang="en" dir="ltr"> <a href="${
-    tweet.url
-  }">_</a></blockquote-->
-
-  ${generateTweet(tweet)}
-</article>
-`;
+    ${generateTweet(tweet)}
+  </article>`
 
   return instructions;
 };

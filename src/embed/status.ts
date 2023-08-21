@@ -38,7 +38,7 @@ export const handleStatus = async (
 
   const isTelegram = (userAgent || '').indexOf('Telegram') > -1;
   /* Should sensitive posts be allowed Instant View? */
-  const useIV =
+  let useIV =
     isTelegram /*&& !tweet.possibly_sensitive*/ &&
     !flags?.direct &&
     !flags?.api &&
@@ -130,12 +130,17 @@ export const handleStatus = async (
   }
 
   if (useIV) {
-    const instructions = renderInstantView({ tweet: tweet, text: newText });
-    headers.push(...instructions.addHeaders);
-    if (instructions.authorText) {
-      authorText = instructions.authorText;
+    try {
+      const instructions = renderInstantView({ tweet: tweet, text: newText });
+      headers.push(...instructions.addHeaders);
+      if (instructions.authorText) {
+        authorText = instructions.authorText;
+      }
+      ivbody = instructions.text || '';
+    } catch (e) {
+      console.log('Error rendering Instant View', e);
+      useIV = false;
     }
-    ivbody = instructions.text || '';
   }
 
   /* This Tweet has a translation attached to it, so we'll render it. */
@@ -365,7 +370,7 @@ export const handleStatus = async (
       lang: `lang="${lang}"`,
       headers: headers.join(''),
       body: ivbody
-    }),
+    }).replace(/>(\s+)</gm, '><'), // Remove whitespace between tags
     cacheControl: cacheControl
   };
 };

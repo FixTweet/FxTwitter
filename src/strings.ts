@@ -64,7 +64,7 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
     </body>
   </html>`
     .replace(/( {2})/g, '')
-    .replace(/>[\s|\n]+</g, '><'),
+    .replace(/>\s+</gm, '><'),
   VERSION_HTML: `<!DOCTYPE html>
   <html lang="en">
     <head>
@@ -125,7 +125,7 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
     </body>
   </html>`
     .replace(/( {2})/g, '')
-    .replace(/>[\s|\n]+</g, '><'),
+    .replace(/>\s+</gm, '><'),
   DEFAULT_AUTHOR_TEXT: 'Twitter',
 
   QUOTE_TEXT: `↘️ Quoting {name} (@{screen_name})`,
