@@ -3,10 +3,10 @@ export enum Experiment {
 }
 
 type ExperimentConfig = {
-  name: string,
-  description: string,
+  name: string;
+  description: string;
   percentage: number;
-}
+};
 
 const Experiments: { [key in Experiment]: ExperimentConfig } = {
   [Experiment.ELONGATOR_BY_DEFAULT]: {
@@ -14,11 +14,12 @@ const Experiments: { [key in Experiment]: ExperimentConfig } = {
     description: 'Enable Elongator by default (guest token lockout bypass)',
     percentage: 0.5
   }
-}
+};
 
 export const experimentCheck = (experiment: Experiment, condition = true) => {
-  console.log(`Checking experiment ${experiment}`)
-  const experimentEnabled = Experiments[experiment].percentage > Math.random() && condition;
-  console.log(`Experiment ${experiment} enabled: ${experimentEnabled}`)
+  console.log(`Checking experiment ${experiment}`);
+  const experimentEnabled =
+    Experiments[experiment].percentage > Math.random() && condition;
+  console.log(`Experiment ${experiment} enabled: ${experimentEnabled}`);
   return experimentEnabled;
-}
+};

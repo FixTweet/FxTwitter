@@ -15,7 +15,8 @@ function generateCSRFToken() {
 export const twitterFetch = async (
   url: string,
   event: FetchEvent,
-  useElongator = typeof TwitterProxy !== 'undefined' && experimentCheck(Experiment.ELONGATOR_BY_DEFAULT),
+  useElongator = typeof TwitterProxy !== 'undefined' &&
+    experimentCheck(Experiment.ELONGATOR_BY_DEFAULT),
   validateFunction: (response: unknown) => boolean
 ): Promise<unknown> => {
   let apiAttempts = 0;
@@ -144,7 +145,8 @@ export const twitterFetch = async (
       /* We'll usually only hit this if we get an invalid response from Twitter.
          It's uncommon, but it happens */
       console.error('Unknown error while fetching from API', e);
-      !useElongator && event &&
+      !useElongator &&
+        event &&
         event.waitUntil(
           cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true })
         );
@@ -158,7 +160,13 @@ export const twitterFetch = async (
     }
 
     // @ts-expect-error This is safe due to optional chaining
-    if (!wasElongatorDisabled && !useElongator && typeof TwitterProxy !== 'undefined' && (response as TweetResultsByRestIdResult)?.data?.tweetResult?.result?.reason === 'NsfwLoggedOut') {
+    if (
+      !wasElongatorDisabled &&
+      !useElongator &&
+      typeof TwitterProxy !== 'undefined' &&
+      (response as TweetResultsByRestIdResult)?.data?.tweetResult?.result?.reason ===
+        'NsfwLoggedOut'
+    ) {
       console.log(`nsfw tweet detected, it's elongator time`);
       useElongator = true;
       continue;
@@ -213,7 +221,8 @@ export const twitterFetch = async (
 export const fetchConversation = async (
   status: string,
   event: FetchEvent,
-  useElongator = typeof TwitterProxy !== 'undefined' && experimentCheck(Experiment.ELONGATOR_BY_DEFAULT)
+  useElongator = typeof TwitterProxy !== 'undefined' &&
+    experimentCheck(Experiment.ELONGATOR_BY_DEFAULT)
 ): Promise<TweetResultsByRestIdResult> => {
   return (await twitterFetch(
     `${
@@ -272,7 +281,7 @@ export const fetchConversation = async (
         return true;
       }
       if (tweet?.__typename === 'TweetUnavailable') {
-        console.log('generic tweet unavailable error')
+        console.log('generic tweet unavailable error');
         return true;
       }
       // Final clause for checking if it's valid is if there's errors

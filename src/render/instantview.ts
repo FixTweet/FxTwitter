@@ -79,14 +79,14 @@ function getTranslatedText(tweet: APITweet, isQuote = false): string | null {
   text = populateUserLinks(tweet, text);
 
   const formatText =
-      tweet.translation.target_lang === 'en'
-        ? Strings.TRANSLATE_TEXT.format({
-            language: tweet.translation.source_lang_en
-          })
-        : Strings.TRANSLATE_TEXT_INTL.format({
-            source: tweet.translation.source_lang.toUpperCase(),
-            destination: tweet.translation.target_lang.toUpperCase()
-          });
+    tweet.translation.target_lang === 'en'
+      ? Strings.TRANSLATE_TEXT.format({
+          language: tweet.translation.source_lang_en
+        })
+      : Strings.TRANSLATE_TEXT_INTL.format({
+          source: tweet.translation.source_lang.toUpperCase(),
+          destination: tweet.translation.target_lang.toUpperCase()
+        });
 
   return `<h4>${formatText}</h4>${text}<h4>Original</h4>`;
 }
@@ -106,7 +106,9 @@ const generateTweet = (tweet: APITweet, isQuote = false): string => {
   ${
     !isQuote
       ? `<table>
-    <img src="${tweet.author.avatar_url?.replace('_200x200', '_400x400')}" alt="${tweet.author.name}'s profile picture" />
+    <img src="${tweet.author.avatar_url?.replace('_200x200', '_400x400')}" alt="${
+      tweet.author.name
+    }'s profile picture" />
     <h2>${tweet.author.name}</h2>
     <p>@${tweet.author.screen_name}</p>
     <p>${getSocialTextIV(tweet)}</p>
@@ -154,17 +156,16 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
     <section class="section-backgroundImage">
       <figure class="graf--layoutFillWidth"></figure>
     </section>
-    <section class="section--first" style="font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 64px;">${''
-        }If you can see this, your browser is doing something weird with your user agent.<a href="${
-        tweet.url
-      }">View original post</a>
+    <section class="section--first" style="font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 64px;">${''}If you can see this, your browser is doing something weird with your user agent.<a href="${
+      tweet.url
+    }">View original post</a>
     </section>
     <article>
     <h1>${tweet.author.name} (@${tweet.author.screen_name})</h1>
     <p>Instant View (✨ Beta) - <a href="${tweet.url}">View original</a></p>
 
     ${generateTweet(tweet)}
-  </article>`
+  </article>`;
 
   return instructions;
 };

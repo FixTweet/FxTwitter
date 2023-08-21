@@ -20,14 +20,14 @@ export const translateTweet = async (
     'x-csrf-token': csrfToken,
     'x-twitter-active-user': 'yes',
     'x-guest-token': guestToken,
-    'Referer': `${Constants.TWITTER_ROOT}/i/status/${tweet.rest_id}`,
+    'Referer': `${Constants.TWITTER_ROOT}/i/status/${tweet.rest_id}`
   };
 
   let translationApiResponse;
   let translationResults: TranslationPartial;
 
   /* Fix up some language codes that may be mistakenly used */
-  switch(language) {
+  switch (language) {
     case 'jp':
       language = 'ja';
       break;
@@ -45,19 +45,16 @@ export const translateTweet = async (
 
   /* As of August 2023, you can no longer fetch translations with guest token */
   if (typeof TwitterProxy === 'undefined') {
-    return null
+    return null;
   }
 
   try {
     const url = `${Constants.TWITTER_ROOT}/i/api/1.1/strato/column/None/tweetId=${tweet.rest_id},destinationLanguage=None,translationSource=Some(Google),feature=None,timeout=None,onlyCached=None/translation/service/translateTweet`;
     console.log(url, headers);
-    translationApiResponse = await TwitterProxy.fetch(
-      url,
-      {
-        method: 'GET',
-        headers: headers
-      }
-    );
+    translationApiResponse = await TwitterProxy.fetch(url, {
+      method: 'GET',
+      headers: headers
+    });
     translationResults = (await translationApiResponse.json()) as TranslationPartial;
 
     console.log(`translationResults`, translationResults);

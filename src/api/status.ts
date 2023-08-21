@@ -225,7 +225,7 @@ export const statusAPI = async (
   // console.log(JSON.stringify(tweet))
 
   if (tweet.__typename === 'TweetUnavailable') {
-    if ((tweet as {reason: string})?.reason === 'Protected') {
+    if ((tweet as { reason: string })?.reason === 'Protected') {
       writeDataPoint(event, language, false, 'PRIVATE_TWEET', flags);
       return { code: 401, message: 'PRIVATE_TWEET' };
       // } else if (tweet.reason === 'NsfwLoggedOut') {
