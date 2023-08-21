@@ -53,6 +53,9 @@ const statusRequest = async (
   } else if (Constants.TEXT_ONLY_DOMAINS.includes(url.hostname)) {
     console.log('Text-only embed request');
     flags.textOnly = true;
+  } else if (Constants.INSTANT_VIEW_DOMAINS.includes(url.hostname)) {
+    console.log('Forced instant view request');
+    flags.forceInstantView = true;
   } else if (prefix === 'dl' || prefix === 'dir') {
     console.log('Direct media request by path prefix');
     flags.direct = true;

@@ -210,22 +210,23 @@ export const statusAPI = async (
   event: FetchEvent,
   flags?: InputFlags
 ): Promise<TweetAPIResponse> => {
-  let wasMediaBlockedNSFW = false;
-  let res = await fetchConversation(status, event);
+  const res = await fetchConversation(status, event);
   const tweet = res.data?.tweetResult?.result;
   if (!tweet) {
     return { code: 404, message: 'NOT_FOUND' };
   }
-  if (tweet.__typename === 'TweetUnavailable' && tweet.reason === 'NsfwLoggedOut') {
-    wasMediaBlockedNSFW = true;
-    res = await fetchConversation(status, event, true);
-  }
+  /* We're handling this in the actual fetch code now */
+
+  // if (tweet.__typename === 'TweetUnavailable' && tweet.reason === 'NsfwLoggedOut') {
+  //   wasMediaBlockedNSFW = true;
+  //   res = await fetchConversation(status, event, true);
+  // }
 
   // console.log(JSON.stringify(tweet))
 
   if (tweet.__typename === 'TweetUnavailable') {
-    if (tweet.reason === 'Protected') {
-      writeDataPoint(event, language, wasMediaBlockedNSFW, 'PRIVATE_TWEET', flags);
+    if ((tweet as {reason: string})?.reason === 'Protected') {
+      writeDataPoint(event, language, false, 'PRIVATE_TWEET', flags);
       return { code: 401, message: 'PRIVATE_TWEET' };
       // } else if (tweet.reason === 'NsfwLoggedOut') {
       //   // API failure as elongator should have handled this
@@ -233,14 +234,14 @@ export const statusAPI = async (
       //   return { code: 500, message: 'API_FAIL' };
     } else {
       // Api failure at parsing status
-      writeDataPoint(event, language, wasMediaBlockedNSFW, 'API_FAIL', flags);
+      writeDataPoint(event, language, false, 'API_FAIL', flags);
       return { code: 500, message: 'API_FAIL' };
     }
   }
   // If the tweet is not a graphQL tweet something went wrong
   if (!isGraphQLTweet(tweet)) {
     console.log('Tweet was not a valid tweet', tweet);
-    writeDataPoint(event, language, wasMediaBlockedNSFW, 'API_FAIL', flags);
+    writeDataPoint(event, language, false, 'API_FAIL', flags);
     return { code: 500, message: 'API_FAIL' };
   }
 
@@ -274,7 +275,7 @@ export const statusAPI = async (
   /* Finally, staple the Tweet to the response and return it */
   response.tweet = apiTweet;
 
-  writeDataPoint(event, language, wasMediaBlockedNSFW, 'OK', flags);
+  writeDataPoint(event, language, false, 'OK', flags);
 
   return response;
 };

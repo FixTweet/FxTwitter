@@ -308,7 +308,7 @@ type GraphQLUser = {
 type GraphQLTweet = {
   // Workaround
   result: GraphQLTweet;
-  __typename: 'Tweet';
+  __typename: 'Tweet' | 'TweetUnavailable';
   rest_id: string; // "1674824189176590336",
   has_birdwatch_notes: false;
   core: {

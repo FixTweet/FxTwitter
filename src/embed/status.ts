@@ -42,7 +42,7 @@ export const handleStatus = async (
     isTelegram /*&& !tweet.possibly_sensitive*/ &&
     !flags?.direct &&
     !flags?.api &&
-    (tweet.media?.mosaic || tweet.is_note_tweet || tweet.quote);
+    (tweet.media?.mosaic || tweet.is_note_tweet || tweet.quote || flags?.forceInstantView);
 
   let ivbody = '';
 

@@ -6,6 +6,7 @@ const humanHeaders = {
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
 };
 const githubUrl = 'https://github.com/FixTweet/FixTweet';
+const twitterBaseUrl = 'https://twitter.com';
 
 test('Home page redirect', async () => {
   const result = await cacheWrapper(
@@ -49,7 +50,7 @@ test('Twitter moment redirect', async () => {
   );
   expect(result.status).toEqual(302);
   expect(result.headers.get('location')).toEqual(
-    'https://twitter.com/i/events/1572638642127966214'
+    `${twitterBaseUrl}/i/events/1572638642127966214`
   );
 });
 
@@ -78,7 +79,7 @@ test('API fetch basic Tweet', async () => {
 
   const tweet = response.tweet as APITweet;
   expect(tweet).toBeTruthy();
-  expect(tweet.url).toEqual('https://twitter.com/jack/status/20');
+  expect(tweet.url).toEqual(`${twitterBaseUrl}/jack/status/20`);
   expect(tweet.id).toEqual('20');
   expect(tweet.text).toEqual('just setting up my twttr');
   expect(tweet.author.screen_name?.toLowerCase()).toEqual('jack');
@@ -112,7 +113,7 @@ test('API fetch video Tweet', async () => {
 
   const tweet = response.tweet as APITweet;
   expect(tweet).toBeTruthy();
-  expect(tweet.url).toEqual('https://twitter.com/X/status/854416760933556224');
+  expect(tweet.url).toEqual(`${twitterBaseUrl}/X/status/854416760933556224`);
   expect(tweet.id).toEqual('854416760933556224');
   expect(tweet.text).toEqual(
     'Get the sauces ready, #NuggsForCarter has 3 million+ Retweets.'
@@ -158,7 +159,7 @@ test('API fetch multi-photo Tweet', async () => {
 
   const tweet = response.tweet as APITweet;
   expect(tweet).toBeTruthy();
-  expect(tweet.url).toEqual('https://twitter.com/X/status/1445094085593866246');
+  expect(tweet.url).toEqual(`${twitterBaseUrl}/X/status/1445094085593866246`);
   expect(tweet.id).toEqual('1445094085593866246');
   expect(tweet.text).toEqual('@netflix');
   expect(tweet.author.screen_name?.toLowerCase()).toEqual('x');
@@ -206,7 +207,7 @@ test('API fetch poll Tweet', async () => {
 
   const tweet = response.tweet as APITweet;
   expect(tweet).toBeTruthy();
-  expect(tweet.url).toEqual('https://twitter.com/X/status/1055475950543167488');
+  expect(tweet.url).toEqual(`${twitterBaseUrl}/X/status/1055475950543167488`);
   expect(tweet.id).toEqual('1055475950543167488');
   expect(tweet.text).toEqual('A poll:');
   expect(tweet.author.screen_name?.toLowerCase()).toEqual('x');
@@ -256,7 +257,7 @@ test('API fetch user', async () => {
 
   const user = response.user as APIUser;
   expect(user).toBeTruthy();
-  expect(user.url).toEqual('https://twitter.com/X');
+  expect(user.url).toEqual(`${twitterBaseUrl}/X`);
   expect(user.id).toEqual('783214');
   expect(user.screen_name).toEqual('X');
   expect(user.followers).toEqual(expect.any(Number));

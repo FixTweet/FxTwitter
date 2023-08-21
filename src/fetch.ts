@@ -128,11 +128,13 @@ export const twitterFetch = async (
           method: 'GET',
           headers: headers
         });
+        console.log('Elongator request successful');
       } else {
         apiRequest = await fetch(url, {
           method: 'GET',
           headers: headers
         });
+        console.log('Guest API request successful');
       }
 
       response = await apiRequest?.json();
@@ -148,12 +150,19 @@ export const twitterFetch = async (
       continue;
     }
 
+    // @ts-expect-error This is safe due to optional chaining
+    if ((response as TweetResultsByRestIdResult)?.data?.tweetResult?.result?.reason === 'NsfwLoggedOut') {
+      console.log(`nsfw tweet detected, it's elongator time`);
+      useElongator = true;
+      continue;
+    }
+
     const remainingRateLimit = parseInt(
       apiRequest.headers.get('x-rate-limit-remaining') || '0'
     );
     console.log(`Remaining rate limit: ${remainingRateLimit} requests`);
     /* Running out of requests within our rate limit, let's purge the cache */
-    if (remainingRateLimit < 10) {
+    if (remainingRateLimit < 10 && !useElongator) {
       console.log(`Purging token on this edge due to low rate limit remaining`);
       event &&
         event.waitUntil(
@@ -180,6 +189,7 @@ export const twitterFetch = async (
 
     // @ts-expect-error - We'll pin the guest token to whatever response we have
     response.guestToken = guestToken;
+    console.log('twitterFetch is all done here, see you soon!');
     return response;
   }
 
@@ -240,13 +250,17 @@ export const fetchConversation = async (
       if (isGraphQLTweet(tweet)) {
         return true;
       }
-      if (tweet?.__typename === 'TweetUnavailable' && tweet.reason === 'Protected') {
+      console.log('invalid graphql tweet');
+      if (tweet?.__typename === 'TweetUnavailable' && tweet.reason === 'NsfwLoggedOut') {
+        console.log('tweet is nsfw');
         return true;
       }
-      if (tweet?.__typename === 'TweetUnavailable' && tweet.reason === 'NsfwLoggedOut') {
+      if (tweet?.__typename === 'TweetUnavailable' && tweet.reason === 'Protected') {
+        console.log('tweet is protected');
         return true;
       }
       if (tweet?.__typename === 'TweetUnavailable') {
+        console.log('generic tweet unavailable error')
         return true;
       }
       // Final clause for checking if it's valid is if there's errors
@@ -284,6 +298,7 @@ export const fetchUser = async (
       const response = _res as GraphQLUserResponse;
       // If _res.data is an empty object, we have no user
       if (!Object.keys(response?.data).length) {
+        console.log(`response.data is empty, can't continue`);
         return false;
       }
       return !(

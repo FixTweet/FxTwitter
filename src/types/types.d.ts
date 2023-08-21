@@ -8,6 +8,7 @@ type InputFlags = {
   deprecated?: boolean;
   textOnly?: boolean;
   isXDomain?: boolean;
+  forceInstantView?: boolean;
 };
 
 interface StatusResponse {
