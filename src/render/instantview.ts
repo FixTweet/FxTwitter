@@ -55,7 +55,7 @@ const htmlifyHashtags = (input: string): string => {
   const hashtagPattern = /#([a-zA-Z_]\w*)/g;
   return input.replace(hashtagPattern, (match, hashtag) => {
     const encodedHashtag = encodeURIComponent(hashtag);
-    return `<a href="https://twitter.com/hashtag/${encodedHashtag}?src=hashtag_click">${match}</a>`;
+    return `<a href="${Constants.TWITTER_ROOT}/hashtag/${encodedHashtag}?src=hashtag_click">${match}</a>`;
   });
 };
 
