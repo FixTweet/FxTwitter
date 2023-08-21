@@ -159,11 +159,11 @@ export const twitterFetch = async (
       continue;
     }
 
-    // @ts-expect-error This is safe due to optional chaining
     if (
       !wasElongatorDisabled &&
       !useElongator &&
       typeof TwitterProxy !== 'undefined' &&
+      // @ts-expect-error This is safe due to optional chaining
       (response as TweetResultsByRestIdResult)?.data?.tweetResult?.result?.reason ===
         'NsfwLoggedOut'
     ) {
