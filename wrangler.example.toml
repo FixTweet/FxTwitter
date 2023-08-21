@@ -15,3 +15,6 @@ command = "npm run build"
 
 [miniflare.globals]
 TEST = "true" # Will have unicode character errors in headers if not set to true
+
+[placement]
+mode = "smart"

@@ -305,6 +305,48 @@ type GraphQLUser = {
   };
 };
 
+type GraphQLTweetLegacy = {
+  created_at: string; // "Tue Sep 14 20:00:00 +0000 2021"
+  conversation_id_str: string; // "1674824189176590336"
+  bookmark_count: number; // 0
+  bookmarked: boolean; // false
+  favorite_count: number; // 28
+  full_text: string; // "This is a test tweet"
+  in_reply_to_screen_name: string; // "username"
+  in_reply_to_status_id_str: string; // "1674824189176590336"
+  in_reply_to_user_id_str: string; // "783214"
+  is_quote_status: boolean; // false
+  quote_count: number; // 39
+  quoted_status_id_str: string; // "1674824189176590336"
+  quoted_status_permalink: {
+    url: string; // "https://t.co/aBcDeFgHiJ"
+    expanded: string; // "https://twitter.com/username/status/1674824189176590336"
+    display: string; // "twitter.com/username/statu…"
+  };
+  reply_count: number; // 1
+  retweet_count: number; // 4
+  lang: string; // "en"
+  possibly_sensitive: boolean; // false
+  possibly_sensitive_editable: boolean; // false
+  entities: {
+    media: {
+      display_url: string; // "pic.twitter.com/1X2X3X4X5X"
+      expanded_url: string; // "https://twitter.com/username/status/1674824189176590336/photo/1" "https://twitter.com/username/status/1674824189176590336/video/1"
+      id_str: string; // "1674824189176590336"
+      indices: [number, number]; // [number, number]
+      media_url_https: string; // "https://pbs.twimg.com/media/FAKESCREENSHOT.jpg" With videos appears to be the thumbnail
+      type: string; // "photo" Seems to be photo even with videos
+    }[];
+    user_mentions: unknown[];
+    urls: TcoExpansion[];
+    hashtags: unknown[];
+    symbols: unknown[];
+  };
+  extended_entities: {
+    media: TweetMedia[];
+  };
+};
+
 type GraphQLTweet = {
   // Workaround
   result: GraphQLTweet;
@@ -316,6 +358,18 @@ type GraphQLTweet = {
       result: GraphQLUser;
     };
   };
+  tweet?: {
+    legacy: GraphQLTweetLegacy;
+    views: {
+      count: string; // "562"
+      state: string; // "EnabledWithCount"
+    };
+    core: {
+      user_results: {
+        result: GraphQLUser;
+      };
+    }
+  };
   edit_control: unknown;
   edit_perspective: unknown;
   is_translatable: false;
@@ -325,47 +379,7 @@ type GraphQLTweet = {
   };
   source: string; // "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Web App</a>"
   quoted_status_result?: GraphQLTweet;
-  legacy: {
-    created_at: string; // "Tue Sep 14 20:00:00 +0000 2021"
-    conversation_id_str: string; // "1674824189176590336"
-    bookmark_count: number; // 0
-    bookmarked: boolean; // false
-    favorite_count: number; // 28
-    full_text: string; // "This is a test tweet"
-    in_reply_to_screen_name: string; // "username"
-    in_reply_to_status_id_str: string; // "1674824189176590336"
-    in_reply_to_user_id_str: string; // "783214"
-    is_quote_status: boolean; // false
-    quote_count: number; // 39
-    quoted_status_id_str: string; // "1674824189176590336"
-    quoted_status_permalink: {
-      url: string; // "https://t.co/aBcDeFgHiJ"
-      expanded: string; // "https://twitter.com/username/status/1674824189176590336"
-      display: string; // "twitter.com/username/statu…"
-    };
-    reply_count: number; // 1
-    retweet_count: number; // 4
-    lang: string; // "en"
-    possibly_sensitive: boolean; // false
-    possibly_sensitive_editable: boolean; // false
-    entities: {
-      media: {
-        display_url: string; // "pic.twitter.com/1X2X3X4X5X"
-        expanded_url: string; // "https://twitter.com/username/status/1674824189176590336/photo/1" "https://twitter.com/username/status/1674824189176590336/video/1"
-        id_str: string; // "1674824189176590336"
-        indices: [number, number]; // [number, number]
-        media_url_https: string; // "https://pbs.twimg.com/media/FAKESCREENSHOT.jpg" With videos appears to be the thumbnail
-        type: string; // "photo" Seems to be photo even with videos
-      }[];
-      user_mentions: unknown[];
-      urls: TcoExpansion[];
-      hashtags: unknown[];
-      symbols: unknown[];
-    };
-    extended_entities: {
-      media: TweetMedia[];
-    };
-  };
+  legacy: GraphQLTweetLegacy;
   note_tweet: {
     is_expandable: boolean;
     entity_set: {

@@ -150,7 +150,7 @@ interface APITweet {
   replies: number;
   views?: number | null;
 
-  color: string;
+  color: string | null;
 
   quote?: APITweet;
   poll?: APIPoll;

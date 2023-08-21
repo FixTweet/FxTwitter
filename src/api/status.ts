@@ -20,10 +20,23 @@ const populateTweetProperties = async (
 ): Promise<APITweet> => {
   const apiTweet = {} as APITweet;
 
+  /* Sometimes, Twitter returns a different kind of Tweet type called 'TweetWithVisibilityResults'.
+     It has slightly different attributes from the regular 'Tweet' type. We fix that up here. */
+
   if (typeof tweet.core === 'undefined' && typeof tweet.result !== 'undefined') {
     tweet = tweet.result;
-  } else {
-    console.log('tweet core exists');
+  }
+
+  if (typeof tweet.core === 'undefined' && typeof tweet.tweet?.core !== 'undefined') {
+    tweet.core = tweet.tweet.core;
+  }
+
+  if (typeof tweet.legacy === 'undefined' && typeof tweet.tweet?.legacy !== 'undefined') {
+    tweet.legacy = tweet.tweet?.legacy;
+  }
+
+  if (typeof tweet.views === 'undefined' && typeof tweet?.tweet?.views !== 'undefined') {
+    tweet.views = tweet?.tweet?.views;
   }
 
   /* With v2 conversation API we re-add the user object ot the tweet because
