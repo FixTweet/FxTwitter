@@ -178,7 +178,7 @@ export const twitterFetch = async (
     }
 
     if (!validateFunction(response)) {
-      console.log('Failed to fetch response, got', response);
+      console.log('Failed to fetch response, got', JSON.stringify(response));
       if (useElongator) {
         console.log('Elongator request failed to validate, trying again without it');
         wasElongatorDisabled = true;
