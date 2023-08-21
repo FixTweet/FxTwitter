@@ -146,7 +146,7 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
   FINAL_POLL_RESULTS: 'Final results',
 
   ERROR_API_FAIL:
-    "Post failed to load due to an API error. This is most common with NSFW Posts as Twitter / X currently blocks us from fetching them. We're still working on a fix for that.🙏",
+    "Post failed to load due to an API error. The account may be private or suspended, or there may be another issue :(",
   ERROR_PRIVATE: `Sorry, we can't embed this post because the user is private or suspended :(`,
   ERROR_TWEET_NOT_FOUND: `Sorry, that post doesn't exist :(`,
   ERROR_USER_NOT_FOUND: `Sorry, that user doesn't exist :(`,
