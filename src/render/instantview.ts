@@ -1,6 +1,7 @@
 import { Constants } from '../constants';
 import { getSocialTextIV } from '../helpers/author';
 import { sanitizeText } from '../helpers/utils';
+import { Strings } from '../strings';
 
 const populateUserLinks = (tweet: APITweet, text: string): string => {
   /* TODO: Maybe we can add username splices to our API so only genuinely valid users are linked? */
@@ -68,12 +69,36 @@ function paragraphify(text: string, isQuote = false): string {
     .join('\n');
 }
 
+function getTranslatedText(tweet: APITweet, isQuote = false): string | null {
+  if (!tweet.translation) {
+    return null;
+  }
+  let text = paragraphify(sanitizeText(tweet.translation?.text), isQuote);
+  text = htmlifyLinks(text);
+  text = htmlifyHashtags(text);
+  text = populateUserLinks(tweet, text);
+
+  const formatText =
+      tweet.translation.target_lang === 'en'
+        ? Strings.TRANSLATE_TEXT.format({
+            language: tweet.translation.source_lang_en
+          })
+        : Strings.TRANSLATE_TEXT_INTL.format({
+            source: tweet.translation.source_lang.toUpperCase(),
+            destination: tweet.translation.target_lang.toUpperCase()
+          });
+
+  return `<h4>${formatText}</h4>${text}<h4>Original</h4>`;
+}
+
 /* TODO: maybe refactor so all tweets pull from this */
 const generateTweet = (tweet: APITweet, isQuote = false): string => {
   let text = paragraphify(sanitizeText(tweet.text), isQuote);
   text = htmlifyLinks(text);
   text = htmlifyHashtags(text);
   text = populateUserLinks(tweet, text);
+
+  const translatedText = getTranslatedText(tweet, isQuote);
 
   return `
   <!-- Embed profile picture, display name, and screen name in table -->
@@ -95,8 +120,8 @@ const generateTweet = (tweet: APITweet, isQuote = false): string => {
   `
       : ''
   }
-
   <!-- Embed Tweet text -->
+  ${translatedText ? translatedText : ''}
   ${text}
   ${generateTweetMedia(tweet)} 
   ${!isQuote && tweet.quote ? generateTweet(tweet.quote, true) : ''}
