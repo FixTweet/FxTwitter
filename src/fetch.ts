@@ -131,7 +131,6 @@ export const twitterFetch = async (
           headers: headers
         });
         console.log('Elongator request successful');
-        throw 'asdhasdhbsa';
       } else {
         apiRequest = await fetch(url, {
           method: 'GET',
