@@ -26,6 +26,21 @@ export const translateTweet = async (
   let translationApiResponse;
   let translationResults: TranslationPartial;
 
+  /* Fix up some language codes that may be mistakenly used */
+  switch(language) {
+    case 'jp':
+      language = 'ja';
+      break;
+    case 'kr':
+      language = 'ko';
+      break;
+    case 'ua':
+      language = 'uk';
+      break;
+    default:
+      break;
+  }
+
   headers['x-twitter-client-language'] = language;
 
   /* As of August 2023, you can no longer fetch translations with guest token */
