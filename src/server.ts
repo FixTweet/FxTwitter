@@ -163,7 +163,7 @@ const statusRequest = async (
         return new Response(null, {
             status: 302,
             headers: {
-                'Location': `${baseUrl}/${handle}/status/${id}`,
+                'Location': `${baseUrl}/${handle || 'i'}/status/${id}`,
                 ...(cacheControl ? { 'cache-control': cacheControl } : {})
             }
         });
@@ -202,7 +202,7 @@ const statusRequest = async (
     return new Response(null, {
         status: 302,
         headers: {
-            'Location': `${baseUrl}/${handle}/status/${id?.match(/\d{2,20}/)?.[0]}`,
+            'Location': `${baseUrl}/${handle || 'i'}/status/${id?.match(/\d{2,20}/)?.[0]}`,
             ...(cacheControl ? { 'cache-control': cacheControl } : {})
         }
     });
