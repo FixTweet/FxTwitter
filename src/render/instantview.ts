@@ -175,7 +175,7 @@ const generateTweet = (tweet: APITweet, isQuote = false): string => {
   ${text}
   <!-- Embedded quote tweet -->
   ${!isQuote && tweet.quote ? generateTweet(tweet.quote, true) : notApplicableComment}
-  ${generateTweetFooter(tweet)}
+  ${!isQuote ? generateTweetFooter(tweet) : ''}
   <br>${!isQuote ? `<a href="${tweet.url}">View original post</a>` : notApplicableComment}
   `;
 };
