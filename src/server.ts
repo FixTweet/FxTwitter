@@ -25,7 +25,7 @@ const statusRequest = async (
   /* Let's return our HTML version for wayback machine (we can add other archivers too in future) */
   if (
     ['archive.org', 'Wayback Machine'].some(service =>
-      request.headers.get('Via').includes(service)
+      request.headers.get('Via')?.includes?.(service)
     )
   ) {
     console.log('Request from archive.org');

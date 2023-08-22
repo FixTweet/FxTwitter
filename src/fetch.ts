@@ -256,8 +256,7 @@ export const fetchConversation = async (
       })
     )}&fieldToggles=${encodeURIComponent(
       JSON.stringify({
-        // TODO Figure out what this property does
-        withArticleRichContentState: false
+        withArticleRichContentState: true
       })
     )}`,
     event,
