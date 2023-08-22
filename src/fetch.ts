@@ -13,7 +13,7 @@ declare const globalThis: {
 const generateSnowflake = () => {
   const epoch = 1288834974657n; /* Twitter snowflake epoch */
   const timestamp = BigInt(Date.now()) - epoch;
-  return String((timestamp << 22n) | 696969n);
+  return String((timestamp << 22n) | BigInt(Math.floor(Math.random() * 696969)));
 };
 
 globalThis.fetchCompletedTime = 0;
