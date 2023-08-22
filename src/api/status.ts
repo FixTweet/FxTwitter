@@ -44,8 +44,6 @@ const populateTweetProperties = async (
   const graphQLUser = tweet.core.user_results.result;
   const apiUser = convertToApiUser(graphQLUser);
 
-  console.log(JSON.stringify(graphQLUser));
-
   /* Populating a lot of the basics */
   apiTweet.url = `${Constants.TWITTER_ROOT}/${apiUser.screen_name}/status/${tweet.rest_id}`;
   apiTweet.id = tweet.rest_id;
