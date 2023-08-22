@@ -124,29 +124,41 @@ const generateTweetFooter = (tweet: APITweet, isQuote = false): string => {
   description = populateUserLinks(tweet, description);
 
   return `
-  <p>${getSocialTextIV(tweet)}</p>
-  <br>${!isQuote ? `<a href="${tweet.url}">View original post</a>` : notApplicableComment}
-  <!-- Embed profile picture, display name, and screen name in table -->
-  <h3>About author</h3>
-  ${
-    !isQuote
-      ? `
-      <img src="${author.avatar_url?.replace('_200x200', '_400x400')}" alt="${
-        author.name
-      }'s profile picture" />
-    <h2>${author.name}</h2>
-    <p><a href="${author.url}">@${author.screen_name}</a></p>
-    <p><b>${description}</b></p>
-    <p>${author.location ? `📌 ${author.location}` : ''}${' '}${
-      author.website
-        ? `🔗 <a href=${author.website.url}>${author.website.display_url}</a>`
-        : ''
-    }${' '}${author.joined ? `📆 ${formatDate(new Date(author.joined))}` : ''}</p>
-    <p>${truncateSocialCount(author.following)} <b>Following</b> 
-    ${truncateSocialCount(author.followers)} <b>Followers</b> 
-    ${truncateSocialCount(author.tweets)} <b>Posts</b></p>`
-      : ''
-  }`;
+    <p>{socialText}</p>
+    <br>{viewOriginal}
+    <!-- Embed profile picture, display name, and screen name in table -->
+    {aboutSection}
+    `.format({
+    socialText: getSocialTextIV(tweet) || '',
+    viewOriginal: !isQuote
+      ? `<a href="${tweet.url}">View original post</a>`
+      : notApplicableComment,
+    aboutSection: isQuote
+      ? ''
+      : `<h3>About author</h3>
+        {pfp}
+        <h2>${author.name}</h2>
+        <p><a href="${author.url}">@${author.screen_name}</a></p>
+        <p><b>${description}</b></p>
+        <p>{location} {website} {joined}</p>
+        <p>
+          {following} <b>Following</b> 
+          {followers} <b>Followers</b> 
+          {tweets} <b>Posts</b>
+        </p>`.format({
+          pfp: `<img src="${author.avatar_url?.replace('_200x200', '_400x400')}" alt="${
+            author.name
+          }'s profile picture" />`,
+          location: author.location ? `📌 ${author.location}` : '',
+          website: author.website
+            ? `🔗 <a href=${author.website.url}>${author.website.display_url}</a>`
+            : '',
+          joined: author.joined ? `📆 ${formatDate(new Date(author.joined))}` : '',
+          following: truncateSocialCount(author.following),
+          followers: truncateSocialCount(author.followers),
+          tweets: truncateSocialCount(author.tweets)
+        })
+  });
 };
 
 const generateTweet = (tweet: APITweet, isQuote = false): string => {
@@ -158,14 +170,7 @@ const generateTweet = (tweet: APITweet, isQuote = false): string => {
   const translatedText = getTranslatedText(tweet, isQuote);
 
   return `<!-- Telegram Instant View -->
-  ${
-    isQuote
-      ? `
-    <h4><a href="${tweet.url}">Quoting</a> ${tweet.author.name}
-    (<a href="${Constants.TWITTER_ROOT}/${tweet.author.screen_name}">@${tweet.author.screen_name}</a>)</h4>
-  `
-      : ''
-  }
+  {quoteHeader}
   <!-- Embed Tweet media -->
   ${generateTweetMedia(tweet)} 
   <!-- Translated text (if applicable) -->
@@ -176,7 +181,11 @@ const generateTweet = (tweet: APITweet, isQuote = false): string => {
   ${!isQuote && tweet.quote ? generateTweet(tweet.quote, true) : notApplicableComment}
   ${!isQuote ? generateTweetFooter(tweet) : ''}
   <br>${!isQuote ? `<a href="${tweet.url}">View original post</a>` : notApplicableComment}
-  `;
+  `.format({
+    quoteHeader: isQuote
+      ? `<h4><a href="${tweet.url}">Quoting</a> ${tweet.author.name} (<a href="${Constants.TWITTER_ROOT}/${tweet.author.screen_name}">@${tweet.author.screen_name}</a>)</h4>`
+      : ''
+  });
 };
 
 export const renderInstantView = (properties: RenderProperties): ResponseInstructions => {
