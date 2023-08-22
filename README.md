@@ -1,6 +1,6 @@
 # FixTweet / FixupX <img src="https://abs-0.twimg.com/emoji/v2/svg/1f527.svg" height="28">
 
-## Embed X / Twitter videos, polls, translations, & more on Discord and Telegram!
+## Embed X / Twitter videos, polls, translations, & more on Discord, Telegram, and more!
 
 ![][icons]
 
@@ -90,12 +90,6 @@ The default Twitter embeds include t.co link shorteners, which make it difficult
 
 ![](https://cdn.discordapp.com/attachments/165560751363325952/1006348698659344464/FixTweet.png)
 
-## Color-matched embeds on Discord
-
-We use Twitter's color data for either the first image/video of the post, or the author's profile picture. It makes the embed's appearance more _aesthetic_, as well as in line with the content of the post.
-
-![](https://cdn.discordapp.com/attachments/165560751363325952/1006370708265386134/fixtweetcolor3.png)
-
 ## Built with privacy in mind
 
 FixTweet doesn't save logs of what posts you're sending, nor do we have a public record of what posts are being embedded by FixTweet.
@@ -124,7 +118,6 @@ In many ways, FixTweet has richer embeds and does more. Here's a table comparing
 | Translate Posts                         |         :heavy_check_mark:          |               :x:                |                         :x:                         |                  :x:                  |
 | Publicly accessible embed index         |                :x:²                 |               N/A                |                        :x:²                         |          :heavy_check_mark:           |
 | Replace t.co with original links        |         :heavy_check_mark:          |               :x:                |                         :x:                         |                  :x:                  |
-| Media-based embed colors on Discord     |         :heavy_check_mark:          |               :x:                |                         :x:                         |                  :x:                  |
 | Redirect to media file (without embed)  |         :heavy_check_mark:          |               :x:                | :ballot_box_with_check: Subdomain broken, no images |   :ballot_box_with_check: No images   |
 | Strip Twitter tracking info on redirect |         :heavy_check_mark:          |               :x:                |                 :heavy_check_mark:                  |          :heavy_check_mark:           |
 | Show retweet, like, reply counts        |         :heavy_check_mark:          | :heavy_minus_sign: Discord Only³ |         :ballot_box_with_check: No replies          |  :ballot_box_with_check: No replies   |
