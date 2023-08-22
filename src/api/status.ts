@@ -84,7 +84,7 @@ const populateTweetProperties = async (
   }
   console.log('note_tweet', JSON.stringify(tweet.note_tweet));
   const noteTweetText = tweet.note_tweet?.note_tweet_results?.result?.text;
-  /* For now, don't include note tweets */
+  
   if (noteTweetText) {
     tweet.legacy.entities.urls =
       tweet.note_tweet?.note_tweet_results?.result?.entity_set.urls;
