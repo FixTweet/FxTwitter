@@ -6,6 +6,7 @@ import { isGraphQLTweet } from './utils/graphql';
 const API_ATTEMPTS = 3;
 let wasElongatorDisabled = false;
 
+/* TODO: Figure out why TS globals were broken when not forcing globalThis */
 declare const globalThis: {
   fetchCompletedTime: number;
 };
