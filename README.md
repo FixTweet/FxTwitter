@@ -7,7 +7,6 @@
 [![Webpack][webpackbadge]][webpack]
 [![Tests][testsbadge]][tests]
 [![License][licensebadge]][license]
-![Uptime][uptimebadge]
 
 <!-- Links & Badges -->
 
@@ -18,7 +17,6 @@
 [testsbadge]: https://github.com/FixTweet/FixTweet/actions/workflows/tests.yml/badge.svg
 [license]: https://github.com/FixTweet/FixTweet/blob/main/LICENSE.md
 [licensebadge]: https://img.shields.io/github/license/FixTweet/FixTweet
-[uptimebadge]: https://img.shields.io/uptimerobot/ratio/m792476277-53add6f22c4e6f4d3a2d7e98
 
 ## Written in TypeScript as a Cloudflare Worker to scale, packed with more features and [best-in-class user privacy 🔒](#built-with-privacy-in-mind).
 
