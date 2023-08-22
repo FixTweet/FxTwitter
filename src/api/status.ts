@@ -3,12 +3,11 @@ import { Constants } from '../constants';
 import { fetchConversation } from '../fetch';
 import { linkFixer } from '../helpers/linkFixer';
 import { handleMosaic } from '../helpers/mosaic';
-import { colorFromPalette } from '../helpers/palette';
 import { translateTweet } from '../helpers/translate';
 import { unescapeText } from '../helpers/utils';
 import { processMedia } from '../helpers/media';
 import { convertToApiUser } from './user';
-import { isGraphQLTweet, isGraphQLTweetNotFoundResponse } from '../utils/graphql';
+import { isGraphQLTweet } from '../utils/graphql';
 
 /* This function does the heavy lifting of processing data from Twitter API
    and using it to create FixTweet's streamlined API responses */
