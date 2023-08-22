@@ -89,12 +89,16 @@ export const twitterFetch = async (
     }
 
     if (newTokenGenerated || activate === null) {
-      /* If all goes according to plan, we have a guest token we can use to call API
+      /* We have a guest token that we can use to call API
         AFAIK there is no limit to how many guest tokens you can request.
 
         This can effectively mean virtually unlimited (read) access to Twitter's API,
-        which is very funny. */
+        which is very funny. Though they've since restricted accessing NSFW tweets with this method.  */
+      const timeBefore = performance.now();
       activate = await fetch(guestTokenRequest.clone());
+      const timeAfter = performance.now();
+
+      console.log(`Guest token request after ${timeAfter - timeBefore}ms`);
     }
 
     /* Let's grab that guest_token so we can use it */
@@ -129,17 +133,21 @@ export const twitterFetch = async (
     try {
       if (useElongator && typeof TwitterProxy !== 'undefined') {
         console.log('Fetching using elongator');
+        const performanceStart = performance.now();
         apiRequest = await TwitterProxy.fetch(url, {
           method: 'GET',
           headers: headers
         });
-        console.log('Elongator request successful');
+        const performanceEnd = performance.now();
+        console.log(`Elongator request successful after ${performanceEnd - performanceStart}ms`);
       } else {
+        const performanceStart = performance.now();
         apiRequest = await fetch(url, {
           method: 'GET',
           headers: headers
         });
-        console.log('Guest API request successful');
+        const performanceEnd = performance.now();
+        console.log(`Guest API request successful after ${performanceEnd - performanceStart}ms`);
       }
 
       response = await apiRequest?.json();
