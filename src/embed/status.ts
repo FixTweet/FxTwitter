@@ -120,7 +120,7 @@ export const handleStatus = async (
   const headers = [
     `<link rel="canonical" href="${Constants.TWITTER_ROOT}/${tweet.author.screen_name}/status/${tweet.id}"/>`,
     `<meta property="og:url" content="${Constants.TWITTER_ROOT}/${tweet.author.screen_name}/status/${tweet.id}"/>`,
-    `<meta property="theme-color" content="${tweet.color}"/>`,
+    `<meta property="theme-color" content="${tweet.color || '#00a8fc'}"/>`,
     `<meta property="twitter:card" content="${
       tweet.quote?.twitter_card || tweet.twitter_card
     }"/>`,
