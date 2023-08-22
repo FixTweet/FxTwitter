@@ -163,13 +163,18 @@ const populateTweetProperties = async (
   if (tweet.card) {
     const card = renderCard(tweet.card);
     if (card.external_media) {
-      apiTweet.twitter_card = 'summary_large_image';
       apiTweet.media = apiTweet.media || {};
       apiTweet.media.external = card.external_media;
     }
     if (card.poll) {
       apiTweet.poll = card.poll;
     }
+  }
+
+  /* Workaround: Force player card by default for videos */
+  // @ts-expect-error Inexplicably, twitter_card becomes type of 'tweet' instead of 'tweet' | 'summary' | 'summary_large_image' | 'player'
+  if (apiTweet.media?.videos && apiTweet.twitter_card !== 'player')  {
+    apiTweet.twitter_card = 'player';
   }
 
   /* If a language is specified in API or by user, let's try translating it! */

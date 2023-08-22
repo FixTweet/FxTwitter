@@ -46,9 +46,10 @@ export const renderVideo = (
 
   /* Push the raw video-related headers */
   instructions.addHeaders = [
-    `<meta property="twitter:player:stream:content_type" content="${video.format}"/>`,
     `<meta property="twitter:player:height" content="${video.height * sizeMultiplier}"/>`,
     `<meta property="twitter:player:width" content="${video.width * sizeMultiplier}"/>`,
+    `<meta property="twitter:player:stream" content="${video.url}"/>`,
+    `<meta property="twitter:player:stream:content_type" content="${video.format}"/>`,
     `<meta property="og:video" content="${video.url}"/>`,
     `<meta property="og:video:secure_url" content="${video.url}"/>`,
     `<meta property="og:video:height" content="${video.height * sizeMultiplier}"/>`,

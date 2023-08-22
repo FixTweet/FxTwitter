@@ -1,6 +1,6 @@
 import { Constants } from '../constants';
 import { handleQuote } from '../helpers/quote';
-import { formatNumber, sanitizeText } from '../helpers/utils';
+import { formatNumber, sanitizeText, truncateWithEllipsis } from '../helpers/utils';
 import { Strings } from '../strings';
 import { getAuthorText } from '../helpers/author';
 import { statusAPI } from '../api/status';
@@ -121,9 +121,6 @@ export const handleStatus = async (
     `<link rel="canonical" href="${Constants.TWITTER_ROOT}/${tweet.author.screen_name}/status/${tweet.id}"/>`,
     `<meta property="og:url" content="${Constants.TWITTER_ROOT}/${tweet.author.screen_name}/status/${tweet.id}"/>`,
     `<meta property="theme-color" content="${tweet.color || '#00a8fc'}"/>`,
-    `<meta property="twitter:card" content="${
-      tweet.quote?.twitter_card || tweet.twitter_card
-    }"/>`,
     `<meta property="twitter:site" content="@${tweet.author.screen_name}"/>`,
     `<meta property="twitter:creator" content="@${tweet.author.screen_name}"/>`,
     `<meta property="twitter:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`
@@ -201,6 +198,10 @@ export const handleStatus = async (
           if (instructions.siteName) {
             siteName = instructions.siteName;
           }
+          /* Overwrite our Twitter Card if overriding media, so it displays correctly in Discord */
+          if (tweet.twitter_card === 'player') {
+            tweet.twitter_card = 'summary_large_image';
+          }
           break;
         case 'video':
           instructions = renderVideo(
@@ -213,6 +214,10 @@ export const handleStatus = async (
           }
           if (instructions.siteName) {
             siteName = instructions.siteName;
+          }
+          /* Overwrite our Twitter Card if overriding media, so it displays correctly in Discord */
+          if (tweet.twitter_card !== 'player') {
+            tweet.twitter_card = 'player';
           }
           /* This Tweet has a video to render. */
           break;
@@ -349,7 +354,10 @@ export const handleStatus = async (
   headers.push(
     `<meta property="og:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`,
     `<meta property="og:description" content="${text}"/>`,
-    `<meta property="og:site_name" content="${siteName}"/>`
+    `<meta property="og:site_name" content="${siteName}"/>`,
+    `<meta property="twitter:card" content="${
+      tweet.quote?.twitter_card || tweet.twitter_card
+    }"/>`,
   );
 
   /* Special reply handling if authorText is not overriden */
@@ -366,13 +374,15 @@ export const handleStatus = async (
   /* The additional oembed is pulled by Discord to enable improved embeds.
      Telegram does not use this. */
   headers.push(
-    `<link rel="alternate" href="${Constants.HOST_URL}/owoembed?text=${encodeURIComponent(
-      authorText.substring(0, 200)
-    )}${flags?.deprecated ? '&deprecated=true' : ''}&status=${encodeURIComponent(
-      status
-    )}&author=${encodeURIComponent(tweet.author?.screen_name || '')}&useXbranding=${
-      flags?.isXDomain ? 'true' : 'false'
-    }" type="application/json+oembed" title="${tweet.author.name}">`
+    `<link rel="alternate" href="{base}/owoembed?text={text}{deprecatedFlag}&status={status}&author={author}&useXbranding={useXBranding}" type="application/json+oembed" title="{name}">`.format({
+      base: Constants.HOST_URL,
+      text: encodeURIComponent(truncateWithEllipsis(authorText, 250)),
+      deprecatedFlag: flags?.deprecated ? '&deprecated=true' : '',
+      status: encodeURIComponent(status),
+      author: encodeURIComponent(tweet.author?.screen_name || ''),
+      useXBranding: flags?.isXDomain ? 'true' : 'false',
+      name: tweet.author.name || ''
+    })
   );
 
   /* When dealing with a Tweet of unknown lang, fall back to en */
