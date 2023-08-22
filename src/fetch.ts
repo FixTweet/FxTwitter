@@ -6,6 +6,12 @@ import { isGraphQLTweet } from './utils/graphql';
 const API_ATTEMPTS = 3;
 let wasElongatorDisabled = false;
 
+declare const globalThis: {
+  fetchCompletedTime: number;
+}
+
+globalThis.fetchCompletedTime = 0;
+
 export const twitterFetch = async (
   url: string,
   event: FetchEvent,
@@ -154,6 +160,8 @@ export const twitterFetch = async (
       useElongator = false;
       continue;
     }
+
+    globalThis.fetchCompletedTime = performance.now();
 
     if (
       !wasElongatorDisabled &&

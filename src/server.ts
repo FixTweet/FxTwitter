@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 import Toucan from 'toucan-js';
 
 import { IRequest, Router } from 'itty-router';
@@ -8,6 +9,10 @@ import { Strings } from './strings';
 import motd from '../motd.json';
 import { sanitizeText } from './helpers/utils';
 import { handleProfile } from './user';
+
+declare const globalThis: {
+  fetchCompletedTime: number;
+}
 
 const router = Router();
 
@@ -153,6 +158,7 @@ const statusRequest = async (
       });
     }
   } else {
+    globalThis.fetchCompletedTime = performance.now();
     /* A human has clicked a fxtwitter.com/:screen_name/status/:id link!
        Obviously we just need to redirect to the Tweet directly.*/
     console.log('Matched human UA', userAgent);
@@ -251,6 +257,7 @@ const genericTwitterRedirect = async (request: IRequest) => {
 };
 
 const versionRequest = async (request: IRequest) => {
+  globalThis.fetchCompletedTime = performance.now();
   return new Response(
     Strings.VERSION_HTML.format({
       rtt: request.cf?.clientTcpRtt ? `🏓 ${request.cf.clientTcpRtt} ms RTT` : '',
@@ -305,6 +312,7 @@ router.get('/version', versionRequest);
 
 Yes, I actually made the endpoint /owoembed. Deal with it. */
 router.get('/owoembed', async (request: IRequest) => {
+  globalThis.fetchCompletedTime = performance.now();
   console.log('oembed hit!');
   const { searchParams } = new URL(request.url);
 
@@ -368,6 +376,7 @@ export const cacheWrapper = async (
   request: Request,
   event?: FetchEvent
 ): Promise<Response> => {
+  const startTime = performance.now();
   const userAgent = request.headers.get('User-Agent') || '';
   // https://developers.cloudflare.com/workers/examples/cache-api/
   const cacheUrl = new URL(
@@ -427,8 +436,6 @@ export const cacheWrapper = async (
         console.log('Cache miss');
       }
 
-      /* Literally do not know what the hell eslint is complaining about */
-      // eslint-disable-next-line no-case-declarations
       const response = await router.handle(request, event);
 
       /* Store the fetched response as cacheKey
@@ -439,6 +446,11 @@ export const cacheWrapper = async (
       } catch (error) {
         console.error((error as Error).stack);
       }
+
+      const endTime = performance.now();
+      const timeSinceFetch = endTime - (globalThis.fetchCompletedTime || 0);
+      const timeSinceStart = endTime - startTime;
+      console.log(`Request took ${timeSinceStart}ms, of which ${timeSinceFetch}ms was CPU time after last fetch`);
 
       return response;
     /* Telegram sends this from Webpage Bot, and Cloudflare sends it if we purge cache, and we respect it.
