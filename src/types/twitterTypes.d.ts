@@ -390,13 +390,24 @@ type GraphQLTweet = {
   legacy: GraphQLTweetLegacy;
   note_tweet: {
     is_expandable: boolean;
-    entity_set: {
-      hashtags: unknown[];
-      urls: unknown[];
-      user_mentions: unknown[];
-    };
     note_tweet_results: {
       result: {
+        entity_set: {
+          hashtags: unknown[];
+          symbols: unknown[];
+          urls: TcoExpansion[];
+          user_mentions: unknown[];
+        };
+        media: {
+          inline_media: unknown[]
+        };
+        richtext: {
+          richtext_tags: {
+            from_index: number
+            to_index: number
+            richtext_types: string[]
+          }[]
+        };
         text: string;
       };
     };

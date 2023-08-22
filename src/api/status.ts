@@ -84,6 +84,20 @@ const populateTweetProperties = async (
   } else {
     apiTweet.views = null;
   }
+  console.log('note_tweet', JSON.stringify(tweet.note_tweet));
+  const noteTweetText = tweet.note_tweet?.note_tweet_results?.result?.text;
+  /* For now, don't include note tweets */
+  if (noteTweetText) {
+    tweet.legacy.entities.urls = tweet.note_tweet?.note_tweet_results?.result?.entity_set.urls;
+    tweet.legacy.entities.hashtags = tweet.note_tweet?.note_tweet_results?.result?.entity_set.hashtags;
+    tweet.legacy.entities.symbols = tweet.note_tweet?.note_tweet_results?.result?.entity_set.symbols;
+
+    console.log('We meet the conditions to use new note tweets');
+    apiTweet.text = unescapeText(linkFixer(tweet, noteTweetText));
+    apiTweet.is_note_tweet = true;
+  } else {
+    apiTweet.is_note_tweet = false;
+  }
 
   if (tweet.legacy.lang !== 'unk') {
     apiTweet.lang = tweet.legacy.lang;
@@ -126,18 +140,6 @@ const populateTweetProperties = async (
     apiTweet.color = colorFromPalette(mediaList[0].ext_media_color.palette);
   }
   */
-  console.log('note_tweet', JSON.stringify(tweet.note_tweet));
-  const noteTweetText = tweet.note_tweet?.note_tweet_results?.result?.text;
-  /* For now, don't include note tweets */
-  if (
-    noteTweetText /*&& mediaList.length <= 0 && tweet.legacy.entities?.urls?.length <= 0*/
-  ) {
-    console.log('We meet the conditions to use new note tweets');
-    apiTweet.text = unescapeText(linkFixer(tweet, noteTweetText));
-    apiTweet.is_note_tweet = true;
-  } else {
-    apiTweet.is_note_tweet = false;
-  }
 
   /* Handle photos and mosaic if available */
   if ((apiTweet?.media?.photos?.length || 0) > 1) {
