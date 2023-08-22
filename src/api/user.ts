@@ -41,6 +41,16 @@ export const convertToApiUser = (user: GraphQLUser): APIUser => {
     if (typeof birthdate.month === 'number') apiUser.birthday.month = birthdate.month;
     if (typeof birthdate.year === 'number') apiUser.birthday.year = birthdate.year;
   }
+  const website = user.legacy.entities?.url?.urls?.[0];
+
+  if (website) {
+    apiUser.website = {
+      url: website.expanded_url,
+      display_url: website.display_url
+    };
+  } else {
+    apiUser.website = null;
+  }
 
   return apiUser;
 };
@@ -61,7 +71,7 @@ const populateUserProperties = async (
 export const userAPI = async (
   username: string,
   event: FetchEvent,
-  flags?: InputFlags
+  // flags?: InputFlags
 ): Promise<UserAPIResponse> => {
   const userResponse = await fetchUser(username, event);
   if (!userResponse || !Object.keys(userResponse).length) {

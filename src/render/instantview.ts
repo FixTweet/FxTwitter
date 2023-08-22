@@ -1,3 +1,4 @@
+/* eslint-disable no-irregular-whitespace */
 import { Constants } from '../constants';
 import { getSocialTextIV } from '../helpers/author';
 import { sanitizeText } from '../helpers/utils';
@@ -43,6 +44,13 @@ const generateTweetMedia = (tweet: APITweet): string => {
 //   const min = String(date.getMinutes()).padStart(2, '0');
 //   return `${hh}:${min} - ${yyyy}/${mm}/${dd}`;
 // }
+
+const formatDate = (date: Date): string => {
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+  const dd = String(date.getDate()).padStart(2, '0');
+  return `${yyyy}/${mm}/${dd}`;
+}
 
 const htmlifyLinks = (input: string): string => {
   const urlPattern = /\bhttps?:\/\/\S+/g;
@@ -93,6 +101,50 @@ function getTranslatedText(tweet: APITweet, isQuote = false): string | null {
 
 const notApplicableComment = '<!-- N/A -->';
 
+// 1100 -> 1.1K, 1100000 -> 1.1M
+const truncateSocialCount = (count: number): string => {
+  if (count >= 1000000) {
+    return `${(count / 1000000).toFixed(1)}M`;
+  } else if (count >= 1000) {
+    return `${(count / 1000).toFixed(1)}K`;
+  } else {
+    return String(count);
+  }
+}
+
+
+const generateTweetFooter = (tweet: APITweet, isQuote = false): string => {
+  const { author } = tweet;
+
+  let description = author.description;
+  description = htmlifyLinks(description);
+  description = htmlifyHashtags(description);
+  description = populateUserLinks(tweet, description);
+
+  return `
+  <p>${getSocialTextIV(tweet)}</p>
+  <!-- Embed profile picture, display name, and screen name in table -->
+  <h3>About author</h3>
+  ${
+    !isQuote
+      ? `<table>
+      <img src="${author.avatar_url?.replace('_200x200', '_400x400')}" alt="${
+      author.name
+    }'s profile picture" />
+    <h2>${author.name}</h2>
+    <p><a href="${author.url}">@${author.screen_name}</a></p>
+    <p><b>${description}</b></p>
+    <p>${author.location ? `📌 ${author.location}` : ''}${' '
+    }${author.website ? `🔗 <a href=${author.website.url}>${author.website.display_url}</a>` : ''}${' '
+    }${author.joined ? `📆 ${formatDate(new Date(author.joined))}` : ''}</p>
+    <p>${truncateSocialCount(author.following)} <b>Following</b> 
+    ${truncateSocialCount(author.followers)} <b>Followers</b> 
+    ${truncateSocialCount(author.tweets)} <b>Posts</b></p>
+  </table>`
+      : ''
+  }`;
+}
+
 const generateTweet = (tweet: APITweet, isQuote = false): string => {
   let text = paragraphify(sanitizeText(tweet.text), isQuote);
   text = htmlifyLinks(text);
@@ -102,19 +154,6 @@ const generateTweet = (tweet: APITweet, isQuote = false): string => {
   const translatedText = getTranslatedText(tweet, isQuote);
 
   return `<!-- Telegram Instant View -->
-  <!-- Embed profile picture, display name, and screen name in table -->
-  ${
-    !isQuote
-      ? `<table>
-    <img src="${tweet.author.avatar_url?.replace('_200x200', '_400x400')}" alt="${
-      tweet.author.name
-    }'s profile picture" />
-    <h2>${tweet.author.name}</h2>
-    <p>@${tweet.author.screen_name}</p>
-    <p>${getSocialTextIV(tweet)}</p>
-  </table>`
-      : ''
-  }
   ${
     isQuote
       ? `
@@ -123,14 +162,15 @@ const generateTweet = (tweet: APITweet, isQuote = false): string => {
   `
       : ''
   }
+  <!-- Embed Tweet media -->
+  ${generateTweetMedia(tweet)} 
   <!-- Translated text (if applicable) -->
   ${translatedText ? translatedText : notApplicableComment}
   <!-- Embed Tweet text -->
   ${text}
-  <!-- Embed Tweet media -->
-  ${generateTweetMedia(tweet)} 
   <!-- Embedded quote tweet -->
   ${!isQuote && tweet.quote ? generateTweet(tweet.quote, true) : notApplicableComment}
+  ${generateTweetFooter(tweet)}
   <br>${!isQuote ? `<a href="${tweet.url}">View original</a>` : notApplicableComment}
   `;
 };

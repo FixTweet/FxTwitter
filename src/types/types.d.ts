@@ -87,10 +87,6 @@ interface BaseUser {
   banner_url?: string;
 }
 
-interface APITweetAuthor extends BaseUser {
-  avatar_color: string;
-}
-
 interface APIExternalMedia {
   type: 'video';
   url: string;
@@ -155,7 +151,7 @@ interface APITweet {
   quote?: APITweet;
   poll?: APIPoll;
   translation?: APITranslate;
-  author: APITweetAuthor;
+  author: APIUser;
 
   media?: {
     external?: APIExternalMedia;
@@ -179,17 +175,22 @@ interface APITweet {
 }
 
 interface APIUser extends BaseUser {
+  // verified: 'legacy' | 'blue'| 'business' | 'government';
+  // verified_label: string;
   description: string;
   location: string;
   url: string;
+  avatar_color?: string | null;
   protected: boolean;
-  // verified: 'legacy' | 'blue'| 'business' | 'government';
-  // verified_label: string;
   followers: number;
   following: number;
   tweets: number;
   likes: number;
   joined: string;
+  website: {
+    url: string;
+    display_url: string;
+  } | null;
   birthday: {
     day?: number;
     month?: number;

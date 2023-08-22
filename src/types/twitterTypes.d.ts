@@ -239,6 +239,14 @@ type GraphQLUser = {
           indices: [0, 23];
         }[];
       };
+      url?: {
+        urls?: {
+          display_url: string; // "about.twitter.com",
+          expanded_url: string; // "https://about.twitter.com/",
+          url: string; // "https://t.co/DAtOo6uuHk",
+          indices: [0, 23];
+        }[];
+      }
     };
     fast_followers_count: 0;
     favourites_count: number; // 126708,
@@ -502,6 +510,7 @@ type GraphQLTweetFoundResponse = {
   };
 };
 type TweetResultsByRestIdResult = {
+  guestToken?: string;
   errors?: unknown[];
   data?: {
     tweetResult?: {

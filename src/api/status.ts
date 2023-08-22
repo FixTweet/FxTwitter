@@ -13,7 +13,7 @@ import { isGraphQLTweet } from '../utils/graphql';
    and using it to create FixTweet's streamlined API responses */
 const populateTweetProperties = async (
   tweet: GraphQLTweet,
-  conversation: any, // TimelineBlobPartial,
+  conversation: TweetResultsByRestIdResult, // TimelineBlobPartial,
   language: string | undefined
   // eslint-disable-next-line sonarjs/cognitive-complexity
 ): Promise<APITweet> => {
@@ -44,6 +44,8 @@ const populateTweetProperties = async (
   const graphQLUser = tweet.core.user_results.result;
   const apiUser = convertToApiUser(graphQLUser);
 
+  console.log(JSON.stringify(graphQLUser))
+
   /* Populating a lot of the basics */
   apiTweet.url = `${Constants.TWITTER_ROOT}/${apiUser.screen_name}/status/${tweet.rest_id}`;
   apiTweet.id = tweet.rest_id;
@@ -53,15 +55,24 @@ const populateTweetProperties = async (
     name: apiUser.name,
     screen_name: apiUser.screen_name,
     avatar_url: (apiUser.avatar_url || '').replace('_normal', '_200x200') || '',
-    avatar_color: '0000FF' /* colorFromPalette(
-      tweet.user?.profile_image_extensions_media_color?.palette || []
-    ),*/,
-    banner_url: apiUser.banner_url || ''
+    avatar_color: null,
+    banner_url: apiUser.banner_url || '',
+    description: apiUser.description || '',
+    location: apiUser.location || '',
+    url: apiUser.url || '',
+    followers: apiUser.followers,
+    following: apiUser.following,
+    joined: apiUser.joined,
+    tweets: apiUser.tweets,
+    likes: apiUser.likes,
+    protected: apiUser.protected,
+    birthday: apiUser.birthday,
+    website: apiUser.website,
   };
   apiTweet.replies = tweet.legacy.reply_count;
   apiTweet.retweets = tweet.legacy.retweet_count;
   apiTweet.likes = tweet.legacy.favorite_count;
-  apiTweet.color = apiTweet.author.avatar_color;
+  apiTweet.color = null;
   apiTweet.twitter_card = 'tweet';
   apiTweet.created_at = tweet.legacy.created_at;
   apiTweet.created_timestamp = new Date(tweet.legacy.created_at).getTime() / 1000;
