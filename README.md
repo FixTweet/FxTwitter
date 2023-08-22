@@ -90,6 +90,12 @@ The default Twitter embeds include t.co link shorteners, which make it difficult
 
 ![](https://cdn.discordapp.com/attachments/165560751363325952/1006348698659344464/FixTweet.png)
 
+## Redirect to Nitter or other custom instances
+
+If you want to redirect to Nitter or another custom Twitter interface, you can set your custom redirect domain, like so: `https://fxtwitter.com/set_base_redirect?url=https://nitter.net`
+
+At this time, the cookie is only set on the domain you set it on, so if you set it up using `fxtwitter.com`, `fixupx.com` will not redirect to your custom domain unless you set it there.
+
 ## Built with privacy in mind
 
 FixTweet doesn't save logs of what posts you're sending, nor do we have a public record of what posts are being embedded by FixTweet.
