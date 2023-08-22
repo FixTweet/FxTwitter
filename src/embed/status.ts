@@ -217,17 +217,6 @@ export const handleStatus = async (
           /* This Tweet has a video to render. */
           break;
       }
-    } else if (media?.mosaic) {
-      const instructions = renderPhoto(
-        {
-          tweet: tweet,
-          authorText: authorText,
-          engagementText: engagementText,
-          userAgent: userAgent
-        },
-        media.mosaic
-      );
-      headers.push(...instructions.addHeaders);
     } else if (media?.videos) {
       const instructions = renderVideo(
         { tweet: tweet, userAgent: userAgent, text: newText },
@@ -240,6 +229,17 @@ export const handleStatus = async (
       if (instructions.siteName) {
         siteName = instructions.siteName;
       }
+    } else if (media?.mosaic) {
+      const instructions = renderPhoto(
+        {
+          tweet: tweet,
+          authorText: authorText,
+          engagementText: engagementText,
+          userAgent: userAgent
+        },
+        media.mosaic
+      );
+      headers.push(...instructions.addHeaders);
     } else if (media?.photos) {
       const instructions = renderPhoto(
         {
