@@ -19,7 +19,7 @@ const Experiments: { [key in Experiment]: ExperimentConfig } = {
 export const experimentCheck = (experiment: Experiment, condition = true) => {
   console.log(`Checking experiment ${experiment}`);
   const experimentEnabled =
-    (Experiments[experiment].percentage > Math.random()) && condition;
+    Experiments[experiment].percentage > Math.random() && condition;
   console.log(`Experiment ${experiment} enabled: ${experimentEnabled}`);
   return experimentEnabled;
 };

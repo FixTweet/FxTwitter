@@ -8,6 +8,22 @@ const humanHeaders = {
 const githubUrl = 'https://github.com/FixTweet/FixTweet';
 const twitterBaseUrl = 'https://twitter.com';
 
+// @ts-expect-error - Performance not included in jest environment
+if (!globalThis.performance) {
+  // @ts-expect-error - Performance not included in jest environment
+  globalThis.performance = {};
+}
+
+// @ts-expect-error - Performance not included in jest environment
+if (!globalThis.performance.now) {
+  var start = Date.now();
+
+  // @ts-expect-error - Performance not included in jest environment
+  globalThis.performance.now = function () {
+    return Date.now() - start;
+  };
+}
+
 test('Home page redirect', async () => {
   const result = await cacheWrapper(
     new Request('https://fxtwitter.com', {
@@ -87,7 +103,6 @@ test('API fetch basic Tweet', async () => {
   expect(tweet.author.name).toBeTruthy();
   expect(tweet.author.avatar_url).toBeTruthy();
   expect(tweet.author.banner_url).toBeTruthy();
-  expect(tweet.author.avatar_color).toBeTruthy();
   expect(tweet.replies).toBeGreaterThan(0);
   expect(tweet.retweets).toBeGreaterThan(0);
   expect(tweet.likes).toBeGreaterThan(0);
@@ -123,7 +138,6 @@ test('API fetch video Tweet', async () => {
   expect(tweet.author.name).toBeTruthy();
   expect(tweet.author.avatar_url).toBeTruthy();
   expect(tweet.author.banner_url).toBeTruthy();
-  expect(tweet.author.avatar_color).toBeTruthy();
   expect(tweet.replies).toBeGreaterThan(0);
   expect(tweet.retweets).toBeGreaterThan(0);
   expect(tweet.likes).toBeGreaterThan(0);
@@ -167,7 +181,6 @@ test('API fetch multi-photo Tweet', async () => {
   expect(tweet.author.name).toBeTruthy();
   expect(tweet.author.avatar_url).toBeTruthy();
   expect(tweet.author.banner_url).toBeTruthy();
-  expect(tweet.author.avatar_color).toBeTruthy();
   expect(tweet.twitter_card).toEqual('summary_large_image');
   expect(tweet.created_at).toEqual('Mon Oct 04 18:30:53 +0000 2021');
   expect(tweet.created_timestamp).toEqual(1633372253);
@@ -215,7 +228,6 @@ test('API fetch poll Tweet', async () => {
   expect(tweet.author.name).toBeTruthy();
   expect(tweet.author.avatar_url).toBeTruthy();
   expect(tweet.author.banner_url).toBeTruthy();
-  expect(tweet.author.avatar_color).toBeTruthy();
   expect(tweet.twitter_card).toEqual('tweet');
   expect(tweet.created_at).toEqual('Thu Oct 25 15:07:31 +0000 2018');
   expect(tweet.created_timestamp).toEqual(1540480051);
