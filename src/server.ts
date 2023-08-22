@@ -520,7 +520,7 @@ const sentryWrapper = async (event: FetchEvent, test = false): Promise<void> => 
             'content-type': 'text/html',
             'cache-control': 'max-age=1'
           },
-          status: 500
+          status: 200
         });
       }
     })()
