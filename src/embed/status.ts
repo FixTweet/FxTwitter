@@ -48,6 +48,11 @@ export const handleStatus = async (
       tweet.translation ||
       flags?.forceInstantView);
 
+  /* Force enable IV for archivers */
+  if (flags?.archive) {
+    useIV = true;
+  }
+
   let ivbody = '';
 
   /* Catch this request if it's an API response */
@@ -136,7 +141,11 @@ export const handleStatus = async (
 
   if (useIV) {
     try {
-      const instructions = renderInstantView({ tweet: tweet, text: newText });
+      const instructions = renderInstantView({
+        tweet: tweet,
+        text: newText,
+        flags: flags
+      });
       headers.push(...instructions.addHeaders);
       if (instructions.authorText) {
         authorText = instructions.authorText;

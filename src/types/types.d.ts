@@ -9,6 +9,7 @@ type InputFlags = {
   textOnly?: boolean;
   isXDomain?: boolean;
   forceInstantView?: boolean;
+  archive?: boolean;
 };
 
 interface StatusResponse {
@@ -33,6 +34,7 @@ interface RenderProperties {
   isOverrideMedia?: boolean;
   userAgent?: string;
   text?: string;
+  flags?: InputFlags;
 }
 
 interface Request {

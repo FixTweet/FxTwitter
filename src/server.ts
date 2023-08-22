@@ -22,6 +22,16 @@ const statusRequest = async (
   // eslint-disable-next-line sonarjs/no-duplicate-string
   const userAgent = request.headers.get('User-Agent') || '';
 
+  /* Let's return our HTML version for wayback machine (we can add other archivers too in future) */
+  if (
+    ['archive.org', 'Wayback Machine'].some(service =>
+      request.headers.get('Via').includes(service)
+    )
+  ) {
+    console.log('Request from archive.org');
+    flags.archive = true;
+  }
+
   /* User Agent matching for embed generators, bots, crawlers, and other automated
      tools. It's pretty all-encompassing. Note that Firefox/92 is in here because 
      Discord sometimes uses the following UA:
@@ -33,7 +43,7 @@ const statusRequest = async (
      
      On the very rare off chance someone happens to be using specifically Firefox 92,
      the http-equiv="refresh" meta tag will ensure an actual human is sent to the destination. */
-  const isBotUA = userAgent.match(Constants.BOT_UA_REGEX) !== null;
+  const isBotUA = userAgent.match(Constants.BOT_UA_REGEX) !== null || flags?.archive;
 
   /* Check if domain is a direct media domain (i.e. d.fxtwitter.com),
      the tweet is prefixed with /dl/ or /dir/ (for TwitFix interop), or the

@@ -130,7 +130,7 @@ const generateTweetFooter = (tweet: APITweet, isQuote = false): string => {
   <h3>About author</h3>
   ${
     !isQuote
-      ? `<table>
+      ? `
       <img src="${author.avatar_url?.replace('_200x200', '_400x400')}" alt="${
         author.name
       }'s profile picture" />
@@ -144,8 +144,7 @@ const generateTweetFooter = (tweet: APITweet, isQuote = false): string => {
     }${' '}${author.joined ? `📆 ${formatDate(new Date(author.joined))}` : ''}</p>
     <p>${truncateSocialCount(author.following)} <b>Following</b> 
     ${truncateSocialCount(author.followers)} <b>Followers</b> 
-    ${truncateSocialCount(author.tweets)} <b>Posts</b></p>
-  </table>`
+    ${truncateSocialCount(author.tweets)} <b>Posts</b></p>`
       : ''
   }`;
 };
@@ -182,7 +181,7 @@ const generateTweet = (tweet: APITweet, isQuote = false): string => {
 
 export const renderInstantView = (properties: RenderProperties): ResponseInstructions => {
   console.log('Generating Instant View...');
-  const { tweet } = properties;
+  const { tweet, flags } = properties;
   const instructions: ResponseInstructions = { addHeaders: [] };
   /* Use ISO date for Medium template */
   const postDate = new Date(tweet.created_at).toISOString();
@@ -194,16 +193,21 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
      contact me https://t.me/dangeredwolf */
   instructions.addHeaders = [
     `<meta property="al:android:app_name" content="Medium"/>`,
-    `<meta property="article:published_time" content="${postDate}"/>`
+    `<meta property="article:published_time" content="${postDate}"/>`,
+    flags?.archive
+      ? `<style>img,video{width:100%;max-width:500px}html{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif}</style>`
+      : ``
   ];
 
   instructions.text = `
     <section class="section-backgroundImage">
       <figure class="graf--layoutFillWidth"></figure>
     </section>
-    <section class="section--first" style="font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 64px;">${''}If you can see this, your browser is doing something weird with your user agent.<a href="${
-      tweet.url
-    }">View original post</a>
+    <section class="section--first">${
+      flags?.archive
+        ? `${Constants.BRANDING_NAME} archive`
+        : 'If you can see this, your browser is doing something weird with your user agent.'
+    } <a href="${tweet.url}">View original post</a>
     </section>
     <article>
     <h1>${tweet.author.name} (@${tweet.author.screen_name})</h1>
