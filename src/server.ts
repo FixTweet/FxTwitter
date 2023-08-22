@@ -16,6 +16,24 @@ declare const globalThis: {
 
 const router = Router();
 
+const getBaseRedirectUrl = (request: IRequest) => {
+  const baseRedirect = request.headers
+    ?.get('cookie')
+    ?.match(/(?<=base_redirect=)(.*?)(?=;|$)/)?.[0];
+
+  if (baseRedirect) {
+    console.log('Found base redirect', baseRedirect);
+    try {
+      new URL(baseRedirect);
+    } catch (e) {
+      return Constants.TWITTER_ROOT;
+    }
+    return baseRedirect.endsWith('/') ? baseRedirect.slice(0, -1) : baseRedirect;
+  }
+
+  return Constants.TWITTER_ROOT;
+};
+
 /* Handler for status (Tweet) request */
 const statusRequest = async (
   request: IRequest,
@@ -94,6 +112,8 @@ const statusRequest = async (
     console.log(`We're using twitter domain`);
   }
 
+  const baseUrl = getBaseRedirectUrl(request);
+
   /* Check if request is to api.fxtwitter.com, or the tweet is appended with .json
      Note that unlike TwitFix, FixTweet will never generate embeds for .json, and
      in fact we only support .json because it's what people using TwitFix API would
@@ -136,13 +156,27 @@ const statusRequest = async (
          Since we obviously have no media to give the user, we'll just redirect to the Tweet.
          Embeds will return as usual to bots as if direct media was never specified. */
       if (!isBotUA) {
-        return Response.redirect(`${Constants.TWITTER_ROOT}/${handle}/status/${id}`, 302);
+        const baseUrl = getBaseRedirectUrl(request);
+        /* Do not cache if using a custom redirect */
+        const cacheControl = baseUrl !== Constants.TWITTER_ROOT ? 'max-age=0' : undefined;
+
+        return new Response(null, {
+            status: 302,
+            headers: {
+                'Location': `${baseUrl}/${handle}/status/${id}`,
+                ...(cacheControl ? { 'cache-control': cacheControl } : {})
+            }
+        });
       }
 
       let headers = Constants.RESPONSE_HEADERS;
 
       if (statusResponse.cacheControl) {
-        headers = { ...headers, 'cache-control': statusResponse.cacheControl };
+        headers = {
+          ...headers,
+          'cache-control':
+            baseUrl !== Constants.TWITTER_ROOT ? 'max-age=0' : statusResponse.cacheControl
+        };
       }
 
       /* Return the response containing embed information */
@@ -162,10 +196,17 @@ const statusRequest = async (
     /* A human has clicked a fxtwitter.com/:screen_name/status/:id link!
        Obviously we just need to redirect to the Tweet directly.*/
     console.log('Matched human UA', userAgent);
-    return Response.redirect(
-      `${Constants.TWITTER_ROOT}/${handle}/status/${id?.match(/\d{2,20}/)?.[0]}`,
-      302
-    );
+
+    const cacheControl = baseUrl !== Constants.TWITTER_ROOT ? 'max-age=0' : undefined;
+
+    return new Response(null, {
+        status: 302,
+        headers: {
+            'Location': `${baseUrl}/${handle}/status/${id?.match(/\d{2,20}/)?.[0]}`,
+            ...(cacheControl ? { 'cache-control': cacheControl } : {})
+        }
+    });
+
   }
 };
 
@@ -221,14 +262,32 @@ const profileRequest = async (
     } else if (profileResponse.text) {
       console.log('handleProfile sent embed');
       /* TODO This check has purpose in the original handleStatus handler, but I'm not sure if this edge case can happen here */
+      const baseUrl = getBaseRedirectUrl(request);
+      /* Check for custom redirect */
+
       if (!isBotUA) {
-        return Response.redirect(`${Constants.TWITTER_ROOT}/${handle}`, 302);
+        /* Do not cache if using a custom redirect */
+        const cacheControl = baseUrl !== Constants.TWITTER_ROOT ? 'max-age=0' : undefined;
+
+        return new Response(null, {
+            status: 302,
+            headers: {
+                'Location': `${baseUrl}/${handle}`,
+                ...(cacheControl ? { 'cache-control': cacheControl } : {})
+            }
+        });
       }
 
       let headers = Constants.RESPONSE_HEADERS;
 
       if (profileResponse.cacheControl) {
-        headers = { ...headers, 'cache-control': profileResponse.cacheControl };
+        headers = {
+          ...headers,
+          'cache-control':
+            baseUrl !== Constants.TWITTER_ROOT
+              ? 'max-age=0'
+              : profileResponse.cacheControl
+        };
       }
 
       /* Return the response containing embed information */
@@ -239,7 +298,7 @@ const profileRequest = async (
     } else {
       /* Somehow handleStatus sent us nothing. This should *never* happen, but we have a case for it. */
       return new Response(Strings.ERROR_UNKNOWN, {
-        headers: Constants.RESPONSE_HEADERS,
+        headers: { ...Constants.RESPONSE_HEADERS, 'cache-control': 'max-age=0' },
         status: 500
       });
     }
@@ -247,13 +306,34 @@ const profileRequest = async (
     /* A human has clicked a fxtwitter.com/:screen_name link!
         Obviously we just need to redirect to the user directly.*/
     console.log('Matched human UA', userAgent);
-    return Response.redirect(`${Constants.TWITTER_ROOT}/${handle}`, 302);
+
+    const baseUrl = getBaseRedirectUrl(request);
+    /* Do not cache if using a custom redirect */
+    const cacheControl = baseUrl !== Constants.TWITTER_ROOT ? 'max-age=0' : undefined;
+
+    return new Response(null, {
+        status: 302,
+        headers: {
+            'Location': `${baseUrl}/${handle}`,
+            ...(cacheControl ? { 'cache-control': cacheControl } : {})
+        }
+    });
   }
 };
 
 const genericTwitterRedirect = async (request: IRequest) => {
   const url = new URL(request.url);
-  return Response.redirect(`${Constants.TWITTER_ROOT}${url.pathname}`, 302);
+  const baseUrl = getBaseRedirectUrl(request);
+  /* Do not cache if using a custom redirect */
+  const cacheControl = baseUrl !== Constants.TWITTER_ROOT ? 'max-age=0' : undefined;
+
+  return new Response(null, {
+      status: 302,
+      headers: {
+          'Location': `${baseUrl}${url.pathname}`,
+          ...(cacheControl ? { 'cache-control': cacheControl } : {})
+      }
+  });
 };
 
 const versionRequest = async (request: IRequest) => {
@@ -292,6 +372,70 @@ const versionRequest = async (request: IRequest) => {
   );
 };
 
+const setRedirectRequest = async (request: IRequest) => {
+  /* Query params */
+  const { searchParams } = new URL(request.url);
+  let url = searchParams.get('url');
+
+  if (!url) {
+    /* Remove redirect URL */
+    return new Response(
+      Strings.MESSAGE_HTML.format({
+        message: `Your base redirect has been cleared. To set one, please pass along the <code>url</code> parameter.`
+      }),
+      {
+        headers: {
+          'set-cookie': `base_redirect=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; HttpOnly`,
+          ...Constants.RESPONSE_HEADERS
+        },
+        status: 200
+      }
+    );
+  }
+
+  try {
+    new URL(url);
+  } catch (e) {
+    try {
+      new URL(`https://${url}`);
+    } catch (e) {
+      /* URL is not well-formed, remove */
+      console.log('Invalid base redirect URL, removing cookie before redirect');
+
+      return new Response(
+        Strings.MESSAGE_HTML.format({
+          message: `Your URL does not appear to be well-formed. Example: ?url=https://nitter.net`
+        }),
+        {
+          headers: {
+            'set-cookie': `base_redirect=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; HttpOnly`,
+            ...Constants.RESPONSE_HEADERS
+          },
+          status: 200
+        }
+      );
+    }
+
+    url = `https://${url}`;
+  }
+
+  /* Set cookie for url */
+  return new Response(
+    Strings.MESSAGE_HTML.format({
+      message: `Successfully set base redirect, you will now be redirected to ${sanitizeText(
+        url
+      )} rather than ${Constants.TWITTER_ROOT}`
+    }),
+    {
+      headers: {
+        'set-cookie': `base_redirect=${url}; path=/; max-age=63072000; secure; HttpOnly`,
+        ...Constants.RESPONSE_HEADERS
+      },
+      status: 200
+    }
+  );
+};
+
 /* TODO: is there any way to consolidate these stupid routes for itty-router?
    I couldn't find documentation allowing for regex matching */
 router.get('/:prefix?/:handle/status/:id', statusRequest);
@@ -307,6 +451,7 @@ router.get('/:prefix?/:handle/statuses/:id/:language', statusRequest);
 router.get('/status/:id', statusRequest);
 router.get('/status/:id/:language', statusRequest);
 router.get('/version', versionRequest);
+router.get('/set_base_redirect', setRedirectRequest);
 
 /* Oembeds (used by Discord to enhance responses) 
 
@@ -424,7 +569,10 @@ export const cacheWrapper = async (
 
   switch (request.method) {
     case 'GET':
-      if (!Constants.API_HOST_LIST.includes(cacheUrl.hostname)) {
+      if (
+        !Constants.API_HOST_LIST.includes(cacheUrl.hostname) &&
+        !request.headers?.get('Cookie')?.includes('base_redirect')
+      ) {
         /* cache may be undefined in tests */
         const cachedResponse = await cache.match(cacheKey);
 

@@ -66,64 +66,98 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
     .replace(/( {2})/g, '')
     .replace(/>\s+</gm, '><'),
   VERSION_HTML: `<!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta content="${BRANDING_NAME}" property="og:title"/>
-      <meta content="${BRANDING_NAME}" property="og:site_name"/>
-      <meta content="https://cdn.discordapp.com/icons/958942151817977906/7a220767640cbedbf780767585eaa10d.png?size=96" property="og:image"/>
-      <meta content="https://cdn.discordapp.com/icons/958942151817977906/7a220767640cbedbf780767585eaa10d.png?size=96" property="twitter:image"/>
-      <meta content="#1E98F0" name="theme-color"/>
-      <meta content="Worker release: ${RELEASE_NAME}
-      
-      Stats for nerds: 
-      🕵️‍♂️ {ua}
-      🌐 {ip}
-      🌎 {city}, {region}, {country}
-      🛴 {asn}
-
-      Edge Connection:
-      {rtt} 📶 {httpversion} 🔒 {tlsversion} ➡ ⛅ {colo}
-      " property="og:description"/></head>
-      <title>${BRANDING_NAME}</title>
-      <style>
-        body {
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-          padding: 0 20px;
-        }
-        h1 {
-          font-size: 4em;
-          font-weight: 900;
-          margin-bottom: 0;
-        }
-        h2 {
-          white-space: pre-wrap;
-        }
-        p {
-          font-size: 10px;
-          opacity: 0.3;
-        }
-        .cf {
-          display: inline-block;
-          vertical-align: middle;
-          height: 48px;
-          width: 48px;
-        }
-      </style>
-    </head>
-    <body>
-      <h1>${BRANDING_NAME}</h1>
-      <h3>A better way to embed X / Twitter posts on Discord, Telegram, and more.</h2>
-      <h2>Worker release: ${RELEASE_NAME}</h2>
-      <br>
-      <h3>Stats for nerds:</h3>
-      <h2>Edge Connection:
-      {rtt} 📶 {httpversion} 🔒 {tlsversion} ➡ <img class="cf" referrerpolicy="no-referrer" src="https://cdn.discordapp.com/emojis/988895299693080616.webp?size=96&quality=lossless"> {colo}</h2>
-      <h2>User Agent:
-      {ua}</h2>
-    </body>
-  </html>`
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="${BRANDING_NAME}" property="og:title"/>
+        <meta content="${BRANDING_NAME}" property="og:site_name"/>
+        <meta content="https://cdn.discordapp.com/icons/958942151817977906/7a220767640cbedbf780767585eaa10d.png?size=96" property="og:image"/>
+        <meta content="https://cdn.discordapp.com/icons/958942151817977906/7a220767640cbedbf780767585eaa10d.png?size=96" property="twitter:image"/>
+        <meta content="#1E98F0" name="theme-color"/>
+        <meta content="Worker release: ${RELEASE_NAME}
+        
+        Stats for nerds: 
+        🕵️‍♂️ {ua}
+        🌐 {ip}
+        🌎 {city}, {region}, {country}
+        🛴 {asn}
+  
+        Edge Connection:
+        {rtt} 📶 {httpversion} 🔒 {tlsversion} ➡ ⛅ {colo}
+        " property="og:description"/></head>
+        <title>${BRANDING_NAME}</title>
+        <style>
+          body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            padding: 0 20px;
+          }
+          h1 {
+            font-size: 4em;
+            font-weight: 900;
+            margin-bottom: 0;
+          }
+          h2 {
+            white-space: pre-wrap;
+          }
+          p {
+            font-size: 10px;
+            opacity: 0.3;
+          }
+          .cf {
+            display: inline-block;
+            vertical-align: middle;
+            height: 48px;
+            width: 48px;
+          }
+        </style>
+      </head>
+      <body>
+        <h1>${BRANDING_NAME}</h1>
+        <h3>A better way to embed X / Twitter posts on Discord, Telegram, and more.</h2>
+        <h2>Worker release: ${RELEASE_NAME}</h2>
+        <br>
+        <h3>Stats for nerds:</h3>
+        <h2>Edge Connection:
+        {rtt} 📶 {httpversion} 🔒 {tlsversion} ➡ <img class="cf" referrerpolicy="no-referrer" src="https://cdn.discordapp.com/emojis/988895299693080616.webp?size=96&quality=lossless"> {colo}</h2>
+        <h2>User Agent:
+        {ua}</h2>
+      </body>
+    </html>`
+    .replace(/( {2})/g, '')
+    .replace(/>\s+</gm, '><'),
+  MESSAGE_HTML: `<!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="${BRANDING_NAME}" property="og:title"/>
+        <meta content="${BRANDING_NAME}" property="og:site_name"/>
+        <title>${BRANDING_NAME}</title>
+        <style>
+          body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            padding: 0 20px;
+          }
+          h1 {
+            font-size: 4em;
+            font-weight: 900;
+            margin-bottom: 0;
+          }
+          h2 {
+            white-space: pre-wrap;
+          }
+          p {
+            font-size: 10px;
+            opacity: 0.3;
+          }
+        </style>
+      </head>
+      <body>
+        <h1>${BRANDING_NAME}</h1>
+        <h2>{message}</h2>
+      </body>
+    </html>`
     .replace(/( {2})/g, '')
     .replace(/>\s+</gm, '><'),
   DEFAULT_AUTHOR_TEXT: 'Twitter',

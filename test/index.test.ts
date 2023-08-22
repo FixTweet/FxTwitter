@@ -3,7 +3,7 @@ import { cacheWrapper } from '../src/server';
 const botHeaders = { 'User-Agent': 'Discordbot/2.0' };
 const humanHeaders = {
   'User-Agent':
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36'
 };
 const githubUrl = 'https://github.com/FixTweet/FixTweet';
 const twitterBaseUrl = 'https://twitter.com';
@@ -52,6 +52,17 @@ test('Tweet redirect human', async () => {
   );
   expect(result.status).toEqual(302);
   expect(result.headers.get('location')).toEqual('https://twitter.com/jack/status/20');
+});
+
+test('Tweet redirect human custom base redirect', async () => {
+  const result = await cacheWrapper(
+    new Request('https://fxtwitter.com/jack/status/20', {
+      method: 'GET',
+      headers: { ...humanHeaders, 'Cookie': 'cf_clearance=a; base_redirect=https://nitter.net' }
+    })
+  );
+  expect(result.status).toEqual(302);
+  expect(result.headers.get('location')).toEqual('https://nitter.net/jack/status/20');
 });
 
 test('Twitter moment redirect', async () => {
