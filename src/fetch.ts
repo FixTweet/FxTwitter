@@ -8,7 +8,13 @@ let wasElongatorDisabled = false;
 
 declare const globalThis: {
   fetchCompletedTime: number;
-}
+};
+
+const generateSnowflake = () => {
+  const epoch = 1288834974657n; /* Twitter snowflake epoch */
+  const timestamp = BigInt(Date.now()) - epoch;
+  return String((timestamp << 22n) | 696969n);
+};
 
 globalThis.fetchCompletedTime = 0;
 
@@ -76,8 +82,12 @@ export const twitterFetch = async (
 
     let activate: Response | null = null;
 
-    if (!newTokenGenerated) {
+    if (!newTokenGenerated && !useElongator) {
+      const timeBefore = performance.now();
       const cachedResponse = await cache.match(guestTokenRequestCacheDummy.clone());
+      const timeAfter = performance.now();
+
+      console.log(`Searched cache for token, took ${timeAfter - timeBefore}ms`);
 
       if (cachedResponse) {
         console.log('Token cache hit');
@@ -88,7 +98,7 @@ export const twitterFetch = async (
       }
     }
 
-    if (newTokenGenerated || activate === null) {
+    if (newTokenGenerated || (activate === null && !useElongator)) {
       /* We have a guest token that we can use to call API
         AFAIK there is no limit to how many guest tokens you can request.
 
@@ -110,10 +120,10 @@ export const twitterFetch = async (
       continue;
     }
 
-    const guestToken = activateJson.guest_token;
+    /* Elongator doesn't need guestToken, so we just make up a snowflake */
+    const guestToken = activateJson?.guest_token || generateSnowflake();
 
     console.log(newTokenGenerated ? 'Activated guest:' : 'Using guest:', activateJson);
-    console.log('Guest token:', guestToken);
 
     /* Just some cookies to mimick what the Twitter Web App would send */
     headers['Cookie'] = [
@@ -139,7 +149,9 @@ export const twitterFetch = async (
           headers: headers
         });
         const performanceEnd = performance.now();
-        console.log(`Elongator request successful after ${performanceEnd - performanceStart}ms`);
+        console.log(
+          `Elongator request successful after ${performanceEnd - performanceStart}ms`
+        );
       } else {
         const performanceStart = performance.now();
         apiRequest = await fetch(url, {
@@ -147,7 +159,9 @@ export const twitterFetch = async (
           headers: headers
         });
         const performanceEnd = performance.now();
-        console.log(`Guest API request successful after ${performanceEnd - performanceStart}ms`);
+        console.log(
+          `Guest API request successful after ${performanceEnd - performanceStart}ms`
+        );
       }
 
       response = await apiRequest?.json();
@@ -208,7 +222,7 @@ export const twitterFetch = async (
       continue;
     }
     /* If we've generated a new token, we'll cache it */
-    if (event && newTokenGenerated) {
+    if (event && newTokenGenerated && activate) {
       const cachingResponse = new Response(await activate.clone().text(), {
         headers: {
           ...tokenHeaders,

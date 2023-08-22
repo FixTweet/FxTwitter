@@ -12,7 +12,7 @@ import { handleProfile } from './user';
 
 declare const globalThis: {
   fetchCompletedTime: number;
-}
+};
 
 const router = Router();
 
@@ -29,8 +29,8 @@ const statusRequest = async (
 
   /* Let's return our HTML version for wayback machine (we can add other archivers too in future) */
   if (
-    ['archive.org', 'Wayback Machine'].some(service =>
-      request.headers.get('Via')?.includes?.(service)
+    ['archive.org', 'Wayback Machine'].some(
+      service => request.headers.get('Via')?.includes?.(service)
     )
   ) {
     console.log('Request from archive.org');
@@ -450,7 +450,9 @@ export const cacheWrapper = async (
       const endTime = performance.now();
       const timeSinceFetch = endTime - (globalThis.fetchCompletedTime || 0);
       const timeSinceStart = endTime - startTime;
-      console.log(`Request took ${timeSinceStart}ms, of which ${timeSinceFetch}ms was CPU time after last fetch`);
+      console.log(
+        `Request took ${timeSinceStart}ms, of which ${timeSinceFetch}ms was CPU time after last fetch`
+      );
 
       return response;
     /* Telegram sends this from Webpage Bot, and Cloudflare sends it if we purge cache, and we respect it.
