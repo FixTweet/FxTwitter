@@ -70,7 +70,7 @@ const populateUserProperties = async (
    available for free using api.fxtwitter.com. */
 export const userAPI = async (
   username: string,
-  event: FetchEvent,
+  event: FetchEvent
   // flags?: InputFlags
 ): Promise<UserAPIResponse> => {
   const userResponse = await fetchUser(username, event);

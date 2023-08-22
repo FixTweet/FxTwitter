@@ -9,7 +9,10 @@ let wasElongatorDisabled = false;
 export const twitterFetch = async (
   url: string,
   event: FetchEvent,
-  useElongator = experimentCheck(Experiment.ELONGATOR_BY_DEFAULT, typeof TwitterProxy !== 'undefined'),
+  useElongator = experimentCheck(
+    Experiment.ELONGATOR_BY_DEFAULT,
+    typeof TwitterProxy !== 'undefined'
+  ),
   validateFunction: (response: unknown) => boolean
 ): Promise<unknown> => {
   let apiAttempts = 0;
@@ -214,7 +217,10 @@ export const twitterFetch = async (
 export const fetchConversation = async (
   status: string,
   event: FetchEvent,
-  useElongator = experimentCheck(Experiment.ELONGATOR_BY_DEFAULT, typeof TwitterProxy !== 'undefined')
+  useElongator = experimentCheck(
+    Experiment.ELONGATOR_BY_DEFAULT,
+    typeof TwitterProxy !== 'undefined'
+  )
 ): Promise<TweetResultsByRestIdResult> => {
   return (await twitterFetch(
     `${

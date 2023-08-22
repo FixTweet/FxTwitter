@@ -22,13 +22,16 @@ const generateTweetMedia = (tweet: APITweet): string => {
     tweet.media.all.forEach(mediaItem => {
       switch (mediaItem.type) {
         case 'photo':
-          media += `<img src="${mediaItem.url}" alt="${tweet.author.name}'s photo"/>`;
+          // eslint-disable-next-line no-case-declarations
+          const { altText } = mediaItem as APIPhoto;
+          // eslint-disable-next-line sonarjs/no-nested-template-literals
+          media += `<img src="${mediaItem.url}" ${altText ? `alt="${altText}"` : ''}/>`;
           break;
         case 'video':
-          media += `<video src="${mediaItem.url}" alt="${tweet.author.name}'s video"/>`;
+          media += `<video src="${mediaItem.url}" alt="${tweet.author.name}'s video. Alt text not available."/>`;
           break;
         case 'gif':
-          media += `<video src="${mediaItem.url}" alt="${tweet.author.name}'s gif"/>`;
+          media += `<video src="${mediaItem.url}" alt="${tweet.author.name}'s gif. Alt text not available."/>`;
           break;
       }
     });
@@ -50,7 +53,7 @@ const formatDate = (date: Date): string => {
   const mm = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
   const dd = String(date.getDate()).padStart(2, '0');
   return `${yyyy}/${mm}/${dd}`;
-}
+};
 
 const htmlifyLinks = (input: string): string => {
   const urlPattern = /\bhttps?:\/\/\S+/g;
@@ -110,8 +113,7 @@ const truncateSocialCount = (count: number): string => {
   } else {
     return String(count);
   }
-}
-
+};
 
 const generateTweetFooter = (tweet: APITweet, isQuote = false): string => {
   const { author } = tweet;
@@ -123,27 +125,30 @@ const generateTweetFooter = (tweet: APITweet, isQuote = false): string => {
 
   return `
   <p>${getSocialTextIV(tweet)}</p>
+  <br>${!isQuote ? `<a href="${tweet.url}">View original post</a>` : notApplicableComment}
   <!-- Embed profile picture, display name, and screen name in table -->
   <h3>About author</h3>
   ${
     !isQuote
       ? `<table>
       <img src="${author.avatar_url?.replace('_200x200', '_400x400')}" alt="${
-      author.name
-    }'s profile picture" />
+        author.name
+      }'s profile picture" />
     <h2>${author.name}</h2>
     <p><a href="${author.url}">@${author.screen_name}</a></p>
     <p><b>${description}</b></p>
-    <p>${author.location ? `📌 ${author.location}` : ''}${' '
-    }${author.website ? `🔗 <a href=${author.website.url}>${author.website.display_url}</a>` : ''}${' '
-    }${author.joined ? `📆 ${formatDate(new Date(author.joined))}` : ''}</p>
+    <p>${author.location ? `📌 ${author.location}` : ''}${' '}${
+      author.website
+        ? `🔗 <a href=${author.website.url}>${author.website.display_url}</a>`
+        : ''
+    }${' '}${author.joined ? `📆 ${formatDate(new Date(author.joined))}` : ''}</p>
     <p>${truncateSocialCount(author.following)} <b>Following</b> 
     ${truncateSocialCount(author.followers)} <b>Followers</b> 
     ${truncateSocialCount(author.tweets)} <b>Posts</b></p>
   </table>`
       : ''
   }`;
-}
+};
 
 const generateTweet = (tweet: APITweet, isQuote = false): string => {
   let text = paragraphify(sanitizeText(tweet.text), isQuote);
@@ -171,7 +176,7 @@ const generateTweet = (tweet: APITweet, isQuote = false): string => {
   <!-- Embedded quote tweet -->
   ${!isQuote && tweet.quote ? generateTweet(tweet.quote, true) : notApplicableComment}
   ${generateTweetFooter(tweet)}
-  <br>${!isQuote ? `<a href="${tweet.url}">View original</a>` : notApplicableComment}
+  <br>${!isQuote ? `<a href="${tweet.url}">View original post</a>` : notApplicableComment}
   `;
 };
 

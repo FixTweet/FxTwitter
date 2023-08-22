@@ -44,7 +44,7 @@ const populateTweetProperties = async (
   const graphQLUser = tweet.core.user_results.result;
   const apiUser = convertToApiUser(graphQLUser);
 
-  console.log(JSON.stringify(graphQLUser))
+  console.log(JSON.stringify(graphQLUser));
 
   /* Populating a lot of the basics */
   apiTweet.url = `${Constants.TWITTER_ROOT}/${apiUser.screen_name}/status/${tweet.rest_id}`;
@@ -67,7 +67,7 @@ const populateTweetProperties = async (
     likes: apiUser.likes,
     protected: apiUser.protected,
     birthday: apiUser.birthday,
-    website: apiUser.website,
+    website: apiUser.website
   };
   apiTweet.replies = tweet.legacy.reply_count;
   apiTweet.retweets = tweet.legacy.retweet_count;
@@ -88,9 +88,12 @@ const populateTweetProperties = async (
   const noteTweetText = tweet.note_tweet?.note_tweet_results?.result?.text;
   /* For now, don't include note tweets */
   if (noteTweetText) {
-    tweet.legacy.entities.urls = tweet.note_tweet?.note_tweet_results?.result?.entity_set.urls;
-    tweet.legacy.entities.hashtags = tweet.note_tweet?.note_tweet_results?.result?.entity_set.hashtags;
-    tweet.legacy.entities.symbols = tweet.note_tweet?.note_tweet_results?.result?.entity_set.symbols;
+    tweet.legacy.entities.urls =
+      tweet.note_tweet?.note_tweet_results?.result?.entity_set.urls;
+    tweet.legacy.entities.hashtags =
+      tweet.note_tweet?.note_tweet_results?.result?.entity_set.hashtags;
+    tweet.legacy.entities.symbols =
+      tweet.note_tweet?.note_tweet_results?.result?.entity_set.symbols;
 
     console.log('We meet the conditions to use new note tweets');
     apiTweet.text = unescapeText(linkFixer(tweet, noteTweetText));

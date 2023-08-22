@@ -246,7 +246,7 @@ type GraphQLUser = {
           url: string; // "https://t.co/DAtOo6uuHk",
           indices: [0, 23];
         }[];
-      }
+      };
     };
     fast_followers_count: 0;
     favourites_count: number; // 126708,
@@ -376,7 +376,7 @@ type GraphQLTweet = {
       user_results: {
         result: GraphQLUser;
       };
-    }
+    };
   };
   edit_control: unknown;
   edit_perspective: unknown;
@@ -399,14 +399,14 @@ type GraphQLTweet = {
           user_mentions: unknown[];
         };
         media: {
-          inline_media: unknown[]
+          inline_media: unknown[];
         };
         richtext: {
           richtext_tags: {
-            from_index: number
-            to_index: number
-            richtext_types: string[]
-          }[]
+            from_index: number;
+            to_index: number;
+            richtext_types: string[];
+          }[];
         };
         text: string;
       };
