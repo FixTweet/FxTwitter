@@ -6,12 +6,32 @@ const gitCommit = require('child_process')
   .execSync('git rev-parse --short HEAD')
   .toString()
   .trim();
+const gitCommitFull = require('child_process')
+  .execSync('git rev-parse HEAD')
+  .toString()
+  .trim();
+const gitUrl = require('child_process')
+  .execSync('git remote get-url origin')
+  .toString()
+  .trim();
 const gitBranch = require('child_process')
   .execSync('git rev-parse --abbrev-ref HEAD')
   .toString()
   .trim();
 
-const releaseName = `fixtweet-${gitBranch}-${gitCommit}-${new Date()
+// Get worker name from wrangler.toml
+let workerName = 'fixtweet';
+
+try {
+  workerName = require('fs')
+  .readFileSync('wrangler.toml')
+  .toString()
+  .match(/name ?= ?"(.+)"/)[1];
+} catch(e) {
+  console.error(`Error reading wrangler.toml to find worker name, using 'fixtweet' instead.`)
+}
+
+const releaseName = `${workerName}-${gitBranch}-${gitCommit}-${new Date()
   .toISOString()
   .substring(0, 19)}`;
 
@@ -47,13 +67,23 @@ let plugins = [
 if (process.env.SENTRY_AUTH_TOKEN) {
   plugins.push(
     sentryWebpackPlugin({
-      release: releaseName,
+      release: {
+        name: releaseName,
+        create: true,
+        vcsRemote: gitUrl,
+        setCommits: {
+          auto: true,
+          ignoreMissing: true
+        }
+      },
       include: './dist',
       urlPrefix: '~/',
       ignore: ['node_modules', 'webpack.config.js'],
       authToken: process.env.SENTRY_AUTH_TOKEN
     })
   );
+} else {
+  console.log('No Sentry auth token found, skipping Sentry release upload.');
 }
 
 module.exports = {
