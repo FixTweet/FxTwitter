@@ -36,6 +36,17 @@ export const handleStatus = async (
   const api = await statusAPI(status, language, event as FetchEvent, flags);
   const tweet = api?.tweet as APITweet;
 
+  /* If there was any errors fetching the Tweet, we'll return it */
+  switch (api.code) {
+    case 401:
+      return returnError(Strings.ERROR_PRIVATE);
+    case 404:
+      return returnError(Strings.ERROR_TWEET_NOT_FOUND);
+    case 500:
+      console.log(api);
+      return returnError(Strings.ERROR_API_FAIL);
+  } 
+
   const isTelegram = (userAgent || '').indexOf('Telegram') > -1;
   /* Should sensitive posts be allowed Instant View? */
   let useIV =
@@ -63,17 +74,6 @@ export const handleStatus = async (
         status: api.code
       })
     };
-  }
-
-  /* If there was any errors fetching the Tweet, we'll return it */
-  switch (api.code) {
-    case 401:
-      return returnError(Strings.ERROR_PRIVATE);
-    case 404:
-      return returnError(Strings.ERROR_TWEET_NOT_FOUND);
-    case 500:
-      console.log(api);
-      return returnError(Strings.ERROR_API_FAIL);
   }
 
   let overrideMedia: APIMedia | undefined;
