@@ -135,7 +135,7 @@ const generateTweetFooter = (tweet: APITweet, isQuote = false): string => {
       : notApplicableComment,
     aboutSection: isQuote
       ? ''
-      : `<h3>About author</h3>
+      : `<h2>About author</h2>
         {pfp}
         <h2>${author.name}</h2>
         <p><a href="${author.url}">@${author.screen_name}</a></p>
@@ -219,8 +219,8 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
     } <a href="${tweet.url}">View original post</a>
     </section>
     <article>
+    <sub>Instant View (✨ Beta) - <a href="${tweet.url}">View original</a></sub>
     <h1>${tweet.author.name} (@${tweet.author.screen_name})</h1>
-    <p>Instant View (✨ Beta) - <a href="${tweet.url}">View original</a></p>
 
     ${generateTweet(tweet)}
   </article>`;
