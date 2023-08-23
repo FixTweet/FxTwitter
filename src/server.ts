@@ -377,6 +377,20 @@ const setRedirectRequest = async (request: IRequest) => {
   const { searchParams } = new URL(request.url);
   let url = searchParams.get('url');
 
+  /* Check that origin either does not exist or is in our domain list */
+  const origin = request.headers.get('origin');
+  if (origin && !Constants.STANDARD_DOMAIN_LIST.includes(new URL(origin).hostname)) {
+    return new Response(
+      Strings.MESSAGE_HTML.format({
+        message: `Failed to set base redirect: Your request seems to be originating from another domain, please open this up in a new tab if you are trying to set your base redirect.`
+      }),
+      {
+        headers: Constants.RESPONSE_HEADERS,
+        status: 403
+      }
+    );
+  }
+
   if (!url) {
     /* Remove redirect URL */
     return new Response(
@@ -386,6 +400,7 @@ const setRedirectRequest = async (request: IRequest) => {
       {
         headers: {
           'set-cookie': `base_redirect=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; HttpOnly`,
+          'content-security-policy': `frame-ancestors ${Constants.STANDARD_DOMAIN_LIST.join(' ')};`,
           ...Constants.RESPONSE_HEADERS
         },
         status: 200
@@ -409,6 +424,7 @@ const setRedirectRequest = async (request: IRequest) => {
         {
           headers: {
             'set-cookie': `base_redirect=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; HttpOnly`,
+            'content-security-policy': `frame-ancestors ${Constants.STANDARD_DOMAIN_LIST.join(' ')};`,
             ...Constants.RESPONSE_HEADERS
           },
           status: 200
@@ -429,6 +445,7 @@ const setRedirectRequest = async (request: IRequest) => {
     {
       headers: {
         'set-cookie': `base_redirect=${url}; path=/; max-age=63072000; secure; HttpOnly`,
+        'content-security-policy': `frame-ancestors ${Constants.STANDARD_DOMAIN_LIST.join(' ')};`,
         ...Constants.RESPONSE_HEADERS
       },
       status: 200

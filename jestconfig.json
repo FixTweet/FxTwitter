@@ -7,6 +7,7 @@
     "BRANDING_NAME": "FixTweet",
     "TEXT_ONLY_DOMAINS": "t.fxtwitter.com,t.twittpr.com",
     "INSTANT_VIEW_DOMAINS": "i.fxtwitter.com,i.twittpr.com",
+    "STANDARD_DOMAIN_LIST": "fxtwitter.com,fixupx.com,twittpr.com",
     "DIRECT_MEDIA_DOMAINS": "d.fxtwitter.com,dl.fxtwitter.com",
     "MOSAIC_DOMAIN_LIST": "mosaic.fxtwitter.com",
     "DEPRECATED_DOMAIN_LIST": "pxtwitter.com,www.pxtwitter.com",
