@@ -300,7 +300,7 @@ export const fetchConversation = async (
         return true;
       }
       console.log('invalid graphql tweet');
-      if (!tweet && typeof conversation.data?.tweetResult === 'object' && Object.keys(conversation.data?.tweetResult).length === 0) {
+      if (!tweet && typeof conversation.data?.tweetResult === 'object' && Object.keys(conversation.data?.tweetResult || {}).length === 0) {
         console.log('tweet was not found');
         return true;
       }
@@ -350,7 +350,7 @@ export const fetchUser = async (
     (_res: unknown) => {
       const response = _res as GraphQLUserResponse;
       // If _res.data is an empty object, we have no user
-      if (!Object.keys(response?.data).length) {
+      if (!Object.keys(response?.data || {}).length) {
         console.log(`response.data is empty, can't continue`);
         return false;
       }
