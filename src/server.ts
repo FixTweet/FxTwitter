@@ -1,5 +1,6 @@
 /* eslint-disable no-case-declarations */
-import Toucan from 'toucan-js';
+import { Toucan } from 'toucan-js';
+import { RewriteFrames } from "@sentry/integrations";
 
 import { IRequest, Router } from 'itty-router';
 import { Constants } from './constants';
@@ -656,15 +657,15 @@ const sentryWrapper = async (event: FetchEvent, test = false): Promise<void> => 
     sentry = new Toucan({
       dsn: SENTRY_DSN,
       context: event,
+      request: event.request,
+      requestDataOptions: {
+        allowedHeaders: /(.*)/,
+        allowedSearchParams: /(.*)/,
+      },
+      integrations: [new RewriteFrames({ root: '/' })],
       /* event includes 'waitUntil', which is essential for Sentry logs to be delivered.
          Also includes 'request' -- no need to set it separately. */
-      allowedHeaders: /(.*)/,
-      allowedSearchParams: /(.*)/,
-      release: RELEASE_NAME,
-      rewriteFrames: {
-        root: '/'
-      },
-      event
+      release: RELEASE_NAME
     });
   }
 
