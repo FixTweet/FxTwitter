@@ -42,16 +42,22 @@ export const renderVideo = (
     instructions.siteName = `${Constants.BRANDING_NAME} - ${videoCounter}`;
   }
 
+  let url = video.url;
+
+  if (video.type === 'gif' && !userAgent?.includes('Telegram')) {
+    url = (video as APIGIF).gif_url ?? video.url;
+  }
+
   instructions.authorText = tweet.translation?.text || text || '';
 
   /* Push the raw video-related headers */
   instructions.addHeaders = [
     `<meta property="twitter:player:height" content="${video.height * sizeMultiplier}"/>`,
     `<meta property="twitter:player:width" content="${video.width * sizeMultiplier}"/>`,
-    `<meta property="twitter:player:stream" content="${video.url}"/>`,
+    `<meta property="twitter:player:stream" content="${url}"/>`,
     `<meta property="twitter:player:stream:content_type" content="${video.format}"/>`,
-    `<meta property="og:video" content="${video.url}"/>`,
-    `<meta property="og:video:secure_url" content="${video.url}"/>`,
+    `<meta property="og:video" content="${url}"/>`,
+    `<meta property="og:video:secure_url" content="${url}"/>`,
     `<meta property="og:video:height" content="${video.height * sizeMultiplier}"/>`,
     `<meta property="og:video:width" content="${video.width * sizeMultiplier}"/>`,
     `<meta property="og:video:type" content="${video.format}"/>`,

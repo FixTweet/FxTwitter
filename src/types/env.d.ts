@@ -9,6 +9,7 @@ declare const HOST_URL: string;
 declare const EMBED_URL: string;
 declare const REDIRECT_URL: string;
 declare const MOSAIC_DOMAIN_LIST: string;
+declare const MEDIA_PROXY_DOMAIN_LIST: string;
 declare const API_HOST_LIST: string;
 
 declare const SENTRY_DSN: string;

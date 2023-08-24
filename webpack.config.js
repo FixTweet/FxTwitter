@@ -24,11 +24,13 @@ let workerName = 'fixtweet';
 
 try {
   workerName = require('fs')
-  .readFileSync('wrangler.toml')
-  .toString()
-  .match(/name ?= ?"(.+)"/)[1];
-} catch(e) {
-  console.error(`Error reading wrangler.toml to find worker name, using 'fixtweet' instead.`)
+    .readFileSync('wrangler.toml')
+    .toString()
+    .match(/name ?= ?"(.+)"/)[1];
+} catch (e) {
+  console.error(
+    `Error reading wrangler.toml to find worker name, using 'fixtweet' instead.`
+  );
 }
 
 const releaseName = `${workerName}-${gitBranch}-${gitCommit}-${new Date()
@@ -47,6 +49,7 @@ let envVariables = [
   'REDIRECT_URL',
   'EMBED_URL',
   'MOSAIC_DOMAIN_LIST',
+  'MEDIA_PROXY_DOMAIN_LIST',
   'API_HOST_LIST',
   'SENTRY_DSN',
   'DEPRECATED_DOMAIN_LIST',

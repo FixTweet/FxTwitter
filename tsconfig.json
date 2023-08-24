@@ -12,7 +12,11 @@
     "allowJs": true,
     "sourceMap": true,
     "esModuleInterop": true,
-    "types": ["@cloudflare/workers-types/2022-11-30", "@types/jest", "@sentry/integrations"]
+    "types": [
+      "@cloudflare/workers-types/2022-11-30",
+      "@types/jest",
+      "@sentry/integrations"
+    ]
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist", "test"]

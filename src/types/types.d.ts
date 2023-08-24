@@ -128,6 +128,11 @@ interface APIVideo extends APIMedia {
   duration: number;
 }
 
+interface APIGIF extends APIVideo {
+  type: 'gif';
+  gif_url: string;
+}
+
 interface APIMosaicPhoto extends APIMedia {
   type: 'mosaic_photo';
   formats: {

@@ -10,6 +10,7 @@
     "STANDARD_DOMAIN_LIST": "fxtwitter.com,fixupx.com,twittpr.com",
     "DIRECT_MEDIA_DOMAINS": "d.fxtwitter.com,dl.fxtwitter.com",
     "MOSAIC_DOMAIN_LIST": "mosaic.fxtwitter.com",
+    "MEDIA_PROXY_DOMAIN_LIST": "media.fxtwitter.com",
     "DEPRECATED_DOMAIN_LIST": "pxtwitter.com,www.pxtwitter.com",
     "DEPRECATED_DOMAIN_EPOCH": "1559320000000000000",
     "API_HOST_LIST": "api.fxtwitter.com",

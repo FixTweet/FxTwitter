@@ -58,7 +58,10 @@ test('Tweet redirect human custom base redirect', async () => {
   const result = await cacheWrapper(
     new Request('https://fxtwitter.com/jack/status/20', {
       method: 'GET',
-      headers: { ...humanHeaders, 'Cookie': 'cf_clearance=a; base_redirect=https://nitter.net' }
+      headers: {
+        ...humanHeaders,
+        Cookie: 'cf_clearance=a; base_redirect=https://nitter.net'
+      }
     })
   );
   expect(result.status).toEqual(302);
