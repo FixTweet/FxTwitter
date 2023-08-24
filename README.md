@@ -194,14 +194,18 @@ Telegram's embedding servers sometimes never even send us a request to embed a U
 
 No problem! You can pick any specific photo from a post using Twitter's own URL syntax (`/photo/1` is the first photo of a post) and we'll render you the full-resolution original image.
 
+### I updated my own deployment of FixTweet, now I'm getting errors
+
+Be sure your .env file contains all of the values currently present in .env.example. Some values have been added to allow for new features to be added. Many of these environment variables can be left blank (such as domain lists, Sentry credentials, etc), but if they are missing entirely, it will cause JavaScript that depend on it to break.
+
 ---
 
 **Licensed under the permissive MIT license. Feel free to send a pull request!**
 
 ## Things to tackle in the future
 
-- Improved support for multi-image with large height differences
-- Discord bot
+- Convert MP4 to GIF for Discord
+- Improve Instant View support
 
 ## Bugs or issues?
 
@@ -211,4 +215,4 @@ Feel free to [open an issue](https://github.com/FixTweet/FixTweet/issues)
 
 [Mosaic](https://github.com/FixTweet/mosaic) Multi-image combiner by [Antonio32A](https://github.com/Antonio32A)
 
-& other contributions by [Burner](https://github.com/YaBoiBurner), [Deer-Spangle](https://github.com/Deer-Spangle), [Antonio32A](https://github.com/Antonio32A)
+& other contributions by [Burner](https://github.com/YaBoiBurner), [Deer-Spangle](https://github.com/Deer-Spangle), [Antonio32A](https://github.com/Antonio32A), and others
