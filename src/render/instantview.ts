@@ -24,7 +24,6 @@ const generateTweetMedia = (tweet: APITweet): string => {
         case 'photo':
           // eslint-disable-next-line no-case-declarations
           const { altText } = mediaItem as APIPhoto;
-          // eslint-disable-next-line sonarjs/no-nested-template-literals
           media += `<img src="{url}" {altText}/>`.format({
             altText: altText ? `alt="${altText}"` : '',
             url: mediaItem.url
