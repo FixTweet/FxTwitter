@@ -41,6 +41,6 @@
   },
   "dependencies": {
     "itty-router": "^3.0.12",
-    "toucan-js": "^3.2.2"
+    "toucan-js": "^3.2.3"
   }
 }
