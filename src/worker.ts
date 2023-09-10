@@ -662,6 +662,8 @@ const sentryWrapper = async (event: FetchEvent, test = false): Promise<void> => 
         allowedHeaders: /(.*)/,
         allowedSearchParams: /(.*)/,
       },
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore TODO: Figure out why this throws type errors after @sentry/integrations update
       integrations: [new RewriteFrames({ root: '/' })],
       /* event includes 'waitUntil', which is essential for Sentry logs to be delivered.
          Also includes 'request' -- no need to set it separately. */
