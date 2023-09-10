@@ -4,7 +4,7 @@
 
 ![][icons]
 
-[![esbuild][buildbadge]][esbuild]
+[![esbuild][buildbadge]][build]
 [![Tests][testsbadge]][tests]
 [![License][licensebadge]][license]
 
