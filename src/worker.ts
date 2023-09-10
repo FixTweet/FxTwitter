@@ -366,7 +366,7 @@ const versionRequest = async (request: IRequest) => {
     {
       headers: {
         ...Constants.RESPONSE_HEADERS,
-        'cache-control': 'max-age=1'
+        'cache-control': 'max-age=0, no-cache, no-store, must-revalidate',
       },
       status: 200
     }
@@ -686,7 +686,7 @@ const sentryWrapper = async (event: FetchEvent, test = false): Promise<void> => 
           headers: {
             ...Constants.RESPONSE_HEADERS,
             'content-type': 'text/html',
-            'cache-control': 'max-age=1'
+            'cache-control': 'max-age=0, no-cache, no-store, must-revalidate'
           },
           status: 200
         });
