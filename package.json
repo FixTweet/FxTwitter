@@ -4,11 +4,11 @@
   "description": "Embed Twitter videos, polls, and more on Discord and Telegram",
   "main": "dist/worker.js",
   "scripts": {
-    "build": "webpack",
-    "publish": "wrangler deploy",
-    "deploy": "wrangler deploy",
+    "build": "node esbuild.config.mjs",
+    "publish": "wrangler deploy --no-bundle",
+    "deploy": "wrangler deploy --no-bundle",
     "log": "wrangler tail",
-    "reload": "wrangler deploy && wrangler tail",
+    "reload": "wrangler deploy --no-bundle && wrangler tail",
     "prettier": "prettier --write .",
     "lint:eslint": "eslint --max-warnings=0 src",
     "test": "jest --config jestconfig.json --verbose"
@@ -18,6 +18,7 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20230904.0",
     "@microsoft/eslint-formatter-sarif": "^3.0.0",
+    "@sentry/esbuild-plugin": "^2.7.1",
     "@sentry/integrations": "^7.65.0",
     "@sentry/webpack-plugin": "^2.7.1",
     "@types/jest": "^29.5.4",
@@ -37,7 +38,7 @@
     "typescript": "^5.2.2",
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4",
-    "wrangler": "^3.6.0"
+    "wrangler": "^3.7.0"
   },
   "dependencies": {
     "itty-router": "^3.0.12",

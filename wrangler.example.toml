@@ -14,7 +14,4 @@ analytics_engine_datasets = [
 command = "npm run build"
 
 [miniflare.globals]
-TEST = "true" # Will have unicode character errors in headers if not set to true
-
-[placement]
-mode = "smart"
+TEST = "true" # Will have unicode character errors in headers if not set to true and running unit tests
