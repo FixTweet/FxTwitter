@@ -8,17 +8,21 @@ const humanHeaders = {
 const githubUrl = 'https://github.com/FixTweet/FixTweet';
 const twitterBaseUrl = 'https://twitter.com';
 
-// @ts-expect-error - Performance not included in jest environment
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore - Performance not included in miniflare environment
 if (!globalThis.performance) {
   // @ts-expect-error - Performance not included in jest environment
   globalThis.performance = {};
 }
 
-// @ts-expect-error - Performance not included in jest environment
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore - Performance not included in miniflare environment
 if (!globalThis.performance.now) {
+  // eslint-disable-next-line no-var
   var start = Date.now();
 
-  // @ts-expect-error - Performance not included in jest environment
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore - Performance not included in miniflare environment
   globalThis.performance.now = function () {
     return Date.now() - start;
   };
@@ -58,7 +62,10 @@ test('Tweet redirect human custom base redirect', async () => {
   const result = await cacheWrapper(
     new Request('https://fxtwitter.com/jack/status/20', {
       method: 'GET',
-      headers: { ...humanHeaders, 'Cookie': 'cf_clearance=a; base_redirect=https://nitter.net' }
+      headers: {
+        ...humanHeaders,
+        Cookie: 'cf_clearance=a; base_redirect=https://nitter.net'
+      }
     })
   );
   expect(result.status).toEqual(302);

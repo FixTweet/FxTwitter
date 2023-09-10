@@ -300,7 +300,11 @@ export const fetchConversation = async (
         return true;
       }
       console.log('invalid graphql tweet');
-      if (!tweet && typeof conversation.data?.tweetResult === 'object' && Object.keys(conversation.data?.tweetResult || {}).length === 0) {
+      if (
+        !tweet &&
+        typeof conversation.data?.tweetResult === 'object' &&
+        Object.keys(conversation.data?.tweetResult || {}).length === 0
+      ) {
         console.log('tweet was not found');
         return true;
       }

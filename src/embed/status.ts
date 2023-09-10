@@ -45,7 +45,7 @@ export const handleStatus = async (
     case 500:
       console.log(api);
       return returnError(Strings.ERROR_API_FAIL);
-  } 
+  }
 
   const isTelegram = (userAgent || '').indexOf('Telegram') > -1;
   /* Should sensitive posts be allowed Instant View? */
@@ -330,10 +330,6 @@ export const handleStatus = async (
     }
   }
 
-  if (!flags?.isXDomain) {
-    siteName = Strings.X_DOMAIN_NOTICE;
-  }
-
   /* Notice that user is using deprecated domain */
   if (flags?.deprecated) {
     siteName = Strings.DEPRECATED_DOMAIN_NOTICE;
@@ -357,7 +353,7 @@ export const handleStatus = async (
     `<meta property="og:site_name" content="${siteName}"/>`,
     `<meta property="twitter:card" content="${
       tweet.quote?.twitter_card || tweet.twitter_card
-    }"/>`,
+    }"/>`
   );
 
   /* Special reply handling if authorText is not overriden */
@@ -374,15 +370,17 @@ export const handleStatus = async (
   /* The additional oembed is pulled by Discord to enable improved embeds.
      Telegram does not use this. */
   headers.push(
-    `<link rel="alternate" href="{base}/owoembed?text={text}{deprecatedFlag}&status={status}&author={author}&useXbranding={useXBranding}" type="application/json+oembed" title="{name}">`.format({
-      base: Constants.HOST_URL,
-      text: encodeURIComponent(truncateWithEllipsis(authorText, 250)),
-      deprecatedFlag: flags?.deprecated ? '&deprecated=true' : '',
-      status: encodeURIComponent(status),
-      author: encodeURIComponent(tweet.author?.screen_name || ''),
-      useXBranding: flags?.isXDomain ? 'true' : 'false',
-      name: tweet.author.name || ''
-    })
+    `<link rel="alternate" href="{base}/owoembed?text={text}{deprecatedFlag}&status={status}&author={author}&useXbranding={useXBranding}" type="application/json+oembed" title="{name}">`.format(
+      {
+        base: Constants.HOST_URL,
+        text: encodeURIComponent(truncateWithEllipsis(authorText, 250)),
+        deprecatedFlag: flags?.deprecated ? '&deprecated=true' : '',
+        status: encodeURIComponent(status),
+        author: encodeURIComponent(tweet.author?.screen_name || ''),
+        useXBranding: flags?.isXDomain ? 'true' : 'false',
+        name: tweet.author.name || ''
+      }
+    )
   );
 
   /* When dealing with a Tweet of unknown lang, fall back to en */

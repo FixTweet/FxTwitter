@@ -1,24 +1,16 @@
-import { sentryEsbuildPlugin } from "@sentry/esbuild-plugin";
+import { sentryEsbuildPlugin } from '@sentry/esbuild-plugin';
 import { config } from 'dotenv';
 import { execSync } from 'child_process';
-import * as esbuild from 'esbuild'
+import * as esbuild from 'esbuild';
 
 import fs from 'fs';
 
 config();
 
-const gitCommit = execSync('git rev-parse --short HEAD')
-  .toString()
-  .trim();
-const gitCommitFull = execSync('git rev-parse HEAD')
-  .toString()
-  .trim();
-const gitUrl = execSync('git remote get-url origin')
-  .toString()
-  .trim();
-const gitBranch = execSync('git rev-parse --abbrev-ref HEAD')
-  .toString()
-  .trim();
+const gitCommit = execSync('git rev-parse --short HEAD').toString().trim();
+const gitCommitFull = execSync('git rev-parse HEAD').toString().trim();
+const gitUrl = execSync('git remote get-url origin').toString().trim();
+const gitBranch = execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
 
 let workerName = 'fixtweet';
 
@@ -26,16 +18,18 @@ let workerName = 'fixtweet';
 
 try {
   workerName = fs
-  .readFileSync('wrangler.toml')
-  .toString()
-  .match(/name ?= ?"(.+?)"/)[1];
-} catch(e) {
-  console.error(`Error reading wrangler.toml to find worker name, using 'fixtweet' instead.`)
+    .readFileSync('wrangler.toml')
+    .toString()
+    .match(/name ?= ?"(.+?)"/)[1];
+} catch (e) {
+  console.error(
+    `Error reading wrangler.toml to find worker name, using 'fixtweet' instead.`
+  );
 }
 
 const releaseName = `${workerName}-${gitBranch}-${gitCommit}-${new Date()
-.toISOString()
-.substring(0, 19)}`;
+  .toISOString()
+  .substring(0, 19)}`;
 
 let envVariables = [
   'BRANDING_NAME',
@@ -53,7 +47,6 @@ let envVariables = [
   'DEPRECATED_DOMAIN_EPOCH'
 ];
 
-
 // Create defines for all environment variables
 let defines = {};
 for (let envVar of envVariables) {
@@ -63,7 +56,7 @@ for (let envVar of envVariables) {
 defines['RELEASE_NAME'] = `"${releaseName}"`;
 
 await esbuild.build({
-  entryPoints: ["src/worker.ts"],
+  entryPoints: ['src/worker.ts'],
   sourcemap: 'external',
   outdir: 'dist',
   minify: true,
@@ -87,8 +80,8 @@ await esbuild.build({
 
       // Auth tokens can be obtained from
       // https://sentry.io/orgredirect/organizations/:orgslug/settings/auth-tokens/
-      authToken: process.env.SENTRY_AUTH_TOKEN,
-    }),
+      authToken: process.env.SENTRY_AUTH_TOKEN
+    })
   ],
 
   define: defines

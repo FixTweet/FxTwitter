@@ -84,7 +84,7 @@ const populateTweetProperties = async (
   }
   console.log('note_tweet', JSON.stringify(tweet.note_tweet));
   const noteTweetText = tweet.note_tweet?.note_tweet_results?.result?.text;
-  
+
   if (noteTweetText) {
     tweet.legacy.entities.urls =
       tweet.note_tweet?.note_tweet_results?.result?.entity_set.urls;
@@ -173,7 +173,7 @@ const populateTweetProperties = async (
 
   /* Workaround: Force player card by default for videos */
   // @ts-expect-error Inexplicably, twitter_card becomes type of 'tweet' instead of 'tweet' | 'summary' | 'summary_large_image' | 'player'
-  if (apiTweet.media?.videos && apiTweet.twitter_card !== 'player')  {
+  if (apiTweet.media?.videos && apiTweet.twitter_card !== 'player') {
     apiTweet.twitter_card = 'player';
   }
 

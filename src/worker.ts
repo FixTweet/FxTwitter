@@ -1,6 +1,6 @@
 /* eslint-disable no-case-declarations */
 import { Toucan } from 'toucan-js';
-import { RewriteFrames } from "@sentry/integrations";
+import { RewriteFrames } from '@sentry/integrations';
 
 import { IRequest, Router } from 'itty-router';
 import { Constants } from './constants';
@@ -162,11 +162,11 @@ const statusRequest = async (
         const cacheControl = baseUrl !== Constants.TWITTER_ROOT ? 'max-age=0' : undefined;
 
         return new Response(null, {
-            status: 302,
-            headers: {
-                'Location': `${baseUrl}/${handle || 'i'}/status/${id}`,
-                ...(cacheControl ? { 'cache-control': cacheControl } : {})
-            }
+          status: 302,
+          headers: {
+            Location: `${baseUrl}/${handle || 'i'}/status/${id}`,
+            ...(cacheControl ? { 'cache-control': cacheControl } : {})
+          }
         });
       }
 
@@ -201,13 +201,12 @@ const statusRequest = async (
     const cacheControl = baseUrl !== Constants.TWITTER_ROOT ? 'max-age=0' : undefined;
 
     return new Response(null, {
-        status: 302,
-        headers: {
-            'Location': `${baseUrl}/${handle || 'i'}/status/${id?.match(/\d{2,20}/)?.[0]}`,
-            ...(cacheControl ? { 'cache-control': cacheControl } : {})
-        }
+      status: 302,
+      headers: {
+        Location: `${baseUrl}/${handle || 'i'}/status/${id?.match(/\d{2,20}/)?.[0]}`,
+        ...(cacheControl ? { 'cache-control': cacheControl } : {})
+      }
     });
-
   }
 };
 
@@ -271,11 +270,11 @@ const profileRequest = async (
         const cacheControl = baseUrl !== Constants.TWITTER_ROOT ? 'max-age=0' : undefined;
 
         return new Response(null, {
-            status: 302,
-            headers: {
-                'Location': `${baseUrl}/${handle}`,
-                ...(cacheControl ? { 'cache-control': cacheControl } : {})
-            }
+          status: 302,
+          headers: {
+            Location: `${baseUrl}/${handle}`,
+            ...(cacheControl ? { 'cache-control': cacheControl } : {})
+          }
         });
       }
 
@@ -313,11 +312,11 @@ const profileRequest = async (
     const cacheControl = baseUrl !== Constants.TWITTER_ROOT ? 'max-age=0' : undefined;
 
     return new Response(null, {
-        status: 302,
-        headers: {
-            'Location': `${baseUrl}/${handle}`,
-            ...(cacheControl ? { 'cache-control': cacheControl } : {})
-        }
+      status: 302,
+      headers: {
+        Location: `${baseUrl}/${handle}`,
+        ...(cacheControl ? { 'cache-control': cacheControl } : {})
+      }
     });
   }
 };
@@ -329,11 +328,11 @@ const genericTwitterRedirect = async (request: IRequest) => {
   const cacheControl = baseUrl !== Constants.TWITTER_ROOT ? 'max-age=0' : undefined;
 
   return new Response(null, {
-      status: 302,
-      headers: {
-          'Location': `${baseUrl}${url.pathname}`,
-          ...(cacheControl ? { 'cache-control': cacheControl } : {})
-      }
+    status: 302,
+    headers: {
+      Location: `${baseUrl}${url.pathname}`,
+      ...(cacheControl ? { 'cache-control': cacheControl } : {})
+    }
   });
 };
 
@@ -342,9 +341,9 @@ const versionRequest = async (request: IRequest) => {
   return new Response(
     Strings.VERSION_HTML.format({
       rtt: request.cf?.clientTcpRtt ? `🏓 ${request.cf.clientTcpRtt} ms RTT` : '',
-      colo: request.cf?.colo as string ?? '??',
-      httpversion: request.cf?.httpProtocol as string ?? 'Unknown HTTP Version',
-      tlsversion: request.cf?.tlsVersion as string ?? 'Unknown TLS Version',
+      colo: (request.cf?.colo as string) ?? '??',
+      httpversion: (request.cf?.httpProtocol as string) ?? 'Unknown HTTP Version',
+      tlsversion: (request.cf?.tlsVersion as string) ?? 'Unknown TLS Version',
       ip:
         request.headers.get('x-real-ip') ??
         request.headers.get('cf-connecting-ip') ??
@@ -360,7 +359,7 @@ const versionRequest = async (request: IRequest) => {
     {
       headers: {
         ...Constants.RESPONSE_HEADERS,
-        'cache-control': 'max-age=0, no-cache, no-store, must-revalidate',
+        'cache-control': 'max-age=0, no-cache, no-store, must-revalidate'
       },
       status: 200
     }
@@ -395,7 +394,9 @@ const setRedirectRequest = async (request: IRequest) => {
       {
         headers: {
           'set-cookie': `base_redirect=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; HttpOnly`,
-          'content-security-policy': `frame-ancestors ${Constants.STANDARD_DOMAIN_LIST.join(' ')};`,
+          'content-security-policy': `frame-ancestors ${Constants.STANDARD_DOMAIN_LIST.join(
+            ' '
+          )};`,
           ...Constants.RESPONSE_HEADERS
         },
         status: 200
@@ -419,7 +420,9 @@ const setRedirectRequest = async (request: IRequest) => {
         {
           headers: {
             'set-cookie': `base_redirect=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; HttpOnly`,
-            'content-security-policy': `frame-ancestors ${Constants.STANDARD_DOMAIN_LIST.join(' ')};`,
+            'content-security-policy': `frame-ancestors ${Constants.STANDARD_DOMAIN_LIST.join(
+              ' '
+            )};`,
             ...Constants.RESPONSE_HEADERS
           },
           status: 200
@@ -440,7 +443,9 @@ const setRedirectRequest = async (request: IRequest) => {
     {
       headers: {
         'set-cookie': `base_redirect=${url}; path=/; max-age=63072000; secure; HttpOnly`,
-        'content-security-policy': `frame-ancestors ${Constants.STANDARD_DOMAIN_LIST.join(' ')};`,
+        'content-security-policy': `frame-ancestors ${Constants.STANDARD_DOMAIN_LIST.join(
+          ' '
+        )};`,
         ...Constants.RESPONSE_HEADERS
       },
       status: 200
@@ -654,7 +659,7 @@ const sentryWrapper = async (event: FetchEvent, test = false): Promise<void> => 
       request: event.request,
       requestDataOptions: {
         allowedHeaders: /(.*)/,
-        allowedSearchParams: /(.*)/,
+        allowedSearchParams: /(.*)/
       },
 
       /* TODO: Figure out what changed between @sentry/integration 7.65.0 and 7.66.0
