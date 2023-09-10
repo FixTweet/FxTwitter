@@ -86,8 +86,7 @@ const populateTweetProperties = async (
   const noteTweetText = tweet.note_tweet?.note_tweet_results?.result?.text;
 
   if (noteTweetText) {
-    tweet.legacy.entities.urls =
-      tweet.note_tweet?.note_tweet_results?.result?.entity_set.urls;
+    tweet.legacy.entities.urls = tweet.note_tweet?.note_tweet_results?.result?.entity_set.urls;
     tweet.legacy.entities.hashtags =
       tweet.note_tweet?.note_tweet_results?.result?.entity_set.hashtags;
     tweet.legacy.entities.symbols =
@@ -178,17 +177,9 @@ const populateTweetProperties = async (
   }
 
   /* If a language is specified in API or by user, let's try translating it! */
-  if (
-    typeof language === 'string' &&
-    language.length === 2 &&
-    language !== tweet.legacy.lang
-  ) {
+  if (typeof language === 'string' && language.length === 2 && language !== tweet.legacy.lang) {
     console.log(`Attempting to translate Tweet to ${language}...`);
-    const translateAPI = await translateTweet(
-      tweet,
-      conversation.guestToken || '',
-      language
-    );
+    const translateAPI = await translateTweet(tweet, conversation.guestToken || '', language);
     if (translateAPI !== null && translateAPI?.translation) {
       apiTweet.translation = {
         text: unescapeText(linkFixer(tweet, translateAPI?.translation || '')),
@@ -287,20 +278,12 @@ export const statusAPI = async (
   }
   /* Creating the response objects */
   const response: TweetAPIResponse = { code: 200, message: 'OK' } as TweetAPIResponse;
-  const apiTweet: APITweet = (await populateTweetProperties(
-    tweet,
-    res,
-    language
-  )) as APITweet;
+  const apiTweet: APITweet = (await populateTweetProperties(tweet, res, language)) as APITweet;
 
   /* We found a quote tweet, let's process that too */
   const quoteTweet = tweet.quoted_status_result;
   if (quoteTweet) {
-    apiTweet.quote = (await populateTweetProperties(
-      quoteTweet,
-      res,
-      language
-    )) as APITweet;
+    apiTweet.quote = (await populateTweetProperties(quoteTweet, res, language)) as APITweet;
   }
 
   /* Finally, staple the Tweet to the response and return it */

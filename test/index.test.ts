@@ -83,9 +83,7 @@ test('Twitter moment redirect', async () => {
     )
   );
   expect(result.status).toEqual(302);
-  expect(result.headers.get('location')).toEqual(
-    `${twitterBaseUrl}/i/events/1572638642127966214`
-  );
+  expect(result.headers.get('location')).toEqual(`${twitterBaseUrl}/i/events/1572638642127966214`);
 });
 
 test('Tweet response robot', async () => {

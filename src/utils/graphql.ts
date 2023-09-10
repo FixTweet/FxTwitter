@@ -17,7 +17,6 @@ export const isGraphQLTweet = (response: unknown): response is GraphQLTweet => {
     typeof response === 'object' &&
     response !== null &&
     '__typename' in response &&
-    (response.__typename === 'Tweet' ||
-      response.__typename === 'TweetWithVisibilityResults')
+    (response.__typename === 'Tweet' || response.__typename === 'TweetWithVisibilityResults')
   );
 };

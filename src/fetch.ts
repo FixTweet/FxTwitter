@@ -41,18 +41,15 @@ export const twitterFetch = async (
     ...Constants.BASE_HEADERS
   };
 
-  const guestTokenRequest = new Request(
-    `${Constants.TWITTER_API_ROOT}/1.1/guest/activate.json`,
-    {
-      method: 'POST',
-      headers: tokenHeaders,
-      cf: {
-        cacheEverything: true,
-        cacheTtl: Constants.GUEST_TOKEN_MAX_AGE
-      },
-      body: ''
-    }
-  );
+  const guestTokenRequest = new Request(`${Constants.TWITTER_API_ROOT}/1.1/guest/activate.json`, {
+    method: 'POST',
+    headers: tokenHeaders,
+    cf: {
+      cacheEverything: true,
+      cacheTtl: Constants.GUEST_TOKEN_MAX_AGE
+    },
+    body: ''
+  });
 
   /* A dummy version of the request only used for Cloudflare caching purposes.
      The reason it exists at all is because Cloudflare won't cache POST requests. */
@@ -150,9 +147,7 @@ export const twitterFetch = async (
           headers: headers
         });
         const performanceEnd = performance.now();
-        console.log(
-          `Elongator request successful after ${performanceEnd - performanceStart}ms`
-        );
+        console.log(`Elongator request successful after ${performanceEnd - performanceStart}ms`);
       } else {
         const performanceStart = performance.now();
         apiRequest = await fetch(url, {
@@ -160,9 +155,7 @@ export const twitterFetch = async (
           headers: headers
         });
         const performanceEnd = performance.now();
-        console.log(
-          `Guest API request successful after ${performanceEnd - performanceStart}ms`
-        );
+        console.log(`Guest API request successful after ${performanceEnd - performanceStart}ms`);
       }
 
       response = await apiRequest?.json();
@@ -172,9 +165,7 @@ export const twitterFetch = async (
       console.error('Unknown error while fetching from API', e);
       !useElongator &&
         event &&
-        event.waitUntil(
-          cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true })
-        );
+        event.waitUntil(cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true }));
       if (useElongator) {
         console.log('Elongator request failed, trying again without it');
         wasElongatorDisabled = true;
@@ -199,17 +190,13 @@ export const twitterFetch = async (
       continue;
     }
 
-    const remainingRateLimit = parseInt(
-      apiRequest.headers.get('x-rate-limit-remaining') || '0'
-    );
+    const remainingRateLimit = parseInt(apiRequest.headers.get('x-rate-limit-remaining') || '0');
     console.log(`Remaining rate limit: ${remainingRateLimit} requests`);
     /* Running out of requests within our rate limit, let's purge the cache */
     if (!useElongator && remainingRateLimit < 10) {
       console.log(`Purging token on this edge due to low rate limit remaining`);
       event &&
-        event.waitUntil(
-          cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true })
-        );
+        event.waitUntil(cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true }));
     }
 
     if (!validateFunction(response)) {

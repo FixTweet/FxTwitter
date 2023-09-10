@@ -8,10 +8,7 @@ export const renderCard = (
     return {};
   }
 
-  const binding_values: Record<
-    string,
-    { string_value?: string; boolean_value?: boolean }
-  > = {};
+  const binding_values: Record<string, { string_value?: string; boolean_value?: boolean }> = {};
 
   card.legacy.binding_values.forEach(value => {
     if (value.key && value.value) {
@@ -55,12 +52,8 @@ export const renderCard = (
       external_media: {
         type: 'video',
         url: binding_values.player_url.string_value,
-        width: parseInt(
-          (binding_values.player_width?.string_value || '1280').replace('px', '')
-        ), // TODO: Replacing px might not be necessary, it's just there as a precaution
-        height: parseInt(
-          (binding_values.player_height?.string_value || '720').replace('px', '')
-        )
+        width: parseInt((binding_values.player_width?.string_value || '1280').replace('px', '')), // TODO: Replacing px might not be necessary, it's just there as a precaution
+        height: parseInt((binding_values.player_height?.string_value || '720').replace('px', ''))
       }
     };
   }

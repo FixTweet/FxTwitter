@@ -22,9 +22,7 @@ try {
     .toString()
     .match(/name ?= ?"(.+?)"/)[1];
 } catch (e) {
-  console.error(
-    `Error reading wrangler.toml to find worker name, using 'fixtweet' instead.`
-  );
+  console.error(`Error reading wrangler.toml to find worker name, using 'fixtweet' instead.`);
 }
 
 const releaseName = `${workerName}-${gitBranch}-${gitCommit}-${new Date()

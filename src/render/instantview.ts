@@ -132,9 +132,7 @@ const generateTweetFooter = (tweet: APITweet, isQuote = false): string => {
     {aboutSection}
     `.format({
     socialText: getSocialTextIV(tweet) || '',
-    viewOriginal: !isQuote
-      ? `<a href="${tweet.url}">View original post</a>`
-      : notApplicableComment,
+    viewOriginal: !isQuote ? `<a href="${tweet.url}">View original post</a>` : notApplicableComment,
     aboutSection: isQuote
       ? ''
       : `<h2>About author</h2>

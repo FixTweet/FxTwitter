@@ -469,14 +469,9 @@ type GraphQLConversationThread = {
   sortIndex: string;
 };
 
-type GraphQLTimelineEntry =
-  | GraphQLTimelineTweetEntry
-  | GraphQLConversationThread
-  | unknown;
+type GraphQLTimelineEntry = GraphQLTimelineTweetEntry | GraphQLConversationThread | unknown;
 
-type V2ThreadInstruction =
-  | TimeLineAddEntriesInstruction
-  | TimeLineTerminateTimelineInstruction;
+type V2ThreadInstruction = TimeLineAddEntriesInstruction | TimeLineTerminateTimelineInstruction;
 
 type TimeLineAddEntriesInstruction = {
   type: 'TimelineAddEntries';

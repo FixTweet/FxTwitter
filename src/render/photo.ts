@@ -8,17 +8,12 @@ export const renderPhoto = (
   const { tweet, engagementText, authorText, isOverrideMedia, userAgent } = properties;
   const instructions: ResponseInstructions = { addHeaders: [] };
 
-  if (
-    (tweet.media?.photos?.length || 0) > 1 &&
-    (!tweet.media?.mosaic || isOverrideMedia)
-  ) {
+  if ((tweet.media?.photos?.length || 0) > 1 && (!tweet.media?.mosaic || isOverrideMedia)) {
     photo = photo as APIPhoto;
 
     const all = tweet.media?.all as APIMedia[];
     const baseString =
-      all.length === tweet.media?.photos?.length
-        ? Strings.PHOTO_COUNT
-        : Strings.MEDIA_COUNT;
+      all.length === tweet.media?.photos?.length ? Strings.PHOTO_COUNT : Strings.MEDIA_COUNT;
 
     const photoCounter = baseString.format({
       number: String(all.indexOf(photo) + 1),
@@ -30,9 +25,7 @@ export const renderPhoto = (
     if (authorText === Strings.DEFAULT_AUTHOR_TEXT || isTelegram) {
       instructions.authorText = photoCounter;
     } else {
-      instructions.authorText = `${authorText}${
-        authorText ? '   ―   ' : ''
-      }${photoCounter}`;
+      instructions.authorText = `${authorText}${authorText ? '   ―   ' : ''}${photoCounter}`;
     }
 
     if (engagementText && !isTelegram) {

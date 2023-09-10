@@ -36,11 +36,7 @@ const getBaseRedirectUrl = (request: IRequest) => {
 };
 
 /* Handler for status (Tweet) request */
-const statusRequest = async (
-  request: IRequest,
-  event: FetchEvent,
-  flags: InputFlags = {}
-) => {
+const statusRequest = async (request: IRequest, event: FetchEvent, flags: InputFlags = {}) => {
   const { handle, id, mediaNumber, language, prefix } = request.params;
   const url = new URL(request.url);
   // eslint-disable-next-line sonarjs/no-duplicate-string
@@ -211,11 +207,7 @@ const statusRequest = async (
 };
 
 /* Handler for User Profiles */
-const profileRequest = async (
-  request: IRequest,
-  event: FetchEvent,
-  flags: InputFlags = {}
-) => {
+const profileRequest = async (request: IRequest, event: FetchEvent, flags: InputFlags = {}) => {
   const { handle } = request.params;
   const url = new URL(request.url);
   const userAgent = request.headers.get('User-Agent') || '';
@@ -284,9 +276,7 @@ const profileRequest = async (
         headers = {
           ...headers,
           'cache-control':
-            baseUrl !== Constants.TWITTER_ROOT
-              ? 'max-age=0'
-              : profileResponse.cacheControl
+            baseUrl !== Constants.TWITTER_ROOT ? 'max-age=0' : profileResponse.cacheControl
         };
       }
 
@@ -345,15 +335,11 @@ const versionRequest = async (request: IRequest) => {
       httpversion: (request.cf?.httpProtocol as string) ?? 'Unknown HTTP Version',
       tlsversion: (request.cf?.tlsVersion as string) ?? 'Unknown TLS Version',
       ip:
-        request.headers.get('x-real-ip') ??
-        request.headers.get('cf-connecting-ip') ??
-        'Unknown IP',
+        request.headers.get('x-real-ip') ?? request.headers.get('cf-connecting-ip') ?? 'Unknown IP',
       city: request.cf?.city ?? 'Unknown City',
       region: request.cf?.region ?? request.cf?.country ?? 'Unknown Region',
       country: request.cf?.country ?? 'Unknown Country',
-      asn: `AS${request.cf?.asn ?? '??'} (${
-        request.cf?.asOrganization ?? 'Unknown ASN'
-      })`,
+      asn: `AS${request.cf?.asn ?? '??'} (${request.cf?.asOrganization ?? 'Unknown ASN'})`,
       ua: sanitizeText(request.headers.get('user-agent') ?? 'Unknown User Agent')
     }),
     {
@@ -394,9 +380,7 @@ const setRedirectRequest = async (request: IRequest) => {
       {
         headers: {
           'set-cookie': `base_redirect=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; HttpOnly`,
-          'content-security-policy': `frame-ancestors ${Constants.STANDARD_DOMAIN_LIST.join(
-            ' '
-          )};`,
+          'content-security-policy': `frame-ancestors ${Constants.STANDARD_DOMAIN_LIST.join(' ')};`,
           ...Constants.RESPONSE_HEADERS
         },
         status: 200
@@ -443,9 +427,7 @@ const setRedirectRequest = async (request: IRequest) => {
     {
       headers: {
         'set-cookie': `base_redirect=${url}; path=/; max-age=63072000; secure; HttpOnly`,
-        'content-security-policy': `frame-ancestors ${Constants.STANDARD_DOMAIN_LIST.join(
-          ' '
-        )};`,
+        'content-security-policy': `frame-ancestors ${Constants.STANDARD_DOMAIN_LIST.join(' ')};`,
         ...Constants.RESPONSE_HEADERS
       },
       status: 200
@@ -491,9 +473,7 @@ router.get('/owoembed', async (request: IRequest) => {
 
   const test = {
     author_name: text,
-    author_url: `${Constants.TWITTER_ROOT}/${encodeURIComponent(
-      author
-    )}/status/${status}`,
+    author_url: `${Constants.TWITTER_ROOT}/${encodeURIComponent(author)}/status/${status}`,
     /* Change provider name if tweet is on deprecated domain. */
     provider_name:
       searchParams.get('deprecated') === 'true'
@@ -536,10 +516,7 @@ router.get('*', async (request: IRequest) => {
 });
 
 /* Wrapper to handle caching, and misc things like catching robots.txt */
-export const cacheWrapper = async (
-  request: Request,
-  event?: FetchEvent
-): Promise<Response> => {
+export const cacheWrapper = async (request: Request, event?: FetchEvent): Promise<Response> => {
   const startTime = performance.now();
   const userAgent = request.headers.get('User-Agent') || '';
   // https://developers.cloudflare.com/workers/examples/cache-api/

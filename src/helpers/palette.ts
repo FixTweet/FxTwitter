@@ -16,10 +16,7 @@ export const colorFromPalette = (palette: MediaPlaceholderColor[]) => {
     const rgb = palette[i].rgb;
 
     // We need vibrant colors, grey backgrounds won't do!
-    if (
-      rgb.red + rgb.green + rgb.blue < 120 ||
-      rgb.red + rgb.green + rgb.blue > 240 * 3
-    ) {
+    if (rgb.red + rgb.green + rgb.blue < 120 || rgb.red + rgb.green + rgb.blue > 240 * 3) {
       continue;
     }
 

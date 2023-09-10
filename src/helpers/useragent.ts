@@ -40,10 +40,7 @@ export const generateUserAgent = (): [string, string] => {
       return [userAgent.format({ platform: platformLinux }), secChUa];
     case Platforms.Android:
       userAgent = isEdge ? edgeMobileUA : chromeMobileUA;
-      return [
-        userAgent.format({ platform: platformAndroid, version: String(version) }),
-        secChUa
-      ];
+      return [userAgent.format({ platform: platformAndroid, version: String(version) }), secChUa];
     default:
       return [userAgent.format({ platform: platformWindows }), secChUa];
   }
