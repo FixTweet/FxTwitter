@@ -17,4 +17,4 @@ jobs:
           cache: 'npm'
           cache-dependency-path: package-lock.json
       - run: npm install
-      - run: npx webpack && npm test
+      - run: npm run build && npm test

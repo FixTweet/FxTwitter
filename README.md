@@ -4,15 +4,15 @@
 
 ![][icons]
 
-[![Webpack][webpackbadge]][webpack]
+[![esbuild][buildbadge]][esbuild]
 [![Tests][testsbadge]][tests]
 [![License][licensebadge]][license]
 
 <!-- Links & Badges -->
 
-[icons]: https://skillicons.dev/icons?i=typescript,webpack,workers
-[webpack]: https://github.com/FixTweet/FixTweet/actions/workflows/webpack.yml
-[webpackbadge]: https://github.com/FixTweet/FixTweet/actions/workflows/webpack.yml/badge.svg
+[icons]: https://skillicons.dev/icons?i=typescript,workers
+[build]: https://github.com/FixTweet/FixTweet/actions/workflows/build.yml
+[buildbadge]: https://github.com/FixTweet/FixTweet/actions/workflows/build.yml/badge.svg
 [tests]: https://github.com/FixTweet/FixTweet/actions/workflows/tests.yml
 [testsbadge]: https://github.com/FixTweet/FixTweet/actions/workflows/tests.yml/badge.svg
 [license]: https://github.com/FixTweet/FixTweet/blob/main/LICENSE.md

@@ -1,4 +1,4 @@
-name: Webpack
+name: Build
 
 on:
   push:
@@ -17,4 +17,4 @@ jobs:
           cache: 'npm'
           cache-dependency-path: package-lock.json
       - run: npm install
-      - run: npx webpack
+      - run: npm run build
