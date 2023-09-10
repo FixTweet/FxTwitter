@@ -342,26 +342,26 @@ const versionRequest = async (request: IRequest) => {
   return new Response(
     Strings.VERSION_HTML.format({
       rtt: request.cf?.clientTcpRtt ? `🏓 ${request.cf.clientTcpRtt} ms RTT` : '',
-      colo: request.cf?.colo || '??',
-      httpversion: request.cf?.httpProtocol || 'Unknown HTTP Version',
-      tlsversion: request.cf?.tlsVersion || 'Unknown TLS Version',
+      colo: request.cf?.colo ?? '??',
+      httpversion: request.cf?.httpProtocol ?? 'Unknown HTTP Version',
+      tlsversion: request.cf?.tlsVersion ?? 'Unknown TLS Version',
       ip:
-        request.headers.get('x-real-ip') ||
-        request.headers.get('cf-connecting-ip') ||
+        request.headers.get('x-real-ip') ??
+        request.headers.get('cf-connecting-ip') ??
         'Unknown IP',
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore - @cloudflare/workers-types v4 is missing IncomingRequestCfProperties.city despite it being a real property
-      city: request.cf?.city || 'Unknown City',
+      city: request.cf?.city ?? 'Unknown City',
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore - @cloudflare/workers-types v4 is missing IncomingRequestCfProperties.country / region despite it being a real property
-      region: request.cf?.region || request.cf?.country || 'Unknown Region',
+      region: request.cf?.region ?? request.cf?.country ?? 'Unknown Region',
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore - @cloudflare/workers-types v4 is missing IncomingRequestCfProperties.country despite it being a real property
-      country: request.cf?.country || 'Unknown Country',
-      asn: `AS${request.cf?.asn || '??'} (${
-        request.cf?.asOrganization || 'Unknown ASN'
+      country: request.cf?.country ?? 'Unknown Country',
+      asn: `AS${request.cf?.asn ?? '??'} (${
+        request.cf?.asOrganization ?? 'Unknown ASN'
       })`,
-      ua: sanitizeText(request.headers.get('user-agent') || 'Unknown User Agent')
+      ua: sanitizeText(request.headers.get('user-agent') ?? 'Unknown User Agent')
     }),
     {
       headers: {
