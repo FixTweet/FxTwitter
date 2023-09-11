@@ -1,7 +1,7 @@
 import { Constants } from './constants';
 import { Experiment, experimentCheck } from './experiments';
 import { generateUserAgent } from './helpers/useragent';
-import { isGraphQLTweet } from './utils/graphql';
+import { isGraphQLTweet } from './helpers/graphql';
 
 const API_ATTEMPTS = 3;
 let wasElongatorDisabled = false;

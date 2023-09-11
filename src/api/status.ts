@@ -7,7 +7,7 @@ import { translateTweet } from '../helpers/translate';
 import { unescapeText } from '../helpers/utils';
 import { processMedia } from '../helpers/media';
 import { convertToApiUser } from './user';
-import { isGraphQLTweet } from '../utils/graphql';
+import { isGraphQLTweet } from '../helpers/graphql';
 
 /* This function does the heavy lifting of processing data from Twitter API
    and using it to create FixTweet's streamlined API responses */
