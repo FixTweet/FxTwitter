@@ -336,9 +336,9 @@ const versionRequest = async (request: IRequest) => {
       tlsversion: (request.cf?.tlsVersion as string) ?? 'Unknown TLS Version',
       ip:
         request.headers.get('x-real-ip') ?? request.headers.get('cf-connecting-ip') ?? 'Unknown IP',
-      city: request.cf?.city ?? 'Unknown City',
-      region: request.cf?.region ?? request.cf?.country ?? 'Unknown Region',
-      country: request.cf?.country ?? 'Unknown Country',
+      city: request.cf?.city as string ?? 'Unknown City',
+      region: request.cf?.region as string ?? request.cf?.country ?? 'Unknown Region',
+      country: request.cf?.country as string ?? 'Unknown Country',
       asn: `AS${request.cf?.asn ?? '??'} (${request.cf?.asOrganization ?? 'Unknown ASN'})`,
       ua: sanitizeText(request.headers.get('user-agent') ?? 'Unknown User Agent')
     }),
