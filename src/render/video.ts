@@ -1,4 +1,5 @@
 import { Constants } from '../constants';
+import { handleQuote } from '../helpers/quote';
 import { Strings } from '../strings';
 
 export const renderVideo = (
@@ -41,6 +42,10 @@ export const renderVideo = (
   }
 
   instructions.authorText = tweet.translation?.text || text || '';
+
+  if (instructions.authorText.length < 40 && tweet.quote) {
+    instructions.authorText += `\n${handleQuote(tweet.quote)}`;
+  }
 
   /* Push the raw video-related headers */
   instructions.addHeaders = [
