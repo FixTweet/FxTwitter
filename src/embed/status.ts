@@ -371,7 +371,7 @@ export const handleStatus = async (
     `<link rel="alternate" href="{base}/owoembed?text={text}{deprecatedFlag}&status={status}&author={author}&useXbranding={useXBranding}" type="application/json+oembed" title="{name}">`.format(
       {
         base: Constants.HOST_URL,
-        text: encodeURIComponent(truncateWithEllipsis(authorText, 250)),
+        text: encodeURIComponent(truncateWithEllipsis(authorText, 256)),
         deprecatedFlag: flags?.deprecated ? '&deprecated=true' : '',
         status: encodeURIComponent(status),
         author: encodeURIComponent(tweet.author?.screen_name || ''),
