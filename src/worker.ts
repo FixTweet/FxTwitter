@@ -336,9 +336,9 @@ const versionRequest = async (request: IRequest) => {
       tlsversion: (request.cf?.tlsVersion as string) ?? 'Unknown TLS Version',
       ip:
         request.headers.get('x-real-ip') ?? request.headers.get('cf-connecting-ip') ?? 'Unknown IP',
-      city: request.cf?.city as string ?? 'Unknown City',
-      region: request.cf?.region as string ?? request.cf?.country ?? 'Unknown Region',
-      country: request.cf?.country as string ?? 'Unknown Country',
+      city: (request.cf?.city as string) ?? 'Unknown City',
+      region: (request.cf?.region as string) ?? request.cf?.country ?? 'Unknown Region',
+      country: (request.cf?.country as string) ?? 'Unknown Country',
       asn: `AS${request.cf?.asn ?? '??'} (${request.cf?.asOrganization ?? 'Unknown ASN'})`,
       ua: sanitizeText(request.headers.get('user-agent') ?? 'Unknown User Agent')
     }),
@@ -466,7 +466,7 @@ router.get('/owoembed', async (request: IRequest) => {
   const text = searchParams.get('text') || 'Twitter';
   const author = searchParams.get('author') || 'jack';
   const status = searchParams.get('status') || '20';
-  const useXbranding = searchParams.get('useXbranding') === 'true';
+  // const useXbranding = searchParams.get('useXbranding') === 'true';
 
   const random = Math.floor(Math.random() * Object.keys(motd).length);
   const [name, url] = Object.entries(motd)[random];
@@ -476,11 +476,8 @@ router.get('/owoembed', async (request: IRequest) => {
     author_url: `${Constants.TWITTER_ROOT}/${encodeURIComponent(author)}/status/${status}`,
     /* Change provider name if tweet is on deprecated domain. */
     provider_name:
-      searchParams.get('deprecated') === 'true'
-        ? Strings.DEPRECATED_DOMAIN_NOTICE_DISCORD
-        : useXbranding
-        ? name
-        : Strings.X_DOMAIN_NOTICE,
+      searchParams.get('deprecated') === 'true' ? Strings.DEPRECATED_DOMAIN_NOTICE_DISCORD : name,
+    /*useXbranding ? name : Strings.X_DOMAIN_NOTICE*/
     provider_url: url,
     title: Strings.DEFAULT_AUTHOR_TEXT,
     type: 'link',
