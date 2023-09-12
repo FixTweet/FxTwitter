@@ -130,6 +130,8 @@ const populateTweetProperties = async (
         apiTweet.twitter_card = 'player';
         apiTweet.media.videos = apiTweet.media.videos || [];
         apiTweet.media.videos.push(mediaObject);
+      } else {
+        console.log('Unknown media type', mediaObject.type);
       }
     }
   });
@@ -284,6 +286,10 @@ export const statusAPI = async (
   const quoteTweet = tweet.quoted_status_result;
   if (quoteTweet) {
     apiTweet.quote = (await populateTweetProperties(quoteTweet, res, language)) as APITweet;
+    /* Only override the twitter_card if it's a basic tweet, since media always takes precedence  */
+    if (apiTweet.twitter_card === 'tweet') {
+      apiTweet.twitter_card = apiTweet.quote.twitter_card;
+    }
   }
 
   /* Finally, staple the Tweet to the response and return it */

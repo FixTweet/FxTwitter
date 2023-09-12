@@ -344,12 +344,14 @@ export const handleStatus = async (
      and we have to pretend to be Medium in order to get working IV, but haven't figured if the template is causing issues.  */
   const text = useIV ? sanitizeText(newText).replace(/\n/g, '<br>') : sanitizeText(newText);
 
+  const useCard = tweet.twitter_card === 'tweet' ? tweet.quote?.twitter_card : tweet.twitter_card;
+
   /* Push basic headers relating to author, Tweet text, and site name */
   headers.push(
     `<meta property="og:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`,
     `<meta property="og:description" content="${text}"/>`,
     `<meta property="og:site_name" content="${siteName}"/>`,
-    `<meta property="twitter:card" content="${tweet.quote?.twitter_card || tweet.twitter_card}"/>`
+    `<meta property="twitter:card" content="${useCard}"/>`
   );
 
   /* Special reply handling if authorText is not overriden */
