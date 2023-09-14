@@ -173,7 +173,9 @@ const populateTweetProperties = async (
   }
 
   /* Workaround: Force player card by default for videos */
-  // @ts-expect-error Inexplicably, twitter_card becomes type of 'tweet' instead of 'tweet' | 'summary' | 'summary_large_image' | 'player'
+  /*  TypeScript gets confused and re-interprets the type'tweet' instead of 'tweet' | 'summary' | 'summary_large_image' | 'player'
+  The mediaList however can set it to something else. TODO: Reimplement as enums */
+  // @ts-expect-error see above comment
   if (apiTweet.media?.videos && apiTweet.twitter_card !== 'player') {
     apiTweet.twitter_card = 'player';
   }
