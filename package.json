@@ -35,7 +35,7 @@
     "ts-jest": "^29.1.1",
     "ts-loader": "^9.5.0",
     "typescript": "^5.2.2",
-    "wrangler": "^3.11.0"
+    "wrangler": "^3.12.0"
   },
   "dependencies": {
     "itty-router": "^4.0.23",
