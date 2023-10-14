@@ -47,7 +47,7 @@ const populateTweetProperties = async (
   /* Populating a lot of the basics */
   apiTweet.url = `${Constants.TWITTER_ROOT}/${apiUser.screen_name}/status/${tweet.rest_id}`;
   apiTweet.id = tweet.rest_id;
-  apiTweet.text = unescapeText(linkFixer(tweet, tweet.legacy.full_text || ''));
+  apiTweet.text = unescapeText(linkFixer(tweet.legacy.entities?.urls, tweet.legacy.full_text || ''));
   apiTweet.author = {
     id: apiUser.id,
     name: apiUser.name,
@@ -93,7 +93,7 @@ const populateTweetProperties = async (
       tweet.note_tweet?.note_tweet_results?.result?.entity_set.symbols;
 
     console.log('We meet the conditions to use new note tweets');
-    apiTweet.text = unescapeText(linkFixer(tweet, noteTweetText));
+    apiTweet.text = unescapeText(linkFixer(tweet.legacy.entities.urls, noteTweetText));
     apiTweet.is_note_tweet = true;
   } else {
     apiTweet.is_note_tweet = false;
@@ -186,7 +186,7 @@ const populateTweetProperties = async (
     const translateAPI = await translateTweet(tweet, conversation.guestToken || '', language);
     if (translateAPI !== null && translateAPI?.translation) {
       apiTweet.translation = {
-        text: unescapeText(linkFixer(tweet, translateAPI?.translation || '')),
+        text: unescapeText(linkFixer(tweet.legacy?.entities?.urls, translateAPI?.translation || '')),
         source_lang: translateAPI?.sourceLanguage || '',
         target_lang: translateAPI?.destinationLanguage || '',
         source_lang_en: translateAPI?.localizedSourceLanguage || ''

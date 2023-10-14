@@ -232,12 +232,7 @@ type GraphQLUser = {
     description: string; // "What's happening?!",
     entities: {
       description?: {
-        urls?: {
-          display_url: string; // "about.twitter.com",
-          expanded_url: string; // "https://about.twitter.com/",
-          url: string; // "https://t.co/DAtOo6uuHk",
-          indices: [0, 23];
-        }[];
+        urls?: TcoExpansion[];
       };
       url?: {
         urls?: {
