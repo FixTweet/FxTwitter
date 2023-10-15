@@ -309,6 +309,7 @@ type GraphQLUser = {
 };
 
 type GraphQLTweetLegacy = {
+  id_str: string; // "1674824189176590336"
   created_at: string; // "Tue Sep 14 20:00:00 +0000 2021"
   conversation_id_str: string; // "1674824189176590336"
   bookmark_count: number; // 0

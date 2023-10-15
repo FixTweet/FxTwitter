@@ -46,7 +46,7 @@ const populateTweetProperties = async (
 
   /* Populating a lot of the basics */
   apiTweet.url = `${Constants.TWITTER_ROOT}/${apiUser.screen_name}/status/${tweet.rest_id}`;
-  apiTweet.id = tweet.rest_id;
+  apiTweet.id = tweet.rest_id ?? tweet.legacy.id_str;
   apiTweet.text = unescapeText(linkFixer(tweet.legacy.entities?.urls, tweet.legacy.full_text || ''));
   apiTweet.author = {
     id: apiUser.id,
