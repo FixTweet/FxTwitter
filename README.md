@@ -128,6 +128,7 @@ In many ways, FixTweet has richer embeds and does more. Here's a table comparing
 | Strip Twitter tracking info on redirect |         :heavy_check_mark:          |               :x:                |                 :heavy_check_mark:                  |
 | Show retweet, like, reply counts        |         :heavy_check_mark:          | :heavy_minus_sign: Discord Only² |         :ballot_box_with_check: No replies          |
 | Discord sed replace (`s/`) friendly     | :ballot_box_with_check: twittpr.com |               N/A                |                         :x:                         |
+| Domain for X.com links                  | :ballot_box_with_check: fixupx.com  |               N/A                |          :ballot_box_with_check: fixvx.com          |
 | Status fetch API for Developers         |         :heavy_check_mark:          |               N/A                |                         :x:                         |
 | DDoS protection & low latency globally  |         :heavy_check_mark:          |               N/A                |                         :x:                         |
 | Last commit                             |           [![][flc]][fc]            |               N/A                |                   [![][vlc]][vc]                    |
