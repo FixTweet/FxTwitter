@@ -10,7 +10,7 @@ config();
 const gitCommit = execSync('git rev-parse --short HEAD').toString().trim();
 const gitCommitFull = execSync('git rev-parse HEAD').toString().trim();
 const gitUrl = execSync('git remote get-url origin').toString().trim();
-const gitBranch = execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
+const gitBranch = execSync('git rev-parse --abbrev-ref HEAD').toString().trim().replace(/[\\\/]/g, '-');
 
 let workerName = 'fixtweet';
 
