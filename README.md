@@ -214,4 +214,4 @@ Feel free to [open an issue](https://github.com/FixTweet/FixTweet/issues)
 
 [Mosaic](https://github.com/FixTweet/mosaic) Multi-image combiner by [Antonio32A](https://github.com/Antonio32A)
 
-& other contributions by [Burner](https://github.com/YaBoiBurner), [Deer-Spangle](https://github.com/Deer-Spangle), [Antonio32A](https://github.com/Antonio32A)
+& other contributions by [Antonio32A](https://github.com/Antonio32A), [Burner](https://github.com/YaBoiBurner), [Deer-Spangle](https://github.com/Deer-Spangle), [Eramdam](https://github.com/Eramdam), [SirStendec](https://github.com/SirStendec), [SpeedyFolf](https://github.com/SpeedyFolf), [Wazbat](https://github.com/Wazbat)
