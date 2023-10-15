@@ -44,9 +44,12 @@ const populateTweetProperties = async (
   const graphQLUser = tweet.core.user_results.result;
   const apiUser = convertToApiUser(graphQLUser);
 
+  /* Sometimes, `rest_id` is undefined for some reason. Inconsistent behavior. See: https://github.com/FixTweet/FixTweet/issues/416 */
+  const id = tweet.rest_id ?? tweet.legacy.id_str;
+
   /* Populating a lot of the basics */
-  apiTweet.url = `${Constants.TWITTER_ROOT}/${apiUser.screen_name}/status/${tweet.rest_id ?? tweet.legacy.id_str}`;
-  apiTweet.id = tweet.rest_id ?? tweet.legacy.id_str;
+  apiTweet.url = `${Constants.TWITTER_ROOT}/${apiUser.screen_name}/status/${id}`;
+  apiTweet.id = id;
   apiTweet.text = unescapeText(linkFixer(tweet.legacy.entities?.urls, tweet.legacy.full_text || ''));
   apiTweet.author = {
     id: apiUser.id,
@@ -145,7 +148,7 @@ const populateTweetProperties = async (
 
   /* Handle photos and mosaic if available */
   if ((apiTweet?.media?.photos?.length || 0) > 1) {
-    const mosaic = await handleMosaic(apiTweet.media?.photos || [], tweet.rest_id);
+    const mosaic = await handleMosaic(apiTweet.media?.photos || [], id);
     if (typeof apiTweet.media !== 'undefined' && mosaic !== null) {
       apiTweet.media.mosaic = mosaic;
     }
