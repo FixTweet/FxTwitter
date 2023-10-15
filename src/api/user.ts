@@ -1,5 +1,6 @@
 import { Constants } from '../constants';
 import { fetchUser } from '../fetch';
+import { linkFixer } from '../helpers/linkFixer';
 
 export const convertToApiUser = (user: GraphQLUser): APIUser => {
   const apiUser = {} as APIUser;
@@ -12,7 +13,7 @@ export const convertToApiUser = (user: GraphQLUser): APIUser => {
   apiUser.tweets = user.legacy.statuses_count;
   apiUser.name = user.legacy.name;
   apiUser.screen_name = user.legacy.screen_name;
-  apiUser.description = user.legacy.description;
+  apiUser.description = linkFixer(user.legacy.entities?.description?.urls, user.legacy.description);
   apiUser.location = user.legacy.location;
   apiUser.banner_url = user.legacy.profile_banner_url;
   /*
