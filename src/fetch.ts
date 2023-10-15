@@ -316,7 +316,10 @@ export const fetchConversation = async (
 export const fetchUser = async (
   username: string,
   event: FetchEvent,
-  useElongator = false
+  useElongator = experimentCheck(
+    Experiment.ELONGATOR_PROFILE_API,
+    typeof TwitterProxy !== 'undefined'
+  )
 ): Promise<GraphQLUserResponse> => {
   return (await twitterFetch(
     `${

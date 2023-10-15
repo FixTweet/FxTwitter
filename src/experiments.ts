@@ -1,5 +1,6 @@
 export enum Experiment {
-  ELONGATOR_BY_DEFAULT = 'ELONGATOR_BY_DEFAULT'
+  ELONGATOR_BY_DEFAULT = 'ELONGATOR_BY_DEFAULT',
+  ELONGATOR_PROFILE_API = 'ELONGATOR_PROFILE_API'
 }
 
 type ExperimentConfig = {
@@ -13,6 +14,11 @@ const Experiments: { [key in Experiment]: ExperimentConfig } = {
     name: 'Elongator by default',
     description: 'Enable Elongator by default (guest token lockout bypass)',
     percentage: 1
+  },
+  [Experiment.ELONGATOR_PROFILE_API]: {
+    name: 'Elongator profile API',
+    description: 'Use Elongator to load profiles',
+    percentage: 0
   }
 };
 
