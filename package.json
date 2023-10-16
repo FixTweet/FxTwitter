@@ -21,7 +21,7 @@
     "@sentry/esbuild-plugin": "^2.8.0",
     "@sentry/integrations": "^7.74.0",
     "@types/jest": "^29.5.5",
-    "@typescript-eslint/eslint-plugin": "^6.7.5",
+    "@typescript-eslint/eslint-plugin": "^6.8.0",
     "@typescript-eslint/parser": "^6.8.0",
     "dotenv": "^16.3.1",
     "eslint": "^8.51.0",
