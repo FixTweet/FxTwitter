@@ -1,6 +1,6 @@
 /* We keep this value up-to-date for making our requests to Twitter as
    indistinguishable from normal user traffic as possible. */
-const fakeChromeVersion = 116;
+const fakeChromeVersion = 118;
 const platformWindows = 'Windows NT 10.0; Win64; x64';
 const platformMac = 'Macintosh; Intel Mac OS X 10_15_7';
 const platformLinux = 'X11; Linux x86_64';
