@@ -11,11 +11,13 @@ export const convertToApiUser = (user: GraphQLUser): APIUser => {
   apiUser.following = user.legacy.friends_count;
   apiUser.likes = user.legacy.favourites_count;
   apiUser.tweets = user.legacy.statuses_count;
+  apiUser.posts = user.legacy.statuses_count;
   apiUser.name = user.legacy.name;
   apiUser.screen_name = user.legacy.screen_name;
-  apiUser.description = linkFixer(user.legacy.entities?.description?.urls, user.legacy.description);
-  apiUser.location = user.legacy.location;
-  apiUser.banner_url = user.legacy.profile_banner_url;
+  apiUser.global_screen_name = `${user.legacy.screen_name}@${Constants.TWITTER_GLOBAL_NAME_ROOT}`
+  apiUser.description = user.legacy.description ? linkFixer(user.legacy.entities?.description?.urls, user.legacy.description) : null;
+  apiUser.location = user.legacy.location ? user.legacy.location : null;
+  apiUser.banner_url = user.legacy.profile_banner_url ? user.legacy.profile_banner_url : null;
   /*
   if (user.is_blue_verified) {
     apiUser.verified = 'blue';

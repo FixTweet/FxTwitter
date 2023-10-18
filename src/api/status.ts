@@ -56,6 +56,7 @@ const populateTweetProperties = async (
     name: apiUser.name,
     screen_name: apiUser.screen_name,
     avatar_url: (apiUser.avatar_url || '').replace('_normal', '_200x200') || '',
+    // @ts-expect-error Legacy api shit 
     avatar_color: null,
     banner_url: apiUser.banner_url || '',
     description: apiUser.description || '',
@@ -72,8 +73,11 @@ const populateTweetProperties = async (
   };
   apiTweet.replies = tweet.legacy.reply_count;
   apiTweet.retweets = tweet.legacy.retweet_count;
+  apiTweet.reposts = tweet.legacy.retweet_count;
   apiTweet.likes = tweet.legacy.favorite_count;
+  // @ts-expect-error Legacy api shit 
   apiTweet.color = null;
+  // @ts-expect-error legacy api
   apiTweet.twitter_card = 'tweet';
   apiTweet.created_at = tweet.legacy.created_at;
   apiTweet.created_timestamp = new Date(tweet.legacy.created_at).getTime() / 1000;
@@ -126,11 +130,11 @@ const populateTweetProperties = async (
       apiTweet.media.all.push(mediaObject);
 
       if (mediaObject.type === 'photo') {
-        apiTweet.twitter_card = 'summary_large_image';
+        apiTweet.embed_card = 'summary_large_image';
         apiTweet.media.photos = apiTweet.media.photos || [];
         apiTweet.media.photos.push(mediaObject);
       } else if (mediaObject.type === 'video' || mediaObject.type === 'gif') {
-        apiTweet.twitter_card = 'player';
+        apiTweet.embed_card = 'player';
         apiTweet.media.videos = apiTweet.media.videos || [];
         apiTweet.media.videos.push(mediaObject);
       } else {
@@ -178,9 +182,9 @@ const populateTweetProperties = async (
   /* Workaround: Force player card by default for videos */
   /*  TypeScript gets confused and re-interprets the type'tweet' instead of 'tweet' | 'summary' | 'summary_large_image' | 'player'
   The mediaList however can set it to something else. TODO: Reimplement as enums */
-  // @ts-expect-error see above comment
-  if (apiTweet.media?.videos && apiTweet.twitter_card !== 'player') {
-    apiTweet.twitter_card = 'player';
+  
+  if (apiTweet.media?.videos && apiTweet.embed_card !== 'player') {
+    apiTweet.embed_card = 'player';
   }
 
   /* If a language is specified in API or by user, let's try translating it! */
@@ -291,9 +295,9 @@ export const statusAPI = async (
   const quoteTweet = tweet.quoted_status_result;
   if (quoteTweet) {
     apiTweet.quote = (await populateTweetProperties(quoteTweet, res, language)) as APITweet;
-    /* Only override the twitter_card if it's a basic tweet, since media always takes precedence  */
-    if (apiTweet.twitter_card === 'tweet') {
-      apiTweet.twitter_card = apiTweet.quote.twitter_card;
+    /* Only override the embed_card if it's a basic tweet, since media always takes precedence  */
+    if (apiTweet.embed_card === 'tweet') {
+      apiTweet.embed_card = apiTweet.quote.embed_card;
     }
   }
 
