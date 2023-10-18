@@ -152,7 +152,7 @@ const statusRequest = async (request: IRequest, event: FetchEvent, flags: InputF
 
          Since we obviously have no media to give the user, we'll just redirect to the Tweet.
          Embeds will return as usual to bots as if direct media was never specified. */
-      if (!isBotUA) {
+      if (!isBotUA && !flags.api) {
         const baseUrl = getBaseRedirectUrl(request);
         /* Do not cache if using a custom redirect */
         const cacheControl = baseUrl !== Constants.TWITTER_ROOT ? 'max-age=0' : undefined;

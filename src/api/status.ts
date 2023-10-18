@@ -16,7 +16,7 @@ const populateTweetProperties = async (
   conversation: TweetResultsByRestIdResult, // TimelineBlobPartial,
   language: string | undefined
   // eslint-disable-next-line sonarjs/cognitive-complexity
-): Promise<APITweet> => {
+): Promise<APITweet | null> => {
   const apiTweet = {} as APITweet;
 
   /* Sometimes, Twitter returns a different kind of Tweet type called 'TweetWithVisibilityResults'.
@@ -36,6 +36,11 @@ const populateTweetProperties = async (
 
   if (typeof tweet.views === 'undefined' && typeof tweet?.tweet?.views !== 'undefined') {
     tweet.views = tweet?.tweet?.views;
+  }
+
+  if (typeof tweet.core === 'undefined') {
+    console.log('Tweet still not valid', tweet);
+    return null;
   }
 
   /* With v2 conversation API we re-add the user object ot the tweet because
@@ -292,7 +297,7 @@ export const statusAPI = async (
   if (quoteTweet) {
     apiTweet.quote = (await populateTweetProperties(quoteTweet, res, language)) as APITweet;
     /* Only override the twitter_card if it's a basic tweet, since media always takes precedence  */
-    if (apiTweet.twitter_card === 'tweet') {
+    if (apiTweet.twitter_card === 'tweet' && apiTweet.quote !== null) {
       apiTweet.twitter_card = apiTweet.quote.twitter_card;
     }
   }
