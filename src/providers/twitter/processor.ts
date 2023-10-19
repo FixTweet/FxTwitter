@@ -13,7 +13,7 @@ export const buildAPITweet = async (
   threadPiece = false,
   legacyAPI = false
   // eslint-disable-next-line sonarjs/cognitive-complexity
-): Promise<APITweet> => {
+): Promise<APITweet | null> => {
   const apiTweet = {} as APITweet;
 
   /* Sometimes, Twitter returns a different kind of Tweet type called 'TweetWithVisibilityResults'.
@@ -33,6 +33,11 @@ export const buildAPITweet = async (
 
   if (typeof tweet.views === 'undefined' && typeof tweet?.tweet?.views !== 'undefined') {
     tweet.views = tweet?.tweet?.views;
+  }
+
+  if (typeof tweet.core === 'undefined') {
+    console.log('Tweet still not valid', tweet);
+    return null;
   }
 
   const graphQLUser = tweet.core.user_results.result;
@@ -124,6 +129,16 @@ export const buildAPITweet = async (
     photos: [],
     videos: [],
   };
+  
+  /* We found a quote tweet, let's process that too */
+  const quoteTweet = tweet.quoted_status_result;
+  if (quoteTweet) {
+    apiTweet.quote = (await buildAPITweet(quoteTweet, language)) as APITweet;
+    /* Only override the embed_card if it's a basic tweet, since media always takes precedence  */
+    if (apiTweet.embed_card === 'tweet'&& apiTweet.quote !== null) {
+      apiTweet.embed_card = apiTweet.quote.embed_card;
+    }
+  }
 
   const mediaList = Array.from(
     tweet.legacy.extended_entities?.media || tweet.legacy.entities?.media || []
