@@ -81,14 +81,6 @@ interface APITranslate {
   target_lang: string;
 }
 
-interface BaseUser {
-  id?: string;
-  name?: string;
-  screen_name?: string;
-  avatar_url?: string;
-  banner_url?: string;
-}
-
 interface APIExternalMedia {
   type: 'video';
   url: string;
@@ -136,7 +128,7 @@ interface APIMosaicPhoto extends APIMedia {
   };
 }
 
-interface APITweet {
+interface APIPost {
   id: string;
   url: string;
   text: string;
@@ -144,15 +136,11 @@ interface APITweet {
   created_timestamp: number;
 
   likes: number;
-  retweets: number;
+  reposts: number;
   replies: number;
-  views?: number | null;
 
-  color: string | null;
-
-  quote?: APITweet;
+  quote?: APIPost;
   poll?: APIPoll;
-  translation?: APITranslate;
   author: APIUser;
 
   media?: {
@@ -169,24 +157,41 @@ interface APITweet {
   replying_to: string | null;
   replying_to_status: string | null;
 
-  source: string;
+  reply_of: {
+    screen_name: string | null;
+    post: string | null;
+  } | null
 
-  is_note_tweet: boolean;
+  source: string | null;
 
-  twitter_card: 'tweet' | 'summary' | 'summary_large_image' | 'player';
+  embed_card: 'tweet' | 'summary' | 'summary_large_image' | 'player';
 }
 
-interface APIUser extends BaseUser {
+interface APITweet extends APIPost {
+  retweets: number;
+  views?: number | null;
+  translation?: APITranslate;
+
+  is_note_tweet: boolean;
+}
+
+interface APIUser {
+  id: string;
+  name: string;
+  screen_name: string;
+  global_screen_name: string;
+  avatar_url: string | null;
+  banner_url: string | null;
   // verified: 'legacy' | 'blue'| 'business' | 'government';
   // verified_label: string;
-  description: string;
-  location: string;
+  description: string | null;
+  location: string | null;
   url: string;
-  avatar_color?: string | null;
   protected: boolean;
   followers: number;
   following: number;
-  tweets: number;
+  tweets?: number;
+  posts?: number;
   likes: number;
   joined: string;
   website: {
