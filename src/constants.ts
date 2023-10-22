@@ -59,8 +59,8 @@ export const Constants = {
   RESPONSE_HEADERS: {
     'allow': 'OPTIONS, GET, PURGE, HEAD',
     'content-type': 'text/html;charset=UTF-8',
-    'x-powered-by': '🏳️‍⚧️ Trans Rights',
-    'cache-control': 'max-age=3600' // Can be overriden in some cases, like poll tweets
+    'x-powered-by': `${RELEASE_NAME} (Trans Rights are Human Rights)`,
+    'cache-control': 'max-age=3600' // Can be overriden in some cases, like unfinished poll tweets
   },
   API_RESPONSE_HEADERS: {
     'access-control-allow-origin': '*',
@@ -69,8 +69,3 @@ export const Constants = {
   POLL_TWEET_CACHE: 'max-age=60',
   DEFAULT_COLOR: '#10A3FF'
 };
-
-if (typeof TEST !== 'undefined') {
-  /* Undici gets angry about unicode headers, this is a workaround. */
-  Constants.RESPONSE_HEADERS['x-powered-by'] = 'Trans Rights';
-}
