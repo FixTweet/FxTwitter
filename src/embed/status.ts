@@ -36,6 +36,16 @@ export const handleStatus = async (
   const api = await statusAPI(status, language, event as FetchEvent, flags);
   const tweet = api?.tweet as APITweet;
 
+  /* Catch this request if it's an API response */
+  if (flags?.api) {
+    return {
+      response: new Response(JSON.stringify(api), {
+        headers: { ...Constants.RESPONSE_HEADERS, ...Constants.API_RESPONSE_HEADERS },
+        status: api.code
+      })
+    };
+  }
+
   /* If there was any errors fetching the Tweet, we'll return it */
   switch (api.code) {
     case 401:
@@ -65,16 +75,6 @@ export const handleStatus = async (
   }
 
   let ivbody = '';
-
-  /* Catch this request if it's an API response */
-  if (flags?.api) {
-    return {
-      response: new Response(JSON.stringify(api), {
-        headers: { ...Constants.RESPONSE_HEADERS, ...Constants.API_RESPONSE_HEADERS },
-        status: api.code
-      })
-    };
-  }
 
   let overrideMedia: APIMedia | undefined;
 

@@ -16,15 +16,15 @@
   "author": "dangered wolf",
   "license": "MIT",
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20231010.0",
+    "@cloudflare/workers-types": "^4.20231016.0",
     "@microsoft/eslint-formatter-sarif": "^3.0.0",
     "@sentry/esbuild-plugin": "^2.8.0",
-    "@sentry/integrations": "^7.74.0",
-    "@types/jest": "^29.5.5",
+    "@sentry/integrations": "^7.74.1",
+    "@types/jest": "^29.5.6",
     "@typescript-eslint/eslint-plugin": "^6.8.0",
     "@typescript-eslint/parser": "^6.8.0",
     "dotenv": "^16.3.1",
-    "eslint": "^8.51.0",
+    "eslint": "^8.52.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-config-typescript": "^3.0.0",
     "eslint-plugin-optimize-regex": "^1.2.1",
@@ -35,7 +35,7 @@
     "ts-jest": "^29.1.1",
     "ts-loader": "^9.5.0",
     "typescript": "^5.2.2",
-    "wrangler": "^3.13.1"
+    "wrangler": "^3.14.0"
   },
   "dependencies": {
     "itty-router": "^4.0.23",

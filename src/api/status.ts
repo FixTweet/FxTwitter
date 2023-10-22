@@ -300,9 +300,9 @@ export const statusAPI = async (
   const quoteTweet = tweet.quoted_status_result;
   if (quoteTweet) {
     apiTweet.quote = (await populateTweetProperties(quoteTweet, res, language)) as APITweet;
-    /* Only override the embed_card if it's a basic tweet, since media always takes precedence  */
-    if (apiTweet.embed_card === 'tweet') {
-      apiTweet.embed_card = apiTweet.quote.embed_card;
+    /* Only override the twitter_card if it's a basic tweet, since media always takes precedence  */
+    if (apiTweet.twitter_card === 'tweet' && apiTweet.quote !== null) {
+      apiTweet.twitter_card = apiTweet.quote.twitter_card;
     }
   }
 
