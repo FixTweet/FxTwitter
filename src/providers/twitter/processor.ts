@@ -6,6 +6,7 @@ import { handleMosaic } from '../../helpers/mosaic';
 import { unescapeText } from '../../helpers/utils';
 import { processMedia } from '../../helpers/media';
 import { convertToApiUser } from '../../api/user';
+import { translateTweet } from '../../helpers/translate';
 
 export const buildAPITweet = async (
   tweet: GraphQLTweet,
@@ -135,7 +136,7 @@ export const buildAPITweet = async (
   if (quoteTweet) {
     apiTweet.quote = (await buildAPITweet(quoteTweet, language)) as APITweet;
     /* Only override the embed_card if it's a basic tweet, since media always takes precedence  */
-    if (apiTweet.embed_card === 'tweet'&& apiTweet.quote !== null) {
+    if (apiTweet.embed_card === 'tweet' && apiTweet.quote !== null) {
       apiTweet.embed_card = apiTweet.quote.embed_card;
     }
   }
@@ -199,10 +200,6 @@ export const buildAPITweet = async (
     }
   }
 
-  /* Workaround: Force player card by default for videos */
-  /*  TypeScript gets confused and re-interprets the type'tweet' instead of 'tweet' | 'summary' | 'summary_large_image' | 'player'
-  The mediaList however can set it to something else. TODO: Reimplement as enums */
-  // @ts-expect-error see above comment
   if (apiTweet.media?.videos && apiTweet.embed_card !== 'player') {
     apiTweet.embed_card = 'player';
   }
@@ -210,16 +207,16 @@ export const buildAPITweet = async (
   /* If a language is specified in API or by user, let's try translating it! */
   if (typeof language === 'string' && language.length === 2 && language !== tweet.legacy.lang) {
     /* TODO: Reimplement */
-    // console.log(`Attempting to translate Tweet to ${language}...`);
-    // const translateAPI = await translateTweet(tweet, conversation.guestToken || '', language);
-    // if (translateAPI !== null && translateAPI?.translation) {
-    //   apiTweet.translation = {
-    //     text: unescapeText(linkFixer(tweet.legacy?.entities?.urls, translateAPI?.translation || '')),
-    //     source_lang: translateAPI?.sourceLanguage || '',
-    //     target_lang: translateAPI?.destinationLanguage || '',
-    //     source_lang_en: translateAPI?.localizedSourceLanguage || ''
-    //   };
-    // }
+    console.log(`Attempting to translate Tweet to ${language}...`);
+    const translateAPI = await translateTweet(tweet, '', language);
+    if (translateAPI !== null && translateAPI?.translation) {
+      apiTweet.translation = {
+        text: unescapeText(linkFixer(tweet.legacy?.entities?.urls, translateAPI?.translation || '')),
+        source_lang: translateAPI?.sourceLanguage || '',
+        target_lang: translateAPI?.destinationLanguage || '',
+        source_lang_en: translateAPI?.localizedSourceLanguage || ''
+      };
+    }
   }
 
   return apiTweet;

@@ -172,6 +172,11 @@ export const processTwitterThread = async (id: string, processThread = false, re
   }
   
   const post = await buildAPITweet(originalTweet, undefined, false, false);
+
+  if (post === null) {
+    return { post: null, thread: null, author: null };
+  }
+
   const author = post.author;
   /* remove post.author */
   // @ts-expect-error lmao
