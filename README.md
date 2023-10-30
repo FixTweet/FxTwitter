@@ -29,8 +29,6 @@
 
 ### For `twitter.com` links on Discord, send a link and type `s/e/p` to make `twittpr.com`.
 
-### ℹ️ Note: Some extra features described may currently broken due to recent Twitter/X API changes. [Tracking thread for the API changes](https://github.com/FixTweet/FixTweet/issues/333)
-
 <img src="https://cdn.discordapp.com/attachments/165560751363325952/1006346785985417307/fixtweet.webp">
 
 ## Embed Videos
