@@ -20,7 +20,7 @@
     "@microsoft/eslint-formatter-sarif": "^3.0.0",
     "@sentry/esbuild-plugin": "^2.9.0",
     "@sentry/integrations": "^7.76.0",
-    "@types/jest": "^29.5.6",
+    "@types/jest": "^29.5.7",
     "@typescript-eslint/eslint-plugin": "^6.9.0",
     "@typescript-eslint/parser": "^6.9.0",
     "dotenv": "^16.3.1",
