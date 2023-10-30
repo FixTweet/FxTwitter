@@ -63,7 +63,8 @@ export const handleStatus = async (
     isTelegram /*&& !tweet.possibly_sensitive*/ &&
     !flags?.direct &&
     !flags?.api &&
-    (tweet.media?.mosaic ||
+    (tweet.media?.photos?.[0] || // Force instant view for photos for now https://bugs.telegram.org/c/33679
+      tweet.media?.mosaic ||
       tweet.is_note_tweet ||
       tweet.quote ||
       tweet.translation ||
