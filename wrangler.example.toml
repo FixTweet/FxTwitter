@@ -3,15 +3,16 @@ account_id = "[CLOUDFLARE_ACCOUNT_ID]"
 main = "./dist/worker.js"
 compatibility_date = "2023-08-15"
 send_metrics = false
-services = [
-  { binding = "TwitterProxy", service = "elongator" }
-]
+
+# Remove this if not using Cloudflare Analytics Engine
 analytics_engine_datasets = [
   { binding = "AnalyticsEngine" }
 ]
 
+# Remove this if not using elongator account proxying
+services = [
+  { binding = "TwitterProxy", service = "elongator" }
+]
+
 [build]
 command = "npm run build"
-
-[miniflare.globals]
-TEST = "true" # Will have unicode character errors in headers if not set to true and running unit tests
