@@ -354,7 +354,7 @@ type GraphQLTweetLegacy = {
 type GraphQLTweet = {
   // Workaround
   result: GraphQLTweet;
-  __typename: 'Tweet' | 'TweetUnavailable';
+  __typename: 'Tweet' | 'TweetWithVisibilityResults' | 'TweetUnavailable';
   rest_id: string; // "1674824189176590336",
   has_birdwatch_notes: false;
   core: {
@@ -444,37 +444,76 @@ type TweetTombstone = {
     };
   };
 };
+
+type GraphQLTimelineTweet = {
+  item: 'TimelineTweet';
+  __typename: 'TimelineTweet';
+  tweet_results: {
+    result: GraphQLTweet | TweetTombstone;
+  };
+}
+
+type GraphQLTimelineCursor = {
+  cursorType: 'Top' | 'Bottom' | 'ShowMoreThreadsPrompt' | 'ShowMore';
+  itemType: 'TimelineTimelineCursor';
+  value: string;
+  __typename: 'TimelineTimelineCursor';
+}
+
+interface GraphQLBaseTimeline {
+  entryType: string;
+  __typename: string;
+}
+
+type GraphQLTimelineItem = GraphQLBaseTimeline & {
+  entryType: 'TimelineTimelineItem';
+  __typename: 'TimelineTimelineItem';
+  itemContent: GraphQLTimelineTweet | GraphQLTimelineCursor;
+}
+
+type GraphQLTimelineModule = GraphQLBaseTimeline & {
+  entryType: 'TimelineTimelineModule';
+  __typename: 'TimelineTimelineModule';
+  items: {
+    entryId: `conversationthread-${number}-tweet-${number}`;
+    item: GraphQLTimelineItem
+  }[];
+}
+
 type GraphQLTimelineTweetEntry = {
   /** The entryID contains the tweet ID */
   entryId: `tweet-${number}`; // "tweet-1674824189176590336"
   sortIndex: string;
-  content: {
-    entryType: 'TimelineTimelineItem';
-    __typename: 'TimelineTimelineItem';
-    itemContent: {
-      item: 'TimelineTweet';
-      __typename: 'TimelineTweet';
-      tweet_results: {
-        result: GraphQLTweet | TweetTombstone;
-      };
-    };
-  };
+  content: GraphQLTimelineItem;
 };
+
+type GraphQLModuleTweetEntry = {
+  /** The entryID contains the tweet ID */
+  sortIndex: string;
+  item: GraphQLTimelineItem | GraphQLTimelineModule;
+};
+
 type GraphQLConversationThread = {
   entryId: `conversationthread-${number}`; // "conversationthread-1674824189176590336"
   sortIndex: string;
+  content: GraphQLTimelineModule;
 };
 
 type GraphQLTimelineEntry = GraphQLTimelineTweetEntry | GraphQLConversationThread | unknown;
 
-type V2ThreadInstruction = TimeLineAddEntriesInstruction | TimeLineTerminateTimelineInstruction;
+type V2ThreadInstruction = TimelineAddEntriesInstruction | TimelineTerminateTimelineInstruction | TimelineAddModulesInstruction;
 
-type TimeLineAddEntriesInstruction = {
+type TimelineAddEntriesInstruction = {
   type: 'TimelineAddEntries';
   entries: GraphQLTimelineEntry[];
 };
 
-type TimeLineTerminateTimelineInstruction = {
+type TimelineAddModulesInstruction = {
+  type: 'TimelineAddToModule';
+  moduleItems: GraphQLTimelineEntry[];
+};
+
+type TimelineTerminateTimelineInstruction = {
   type: 'TimelineTerminateTimeline';
   direction: 'Top';
 };

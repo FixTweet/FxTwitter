@@ -121,7 +121,7 @@ export const handleStatus = async (
   const headers = [
     `<link rel="canonical" href="${Constants.TWITTER_ROOT}/${tweet.author.screen_name}/status/${tweet.id}"/>`,
     `<meta property="og:url" content="${Constants.TWITTER_ROOT}/${tweet.author.screen_name}/status/${tweet.id}"/>`,
-    `<meta property="theme-color" content="${tweet.color || '#00a8fc'}"/>`,
+    `<meta property="theme-color" content="#00a8fc"/>`,
     `<meta property="twitter:site" content="@${tweet.author.screen_name}"/>`,
     `<meta property="twitter:creator" content="@${tweet.author.screen_name}"/>`,
     `<meta property="twitter:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`
@@ -200,8 +200,8 @@ export const handleStatus = async (
             siteName = instructions.siteName;
           }
           /* Overwrite our Twitter Card if overriding media, so it displays correctly in Discord */
-          if (tweet.twitter_card === 'player') {
-            tweet.twitter_card = 'summary_large_image';
+          if (tweet.embed_card === 'player') {
+            tweet.embed_card = 'summary_large_image';
           }
           break;
         case 'video':
@@ -217,8 +217,8 @@ export const handleStatus = async (
             siteName = instructions.siteName;
           }
           /* Overwrite our Twitter Card if overriding media, so it displays correctly in Discord */
-          if (tweet.twitter_card !== 'player') {
-            tweet.twitter_card = 'player';
+          if (tweet.embed_card !== 'player') {
+            tweet.embed_card = 'player';
           }
           /* This Tweet has a video to render. */
           break;
@@ -345,7 +345,7 @@ export const handleStatus = async (
      and we have to pretend to be Medium in order to get working IV, but haven't figured if the template is causing issues.  */
   const text = useIV ? sanitizeText(newText).replace(/\n/g, '<br>') : sanitizeText(newText);
 
-  const useCard = tweet.twitter_card === 'tweet' ? tweet.quote?.twitter_card : tweet.twitter_card;
+  const useCard = tweet.embed_card === 'tweet' ? tweet.quote?.embed_card : tweet.embed_card;
 
   /* Push basic headers relating to author, Tweet text, and site name */
   headers.push(
