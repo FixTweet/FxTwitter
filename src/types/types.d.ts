@@ -43,29 +43,16 @@ interface Request {
   };
 }
 
-interface Size {
-  width: number;
-  height: number;
-}
-
-interface HorizontalSize {
-  width: number;
-  height: number;
-  firstWidth: number;
-  secondWidth: number;
-}
-
-interface VerticalSize {
-  width: number;
-  height: number;
-  firstHeight: number;
-  secondHeight: number;
-}
-
 interface TweetAPIResponse {
   code: number;
   message: string;
   tweet?: APITweet;
+}
+
+interface SocialPostAPIResponse {
+  code: number;
+  message: string;
+  post?: APITweet;
 }
 
 interface UserAPIResponse {
@@ -168,7 +155,6 @@ interface APIPost {
 }
 
 interface APITweet extends APIPost {
-  retweets: number;
   views?: number | null;
   translation?: APITranslate;
 
@@ -203,4 +189,16 @@ interface APIUser {
     month?: number;
     year?: number;
   };
+}
+
+interface SocialPost {
+  post: APIPost | APITweet | null;
+  author: APIUser | null;
+}
+
+interface SocialThread {
+  post: APIPost | APITweet | null;
+  thread: (APIPost | APITweet)[] | null;
+  author: APIUser | null;
+  code: number;
 }

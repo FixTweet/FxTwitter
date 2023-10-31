@@ -4,7 +4,7 @@ import { getSocialTextIV } from '../helpers/author';
 import { sanitizeText } from '../helpers/utils';
 import { Strings } from '../strings';
 
-const populateUserLinks = (tweet: APITweet, text: string): string => {
+const populateUserLinks = (tweet: APIPost, text: string): string => {
   /* TODO: Maybe we can add username splices to our API so only genuinely valid users are linked? */
   text.match(/@(\w{1,15})/g)?.forEach(match => {
     const username = match.replace('@', '');
@@ -117,7 +117,7 @@ const truncateSocialCount = (count: number): string => {
   }
 };
 
-const generateTweetFooter = (tweet: APITweet, isQuote = false): string => {
+const generateTweetFooter = (tweet: APIPost, isQuote = false): string => {
   const { author } = tweet;
 
   let description = author.description;

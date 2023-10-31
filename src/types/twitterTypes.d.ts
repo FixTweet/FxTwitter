@@ -501,7 +501,7 @@ type GraphQLConversationThread = {
 
 type GraphQLTimelineEntry = GraphQLTimelineTweetEntry | GraphQLConversationThread | unknown;
 
-type V2ThreadInstruction = TimelineAddEntriesInstruction | TimelineTerminateTimelineInstruction | TimelineAddModulesInstruction;
+type ThreadInstruction = TimelineAddEntriesInstruction | TimelineTerminateTimelineInstruction | TimelineAddModulesInstruction;
 
 type TimelineAddEntriesInstruction = {
   type: 'TimelineAddEntries';
@@ -544,9 +544,10 @@ type GraphQLTweetNotFoundResponse = {
   data: Record<string, never>;
 };
 type GraphQLTweetFoundResponse = {
+  errors?: unknown[];
   data: {
     threaded_conversation_with_injections_v2: {
-      instructions: V2ThreadInstruction[];
+      instructions: ThreadInstruction[];
     };
   };
 };
@@ -555,12 +556,18 @@ type TweetResultsByRestIdResult = {
   errors?: unknown[];
   data?: {
     tweetResult?: {
-      result?:
-        | {
-            __typename: 'TweetUnavailable';
-            reason: 'NsfwLoggedOut' | 'Protected';
-          }
-        | GraphQLTweet;
+      result?: TweetStub | GraphQLTweet;
     };
   };
 };
+
+type TweetStub = {
+  __typename: 'TweetUnavailable';
+  reason: 'NsfwLoggedOut' | 'Protected';
+}
+
+
+interface GraphQLProcessBucket {
+  tweets: GraphQLTweet[];
+  cursors: GraphQLTimelineCursor[];
+}

@@ -3,10 +3,11 @@ import { handleQuote } from '../helpers/quote';
 import { formatNumber, sanitizeText, truncateWithEllipsis } from '../helpers/utils';
 import { Strings } from '../strings';
 import { getAuthorText } from '../helpers/author';
-import { statusAPI } from '../api/status';
 import { renderPhoto } from '../render/photo';
 import { renderVideo } from '../render/video';
 import { renderInstantView } from '../render/instantview';
+import { constructTwitterThread } from '../providers/twitter/conversation';
+import { IRequest } from 'itty-router';
 
 export const returnError = (error: string): StatusResponse => {
   return {
@@ -33,8 +34,38 @@ export const handleStatus = async (
 ): Promise<StatusResponse> => {
   console.log('Direct?', flags?.direct);
 
-  const api = await statusAPI(status, language, event as FetchEvent, flags);
-  const tweet = api?.tweet as APITweet;
+  const request = (event as FetchEvent).request as IRequest;
+  let fetchWithThreads = false;
+
+  if (request.headers.get('user-agent')?.includes('Telegram') && !flags?.direct) {
+    fetchWithThreads = true;
+  }
+
+  const thread = await constructTwitterThread(status, fetchWithThreads, request, undefined);
+
+  const tweet = thread?.post as APITweet;
+
+  const api = {
+    code: thread.code,
+    message: '',
+    tweet: tweet
+  };
+
+  switch(api.code) {
+    case 200:
+      api.message = "OK";
+      break;
+    case 401:
+      api.message = "PRIVATE_TWEET";
+      break;
+    case 404:
+      api.message = "NOT_FOUND";
+      break;
+    case 500:
+      console.log(api);
+      api.message = "API_FAIL";
+      break;
+  }
 
   /* Catch this request if it's an API response */
   if (flags?.api) {
@@ -44,6 +75,10 @@ export const handleStatus = async (
         status: api.code
       })
     };
+  }
+
+  if (tweet === null) {
+    return returnError(Strings.ERROR_TWEET_NOT_FOUND);
   }
 
   /* If there was any errors fetching the Tweet, we'll return it */

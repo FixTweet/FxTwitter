@@ -77,7 +77,7 @@ const populateTweetProperties = async (
     website: apiUser.website
   };
   apiTweet.replies = tweet.legacy.reply_count;
-  apiTweet.retweets = tweet.legacy.retweet_count;
+  apiTweet.reposts = tweet.legacy.retweet_count;
   apiTweet.reposts = tweet.legacy.retweet_count;
   apiTweet.likes = tweet.legacy.favorite_count;
   // @ts-expect-error Legacy api shit 

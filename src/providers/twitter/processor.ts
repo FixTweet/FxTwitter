@@ -74,6 +74,7 @@ export const buildAPITweet = async (
   }
   apiTweet.replies = tweet.legacy.reply_count;
   if (legacyAPI) {
+    // @ts-expect-error Use retweets for legacy API
     apiTweet.retweets = tweet.legacy.retweet_count;
   } else {
     apiTweet.reposts = tweet.legacy.retweet_count;
@@ -206,7 +207,6 @@ export const buildAPITweet = async (
 
   /* If a language is specified in API or by user, let's try translating it! */
   if (typeof language === 'string' && language.length === 2 && language !== tweet.legacy.lang) {
-    /* TODO: Reimplement */
     console.log(`Attempting to translate Tweet to ${language}...`);
     const translateAPI = await translateTweet(tweet, '', language);
     if (translateAPI !== null && translateAPI?.translation) {

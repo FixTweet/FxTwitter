@@ -10,7 +10,7 @@ import { Strings } from './strings';
 import motd from '../motd.json';
 import { sanitizeText } from './helpers/utils';
 import { handleProfile } from './user';
-import { threadAPIProvider } from './providers/twitter/status';
+import { threadAPIProvider } from './providers/twitter/conversation';
 
 declare const globalThis: {
   fetchCompletedTime: number;
