@@ -43,29 +43,16 @@ interface Request {
   };
 }
 
-interface Size {
-  width: number;
-  height: number;
-}
-
-interface HorizontalSize {
-  width: number;
-  height: number;
-  firstWidth: number;
-  secondWidth: number;
-}
-
-interface VerticalSize {
-  width: number;
-  height: number;
-  firstHeight: number;
-  secondHeight: number;
-}
-
 interface TweetAPIResponse {
   code: number;
   message: string;
   tweet?: APITweet;
+}
+
+interface SocialPostAPIResponse {
+  code: number;
+  message: string;
+  post?: APITweet;
 }
 
 interface UserAPIResponse {
@@ -79,14 +66,6 @@ interface APITranslate {
   source_lang: string;
   source_lang_en: string;
   target_lang: string;
-}
-
-interface BaseUser {
-  id?: string;
-  name?: string;
-  screen_name?: string;
-  avatar_url?: string;
-  banner_url?: string;
 }
 
 interface APIExternalMedia {
@@ -136,7 +115,7 @@ interface APIMosaicPhoto extends APIMedia {
   };
 }
 
-interface APITweet {
+interface APIPost {
   id: string;
   url: string;
   text: string;
@@ -144,18 +123,14 @@ interface APITweet {
   created_timestamp: number;
 
   likes: number;
-  retweets: number;
+  reposts: number;
   replies: number;
-  views?: number | null;
 
-  color: string | null;
-
-  quote?: APITweet;
+  quote?: APIPost;
   poll?: APIPoll;
-  translation?: APITranslate;
   author: APIUser;
 
-  media?: {
+  media: {
     external?: APIExternalMedia;
     photos?: APIPhoto[];
     videos?: APIVideo[];
@@ -166,27 +141,39 @@ interface APITweet {
   lang: string | null;
   possibly_sensitive: boolean;
 
-  replying_to: string | null;
-  replying_to_status: string | null;
+  replying_to: {
+    screen_name: string | null;
+    post: string | null;
+  } | null;
 
-  source: string;
+  source: string | null;
 
-  is_note_tweet: boolean;
-
-  twitter_card: 'tweet' | 'summary' | 'summary_large_image' | 'player';
+  embed_card: 'tweet' | 'summary' | 'summary_large_image' | 'player';
 }
 
-interface APIUser extends BaseUser {
+interface APITweet extends APIPost {
+  views?: number | null;
+  translation?: APITranslate;
+
+  is_note_tweet: boolean;
+}
+
+interface APIUser {
+  id: string;
+  name: string;
+  screen_name: string;
+  global_screen_name?: string;
+  avatar_url: string;
+  banner_url: string;
   // verified: 'legacy' | 'blue'| 'business' | 'government';
   // verified_label: string;
   description: string;
   location: string;
   url: string;
-  avatar_color?: string | null;
   protected: boolean;
   followers: number;
   following: number;
-  tweets: number;
+  posts: number;
   likes: number;
   joined: string;
   website: {
@@ -198,4 +185,20 @@ interface APIUser extends BaseUser {
     month?: number;
     year?: number;
   };
+}
+
+interface SocialPost {
+  post: APIPost | APITweet | null;
+  author: APIUser | null;
+}
+
+interface SocialThread {
+  post: APIPost | APITweet | null;
+  thread: (APIPost | APITweet)[] | null;
+  author: APIUser | null;
+  code: number;
+}
+
+interface FetchResults {
+  status: number;
 }

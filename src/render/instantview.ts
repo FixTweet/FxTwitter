@@ -4,7 +4,7 @@ import { getSocialTextIV } from '../helpers/author';
 import { sanitizeText } from '../helpers/utils';
 import { Strings } from '../strings';
 
-const populateUserLinks = (tweet: APITweet, text: string): string => {
+const populateUserLinks = (tweet: APIPost, text: string): string => {
   /* TODO: Maybe we can add username splices to our API so only genuinely valid users are linked? */
   text.match(/@(\w{1,15})/g)?.forEach(match => {
     const username = match.replace('@', '');
@@ -16,7 +16,7 @@ const populateUserLinks = (tweet: APITweet, text: string): string => {
   return text;
 };
 
-const generateTweetMedia = (tweet: APITweet): string => {
+const generateTweetMedia = (tweet: APIPost): string => {
   let media = '';
   if (tweet.media?.all?.length) {
     tweet.media.all.forEach(mediaItem => {
@@ -117,7 +117,7 @@ const truncateSocialCount = (count: number): string => {
   }
 };
 
-const generateTweetFooter = (tweet: APITweet, isQuote = false): string => {
+const generateTweetFooter = (tweet: APIPost, isQuote = false): string => {
   const { author } = tweet;
 
   let description = author.description;
@@ -131,7 +131,7 @@ const generateTweetFooter = (tweet: APITweet, isQuote = false): string => {
     <!-- Embed profile picture, display name, and screen name in table -->
     {aboutSection}
     `.format({
-    socialText: getSocialTextIV(tweet) || '',
+    socialText: getSocialTextIV(tweet as APITweet) || '',
     viewOriginal: !isQuote ? `<a href="${tweet.url}">View original post</a>` : notApplicableComment,
     aboutSection: isQuote
       ? ''
@@ -156,18 +156,18 @@ const generateTweetFooter = (tweet: APITweet, isQuote = false): string => {
           joined: author.joined ? `📆 ${formatDate(new Date(author.joined))}` : '',
           following: truncateSocialCount(author.following),
           followers: truncateSocialCount(author.followers),
-          tweets: truncateSocialCount(author.tweets)
+          tweets: truncateSocialCount(author.posts)
         })
   });
 };
 
-const generateTweet = (tweet: APITweet, isQuote = false): string => {
+const generateTweet = (tweet: APIPost, isQuote = false): string => {
   let text = paragraphify(sanitizeText(tweet.text), isQuote);
   text = htmlifyLinks(text);
   text = htmlifyHashtags(text);
   text = populateUserLinks(tweet, text);
 
-  const translatedText = getTranslatedText(tweet, isQuote);
+  const translatedText = getTranslatedText(tweet as APITweet, isQuote);
 
   return `<!-- Telegram Instant View -->
   {quoteHeader}

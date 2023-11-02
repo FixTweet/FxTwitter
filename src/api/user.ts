@@ -10,12 +10,16 @@ export const convertToApiUser = (user: GraphQLUser): APIUser => {
   apiUser.followers = user.legacy.followers_count;
   apiUser.following = user.legacy.friends_count;
   apiUser.likes = user.legacy.favourites_count;
+  // @ts-expect-error `tweets` is only part of legacy API
   apiUser.tweets = user.legacy.statuses_count;
   apiUser.name = user.legacy.name;
   apiUser.screen_name = user.legacy.screen_name;
-  apiUser.description = linkFixer(user.legacy.entities?.description?.urls, user.legacy.description);
-  apiUser.location = user.legacy.location;
-  apiUser.banner_url = user.legacy.profile_banner_url;
+  apiUser.global_screen_name = `${user.legacy.screen_name}@${Constants.TWITTER_GLOBAL_NAME_ROOT}`;
+  apiUser.description = user.legacy.description
+    ? linkFixer(user.legacy.entities?.description?.urls, user.legacy.description)
+    : '';
+  apiUser.location = user.legacy.location ? user.legacy.location : '';
+  apiUser.banner_url = user.legacy.profile_banner_url ? user.legacy.profile_banner_url : '';
   /*
   if (user.is_blue_verified) {
     apiUser.verified = 'blue';
@@ -84,6 +88,9 @@ export const userAPI = async (
   /* Creating the response objects */
   const response: UserAPIResponse = { code: 200, message: 'OK' } as UserAPIResponse;
   const apiUser: APIUser = (await populateUserProperties(userResponse)) as APIUser;
+
+  /* Currently, we haven't rolled this out as it's part of the proto-v2 API */
+  delete apiUser.global_screen_name;
 
   /* Finally, staple the User to the response and return it */
   response.user = apiUser;

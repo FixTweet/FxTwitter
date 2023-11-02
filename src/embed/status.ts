@@ -3,10 +3,11 @@ import { handleQuote } from '../helpers/quote';
 import { formatNumber, sanitizeText, truncateWithEllipsis } from '../helpers/utils';
 import { Strings } from '../strings';
 import { getAuthorText } from '../helpers/author';
-import { statusAPI } from '../api/status';
 import { renderPhoto } from '../render/photo';
 import { renderVideo } from '../render/video';
 import { renderInstantView } from '../render/instantview';
+import { constructTwitterThread } from '../providers/twitter/conversation';
+import { IRequest } from 'itty-router';
 
 export const returnError = (error: string): StatusResponse => {
   return {
@@ -24,17 +25,55 @@ export const returnError = (error: string): StatusResponse => {
    Like Twitter, we use the terminologies interchangably. */
 export const handleStatus = async (
   status: string,
-  mediaNumber?: number,
-  userAgent?: string,
-  flags?: InputFlags,
-  language?: string,
-  event?: FetchEvent
+  mediaNumber: number | undefined,
+  userAgent: string,
+  flags: InputFlags,
+  language: string,
+  event: FetchEvent,
+  request: IRequest
   // eslint-disable-next-line sonarjs/cognitive-complexity
 ): Promise<StatusResponse> => {
   console.log('Direct?', flags?.direct);
 
-  const api = await statusAPI(status, language, event as FetchEvent, flags);
-  const tweet = api?.tweet as APITweet;
+  console.log('event', event)
+
+  let fetchWithThreads = false;
+
+  if (request?.headers.get('user-agent')?.includes('Telegram') && !flags?.direct) {
+    fetchWithThreads = true;
+  }
+
+  const thread = await constructTwitterThread(
+    status,
+    fetchWithThreads,
+    request,
+    language,
+    flags?.api ?? false
+  );
+
+  const tweet = thread?.post as APITweet;
+
+  const api = {
+    code: thread.code,
+    message: '',
+    tweet: tweet
+  };
+
+  switch (api.code) {
+    case 200:
+      api.message = 'OK';
+      break;
+    case 401:
+      api.message = 'PRIVATE_TWEET';
+      break;
+    case 404:
+      api.message = 'NOT_FOUND';
+      break;
+    case 500:
+      console.log(api);
+      api.message = 'API_FAIL';
+      break;
+  }
 
   /* Catch this request if it's an API response */
   if (flags?.api) {
@@ -44,6 +83,10 @@ export const handleStatus = async (
         status: api.code
       })
     };
+  }
+
+  if (tweet === null) {
+    return returnError(Strings.ERROR_TWEET_NOT_FOUND);
   }
 
   /* If there was any errors fetching the Tweet, we'll return it */
@@ -121,7 +164,7 @@ export const handleStatus = async (
   const headers = [
     `<link rel="canonical" href="${Constants.TWITTER_ROOT}/${tweet.author.screen_name}/status/${tweet.id}"/>`,
     `<meta property="og:url" content="${Constants.TWITTER_ROOT}/${tweet.author.screen_name}/status/${tweet.id}"/>`,
-    `<meta property="theme-color" content="${tweet.color || '#00a8fc'}"/>`,
+    `<meta property="theme-color" content="#00a8fc"/>`,
     `<meta property="twitter:site" content="@${tweet.author.screen_name}"/>`,
     `<meta property="twitter:creator" content="@${tweet.author.screen_name}"/>`,
     `<meta property="twitter:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`
@@ -200,8 +243,8 @@ export const handleStatus = async (
             siteName = instructions.siteName;
           }
           /* Overwrite our Twitter Card if overriding media, so it displays correctly in Discord */
-          if (tweet.twitter_card === 'player') {
-            tweet.twitter_card = 'summary_large_image';
+          if (tweet.embed_card === 'player') {
+            tweet.embed_card = 'summary_large_image';
           }
           break;
         case 'video':
@@ -217,8 +260,8 @@ export const handleStatus = async (
             siteName = instructions.siteName;
           }
           /* Overwrite our Twitter Card if overriding media, so it displays correctly in Discord */
-          if (tweet.twitter_card !== 'player') {
-            tweet.twitter_card = 'player';
+          if (tweet.embed_card !== 'player') {
+            tweet.embed_card = 'player';
           }
           /* This Tweet has a video to render. */
           break;
@@ -345,7 +388,7 @@ export const handleStatus = async (
      and we have to pretend to be Medium in order to get working IV, but haven't figured if the template is causing issues.  */
   const text = useIV ? sanitizeText(newText).replace(/\n/g, '<br>') : sanitizeText(newText);
 
-  const useCard = tweet.twitter_card === 'tweet' ? tweet.quote?.twitter_card : tweet.twitter_card;
+  const useCard = tweet.embed_card === 'tweet' ? tweet.quote?.embed_card : tweet.embed_card;
 
   /* Push basic headers relating to author, Tweet text, and site name */
   headers.push(
@@ -360,7 +403,7 @@ export const handleStatus = async (
     authorText = `↪ Replying to @${tweet.replying_to}`;
     /* We'll assume it's a thread if it's a reply to themselves */
   } else if (
-    tweet.replying_to === tweet.author.screen_name &&
+    tweet.replying_to?.screen_name === tweet.author.screen_name &&
     authorText === Strings.DEFAULT_AUTHOR_TEXT
   ) {
     authorText = `↪ A part of @${tweet.author.screen_name}'s thread`;

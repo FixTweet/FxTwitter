@@ -15,6 +15,7 @@ export const Constants = {
   RELEASE_NAME: RELEASE_NAME,
   API_DOCS_URL: `https://github.com/dangeredwolf/FixTweet/wiki/API-Home`,
   TWITTER_ROOT: 'https://twitter.com',
+  TWITTER_GLOBAL_NAME_ROOT: 'twitter.com',
   TWITTER_API_ROOT: 'https://api.twitter.com',
   BOT_UA_REGEX:
     /bot|facebook|embed|got|firefox\/92|firefox\/38|curl|wget|go-http|yahoo|generator|whatsapp|preview|link|proxy|vkshare|images|analyzer|index|crawl|spider|python|cfnetwork|node|mastodon|http\.rb/gi,
@@ -58,8 +59,8 @@ export const Constants = {
   RESPONSE_HEADERS: {
     'allow': 'OPTIONS, GET, PURGE, HEAD',
     'content-type': 'text/html;charset=UTF-8',
-    'x-powered-by': '🏳️‍⚧️ Trans Rights',
-    'cache-control': 'max-age=3600' // Can be overriden in some cases, like poll tweets
+    'x-powered-by': `${RELEASE_NAME} (Trans Rights are Human Rights)`,
+    'cache-control': 'max-age=3600' // Can be overriden in some cases, like unfinished poll tweets
   },
   API_RESPONSE_HEADERS: {
     'access-control-allow-origin': '*',
@@ -68,8 +69,3 @@ export const Constants = {
   POLL_TWEET_CACHE: 'max-age=60',
   DEFAULT_COLOR: '#10A3FF'
 };
-
-if (typeof TEST !== 'undefined') {
-  /* Undici gets angry about unicode headers, this is a workaround. */
-  Constants.RESPONSE_HEADERS['x-powered-by'] = 'Trans Rights';
-}

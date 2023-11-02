@@ -1,6 +1,7 @@
 export enum Experiment {
   ELONGATOR_BY_DEFAULT = 'ELONGATOR_BY_DEFAULT',
-  ELONGATOR_PROFILE_API = 'ELONGATOR_PROFILE_API'
+  ELONGATOR_PROFILE_API = 'ELONGATOR_PROFILE_API',
+  TWEET_DETAIL_API = 'TWEET_DETAIL_API'
 }
 
 type ExperimentConfig = {
@@ -13,12 +14,17 @@ const Experiments: { [key in Experiment]: ExperimentConfig } = {
   [Experiment.ELONGATOR_BY_DEFAULT]: {
     name: 'Elongator by default',
     description: 'Enable Elongator by default (guest token lockout bypass)',
-    percentage: 0.6
+    percentage: 1
   },
   [Experiment.ELONGATOR_PROFILE_API]: {
     name: 'Elongator profile API',
     description: 'Use Elongator to load profiles',
     percentage: 0
+  },
+  [Experiment.TWEET_DETAIL_API]: {
+    name: 'Tweet detail API',
+    description: 'Use Tweet Detail API (where available with elongator)',
+    percentage: 0.75
   }
 };
 

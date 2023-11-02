@@ -10,6 +10,7 @@ import { Strings } from './strings';
 import motd from '../motd.json';
 import { sanitizeText } from './helpers/utils';
 import { handleProfile } from './user';
+// import { threadAPIProvider } from './providers/twitter/conversation';
 
 declare const globalThis: {
   fetchCompletedTime: number;
@@ -131,6 +132,8 @@ const statusRequest = async (request: IRequest, event: FetchEvent, flags: InputF
       console.log('Bypass bot check');
     }
 
+    console.log('event', event)
+
     /* This throws the necessary data to handleStatus (in status.ts) */
     const statusResponse = await handleStatus(
       id?.match(/\d{2,20}/)?.[0] || '0',
@@ -138,7 +141,8 @@ const statusRequest = async (request: IRequest, event: FetchEvent, flags: InputF
       userAgent,
       flags,
       language,
-      event
+      event,
+      request
     );
 
     /* Complete responses are normally sent just by errors. Normal embeds send a `text` value. */
@@ -453,6 +457,7 @@ router.get('/status/:id', statusRequest);
 router.get('/status/:id/:language', statusRequest);
 router.get('/version', versionRequest);
 router.get('/set_base_redirect', setRedirectRequest);
+// router.get('/v2/twitter/thread/:id', threadAPIProvider)
 
 /* Oembeds (used by Discord to enhance responses) 
 
