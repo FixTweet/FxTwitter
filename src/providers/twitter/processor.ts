@@ -56,16 +56,15 @@ export const buildAPITweet = async (
       id: apiUser.id,
       name: apiUser.name,
       screen_name: apiUser.screen_name,
-      global_screen_name: apiUser.global_screen_name,
       avatar_url: apiUser.avatar_url?.replace?.('_normal', '_200x200') ?? null,
-      banner_url: apiUser.banner_url ?? null,
-      description: apiUser.description ?? null,
-      location: apiUser.location ?? null,
-      url: apiUser.url ?? null,
+      banner_url: apiUser.banner_url,
+      description: apiUser.description,
+      location: apiUser.location,
+      url: apiUser.url,
       followers: apiUser.followers,
       following: apiUser.following,
       joined: apiUser.joined,
-      posts: apiUser.tweets,
+      posts: apiUser.posts,
       likes: apiUser.likes,
       protected: apiUser.protected,
       birthday: apiUser.birthday,
@@ -76,8 +75,19 @@ export const buildAPITweet = async (
   if (legacyAPI) {
     // @ts-expect-error Use retweets for legacy API
     apiTweet.retweets = tweet.legacy.retweet_count;
+    
+    // @ts-expect-error `tweets` is only part of legacy API
+    apiTweet.author.tweets = apiTweet.author.posts;
+    // @ts-expect-error Part of legacy API that we no longer are able to track
+    apiTweet.author.avatar_color = null;
+    // @ts-expect-error Use retweets for legacy API
+    delete apiTweet.reposts;
+    // @ts-expect-error Use tweets and not posts for legacy API
+    delete apiTweet.author.posts;
+    delete apiTweet.author.global_screen_name;
   } else {
     apiTweet.reposts = tweet.legacy.retweet_count;
+    apiTweet.author.global_screen_name = apiUser.global_screen_name;
   }
   apiTweet.likes = tweet.legacy.favorite_count;
   apiTweet.embed_card = 'tweet';
@@ -115,27 +125,25 @@ export const buildAPITweet = async (
   }
 
   if (legacyAPI) {
+    // @ts-expect-error Use replying_to string for legacy API
     apiTweet.replying_to = tweet.legacy?.in_reply_to_screen_name || null;
+    // @ts-expect-error Use replying_to_status string for legacy API
     apiTweet.replying_to_status = tweet.legacy?.in_reply_to_status_id_str || null;
   } else if (tweet.legacy.in_reply_to_screen_name) {
-    apiTweet.reply_of = {
+    apiTweet.replying_to = {
       screen_name: tweet.legacy.in_reply_to_screen_name || null,
       post: tweet.legacy.in_reply_to_status_id_str || null
     };
   } else {
-    apiTweet.reply_of = null;
+    apiTweet.replying_to = null;
   }
-  
-  apiTweet.media = {
-    all: [],
-    photos: [],
-    videos: [],
-  };
+
+  apiTweet.media = {};
   
   /* We found a quote tweet, let's process that too */
   const quoteTweet = tweet.quoted_status_result;
   if (quoteTweet) {
-    apiTweet.quote = (await buildAPITweet(quoteTweet, language)) as APITweet;
+    apiTweet.quote = (await buildAPITweet(quoteTweet, language, threadPiece, legacyAPI)) as APITweet;
     /* Only override the embed_card if it's a basic tweet, since media always takes precedence  */
     if (apiTweet.embed_card === 'tweet' && apiTweet.quote !== null) {
       apiTweet.embed_card = apiTweet.quote.embed_card;
@@ -152,13 +160,16 @@ export const buildAPITweet = async (
   mediaList.forEach(media => {
     const mediaObject = processMedia(media);
     if (mediaObject) {
+      apiTweet.media.all = apiTweet.media?.all ?? [];
       apiTweet.media?.all?.push(mediaObject);
       if (mediaObject.type === 'photo') {
         apiTweet.embed_card = 'summary_large_image';
-        apiTweet.media?.photos?.push(mediaObject);
+        apiTweet.media.photos = apiTweet.media?.photos ?? [];
+        apiTweet.media.photos?.push(mediaObject);
       } else if (mediaObject.type === 'video' || mediaObject.type === 'gif') {
         apiTweet.embed_card = 'player';
-        apiTweet.media?.videos?.push(mediaObject);
+        apiTweet.media.videos = apiTweet.media?.videos ?? [];
+        apiTweet.media.videos?.push(mediaObject);
       } else {
         console.log('Unknown media type', mediaObject.type);
       }
@@ -173,7 +184,7 @@ export const buildAPITweet = async (
   */
 
   /* Handle photos and mosaic if available */
-  if ((apiTweet?.media?.photos?.length || 0) > 1 && !threadPiece) {
+  if ((apiTweet?.media.photos?.length || 0) > 1 && !threadPiece) {
     const mosaic = await handleMosaic(apiTweet.media?.photos || [], id);
     if (typeof apiTweet.media !== 'undefined' && mosaic !== null) {
       apiTweet.media.mosaic = mosaic;
@@ -193,7 +204,6 @@ export const buildAPITweet = async (
   if (tweet.card) {
     const card = renderCard(tweet.card);
     if (card.external_media) {
-      apiTweet.media = apiTweet.media ?? {};
       apiTweet.media.external = card.external_media;
     }
     if (card.poll) {
@@ -201,7 +211,7 @@ export const buildAPITweet = async (
     }
   }
 
-  if (apiTweet.media?.videos && apiTweet.embed_card !== 'player') {
+  if (apiTweet.media?.videos && apiTweet.media?.videos.length > 0 && apiTweet.embed_card !== 'player') {
     apiTweet.embed_card = 'player';
   }
 
@@ -216,6 +226,19 @@ export const buildAPITweet = async (
         target_lang: translateAPI?.destinationLanguage || '',
         source_lang_en: translateAPI?.localizedSourceLanguage || ''
       };
+    }
+  }
+
+  if (legacyAPI) {
+    // @ts-expect-error Use twitter_card for legacy API
+    apiTweet.twitter_card = apiTweet.embed_card;
+    // @ts-expect-error Part of legacy API that we no longer are able to track
+    apiTweet.color = null
+    // @ts-expect-error Use twitter_card for legacy API
+    delete apiTweet.embed_card;
+    if ((apiTweet.media.all?.length ?? 0) < 1 && !apiTweet.media.external) {
+      // @ts-expect-error media is not required in legacy API if empty
+      delete apiTweet.media;
     }
   }
 

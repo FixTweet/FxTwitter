@@ -120,8 +120,10 @@ test('API fetch basic Tweet', async () => {
   expect(tweet.author.avatar_url).toBeTruthy();
   expect(tweet.author.banner_url).toBeTruthy();
   expect(tweet.replies).toBeGreaterThan(0);
+  // @ts-expect-error retweets only in legacy API
   expect(tweet.retweets).toBeGreaterThan(0);
   expect(tweet.likes).toBeGreaterThan(0);
+  // @ts-expect-error twitter_card only in legacy API
   expect(tweet.twitter_card).toEqual('tweet');
   expect(tweet.created_at).toEqual('Tue Mar 21 20:50:14 +0000 2006');
   expect(tweet.created_timestamp).toEqual(1142974214);

@@ -130,7 +130,7 @@ interface APIPost {
   poll?: APIPoll;
   author: APIUser;
 
-  media?: {
+  media: {
     external?: APIExternalMedia;
     photos?: APIPhoto[];
     videos?: APIVideo[];
@@ -141,10 +141,7 @@ interface APIPost {
   lang: string | null;
   possibly_sensitive: boolean;
 
-  replying_to: string | null;
-  replying_to_status: string | null;
-
-  reply_of: {
+  replying_to: {
     screen_name: string | null;
     post: string | null;
   } | null
@@ -165,19 +162,18 @@ interface APIUser {
   id: string;
   name: string;
   screen_name: string;
-  global_screen_name: string;
-  avatar_url: string | null;
-  banner_url: string | null;
+  global_screen_name?: string;
+  avatar_url: string;
+  banner_url: string;
   // verified: 'legacy' | 'blue'| 'business' | 'government';
   // verified_label: string;
-  description: string | null;
-  location: string | null;
+  description: string;
+  location: string;
   url: string;
   protected: boolean;
   followers: number;
   following: number;
-  tweets?: number;
-  posts?: number;
+  posts: number;
   likes: number;
   joined: string;
   website: {

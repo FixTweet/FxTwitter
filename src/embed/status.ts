@@ -41,7 +41,7 @@ export const handleStatus = async (
     fetchWithThreads = true;
   }
 
-  const thread = await constructTwitterThread(status, fetchWithThreads, request, undefined);
+  const thread = await constructTwitterThread(status, fetchWithThreads, request, undefined, flags?.api ?? false);
 
   const tweet = thread?.post as APITweet;
 
@@ -395,7 +395,7 @@ export const handleStatus = async (
     authorText = `↪ Replying to @${tweet.replying_to}`;
     /* We'll assume it's a thread if it's a reply to themselves */
   } else if (
-    tweet.replying_to === tweet.author.screen_name &&
+    tweet.replying_to?.screen_name === tweet.author.screen_name &&
     authorText === Strings.DEFAULT_AUTHOR_TEXT
   ) {
     authorText = `↪ A part of @${tweet.author.screen_name}'s thread`;

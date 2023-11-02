@@ -16,7 +16,7 @@ const populateUserLinks = (tweet: APIPost, text: string): string => {
   return text;
 };
 
-const generateTweetMedia = (tweet: APITweet): string => {
+const generateTweetMedia = (tweet: APIPost): string => {
   let media = '';
   if (tweet.media?.all?.length) {
     tweet.media.all.forEach(mediaItem => {
@@ -131,7 +131,7 @@ const generateTweetFooter = (tweet: APIPost, isQuote = false): string => {
     <!-- Embed profile picture, display name, and screen name in table -->
     {aboutSection}
     `.format({
-    socialText: getSocialTextIV(tweet) || '',
+    socialText: getSocialTextIV(tweet as APITweet) || '',
     viewOriginal: !isQuote ? `<a href="${tweet.url}">View original post</a>` : notApplicableComment,
     aboutSection: isQuote
       ? ''
@@ -161,13 +161,13 @@ const generateTweetFooter = (tweet: APIPost, isQuote = false): string => {
   });
 };
 
-const generateTweet = (tweet: APITweet, isQuote = false): string => {
+const generateTweet = (tweet: APIPost, isQuote = false): string => {
   let text = paragraphify(sanitizeText(tweet.text), isQuote);
   text = htmlifyLinks(text);
   text = htmlifyHashtags(text);
   text = populateUserLinks(tweet, text);
 
-  const translatedText = getTranslatedText(tweet, isQuote);
+  const translatedText = getTranslatedText(tweet as APITweet, isQuote);
 
   return `<!-- Telegram Instant View -->
   {quoteHeader}

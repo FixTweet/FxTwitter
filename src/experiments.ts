@@ -14,7 +14,7 @@ const Experiments: { [key in Experiment]: ExperimentConfig } = {
   [Experiment.ELONGATOR_BY_DEFAULT]: {
     name: 'Elongator by default',
     description: 'Enable Elongator by default (guest token lockout bypass)',
-    percentage: 0.6
+    percentage: 1
   },
   [Experiment.ELONGATOR_PROFILE_API]: {
     name: 'Elongator profile API',

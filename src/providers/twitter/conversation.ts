@@ -237,6 +237,8 @@ export const constructTwitterThread = async (id: string,
   language: string | undefined,
   legacyAPI = false): Promise<SocialThread> => {
 
+  console.log('legacyAPI', legacyAPI)
+
   let response: GraphQLTweetFoundResponse | TweetResultsByRestIdResult;
   let post: APITweet;
 
@@ -246,7 +248,7 @@ export const constructTwitterThread = async (id: string,
 
     const result = response?.data?.tweetResult?.result as GraphQLTweet;
 
-    if (typeof result?.tweet === "undefined") {
+    if (typeof result === "undefined") {
       return { post: null, thread: null, author: null, code: 404 };
     }
 
