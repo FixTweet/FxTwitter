@@ -39,8 +39,9 @@ export const handleStatus = async (
 
   let fetchWithThreads = false;
 
+  /* TODO: Enable actually pulling threads once we can actually do something with them */
   if (request?.headers.get('user-agent')?.includes('Telegram') && !flags?.direct) {
-    fetchWithThreads = true;
+    fetchWithThreads = false;
   }
 
   const thread = await constructTwitterThread(
