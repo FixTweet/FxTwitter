@@ -156,7 +156,7 @@ const generateTweetFooter = (tweet: APIPost, isQuote = false): string => {
           joined: author.joined ? `📆 ${formatDate(new Date(author.joined))}` : '',
           following: truncateSocialCount(author.following),
           followers: truncateSocialCount(author.followers),
-          tweets: truncateSocialCount(author.tweets)
+          tweets: truncateSocialCount(author.posts)
         })
   });
 };
