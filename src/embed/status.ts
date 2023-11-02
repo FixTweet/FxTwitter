@@ -45,7 +45,7 @@ export const handleStatus = async (
     status,
     fetchWithThreads,
     request,
-    undefined,
+    language,
     flags?.api ?? false
   );
 

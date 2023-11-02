@@ -230,6 +230,8 @@ export const buildAPITweet = async (
     apiTweet.embed_card = 'player';
   }
 
+  console.log('language?', language)
+
   /* If a language is specified in API or by user, let's try translating it! */
   if (typeof language === 'string' && language.length === 2 && language !== tweet.legacy.lang) {
     console.log(`Attempting to translate Tweet to ${language}...`);

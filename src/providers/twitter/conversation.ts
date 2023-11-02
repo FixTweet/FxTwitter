@@ -272,13 +272,16 @@ export const constructTwitterThread = async (
   language: string | undefined,
   legacyAPI = false
 ): Promise<SocialThread> => {
-  console.log('legacyAPI', legacyAPI);
+  console.log('language', language);
 
   let response: TweetDetailResult | TweetResultsByRestIdResult | null = null;
   let post: APITweet;
   /* We can use TweetDetail on elongator accounts to increase per-account rate limit.
-     We also use TweetDetail to process threads (WIP) */
-  if (typeof TwitterProxy !== 'undefined' && (experimentCheck(Experiment.TWEET_DETAIL_API) || processThread)) {
+     We also use TweetDetail to process threads (WIP)
+     
+     Also - dirty hack. Right now, TweetDetails requests aren't working with language and I haven't figured out why.
+     I'll figure out why eventually, but for now just don't use TweetDetail for this. */
+  if (typeof TwitterProxy !== 'undefined' && !language && (experimentCheck(Experiment.TWEET_DETAIL_API) || processThread)) {
     console.log('Using TweetDetail for request...');
     response = (await fetchTweetDetail(id, request.event)) as TweetDetailResult;
 
