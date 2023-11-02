@@ -89,6 +89,9 @@ export const userAPI = async (
   const response: UserAPIResponse = { code: 200, message: 'OK' } as UserAPIResponse;
   const apiUser: APIUser = (await populateUserProperties(userResponse)) as APIUser;
 
+  /* Currently, we haven't rolled this out as it's part of the proto-v2 API */
+  delete apiUser.global_screen_name;
+
   /* Finally, staple the User to the response and return it */
   response.user = apiUser;
 
