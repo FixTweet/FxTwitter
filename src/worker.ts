@@ -132,6 +132,8 @@ const statusRequest = async (request: IRequest, event: FetchEvent, flags: InputF
       console.log('Bypass bot check');
     }
 
+    console.log('event', event)
+
     /* This throws the necessary data to handleStatus (in status.ts) */
     const statusResponse = await handleStatus(
       id?.match(/\d{2,20}/)?.[0] || '0',
@@ -139,7 +141,8 @@ const statusRequest = async (request: IRequest, event: FetchEvent, flags: InputF
       userAgent,
       flags,
       language,
-      event
+      event,
+      request
     );
 
     /* Complete responses are normally sent just by errors. Normal embeds send a `text` value. */

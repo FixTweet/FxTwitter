@@ -25,19 +25,21 @@ export const returnError = (error: string): StatusResponse => {
    Like Twitter, we use the terminologies interchangably. */
 export const handleStatus = async (
   status: string,
-  mediaNumber?: number,
-  userAgent?: string,
-  flags?: InputFlags,
-  language?: string,
-  event?: FetchEvent
+  mediaNumber: number | undefined,
+  userAgent: string,
+  flags: InputFlags,
+  language: string,
+  event: FetchEvent,
+  request: IRequest
   // eslint-disable-next-line sonarjs/cognitive-complexity
 ): Promise<StatusResponse> => {
   console.log('Direct?', flags?.direct);
 
-  const request = (event as FetchEvent).request as IRequest;
+  console.log('event', event)
+
   let fetchWithThreads = false;
 
-  if (request.headers.get('user-agent')?.includes('Telegram') && !flags?.direct) {
+  if (request?.headers.get('user-agent')?.includes('Telegram') && !flags?.direct) {
     fetchWithThreads = true;
   }
 
