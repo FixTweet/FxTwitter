@@ -355,6 +355,7 @@ type GraphQLTweet = {
   // Workaround
   result: GraphQLTweet;
   __typename: 'Tweet' | 'TweetWithVisibilityResults' | 'TweetUnavailable';
+  reason: string; // used for errors
   rest_id: string; // "1674824189176590336",
   has_birdwatch_notes: false;
   core: {
@@ -451,14 +452,14 @@ type GraphQLTimelineTweet = {
   tweet_results: {
     result: GraphQLTweet | TweetTombstone;
   };
-}
+};
 
 type GraphQLTimelineCursor = {
   cursorType: 'Top' | 'Bottom' | 'ShowMoreThreadsPrompt' | 'ShowMore';
   itemType: 'TimelineTimelineCursor';
   value: string;
   __typename: 'TimelineTimelineCursor';
-}
+};
 
 interface GraphQLBaseTimeline {
   entryType: string;
@@ -469,16 +470,16 @@ type GraphQLTimelineItem = GraphQLBaseTimeline & {
   entryType: 'TimelineTimelineItem';
   __typename: 'TimelineTimelineItem';
   itemContent: GraphQLTimelineTweet | GraphQLTimelineCursor;
-}
+};
 
 type GraphQLTimelineModule = GraphQLBaseTimeline & {
   entryType: 'TimelineTimelineModule';
   __typename: 'TimelineTimelineModule';
   items: {
     entryId: `conversationthread-${number}-tweet-${number}`;
-    item: GraphQLTimelineItem
+    item: GraphQLTimelineItem;
   }[];
-}
+};
 
 type GraphQLTimelineTweetEntry = {
   /** The entryID contains the tweet ID */
@@ -501,7 +502,10 @@ type GraphQLConversationThread = {
 
 type GraphQLTimelineEntry = GraphQLTimelineTweetEntry | GraphQLConversationThread | unknown;
 
-type ThreadInstruction = TimelineAddEntriesInstruction | TimelineTerminateTimelineInstruction | TimelineAddModulesInstruction;
+type ThreadInstruction =
+  | TimelineAddEntriesInstruction
+  | TimelineTerminateTimelineInstruction
+  | TimelineAddModulesInstruction;
 
 type TimelineAddEntriesInstruction = {
   type: 'TimelineAddEntries';
@@ -543,7 +547,7 @@ type GraphQLTweetNotFoundResponse = {
   ];
   data: Record<string, never>;
 };
-type GraphQLTweetFoundResponse = {
+type TweetDetailResult = {
   errors?: unknown[];
   data: {
     threaded_conversation_with_injections_v2: {
@@ -564,8 +568,7 @@ type TweetResultsByRestIdResult = {
 type TweetStub = {
   __typename: 'TweetUnavailable';
   reason: 'NsfwLoggedOut' | 'Protected';
-}
-
+};
 
 interface GraphQLProcessBucket {
   tweets: GraphQLTweet[];

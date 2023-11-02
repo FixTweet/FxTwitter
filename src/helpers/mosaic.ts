@@ -13,7 +13,7 @@ const getDomain = (twitterId: string): string | null => {
     hash = (hash << 5) - hash + char;
   }
   return mosaicDomains[Math.abs(hash) % mosaicDomains.length];
-}
+};
 
 /* Handler for mosaic (multi-image combiner) */
 export const handleMosaic = async (

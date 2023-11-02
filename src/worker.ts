@@ -10,7 +10,7 @@ import { Strings } from './strings';
 import motd from '../motd.json';
 import { sanitizeText } from './helpers/utils';
 import { handleProfile } from './user';
-import { threadAPIProvider } from './providers/twitter/conversation';
+// import { threadAPIProvider } from './providers/twitter/conversation';
 
 declare const globalThis: {
   fetchCompletedTime: number;
@@ -454,7 +454,7 @@ router.get('/status/:id', statusRequest);
 router.get('/status/:id/:language', statusRequest);
 router.get('/version', versionRequest);
 router.get('/set_base_redirect', setRedirectRequest);
-router.get('/v2/twitter/thread/:id', threadAPIProvider)
+// router.get('/v2/twitter/thread/:id', threadAPIProvider)
 
 /* Oembeds (used by Discord to enhance responses) 
 

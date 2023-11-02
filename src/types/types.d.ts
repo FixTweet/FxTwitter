@@ -144,7 +144,7 @@ interface APIPost {
   replying_to: {
     screen_name: string | null;
     post: string | null;
-  } | null
+  } | null;
 
   source: string | null;
 
@@ -197,4 +197,8 @@ interface SocialThread {
   thread: (APIPost | APITweet)[] | null;
   author: APIUser | null;
   code: number;
+}
+
+interface FetchResults {
+  status: number;
 }

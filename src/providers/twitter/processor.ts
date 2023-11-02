@@ -14,7 +14,7 @@ export const buildAPITweet = async (
   threadPiece = false,
   legacyAPI = false
   // eslint-disable-next-line sonarjs/cognitive-complexity
-): Promise<APITweet | null> => {
+): Promise<APITweet | FetchResults | null> => {
   const apiTweet = {} as APITweet;
 
   /* Sometimes, Twitter returns a different kind of Tweet type called 'TweetWithVisibilityResults'.
@@ -38,7 +38,11 @@ export const buildAPITweet = async (
 
   if (typeof tweet.core === 'undefined') {
     console.log('Tweet still not valid', tweet);
-    return null;
+    if (tweet.__typename === 'TweetUnavailable' && tweet.reason === 'Protected') {
+      return { status: 401 };
+    } else {
+      return { status: 404 };
+    }
   }
 
   const graphQLUser = tweet.core.user_results.result;
@@ -50,7 +54,9 @@ export const buildAPITweet = async (
   /* Populating a lot of the basics */
   apiTweet.url = `${Constants.TWITTER_ROOT}/${apiUser.screen_name}/status/${id}`;
   apiTweet.id = id;
-  apiTweet.text = unescapeText(linkFixer(tweet.legacy.entities?.urls, tweet.legacy.full_text || ''));
+  apiTweet.text = unescapeText(
+    linkFixer(tweet.legacy.entities?.urls, tweet.legacy.full_text || '')
+  );
   if (!threadPiece) {
     apiTweet.author = {
       id: apiUser.id,
@@ -75,7 +81,7 @@ export const buildAPITweet = async (
   if (legacyAPI) {
     // @ts-expect-error Use retweets for legacy API
     apiTweet.retweets = tweet.legacy.retweet_count;
-    
+
     // @ts-expect-error `tweets` is only part of legacy API
     apiTweet.author.tweets = apiTweet.author.posts;
     // @ts-expect-error Part of legacy API that we no longer are able to track
@@ -139,11 +145,16 @@ export const buildAPITweet = async (
   }
 
   apiTweet.media = {};
-  
+
   /* We found a quote tweet, let's process that too */
   const quoteTweet = tweet.quoted_status_result;
   if (quoteTweet) {
-    apiTweet.quote = (await buildAPITweet(quoteTweet, language, threadPiece, legacyAPI)) as APITweet;
+    apiTweet.quote = (await buildAPITweet(
+      quoteTweet,
+      language,
+      threadPiece,
+      legacyAPI
+    )) as APITweet;
     /* Only override the embed_card if it's a basic tweet, since media always takes precedence  */
     if (apiTweet.embed_card === 'tweet' && apiTweet.quote !== null) {
       apiTweet.embed_card = apiTweet.quote.embed_card;
@@ -211,7 +222,11 @@ export const buildAPITweet = async (
     }
   }
 
-  if (apiTweet.media?.videos && apiTweet.media?.videos.length > 0 && apiTweet.embed_card !== 'player') {
+  if (
+    apiTweet.media?.videos &&
+    apiTweet.media?.videos.length > 0 &&
+    apiTweet.embed_card !== 'player'
+  ) {
     apiTweet.embed_card = 'player';
   }
 
@@ -221,7 +236,9 @@ export const buildAPITweet = async (
     const translateAPI = await translateTweet(tweet, '', language);
     if (translateAPI !== null && translateAPI?.translation) {
       apiTweet.translation = {
-        text: unescapeText(linkFixer(tweet.legacy?.entities?.urls, translateAPI?.translation || '')),
+        text: unescapeText(
+          linkFixer(tweet.legacy?.entities?.urls, translateAPI?.translation || '')
+        ),
         source_lang: translateAPI?.sourceLanguage || '',
         target_lang: translateAPI?.destinationLanguage || '',
         source_lang_en: translateAPI?.localizedSourceLanguage || ''
@@ -233,7 +250,7 @@ export const buildAPITweet = async (
     // @ts-expect-error Use twitter_card for legacy API
     apiTweet.twitter_card = apiTweet.embed_card;
     // @ts-expect-error Part of legacy API that we no longer are able to track
-    apiTweet.color = null
+    apiTweet.color = null;
     // @ts-expect-error Use twitter_card for legacy API
     delete apiTweet.embed_card;
     if ((apiTweet.media.all?.length ?? 0) < 1 && !apiTweet.media.external) {

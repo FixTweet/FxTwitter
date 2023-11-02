@@ -1,7 +1,7 @@
 export enum Experiment {
   ELONGATOR_BY_DEFAULT = 'ELONGATOR_BY_DEFAULT',
   ELONGATOR_PROFILE_API = 'ELONGATOR_PROFILE_API',
-  TWEET_DETAIL_API = 'TWEET_DETAIL_API',
+  TWEET_DETAIL_API = 'TWEET_DETAIL_API'
 }
 
 type ExperimentConfig = {
@@ -24,8 +24,8 @@ const Experiments: { [key in Experiment]: ExperimentConfig } = {
   [Experiment.TWEET_DETAIL_API]: {
     name: 'Tweet detail API',
     description: 'Use Tweet Detail API (where available with elongator)',
-    percentage: 0.75
-  },
+    percentage: 0.5
+  }
 };
 
 export const experimentCheck = (experiment: Experiment, condition = true) => {

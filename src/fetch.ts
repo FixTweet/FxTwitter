@@ -1,7 +1,6 @@
 import { Constants } from './constants';
 import { Experiment, experimentCheck } from './experiments';
 import { generateUserAgent } from './helpers/useragent';
-import { isGraphQLTweet } from './helpers/graphql';
 
 const API_ATTEMPTS = 3;
 let wasElongatorDisabled = false;
@@ -26,7 +25,8 @@ export const twitterFetch = async (
     Experiment.ELONGATOR_BY_DEFAULT,
     typeof TwitterProxy !== 'undefined'
   ),
-  validateFunction: (response: unknown) => boolean
+  validateFunction: (response: unknown) => boolean,
+  elongatorRequired = false
 ): Promise<unknown> => {
   let apiAttempts = 0;
   let newTokenGenerated = false;
@@ -163,6 +163,11 @@ export const twitterFetch = async (
       /* We'll usually only hit this if we get an invalid response from Twitter.
          It's uncommon, but it happens */
       console.error('Unknown error while fetching from API', e);
+      /* Elongator returns strings to communicate downstream errors */
+      if (String(e).indexOf('Status not found')) {
+        console.log('Tweet was not found');
+        return {};
+      }
       !useElongator &&
         event &&
         event.waitUntil(cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true }));
@@ -181,7 +186,6 @@ export const twitterFetch = async (
       !wasElongatorDisabled &&
       !useElongator &&
       typeof TwitterProxy !== 'undefined' &&
-      // @ts-expect-error This is safe due to optional chaining
       (response as TweetResultsByRestIdResult)?.data?.tweetResult?.result?.reason ===
         'NsfwLoggedOut'
     ) {
@@ -201,6 +205,10 @@ export const twitterFetch = async (
 
     if (!validateFunction(response)) {
       console.log('Failed to fetch response, got', JSON.stringify(response));
+      if (elongatorRequired) {
+        console.log('Elongator was required, but we failed to fetch a valid response');
+        return {};
+      }
       if (useElongator) {
         console.log('Elongator request failed to validate, trying again without it');
         wasElongatorDisabled = true;
@@ -230,87 +238,6 @@ export const twitterFetch = async (
   console.log('Twitter has repeatedly denied our requests, so we give up now');
 
   return {};
-};
-
-export const fetchConversation = async (
-  status: string,
-  event: FetchEvent,
-  useElongator = experimentCheck(
-    Experiment.ELONGATOR_BY_DEFAULT,
-    typeof TwitterProxy !== 'undefined'
-  )
-): Promise<TweetResultsByRestIdResult> => {
-  return (await twitterFetch(
-    `${
-      Constants.TWITTER_ROOT
-    }/i/api/graphql/2ICDjqPd81tulZcYrtpTuQ/TweetResultByRestId?variables=${encodeURIComponent(
-      JSON.stringify({
-        tweetId: status,
-        withCommunity: false,
-        includePromotedContent: false,
-        withVoice: false
-      })
-    )}&features=${encodeURIComponent(
-      JSON.stringify({
-        creator_subscriptions_tweet_preview_api_enabled: true,
-        tweetypie_unmention_optimization_enabled: true,
-        responsive_web_edit_tweet_api_enabled: true,
-        graphql_is_translatable_rweb_tweet_is_translatable_enabled: true,
-        view_counts_everywhere_api_enabled: true,
-        longform_notetweets_consumption_enabled: true,
-        responsive_web_twitter_article_tweet_consumption_enabled: false,
-        tweet_awards_web_tipping_enabled: false,
-        freedom_of_speech_not_reach_fetch_enabled: true,
-        standardized_nudges_misinfo: true,
-        tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled: true,
-        longform_notetweets_rich_text_read_enabled: true,
-        longform_notetweets_inline_media_enabled: true,
-        responsive_web_graphql_exclude_directive_enabled: true,
-        verified_phone_label_enabled: false,
-        responsive_web_media_download_video_enabled: false,
-        responsive_web_graphql_skip_user_profile_image_extensions_enabled: false,
-        responsive_web_graphql_timeline_navigation_enabled: true,
-        responsive_web_enhance_cards_enabled: false
-      })
-    )}&fieldToggles=${encodeURIComponent(
-      JSON.stringify({
-        withArticleRichContentState: true
-      })
-    )}`,
-    event,
-    useElongator,
-    (_conversation: unknown) => {
-      const conversation = _conversation as TweetResultsByRestIdResult;
-      // If we get a not found error it's still a valid response
-      const tweet = conversation.data?.tweetResult?.result;
-      if (isGraphQLTweet(tweet)) {
-        return true;
-      }
-      console.log('invalid graphql tweet');
-      if (
-        !tweet &&
-        typeof conversation.data?.tweetResult === 'object' &&
-        Object.keys(conversation.data?.tweetResult || {}).length === 0
-      ) {
-        console.log('tweet was not found');
-        return true;
-      }
-      if (tweet?.__typename === 'TweetUnavailable' && tweet.reason === 'NsfwLoggedOut') {
-        console.log('tweet is nsfw');
-        return true;
-      }
-      if (tweet?.__typename === 'TweetUnavailable' && tweet.reason === 'Protected') {
-        console.log('tweet is protected');
-        return true;
-      }
-      if (tweet?.__typename === 'TweetUnavailable') {
-        console.log('generic tweet unavailable error');
-        return true;
-      }
-      // Final clause for checking if it's valid is if there's errors
-      return Array.isArray(conversation.errors);
-    }
-  )) as TweetResultsByRestIdResult;
 };
 
 export const fetchUser = async (
@@ -359,6 +286,7 @@ export const fetchUser = async (
           conversation.errors?.[0]?.code === 239)
       );
       */
-    }
+    },
+    false
   )) as GraphQLUserResponse;
 };

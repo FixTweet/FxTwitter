@@ -41,7 +41,13 @@ export const handleStatus = async (
     fetchWithThreads = true;
   }
 
-  const thread = await constructTwitterThread(status, fetchWithThreads, request, undefined, flags?.api ?? false);
+  const thread = await constructTwitterThread(
+    status,
+    fetchWithThreads,
+    request,
+    undefined,
+    flags?.api ?? false
+  );
 
   const tweet = thread?.post as APITweet;
 
@@ -51,19 +57,19 @@ export const handleStatus = async (
     tweet: tweet
   };
 
-  switch(api.code) {
+  switch (api.code) {
     case 200:
-      api.message = "OK";
+      api.message = 'OK';
       break;
     case 401:
-      api.message = "PRIVATE_TWEET";
+      api.message = 'PRIVATE_TWEET';
       break;
     case 404:
-      api.message = "NOT_FOUND";
+      api.message = 'NOT_FOUND';
       break;
     case 500:
       console.log(api);
-      api.message = "API_FAIL";
+      api.message = 'API_FAIL';
       break;
   }
 
