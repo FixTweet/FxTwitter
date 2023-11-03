@@ -149,14 +149,21 @@ export const buildAPITweet = async (
   /* We found a quote tweet, let's process that too */
   const quoteTweet = tweet.quoted_status_result;
   if (quoteTweet) {
-    apiTweet.quote = (await buildAPITweet(
+    const buildQuote = (await buildAPITweet(
       quoteTweet,
       language,
       threadPiece,
       legacyAPI
-    )) as APITweet;
+    ));
+    if ((buildQuote as FetchResults).status) {
+      apiTweet.quote = undefined
+    } else {
+      apiTweet.quote = buildQuote as APITweet;
+    }
+
+    
     /* Only override the embed_card if it's a basic tweet, since media always takes precedence  */
-    if (apiTweet.embed_card === 'tweet' && apiTweet.quote !== null) {
+    if (apiTweet.embed_card === 'tweet' && typeof apiTweet.quote !== 'undefined') {
       apiTweet.embed_card = apiTweet.quote.embed_card;
     }
   }
