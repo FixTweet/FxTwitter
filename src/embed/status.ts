@@ -219,7 +219,7 @@ export const handleStatus = async (
   console.log('overrideMedia', JSON.stringify(overrideMedia));
 
   if (!flags?.textOnly) {
-    const media = tweet.media || tweet.quote?.media;
+    const media = tweet.media?.all && tweet.media?.all.length > 0 ? tweet.media : tweet.quote?.media || {}
     if (overrideMedia) {
       let instructions: ResponseInstructions;
 
