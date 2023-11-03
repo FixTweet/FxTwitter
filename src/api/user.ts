@@ -2,7 +2,7 @@ import { Constants } from '../constants';
 import { fetchUser } from '../fetch';
 import { linkFixer } from '../helpers/linkFixer';
 
-export const convertToApiUser = (user: GraphQLUser): APIUser => {
+export const convertToApiUser = (user: GraphQLUser, legacyAPI = false): APIUser => {
   const apiUser = {} as APIUser;
   /* Populating a lot of the basics */
   apiUser.url = `${Constants.TWITTER_ROOT}/${user.legacy.screen_name}`;
@@ -10,7 +10,12 @@ export const convertToApiUser = (user: GraphQLUser): APIUser => {
   apiUser.followers = user.legacy.followers_count;
   apiUser.following = user.legacy.friends_count;
   apiUser.likes = user.legacy.favourites_count;
-  apiUser.posts = user.legacy.statuses_count;
+  if (legacyAPI) {
+    // @ts-expect-error Use tweets for legacy API
+    apiUser.tweets = user.legacy.statuses_count;
+  } else {
+    apiUser.posts = user.legacy.statuses_count;
+  }
   apiUser.name = user.legacy.name;
   apiUser.screen_name = user.legacy.screen_name;
   apiUser.global_screen_name = `${user.legacy.screen_name}@${Constants.TWITTER_GLOBAL_NAME_ROOT}`;
@@ -62,11 +67,11 @@ export const convertToApiUser = (user: GraphQLUser): APIUser => {
 /* This function does the heavy lifting of processing data from Twitter API
    and using it to create FixTweet's streamlined API responses */
 const populateUserProperties = async (
-  response: GraphQLUserResponse
-  // eslint-disable-next-line sonarjs/cognitive-complexity
+  response: GraphQLUserResponse,
+  legacyAPI = false
 ): Promise<APIUser> => {
   const user = response.data.user.result;
-  return convertToApiUser(user);
+  return convertToApiUser(user, legacyAPI);
 };
 
 /* API for Twitter profiles (Users)
@@ -86,7 +91,7 @@ export const userAPI = async (
   }
   /* Creating the response objects */
   const response: UserAPIResponse = { code: 200, message: 'OK' } as UserAPIResponse;
-  const apiUser: APIUser = (await populateUserProperties(userResponse)) as APIUser;
+  const apiUser: APIUser = (await populateUserProperties(userResponse, true)) as APIUser;
 
   /* Currently, we haven't rolled this out as it's part of the proto-v2 API */
   delete apiUser.global_screen_name;
