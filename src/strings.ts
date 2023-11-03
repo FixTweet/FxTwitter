@@ -186,9 +186,6 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
   ERROR_USER_NOT_FOUND: `Sorry, that user doesn't exist :(`,
   ERROR_UNKNOWN: `Unknown error occurred, sorry about that :(`,
 
-  TWITFIX_API_SUNSET: `The original TwitFix API has been sunset. To learn more about the FixTweet API, check out <a href="https://${
-    API_HOST_LIST.split(',')[0]
-  }">${API_HOST_LIST.split(',')[0]}</a>`,
   DEPRECATED_DOMAIN_NOTICE: `We've moved! ➡ fxtwitter.com`,
   DEPRECATED_DOMAIN_NOTICE_DISCORD: `We've moved! ➡ fxtwitter.com`,
 

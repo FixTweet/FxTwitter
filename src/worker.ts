@@ -547,22 +547,6 @@ export const cacheWrapper = async (request: Request, event?: FetchEvent): Promis
     });
   }
 
-  /* Some TwitFix APIs will never be available in FixTweet for privacy or
-     design choice reasons. 
-     
-     Trying to access these APIs result in a message saying TwitFix API
-     has been sunset. */
-  if (
-    cacheUrl.pathname.startsWith('/api/') ||
-    cacheUrl.pathname.startsWith('/other/') ||
-    cacheUrl.pathname.startsWith('/info/')
-  ) {
-    return new Response(Strings.TWITFIX_API_SUNSET, {
-      headers: Constants.RESPONSE_HEADERS,
-      status: 410
-    });
-  }
-
   switch (request.method) {
     case 'GET':
       if (
