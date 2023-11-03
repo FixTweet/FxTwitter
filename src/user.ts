@@ -1,6 +1,6 @@
 import { Constants } from './constants';
 import { Strings } from './strings';
-import { userAPI } from './api/user';
+import { userAPI } from './providers/twitter/profile';
 
 export const returnError = (error: string): StatusResponse => {
   return {

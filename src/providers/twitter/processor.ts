@@ -5,7 +5,7 @@ import { handleMosaic } from '../../helpers/mosaic';
 // import { translateTweet } from '../../helpers/translate';
 import { unescapeText } from '../../helpers/utils';
 import { processMedia } from '../../helpers/media';
-import { convertToApiUser } from '../../api/user';
+import { convertToApiUser } from './profile';
 import { translateTweet } from '../../helpers/translate';
 
 export const buildAPITweet = async (

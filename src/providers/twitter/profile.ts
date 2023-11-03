@@ -1,6 +1,6 @@
-import { Constants } from '../constants';
-import { fetchUser } from '../fetch';
-import { linkFixer } from '../helpers/linkFixer';
+import { Constants } from '../../constants';
+import { fetchUser } from '../../fetch';
+import { linkFixer } from '../../helpers/linkFixer';
 
 export const convertToApiUser = (user: GraphQLUser, legacyAPI = false): APIUser => {
   const apiUser = {} as APIUser;
