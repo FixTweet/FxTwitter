@@ -35,8 +35,6 @@ export const handleStatus = async (
 ): Promise<StatusResponse> => {
   console.log('Direct?', flags?.direct);
 
-  console.log('event', event)
-
   let fetchWithThreads = false;
 
   /* TODO: Enable actually pulling threads once we can actually do something with them */
