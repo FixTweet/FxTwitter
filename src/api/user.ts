@@ -10,8 +10,7 @@ export const convertToApiUser = (user: GraphQLUser): APIUser => {
   apiUser.followers = user.legacy.followers_count;
   apiUser.following = user.legacy.friends_count;
   apiUser.likes = user.legacy.favourites_count;
-  // @ts-expect-error `tweets` is only part of legacy API
-  apiUser.tweets = user.legacy.statuses_count;
+  apiUser.posts = user.legacy.statuses_count;
   apiUser.name = user.legacy.name;
   apiUser.screen_name = user.legacy.screen_name;
   apiUser.global_screen_name = `${user.legacy.screen_name}@${Constants.TWITTER_GLOBAL_NAME_ROOT}`;
