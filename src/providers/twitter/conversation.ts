@@ -62,7 +62,7 @@ export const fetchTweetDetail = async (
       const conversation = _conversation as TweetDetailResult;
       const tweet = findTweetInBucket(
         status,
-        processResponse(conversation.data.threaded_conversation_with_injections_v2.instructions)
+        processResponse(conversation.data?.threaded_conversation_with_injections_v2?.instructions)
       );
       if (tweet && isGraphQLTweet(tweet)) {
         return true;
