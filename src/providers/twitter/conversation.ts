@@ -185,6 +185,10 @@ const processResponse = (instructions: ThreadInstruction[]): GraphQLProcessBucke
           | GraphQLModuleTweetEntry;
         const content =
           (entry as GraphQLModuleTweetEntry)?.item ?? (entry as GraphQLTimelineTweetEntry)?.content;
+
+        if (typeof content === 'undefined') {
+          return;
+        }
         if (content.__typename === 'TimelineTimelineItem') {
           const itemContentType = content.itemContent?.__typename;
           if (itemContentType === 'TimelineTweet') {
@@ -204,7 +208,7 @@ const processResponse = (instructions: ThreadInstruction[]): GraphQLProcessBucke
           content.items.forEach(item => {
             const itemContentType = item.item.itemContent.__typename;
             if (itemContentType === 'TimelineTweet') {
-              const entryType = item.item.itemContent.tweet_results.result.__typename;
+              const entryType = item.item.itemContent.tweet_results?.result?.__typename;
               if (entryType === 'Tweet') {
                 bucket.tweets.push(item.item.itemContent.tweet_results.result as GraphQLTweet);
               }
