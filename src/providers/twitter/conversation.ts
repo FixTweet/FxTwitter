@@ -322,9 +322,9 @@ export const constructTwitterThread = async (
 
     const buildPost = await buildAPITweet(result, language, false, legacyAPI);
 
-    if ((buildPost as FetchResults).status === 401) {
+    if ((buildPost as FetchResults)?.status === 401) {
       return { post: null, thread: null, author: null, code: 401 };
-    } else if (buildPost === null) {
+    } else if (buildPost === null || (buildPost as FetchResults)?.status === 404) {
       return { post: null, thread: null, author: null, code: 404 };
     }
 
