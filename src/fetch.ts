@@ -97,11 +97,12 @@ export const twitterFetch = async (
     }
 
     if (newTokenGenerated || (activate === null && !useElongator)) {
-      /* We have a guest token that we can use to call API
-        AFAIK there is no limit to how many guest tokens you can request.
-
-        This can effectively mean virtually unlimited (read) access to Twitter's API,
-        which is very funny. Though they've since restricted accessing NSFW tweets with this method.  */
+      /* Let's get a guest token to call the API.
+      
+      Back in the day (2022), this was pretty much unlimited and gave us nearly unlimited read-only access to Twitter.
+      
+      Since the Elon buyout, this has become more stringent with rate limits, NSFW tweets not loading with this method,
+      among other seemingly arbitrary restrictions and quirks. */
       const timeBefore = performance.now();
       activate = await fetch(guestTokenRequest.clone());
       const timeAfter = performance.now();
