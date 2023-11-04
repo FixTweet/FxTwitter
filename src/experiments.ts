@@ -19,7 +19,7 @@ const Experiments: { [key in Experiment]: ExperimentConfig } = {
   [Experiment.ELONGATOR_PROFILE_API]: {
     name: 'Elongator profile API',
     description: 'Use Elongator to load profiles',
-    percentage: 0
+    percentage: 1
   },
   [Experiment.TWEET_DETAIL_API]: {
     name: 'Tweet detail API',
