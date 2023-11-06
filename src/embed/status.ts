@@ -399,7 +399,7 @@ export const handleStatus = async (
 
   /* Special reply handling if authorText is not overriden */
   if (tweet.replying_to && authorText === Strings.DEFAULT_AUTHOR_TEXT) {
-    authorText = `↪ Replying to @${tweet.replying_to}`;
+    authorText = `↪ Replying to @${tweet.replying_to.screen_name}`;
     /* We'll assume it's a thread if it's a reply to themselves */
   } else if (
     tweet.replying_to?.screen_name === tweet.author.screen_name &&
