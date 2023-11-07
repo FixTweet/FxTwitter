@@ -39,8 +39,8 @@ export const renderPhoto = (
 
   if (photo.type === 'mosaic_photo' && !isOverrideMedia) {
     instructions.addHeaders = [
-      `<meta property="twitter:image" content="${tweet.media?.mosaic?.formats.jpeg}"/>`,
-      `<meta property="og:image" content="${tweet.media?.mosaic?.formats.jpeg}"/>`
+      `<meta property="twitter:image" content="${photo.formats.jpeg}"/>`,
+      `<meta property="og:image" content="${photo.formats.jpeg}"/>`
     ];
   } else {
     instructions.addHeaders = [
