@@ -411,14 +411,13 @@ export const handleStatus = async (
   /* The additional oembed is pulled by Discord to enable improved embeds.
      Telegram does not use this. */
   headers.push(
-    `<link rel="alternate" href="{base}/owoembed?text={text}{deprecatedFlag}&status={status}&author={author}&useXbranding={useXBranding}" type="application/json+oembed" title="{name}">`.format(
+    `<link rel="alternate" href="{base}/owoembed?text={text}{deprecatedFlag}&status={status}&author={author}" type="application/json+oembed" title="{name}">`.format(
       {
         base: Constants.HOST_URL,
         text: encodeURIComponent(truncateWithEllipsis(authorText, 256)),
         deprecatedFlag: flags?.deprecated ? '&deprecated=true' : '',
         status: encodeURIComponent(status),
         author: encodeURIComponent(tweet.author?.screen_name || ''),
-        useXBranding: flags?.isXDomain ? 'true' : 'false',
         name: tweet.author.name || ''
       }
     )

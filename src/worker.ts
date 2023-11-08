@@ -469,7 +469,6 @@ router.get('/owoembed', async (request: IRequest) => {
   const text = searchParams.get('text') || 'Twitter';
   const author = searchParams.get('author') || 'jack';
   const status = searchParams.get('status') || '20';
-  // const useXbranding = searchParams.get('useXbranding') === 'true';
 
   const random = Math.floor(Math.random() * Object.keys(motd).length);
   const [name, url] = Object.entries(motd)[random];
@@ -480,7 +479,6 @@ router.get('/owoembed', async (request: IRequest) => {
     /* Change provider name if tweet is on deprecated domain. */
     provider_name:
       searchParams.get('deprecated') === 'true' ? Strings.DEPRECATED_DOMAIN_NOTICE_DISCORD : name,
-    /*useXbranding ? name : Strings.X_DOMAIN_NOTICE*/
     provider_url: url,
     title: Strings.DEFAULT_AUTHOR_TEXT,
     type: 'link',
