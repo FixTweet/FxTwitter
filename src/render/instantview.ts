@@ -219,7 +219,7 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
     } <a href="${tweet.url}">View original post</a>
     </section>
     <article>
-    <sub>Instant View (✨ Beta) - <a href="${tweet.url}">View original</a></sub>
+    <sub><a href="${tweet.url}">View original</a></sub>
     <h1>${tweet.author.name} (@${tweet.author.screen_name})</h1>
 
     ${generateTweet(tweet)}
