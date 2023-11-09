@@ -4,7 +4,7 @@ import { Strings } from './strings';
 import { userAPI } from './providers/twitter/profile';
 
 export const returnError = (c: Context, error: string): Response => {
-  return c.text(Strings.BASE_HTML.format({
+  return c.html(Strings.BASE_HTML.format({
     lang: '',
     headers: [
       `<meta property="og:title" content="${Constants.BRANDING_NAME}"/>`,
@@ -32,7 +32,7 @@ export const handleProfile = async (
     for (const [header, value] of Object.entries(Constants.API_RESPONSE_HEADERS)) {
       c.header(header, value);
     }
-    return c.text(JSON.stringify(api));
+    return c.json(api);
   }
 
   /* If there was any errors fetching the User, we'll return it */
@@ -51,7 +51,7 @@ export const handleProfile = async (
   // TODO Add card creation logic here
 
   /* Finally, after all that work we return the response HTML! */
-  return c.text(Strings.BASE_HTML.format({
+  return c.html(Strings.BASE_HTML.format({
     lang: `lang="en"`,
     headers: headers.join('')
   }));

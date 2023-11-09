@@ -519,5 +519,5 @@ export const threadAPIProvider = async (c: Context) => {
   for (const [header, value] of Object.entries(Constants.API_RESPONSE_HEADERS)) {
     c.header(header, value);
   }
-  return c.text(JSON.stringify(processedResponse));
+  return c.json(processedResponse);
 };

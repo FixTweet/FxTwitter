@@ -10,37 +10,6 @@ import { oembed } from './routes/oembed';
 
 export const twitter = new Hono();
 
-twitter.get('/status/:id', statusRequest);
-// twitter.get('/:handle/status/:id', statusRequest);
-// twitter.get('/:prefix/:handle/status/:id/:language?', statusRequest);
-// twitter.get(
-//   '/:prefix/:handle/status/:id/:mediaType{(photos?|videos?)}/:mediaNumber{[1-4]}/:language?',
-//   statusRequest
-// );
-// twitter.get('/:handle?/:endpoint{status(es)?}/:id/:language?', statusRequest);
-// twitter.get(
-//   '/:handle?/:endpoint{status(es)?}/:id/:mediaType{(photos?|videos?)}/:mediaNumber{[1-4]}/:language?',
-//   statusRequest
-// );
-
-twitter.get('/version', versionRoute);
-twitter.get('/set_base_redirect', setRedirectRequest);
-twitter.get('/oembed', oembed);
-
-twitter.get(
-  '/robots.txt',
-  async (c) => {
-    c.header('cache-control', 'max-age=0, no-cache, no-store, must-revalidate');
-    c.status(200);
-    return c.text(Strings.ROBOTS_TXT);
-  }
-);
-
-twitter.get('/i/events/:id', genericTwitterRedirect);
-twitter.get('/hashtag/:hashtag', genericTwitterRedirect);
-
-twitter.get('/:handle', profileRequest);
-
 export const getBaseRedirectUrl = (c: Context) => {
   const baseRedirect = c.req.header('cookie')?.match(/(?<=base_redirect=)(.*?)(?=;|$)/)?.[0];
 
@@ -56,3 +25,28 @@ export const getBaseRedirectUrl = (c: Context) => {
 
   return Constants.TWITTER_ROOT;
 };
+
+
+twitter.get('/status/:id', statusRequest);
+twitter.get('/:handle/status/:id', statusRequest);
+twitter.get('/:prefix/:handle/status/:id/:language?', statusRequest);
+twitter.get(
+  '/:prefix/:handle/status/:id/:mediaType{(photos?|videos?)}/:mediaNumber{[1-4]}/:language?',
+  statusRequest
+);
+twitter.get('/:handle?/:endpoint{status(es)?}/:id/:language?', statusRequest);
+twitter.get(
+  '/:handle?/:endpoint{status(es)?}/:id/:mediaType{(photos?|videos?)}/:mediaNumber{[1-4]}/:language?',
+  statusRequest
+);
+
+twitter.get('/version', versionRoute);
+twitter.get('/set_base_redirect', setRedirectRequest);
+twitter.get('/oembed', oembed);
+
+twitter.get('/robots.txt', async (c) => c.text(Strings.ROBOTS_TXT));
+
+twitter.get('/i/events/:id', genericTwitterRedirect);
+twitter.get('/hashtag/:hashtag', genericTwitterRedirect);
+
+twitter.get('/:handle', profileRequest);

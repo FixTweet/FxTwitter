@@ -77,7 +77,7 @@ export const handleStatus = async (
     for (const [header, value] of Object.entries(Constants.API_RESPONSE_HEADERS)) {
       c.header(header, value);
     }
-    return c.text(JSON.stringify(api));
+    return c.json(api);
   }
 
   if (tweet === null) {
@@ -423,7 +423,7 @@ export const handleStatus = async (
   const lang = tweet.lang === null ? 'en' : tweet.lang || 'en';
 
   /* Finally, after all that work we return the response HTML! */
-  return c.text(Strings.BASE_HTML.format({
+  return c.html(Strings.BASE_HTML.format({
     lang: `lang="${lang}"`,
     headers: headers.join(''),
     body: ivbody

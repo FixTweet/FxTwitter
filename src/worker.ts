@@ -64,13 +64,11 @@ app.onError((err, c) => {
   console.error(error.stack);
   c.status(200);
   c.header('cache-control', noCache);
-  c.header('content-type', 'text/html');
 
-
-  return c.text(Strings.ERROR_HTML);
+  return c.html(Strings.ERROR_HTML);
 });
 
-app.use('*', logger());
+// app.use('*', logger());
 
 app.use('*', async (c, next) => {
   console.log(`Hello from ⛅ ${c.req.raw.cf?.colo || 'UNK'}`);
@@ -81,8 +79,8 @@ app.use('*', async (c, next) => {
 app.use('*', cacheMiddleware());
 app.use('*', timing({ enabled: false }));
 
-app.route(`/api`, api);
 app.route(`/twitter`, twitter);
+app.route(`/api`, api);
 
 app.all(
   '/error',
@@ -104,7 +102,7 @@ export default {
       return new Response(Strings.ERROR_HTML, {
         headers: {
           ...Constants.RESPONSE_HEADERS,
-          'content-type': 'text/html',
+          'content-type': 'text/html;charset=utf-8',
           'cache-control': noCache
         },
         status: 200

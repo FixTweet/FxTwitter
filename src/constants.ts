@@ -61,7 +61,6 @@ export const Constants = {
     'content-type': 'text/html;charset=UTF-8',
     'x-powered-by': `${RELEASE_NAME}`,
     'x-trans-rights': 'true',
-    'cache-control': 'max-age=3600', // Can be overriden in some cases, like unfinished poll tweets
     'Vary': 'Accept-Encoding, User-Agent'
   },
   API_RESPONSE_HEADERS: {
