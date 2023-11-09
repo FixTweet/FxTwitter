@@ -624,8 +624,7 @@ const sentryWrapper = async (event: FetchEvent, test = false): Promise<void> => 
       /* TODO: Figure out what changed between @sentry/integration 7.65.0 and 7.66.0
          https://github.com/getsentry/sentry-javascript/compare/7.65.0...7.66.0 
          which caused types to go apeshit */
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      integrations: [new RewriteFrames({ root: '/' }) as any],
+      integrations: [new RewriteFrames({ root: '/' })],
       /* event includes 'waitUntil', which is essential for Sentry logs to be delivered.
          Also includes 'request' -- no need to set it separately. */
       release: RELEASE_NAME
