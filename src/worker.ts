@@ -79,8 +79,8 @@ app.use('*', async (c, next) => {
 app.use('*', cacheMiddleware());
 app.use('*', timing({ enabled: false }));
 
-app.route(`/twitter`, twitter);
 app.route(`/api`, api);
+app.route(`/twitter`, twitter);
 
 app.all(
   '/error',
