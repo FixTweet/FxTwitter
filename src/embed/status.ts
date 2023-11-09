@@ -7,45 +7,41 @@ import { renderPhoto } from '../render/photo';
 import { renderVideo } from '../render/video';
 import { renderInstantView } from '../render/instantview';
 import { constructTwitterThread } from '../providers/twitter/conversation';
-import { IRequest } from 'itty-router';
+import { Context } from 'hono';
 
-export const returnError = (error: string): StatusResponse => {
-  return {
-    text: Strings.BASE_HTML.format({
-      lang: '',
-      headers: [
-        `<meta property="og:title" content="${Constants.BRANDING_NAME}"/>`,
-        `<meta property="og:description" content="${error}"/>`
-      ].join('')
-    })
-  };
+export const returnError = (c: Context, error: string): Response => {
+  return c.text(Strings.BASE_HTML.format({
+    lang: '',
+    headers: [
+      `<meta property="og:title" content="${Constants.BRANDING_NAME}"/>`,
+      `<meta property="og:description" content="${error}"/>`
+    ].join('')
+  }));
 };
-
 /* Handler for Twitter statuses (Tweets).
    Like Twitter, we use the terminologies interchangably. */
 export const handleStatus = async (
+  c: Context,
   status: string,
   mediaNumber: number | undefined,
   userAgent: string,
   flags: InputFlags,
   language: string,
-  event: FetchEvent,
-  request: IRequest
   // eslint-disable-next-line sonarjs/cognitive-complexity
-): Promise<StatusResponse> => {
+): Promise<Response> => {
   console.log('Direct?', flags?.direct);
 
   let fetchWithThreads = false;
 
   /* TODO: Enable actually pulling threads once we can actually do something with them */
-  if (request?.headers.get('user-agent')?.includes('Telegram') && !flags?.direct) {
+  if (c.req.header('user-agent')?.includes('Telegram') && !flags?.direct) {
     fetchWithThreads = false;
   }
 
   const thread = await constructTwitterThread(
     status,
     fetchWithThreads,
-    request,
+    c,
     language,
     flags?.api ?? false
   );
@@ -76,27 +72,27 @@ export const handleStatus = async (
 
   /* Catch this request if it's an API response */
   if (flags?.api) {
-    return {
-      response: new Response(JSON.stringify(api), {
-        headers: { ...Constants.RESPONSE_HEADERS, ...Constants.API_RESPONSE_HEADERS },
-        status: api.code
-      })
-    };
+    c.status(api.code);
+    // Add every header from Constants.API_RESPONSE_HEADERS
+    for (const [header, value] of Object.entries(Constants.API_RESPONSE_HEADERS)) {
+      c.header(header, value);
+    }
+    return c.text(JSON.stringify(api));
   }
 
   if (tweet === null) {
-    return returnError(Strings.ERROR_TWEET_NOT_FOUND);
+    return returnError(c, Strings.ERROR_TWEET_NOT_FOUND);
   }
 
   /* If there was any errors fetching the Tweet, we'll return it */
   switch (api.code) {
     case 401:
-      return returnError(Strings.ERROR_PRIVATE);
+      return returnError(c, Strings.ERROR_PRIVATE);
     case 404:
-      return returnError(Strings.ERROR_TWEET_NOT_FOUND);
+      return returnError(c, Strings.ERROR_TWEET_NOT_FOUND);
     case 500:
       console.log(api);
-      return returnError(Strings.ERROR_API_FAIL);
+      return returnError(c, Strings.ERROR_API_FAIL);
   }
 
   const isTelegram = (userAgent || '').indexOf('Telegram') > -1;
@@ -146,7 +142,7 @@ export const handleStatus = async (
     }
 
     if (redirectUrl) {
-      return { response: Response.redirect(redirectUrl, 302) };
+      return c.redirect(redirectUrl, 302);
     }
   }
 
@@ -157,7 +153,6 @@ export const handleStatus = async (
   const engagementText = authorText.replace(/ {4}/g, ' ');
   let siteName = Constants.BRANDING_NAME;
   let newText = tweet.text;
-  let cacheControl: string | null = null;
 
   /* Base headers included in all responses */
   const headers = [
@@ -217,7 +212,8 @@ export const handleStatus = async (
   console.log('overrideMedia', JSON.stringify(overrideMedia));
 
   if (!flags?.textOnly) {
-    const media = tweet.media?.all && tweet.media?.all.length > 0 ? tweet.media : tweet.quote?.media || {}
+    const media =
+      tweet.media?.all && tweet.media?.all.length > 0 ? tweet.media : tweet.quote?.media || {};
     if (overrideMedia) {
       let instructions: ResponseInstructions;
 
@@ -340,7 +336,7 @@ export const handleStatus = async (
        Yes, checking if this is a string is a hacky way to do this, but
        it can do it in way less code than actually comparing dates */
     if (poll.time_left_en !== 'Final results') {
-      cacheControl = Constants.POLL_TWEET_CACHE;
+      c.header('cache-control', Constants.POLL_TWEET_CACHE);
     }
 
     /* And now we'll put the poll right after the Tweet text! */
@@ -427,12 +423,9 @@ export const handleStatus = async (
   const lang = tweet.lang === null ? 'en' : tweet.lang || 'en';
 
   /* Finally, after all that work we return the response HTML! */
-  return {
-    text: Strings.BASE_HTML.format({
-      lang: `lang="${lang}"`,
-      headers: headers.join(''),
-      body: ivbody
-    }).replace(/>(\s+)</gm, '><'), // Remove whitespace between tags
-    cacheControl: cacheControl
-  };
+  return c.text(Strings.BASE_HTML.format({
+    lang: `lang="${lang}"`,
+    headers: headers.join(''),
+    body: ivbody
+  }).replace(/>(\s+)</gm, '><'));
 };

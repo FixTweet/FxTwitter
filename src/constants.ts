@@ -59,8 +59,10 @@ export const Constants = {
   RESPONSE_HEADERS: {
     'allow': 'OPTIONS, GET, PURGE, HEAD',
     'content-type': 'text/html;charset=UTF-8',
-    'x-powered-by': `${RELEASE_NAME} (Trans Rights are Human Rights)`,
-    'cache-control': 'max-age=3600' // Can be overriden in some cases, like unfinished poll tweets
+    'x-powered-by': `${RELEASE_NAME}`,
+    'x-trans-rights': 'true',
+    'cache-control': 'max-age=3600', // Can be overriden in some cases, like unfinished poll tweets
+    'Vary': 'Accept-Encoding, User-Agent'
   },
   API_RESPONSE_HEADERS: {
     'access-control-allow-origin': '*',
