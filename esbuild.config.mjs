@@ -62,6 +62,7 @@ await esbuild.build({
   outdir: 'dist',
   minify: true,
   bundle: true,
+  format: 'esm',
   plugins: [
     sentryEsbuildPlugin({
       org: process.env.SENTRY_ORG,
