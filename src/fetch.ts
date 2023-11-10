@@ -223,20 +223,20 @@ export const twitterFetch = async (
       newTokenGenerated = true;
       continue;
     }
-    /* If we've generated a new token, we'll cache it */
-    if (c.executionCtx && newTokenGenerated && activate) {
-      const cachingResponse = new Response(await activate.clone().text(), {
-        headers: {
-          ...tokenHeaders,
-          'cache-control': `max-age=${Constants.GUEST_TOKEN_MAX_AGE}`
-        }
-      });
-      console.log('Caching guest token');
-      try {
+    try {
+      /* If we've generated a new token, we'll cache it */
+      if (c.executionCtx && newTokenGenerated && activate) {
+        const cachingResponse = new Response(await activate.clone().text(), {
+          headers: {
+            ...tokenHeaders,
+            'cache-control': `max-age=${Constants.GUEST_TOKEN_MAX_AGE}`
+          }
+        });
+        console.log('Caching guest token');
         c.executionCtx.waitUntil(cache.put(guestTokenRequestCacheDummy.clone(), cachingResponse));
-      } catch (error) {
-        console.error((error as Error).stack);
       }
+    } catch (error) {
+      console.error((error as Error).stack);
     }
 
     // @ts-expect-error - We'll pin the guest token to whatever response we have
