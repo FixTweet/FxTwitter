@@ -80,12 +80,7 @@ export const statusRequest = async (c: Context) => {
 
   const baseUrl = getBaseRedirectUrl(c);
 
-  /* Check if request is to api.fxtwitter.com, or the tweet is appended with .json
-     Note that unlike TwitFix, FixTweet will never generate embeds for .json, and
-     in fact we only support .json because it's what people using TwitFix API would
-     be used to. */
   if (
-    url.pathname.match(/\/status(es)?\/\d{2,20}\.(json)/g) !== null ||
     Constants.API_HOST_LIST.includes(url.hostname)
   ) {
     console.log('JSON API request');
