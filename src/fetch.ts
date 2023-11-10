@@ -163,11 +163,15 @@ export const twitterFetch = async (
         console.log('Tweet was not found');
         return {};
       }
-      !useElongator &&
-        c.executionCtx &&
-        c.executionCtx.waitUntil(
-          cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true })
-        );
+      try{
+        !useElongator &&
+          c.executionCtx &&
+          c.executionCtx.waitUntil(
+            cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true })
+          );
+      } catch (error) {
+        console.error((error as Error).stack);
+      }
       if (useElongator) {
         console.log('Elongator request failed, trying again without it');
         wasElongatorDisabled = true;
@@ -195,10 +199,14 @@ export const twitterFetch = async (
     /* Running out of requests within our rate limit, let's purge the cache */
     if (!useElongator && remainingRateLimit < 10) {
       console.log(`Purging token on this edge due to low rate limit remaining`);
-      c.executionCtx &&
-        c.executionCtx.waitUntil(
-          cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true })
-        );
+      try {
+        c.executionCtx &&
+          c.executionCtx.waitUntil(
+            cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true })
+          );
+      } catch (error) {
+        console.error((error as Error).stack);
+      }
     }
 
     if (!validateFunction(response)) {
@@ -224,7 +232,11 @@ export const twitterFetch = async (
         }
       });
       console.log('Caching guest token');
-      c.executionCtx.waitUntil(cache.put(guestTokenRequestCacheDummy.clone(), cachingResponse));
+      try {
+        c.executionCtx.waitUntil(cache.put(guestTokenRequestCacheDummy.clone(), cachingResponse));
+      } catch (error) {
+        console.error((error as Error).stack);
+      }
     }
 
     // @ts-expect-error - We'll pin the guest token to whatever response we have

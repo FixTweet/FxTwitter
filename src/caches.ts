@@ -56,6 +56,7 @@ export const cacheMiddleware = (): MiddlewareHandler => async (c, next) => {
          Use waitUntil so you can return the response without blocking on
          writing to cache */
       try {
+        c.executionCtx &&
         c.executionCtx.waitUntil(cache.put(cacheKey, response.clone()));
       } catch (error) {
         console.error((error as Error).stack);
