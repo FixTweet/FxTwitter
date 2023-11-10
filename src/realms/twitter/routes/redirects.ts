@@ -36,13 +36,13 @@ export const setRedirectRequest = async (c: Context) => {
 
   if (!url) {
     /* Remove redirect URL */
-    // eslint-disable-next-line sonarjs/no-duplicate-string
     c.header(
+      // eslint-disable-next-line sonarjs/no-duplicate-string
       'set-cookie',
       `base_redirect=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; HttpOnly`
     );
-    // eslint-disable-next-line sonarjs/no-duplicate-string
     c.header(
+      // eslint-disable-next-line sonarjs/no-duplicate-string
       'content-security-policy',
       `frame-ancestors ${Constants.STANDARD_DOMAIN_LIST.join(' ')};`
     );
