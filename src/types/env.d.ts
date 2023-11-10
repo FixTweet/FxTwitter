@@ -13,8 +13,3 @@ declare const API_HOST_LIST: string;
 
 declare const SENTRY_DSN: string;
 declare const RELEASE_NAME: string;
-
-declare const TEST: boolean | undefined;
-
-declare const TwitterProxy: Fetcher;
-declare const AnalyticsEngine: AnalyticsEngineDataset;

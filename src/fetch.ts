@@ -24,7 +24,7 @@ export const twitterFetch = async (
   url: string,
   useElongator = experimentCheck(
     Experiment.ELONGATOR_BY_DEFAULT,
-    typeof c.env.TwitterProxy !== 'undefined'
+    typeof c.env?.TwitterProxy !== 'undefined'
   ),
   validateFunction: (response: unknown) => boolean,
   elongatorRequired = false
@@ -141,10 +141,10 @@ export const twitterFetch = async (
     let apiRequest;
 
     try {
-      if (useElongator && typeof c.env.TwitterProxy !== 'undefined') {
+      if (useElongator && typeof c.env?.TwitterProxy !== 'undefined') {
         console.log('Fetching using elongator');
         const performanceStart = performance.now();
-        apiRequest = await c.env.TwitterProxy.fetch(url, {
+        apiRequest = await c.env?.TwitterProxy.fetch(url, {
           method: 'GET',
           headers: headers
         });
@@ -189,7 +189,7 @@ export const twitterFetch = async (
     if (
       !wasElongatorDisabled &&
       !useElongator &&
-      typeof c.env.TwitterProxy !== 'undefined' &&
+      typeof c.env?.TwitterProxy !== 'undefined' &&
       (response as TweetResultsByRestIdResult)?.data?.tweetResult?.result?.reason ===
         'NsfwLoggedOut'
     ) {
@@ -251,7 +251,7 @@ export const fetchUser = async (
   c: Context,
   useElongator = experimentCheck(
     Experiment.ELONGATOR_PROFILE_API,
-    typeof c.env.TwitterProxy !== 'undefined'
+    typeof c.env?.TwitterProxy !== 'undefined'
   )
 ): Promise<GraphQLUserResponse> => {
   return (await twitterFetch(

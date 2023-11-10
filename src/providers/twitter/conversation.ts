@@ -8,7 +8,7 @@ import { Context } from 'hono';
 export const fetchTweetDetail = async (
   c: Context,
   status: string,
-  useElongator = typeof c.env.TwitterProxy !== 'undefined',
+  useElongator = typeof c.env?.TwitterProxy !== 'undefined',
   cursor: string | null = null
 ): Promise<TweetDetailResult> => {
   return (await twitterFetch(
@@ -93,7 +93,7 @@ export const fetchByRestId = async (
   c: Context,
   useElongator = experimentCheck(
     Experiment.ELONGATOR_BY_DEFAULT,
-    typeof c.env.TwitterProxy !== 'undefined'
+    typeof c.env?.TwitterProxy !== 'undefined'
   )
 ): Promise<TweetResultsByRestIdResult> => {
   return (await twitterFetch(
@@ -287,7 +287,7 @@ export const constructTwitterThread = async (
      Also - dirty hack. Right now, TweetDetail requests aren't working with language and I haven't figured out why.
      I'll figure out why eventually, but for now just don't use TweetDetail for this. */
   if (
-    typeof c.env.TwitterProxy !== 'undefined' &&
+    typeof c.env?.TwitterProxy !== 'undefined' &&
     !language &&
     (experimentCheck(Experiment.TWEET_DETAIL_API) || processThread)
   ) {

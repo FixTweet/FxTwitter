@@ -17,7 +17,17 @@ export const cacheMiddleware = (): MiddlewareHandler => async (c, next) => {
 
   console.log('cacheUrl', cacheUrl);
 
-  const cacheKey = new Request(cacheUrl.toString(), request);
+  let cacheKey: Request;
+
+  try {
+    cacheKey = new Request(cacheUrl.toString(), request);
+  } catch(e) {
+    /* In Miniflare, you can't really create requests like this, so we ignore caching in the test environment */
+    await next();
+    return c.res.clone();
+  }
+
+  
   const cache = caches.default;
 
   switch (request.method) {

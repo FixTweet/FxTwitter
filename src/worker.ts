@@ -52,7 +52,8 @@ if (SENTRY_DSN) {
         allowedSearchParams: /(.*)/
       },
 
-      // integrations: [new RewriteFrames({ root: '/' }) as any],
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      integrations: [new RewriteFrames({ root: '/' }) as any],
       release: RELEASE_NAME
     })
   );

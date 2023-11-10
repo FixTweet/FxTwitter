@@ -46,14 +46,14 @@ export const translateTweet = async (
   headers['x-twitter-client-language'] = language;
 
   /* As of August 2023, you can no longer fetch translations with guest token */
-  if (typeof c.env.TwitterProxy === 'undefined') {
+  if (typeof c.env?.TwitterProxy === 'undefined') {
     return null;
   }
 
   try {
     const url = `${Constants.TWITTER_ROOT}/i/api/1.1/strato/column/None/tweetId=${tweet.rest_id},destinationLanguage=None,translationSource=Some(Google),feature=None,timeout=None,onlyCached=None/translation/service/translateTweet`;
     console.log(url, headers);
-    translationApiResponse = await c.env.TwitterProxy.fetch(url, {
+    translationApiResponse = await c.env?.TwitterProxy.fetch(url, {
       method: 'GET',
       headers: headers
     });
