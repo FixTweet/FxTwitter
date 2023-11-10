@@ -67,7 +67,7 @@ app.use('*', async (c, next) => {
 });
 
 app.onError((err, c) => {
-  c.get('sentry').captureException(err);
+  c.get('sentry')?.captureException?.(err);
   console.error(err.stack);
   c.status(200);
   c.header('cache-control', noCache);
