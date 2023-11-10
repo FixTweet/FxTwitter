@@ -20,5 +20,6 @@
     "SENTRY_DSN": null
   },
   "testRegex": "/test/.*\\.test\\.ts$",
-  "collectCoverageFrom": ["src/**/*.{ts,js}"]
+  "collectCoverageFrom": ["src/**/*.{ts,js}"],
+  "useESM": true
 }
