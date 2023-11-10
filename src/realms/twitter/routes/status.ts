@@ -92,7 +92,7 @@ export const statusRequest = async (c: Context) => {
     if (isBotUA) {
       console.log(`Matched bot UA ${userAgent}`);
     } else {
-      console.log('Bypass bot check');
+      console.log(`Bypass bot check (Presented user-agent ${userAgent})`);
     }
 
     /* This throws the necessary data to handleStatus (in status.ts) */
