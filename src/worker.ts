@@ -11,7 +11,7 @@ import { cacheMiddleware } from './caches';
 
 const noCache = 'max-age=0, no-cache, no-store, must-revalidate';
 
-const app = new Hono<{
+export const app = new Hono<{
   Bindings: { TwitterProxy: Fetcher; AnalyticsEngine: AnalyticsEngineDataset };
 }>({
   getPath: req => {
@@ -80,7 +80,9 @@ const customLogger = (message: string, ...rest: string[]) => {
 app.use('*', logger(customLogger));
 
 app.use('*', async (c, next) => {
-  console.log(`Hello from ⛅ ${c.req.raw.cf?.colo || 'UNK'}`);
+  if (c.req.raw.cf) {
+    console.log(`Hello from ⛅ ${c.req.raw.cf.colo || 'UNK'}`);
+  }
   console.log('userAgent', c.req.header('user-agent'));
   await next();
 });
