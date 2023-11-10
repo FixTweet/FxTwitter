@@ -67,19 +67,19 @@ Want to link directly to a post's media without the embed? You can easily do tha
 
 There are a few supported ways to do this:
 
-- Add `d.` or `dl.` before the domain (so, `d.twittpr.com` or `dl.fxtwitter.com`)
+- Add `d.` or `dl.` before the domain (so, `d.fxtwitter.com` or `dl.fxtwitter.com`)
 - Add `.mp4` to the end of videos or `.jpg` to the end of images, after the post ID
 - Add `/dl` or `/dir` between the domain and the username
 
 Examples from above:
 
-- `https://d.twittpr.com/dangeredwolf/status/1548119328498728960`
+- `https://d.fxtwitter.com/dangeredwolf/status/1548119328498728960`
 - `https://fxtwitter.com/dangeredwolf/status/1548117889437208581.jpg`
 - `https://fxtwitter.com/dl/dangeredwolf/status/1548117889437208581`
 
 Posts with multiple images are supported, so you can do something like this and it will pick the correct one:
 
-`https://d.twittpr.com/dangeredwolf/status/1547514042146865153/photo/3`
+`https://d.fxtwitter.com/dangeredwolf/status/1547514042146865153/photo/3`
 
 Otherwise, it will default to the first image.
 
@@ -111,25 +111,25 @@ On a different note, if the person who posted a FixTweet link forgot to strip tr
 
 In many ways, FixTweet has richer embeds and does more. Here's a table comparing some of FixTweet's features compared to Twitter default embeds as well as other embedding services
 
-|                                         |              FixTweet               |         Twitter default          |              vxTwitter (BetterTwitFix)              |
-| --------------------------------------- | :---------------------------------: | :------------------------------: | :-------------------------------------------------: |
-| Embed Posts / Images                    |         :heavy_check_mark:          |        :heavy_check_mark:        |                 :heavy_check_mark:                  |
-| Embed profile pictures on text posts    |         :heavy_check_mark:          |               :x:                |                 :heavy_check_mark:                  |
-| Embed Twitter Videos                    |         :heavy_check_mark:          | :heavy_minus_sign: Discord Only¹ |                 :heavy_check_mark:                  |
-| Embed External Videos (YouTube, etc.)   |         :heavy_check_mark:⁴         |               :x:                |                        :x:³                         |
-| Embed Poll results                      |         :heavy_check_mark:          |               :x:                |            [:heavy_check_mark:][polladd]            |
-| Embed Quotes                            |         :heavy_check_mark:          |               :x:                |        :ballot_box_with_check: Without Media        |
-| Embed Multiple Images                   |         :heavy_check_mark:          | :heavy_minus_sign: Discord Only² |                 :heavy_check_mark:                  |
-| Translate Posts                         |         :heavy_check_mark:          |               :x:                |                         :x:                         |
-| Replace t.co with original links        |         :heavy_check_mark:          |               :x:                |                         :x:                         |
-| Redirect to media file (without embed)  |         :heavy_check_mark:          |               :x:                | :ballot_box_with_check: Subdomain broken, no images |
-| Strip Twitter tracking info on redirect |         :heavy_check_mark:          |               :x:                |                 :heavy_check_mark:                  |
-| Show retweet, like, reply counts        |         :heavy_check_mark:          | :heavy_minus_sign: Discord Only² |         :ballot_box_with_check: No replies          |
-| Discord sed replace (`s/`) friendly     | :ballot_box_with_check: twittpr.com |               N/A                |                         :x:                         |
-| Domain for X.com links                  | :ballot_box_with_check: fixupx.com  |               N/A                |          :ballot_box_with_check: fixvx.com          |
-| Status fetch API for Developers         |         :heavy_check_mark:          |               N/A                |                         :x:                         |
-| DDoS protection & low latency globally  |         :heavy_check_mark:          |               N/A                |                         :x:                         |
-| Last commit                             |           [![][flc]][fc]            |               N/A                |                   [![][vlc]][vc]                    |
+|                                         |                      FixTweet                      |         Twitter default          |              vxTwitter (BetterTwitFix)              |
+| --------------------------------------- | :------------------------------------------------: | :------------------------------: | :-------------------------------------------------: |
+| Embed Posts / Images                    |                 :heavy_check_mark:                 |        :heavy_check_mark:        |                 :heavy_check_mark:                  |
+| Embed profile pictures on text posts    |                 :heavy_check_mark:                 |               :x:                |                 :heavy_check_mark:                  |
+| Embed Twitter Videos                    |                 :heavy_check_mark:                 | :heavy_minus_sign: Discord Only¹ |                 :heavy_check_mark:                  |
+| Embed External Videos (YouTube, etc.)   |                :heavy_check_mark:⁴                 |               :x:                |                        :x:³                         |
+| Embed Poll results                      |                 :heavy_check_mark:                 |               :x:                |            [:heavy_check_mark:][polladd]            |
+| Embed Quotes                            |                 :heavy_check_mark:                 |               :x:                |        :ballot_box_with_check: Without Media        |
+| Embed Multiple Images                   |                 :heavy_check_mark:                 | :heavy_minus_sign: Discord Only² |                 :heavy_check_mark:                  |
+| Translate Posts                         |                 :heavy_check_mark:                 |               :x:                |                         :x:                         |
+| Replace t.co with original links        |                 :heavy_check_mark:                 |               :x:                |                         :x:                         |
+| Redirect to media file (without embed)  |                 :heavy_check_mark:                 |               :x:                | :ballot_box_with_check: Subdomain broken, no images |
+| Strip Twitter tracking info on redirect |                 :heavy_check_mark:                 |               :x:                |                 :heavy_check_mark:                  |
+| Show retweet, like, reply counts        | :heavy_minus_sign: Discord / Telegram Instant View | :heavy_minus_sign: Discord Only² |         :ballot_box_with_check: No replies          |
+| Discord sed replace (`s/`) friendly     |        :ballot_box_with_check: twittpr.com         |               N/A                |                         :x:                         |
+| Domain for X.com links                  |         :ballot_box_with_check: fixupx.com         |               N/A                |          :ballot_box_with_check: fixvx.com          |
+| Status fetch API for Developers         |                 :heavy_check_mark:                 |               N/A                |                         :x:                         |
+| DDoS protection & low latency globally  |                 :heavy_check_mark:                 |               N/A                |                         :x:                         |
+| Last commit                             |                   [![][flc]][fc]                   |               N/A                |                   [![][vlc]][vc]                    |
 
 [flc]: https://img.shields.io/github/last-commit/FixTweet/FixTweet?label
 [vlc]: https://img.shields.io/github/last-commit/dylanpdx/BetterTwitFix?label
@@ -151,11 +151,9 @@ In many ways, FixTweet has richer embeds and does more. Here's a table comparing
 
 ## Why FixTweet is nicer to develop for and deploy
 
-TwitFix and its derivatives have quite a few dependencies you need to rely on. You need to set up a server somewhere, install Python, all its dependencies, then either set up `youtube-dl` (more resource intensive) or beg Twitter for API access, and optionally set up a database, otherwise it uses the file system to cache.
+FixTweet was originally designed for edge computing in mind meaning it's easy to run closer to your users (which has significant latency advantages for people in a lot of regions). The way we use it and recommend deployment is using Cloudflare Workers, which are completely free for up to 100,000 requests per day, per account. Cloudflare Workers are [fast to set up](https://developers.cloudflare.com/workers/get-started/guide/) and your script is distributed in their datacenters around the world for lower latency. It may be possible to run it on other platforms that support Hono, but at this time we do not provide documentation to do so yet.
 
-FixTweet was written from the start as a lightweight, TypeScript-based Cloudflare Worker. Cloudflare Workers are completely free for up to 100,000 requests per day, per account. Cloudflare Workers are [fast to set up](https://developers.cloudflare.com/workers/get-started/guide/) and your script is distributed in their datacenters around the world for lower latency.
-
-FixTweet does not need a database nor a Twitter API key: It takes a similar approach to `youtube-dl` where it pretends to be a logged-out Twitter web user, fetching a guest token and making API requests from there. As far as I can tell, this basically means we have "unlimited" read-only access to Twitter's API, including things they don't expose in their public API, useful for polls and other features.
+FixTweet does not need a database nor a Twitter API key: It takes a similar approach to `youtube-dl` where it pretends to be a logged-out Twitter web user, fetching a guest token and making API requests from there. At one point, this meant "unlimited" read-only access to Twitter's API, including things they don't expose in their public API, useful for polls and other features. It's been locked down pretty heavily after Elon Musk took over Twitter, but the guest token API does still work.
 
 ## Deploy FixTweet yourself
 
@@ -167,27 +165,21 @@ Once you're set up with your worker on `*.workers.dev`, [add your worker to your
 
 Populate Sentry details in your `.env` to use Sentry in your product to catch exceptions.
 
-In 2023, Twitter began blocking posts with NSFW media from the guest API. We use a service binding code-named [elongator](https://github.com/FixTweet/elongator), which use empty Twitter accounts to make these requests successfully. This is an optional component and is only necessary for those who plan to support embedding NSFW media. This method also means you never have to pay Elon Musk to use Twitter's official API.
+In 2023, Twitter began blocking posts with NSFW media from the guest API. We use a service binding code-named [elongator](https://github.com/FixTweet/elongator), which use empty Twitter accounts to make these requests successfully. This is an optional component and is only necessary for those who plan to support embedding NSFW tweets. This method also means you never have to pay Elon Musk to use Twitter's official API.
 
 ---
 
 ## Q&A
 
-### What's the difference between `fxtwitter.com`, `twittpr.com`, and `pxtwitter.com`?
+### What's the difference between `fxtwitter.com`, `twittpr.com`, and `fixupx.com`?
 
 They all run the exact same worker and function identically... mostly.
 
-`fxtwitter.com` is the primary domain these days, with `twittpr.com` as an alternative that allows for quick sed replacement. `pxtwitter.com` was our original domain, but we consider that to be deprecated now.
-
-The way we handle this is that on post-deprecation posts linked using `pxtwitter.com`, instead of saying "FixTweet", it will have a notice that we've moved to `fxtwitter.com`. The embeds and redirects will still work, and posts posted before deprecation will not be unaffected at all, but it will gently encourage people to migrate by applying the notice to newer posts.
-
-`pxtwitter.com` was our original domain for the project, bought the day before we launched FixTweet (then known as pxTwitter). I was trying to find something memorable and `px` kinda sounds like "pix" or can mean "pixels" which is fitting as a service that can embed images, videos, etc. Not long after, I bought `twittpr.com` because it's easier to do sed replacement with on Discord (`s/e/p`), and because it had a `p` in it, it was sorta related to pxTwitter. They have always functioned identically.
-
-A couple weeks later, I acquired the `fxtwitter.com` domain from RobinUniverse and alongside this rebranded the project as FixTweet and shifted `fxtwitter.com` to be the primary domain instead of `pxtwitter.com`. Like the addition of `twittpr.com` this domain works identically to the others.
+`fxtwitter.com` is the primary domain, with `twittpr.com` as an alternative that allows for quick sed replacement for Twitter links. With `fixupx.com`, you can easily fix `x.com` links as well (Very short .com domains are expensive, sorry I didn't get something shorter)
 
 ### How come embedding takes so long / is not working in Telegram?
 
-Telegram's embedding servers sometimes never even send us a request to embed a URL, possibly due to their servers being overloaded. If you have a link that is broken you can try one of FixTweet's other domains (`fxtwitter.com`, `pxtwitter.com`, `twittpr.com`) or use [Webpage Bot](https://t.me/WebpageBot) to try to clear the cache of the embed.
+Telegram's embedding servers sometimes never even send us a request to embed a URL, possibly due to their servers being overloaded. If you have a link that is broken you can try one of FixTweet's other domains (`fxtwitter.com`, `twittpr.com`) or use [Webpage Bot](https://t.me/WebpageBot) to try to clear the cache of the embed.
 
 ### What if I don't want FixTweet to combine my post's images together with multi-image?
 
