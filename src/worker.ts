@@ -51,7 +51,7 @@ app.use(
       allowedSearchParams: /(.*)/
     },
 
-    integrations: [new RewriteFrames({ root: '/' })],
+    // integrations: [new RewriteFrames({ root: '/' }) as any],
     release: RELEASE_NAME
   })
 );
