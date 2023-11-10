@@ -81,7 +81,7 @@ app.use('*', logger(customLogger));
 
 app.use('*', async (c, next) => {
   if (c.req.raw.cf) {
-    console.log(`Hello from ⛅ ${c.req.raw.cf.colo || 'UNK'}`);
+    console.log(`Hello from ⛅ ${c.req.raw.cf.colo ?? 'UNK'}`);
   }
   console.log('userAgent', c.req.header('user-agent'));
   await next();
