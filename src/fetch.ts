@@ -6,18 +6,11 @@ import { generateUserAgent } from './helpers/useragent';
 const API_ATTEMPTS = 3;
 let wasElongatorDisabled = false;
 
-/* TODO: Figure out why TS globals were broken when not forcing globalThis */
-declare const globalThis: {
-  fetchCompletedTime: number;
-};
-
 const generateSnowflake = () => {
   const epoch = 1288834974657n; /* Twitter snowflake epoch */
   const timestamp = BigInt(Date.now()) - epoch;
   return String((timestamp << 22n) | BigInt(Math.floor(Math.random() * 696969)));
 };
-
-globalThis.fetchCompletedTime = 0;
 
 export const twitterFetch = async (
   c: Context,
@@ -184,7 +177,6 @@ export const twitterFetch = async (
       continue;
     }
 
-    globalThis.fetchCompletedTime = performance.now();
 
     if (
       !wasElongatorDisabled &&
