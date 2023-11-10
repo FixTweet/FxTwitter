@@ -16,9 +16,9 @@ export const isGraphQLTweet = (response: unknown): response is GraphQLTweet => {
   return (
     typeof response === 'object' &&
     response !== null &&
-    // @ts-expect-error it's 6 am please let me sleep
     (('__typename' in response &&
       (response.__typename === 'Tweet' || response.__typename === 'TweetWithVisibilityResults')) ||
+      // @ts-expect-error it's 6 am please let me sleep
       ('legacy' in response && response.legacy?.full_text))
   );
 };
