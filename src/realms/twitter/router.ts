@@ -26,18 +26,18 @@ export const getBaseRedirectUrl = (c: Context) => {
   return Constants.TWITTER_ROOT;
 };
 
+/* Workaround for some dumb maybe-build time issue where statusRequest isn't ready or something because none of these trigger*/
+const tweetRequest = async (c: Context) => await statusRequest(c);
 
-twitter.get('/status/:id', statusRequest);
-twitter.get('/:handle/status/:id', statusRequest);
-twitter.get('/:prefix/:handle/status/:id/:language?', statusRequest);
+twitter.get('/:prefix?/:handle?/:endpoint{status(es)?}/:id/:language?', tweetRequest);
+twitter.get(':handle?/:endpoint{status(es)?}/:id/:language?', tweetRequest);
 twitter.get(
-  '/:prefix/:handle/status/:id/:mediaType{(photos?|videos?)}/:mediaNumber{[1-4]}/:language?',
-  statusRequest
+  '/:prefix?/:handle/:endpoint{status(es)?}/:id/:mediaType{(photos?|videos?)}/:mediaNumber{[1-4]}/:language?',
+  tweetRequest
 );
-twitter.get('/:handle?/:endpoint{status(es)?}/:id/:language?', statusRequest);
 twitter.get(
-  '/:handle?/:endpoint{status(es)?}/:id/:mediaType{(photos?|videos?)}/:mediaNumber{[1-4]}/:language?',
-  statusRequest
+  '/:handle/:endpoint{status(es)?}/:id/:mediaType{(photos?|videos?)}/:mediaNumber{[1-4]}/:language?',
+  tweetRequest
 );
 
 twitter.get('/version', versionRoute);
@@ -50,3 +50,5 @@ twitter.get('/i/events/:id', genericTwitterRedirect);
 twitter.get('/hashtag/:hashtag', genericTwitterRedirect);
 
 twitter.get('/:handle', profileRequest);
+
+twitter.all('*', async (c) => c.redirect(Constants.REDIRECT_URL, 302));

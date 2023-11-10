@@ -25,8 +25,13 @@ const app = new Hono<{ Bindings: { TwitterProxy: Fetcher; AnalyticsEngine: Analy
     /* Override if in API_HOST_LIST. Note that we have to check full hostname for this. */
     if (Constants.API_HOST_LIST.includes(url.hostname)) {
       realm = 'api';
+      console.log('API realm');
     } else if (Constants.STANDARD_DOMAIN_LIST.includes(baseHostName)) {
+      console.log()
       realm = 'twitter';
+      console.log('Twitter realm');
+    } else {
+      console.log(`Domain not assigned to realm, falling back to Twitter: ${url.hostname}`);
     }
     /* Defaults to Twitter realm if unknown domain specified (such as the *.workers.dev hostname or deprecated domain) */
 
@@ -59,16 +64,18 @@ app.use('*', async (c, next) => {
 
 app.onError((err, c) => {
   c.get('sentry').captureException(err);
-  /* workaround for silly TypeScript things */
-  const error = err as Error;
-  console.error(error.stack);
+  console.error(err.stack);
   c.status(200);
   c.header('cache-control', noCache);
 
   return c.html(Strings.ERROR_HTML);
 });
 
-// app.use('*', logger());
+ const customLogger = (message: string, ...rest: string[]) => {
+  console.log(message, ...rest);
+};
+
+app.use('*', logger(customLogger));
 
 app.use('*', async (c, next) => {
   console.log(`Hello from ⛅ ${c.req.raw.cf?.colo || 'UNK'}`);
