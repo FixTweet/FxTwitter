@@ -60,7 +60,7 @@ await esbuild.build({
   entryPoints: ['src/worker.ts'],
   sourcemap: 'external',
   outdir: 'dist',
-  minify: false,
+  minify: true,
   bundle: true,
   format: 'esm',
   plugins: [
