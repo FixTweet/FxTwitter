@@ -14,7 +14,7 @@ export const buildAPITweet = async (
   tweet: GraphQLTweet,
   language: string | undefined,
   threadPiece = false,
-  legacyAPI = false,
+  legacyAPI = false
   // eslint-disable-next-line sonarjs/cognitive-complexity
 ): Promise<APITweet | FetchResults | null> => {
   const apiTweet = {} as APITweet;

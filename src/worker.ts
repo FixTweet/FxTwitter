@@ -11,7 +11,9 @@ import { cacheMiddleware } from './caches';
 
 const noCache = 'max-age=0, no-cache, no-store, must-revalidate';
 
-const app = new Hono<{ Bindings: { TwitterProxy: Fetcher; AnalyticsEngine: AnalyticsEngineDataset } }>({
+const app = new Hono<{
+  Bindings: { TwitterProxy: Fetcher; AnalyticsEngine: AnalyticsEngineDataset };
+}>({
   getPath: req => {
     let url: URL;
 
@@ -27,7 +29,7 @@ const app = new Hono<{ Bindings: { TwitterProxy: Fetcher; AnalyticsEngine: Analy
       realm = 'api';
       console.log('API realm');
     } else if (Constants.STANDARD_DOMAIN_LIST.includes(baseHostName)) {
-      console.log()
+      console.log();
       realm = 'twitter';
       console.log('Twitter realm');
     } else {
@@ -71,7 +73,7 @@ app.onError((err, c) => {
   return c.html(Strings.ERROR_HTML);
 });
 
- const customLogger = (message: string, ...rest: string[]) => {
+const customLogger = (message: string, ...rest: string[]) => {
   console.log(message, ...rest);
 };
 
@@ -89,14 +91,11 @@ app.use('*', timing({ enabled: false }));
 app.route(`/api`, api);
 app.route(`/twitter`, twitter);
 
-app.all(
-  '/error',
-  async (c) => {
-    c.header('cache-control', noCache);
-    c.status(400);
-    return c.body('')
-  }
-);
+app.all('/error', async c => {
+  c.header('cache-control', noCache);
+  c.status(400);
+  return c.body('');
+});
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext) {
@@ -105,7 +104,7 @@ export default {
     } catch (err) {
       console.error(err);
       console.log('Ouch, that error hurt so much Sentry couldnt catch it');
-      
+
       return new Response(Strings.ERROR_HTML, {
         headers: {
           ...Constants.RESPONSE_HEADERS,

@@ -11,7 +11,8 @@ export const fetchTweetDetail = async (
   useElongator = typeof c.env.TwitterProxy !== 'undefined',
   cursor: string | null = null
 ): Promise<TweetDetailResult> => {
-  return (await twitterFetch(c,
+  return (await twitterFetch(
+    c,
     `${
       Constants.TWITTER_ROOT
     }/i/api/graphql/7xdlmKfKUJQP7D7woCL5CA/TweetDetail?variables=${encodeURIComponent(
@@ -95,7 +96,8 @@ export const fetchByRestId = async (
     typeof c.env.TwitterProxy !== 'undefined'
   )
 ): Promise<TweetResultsByRestIdResult> => {
-  return (await twitterFetch(c,
+  return (await twitterFetch(
+    c,
     `${
       Constants.TWITTER_ROOT
     }/i/api/graphql/2ICDjqPd81tulZcYrtpTuQ/TweetResultByRestId?variables=${encodeURIComponent(

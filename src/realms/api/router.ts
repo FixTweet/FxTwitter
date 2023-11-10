@@ -11,7 +11,6 @@ api.get('/status/:id/:language?', statusRequest);
 api.get('/:handle/status/:id/:language?', statusRequest);
 
 api.get('/:handle', profileRequest);
-api.get('/robots.txt', async (c) => c.text(Strings.ROBOTS_TXT));
+api.get('/robots.txt', async c => c.text(Strings.ROBOTS_TXT));
 
-
-api.all('*', async (c) => c.redirect(Constants.API_DOCS_URL, 302));
+api.all('*', async c => c.redirect(Constants.API_DOCS_URL, 302));

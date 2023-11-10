@@ -38,7 +38,7 @@ export const profileRequest = async (c: Context) => {
 
   /* Do not cache if using a custom redirect */
   const cacheControl = baseUrl !== Constants.TWITTER_ROOT ? 'max-age=0' : undefined;
-  
+
   if (cacheControl) {
     c.header('cache-control', cacheControl);
   }
@@ -65,6 +65,6 @@ export const profileRequest = async (c: Context) => {
         Obviously we just need to redirect to the user directly.*/
     console.log('Matched human UA', userAgent);
 
-    return c.redirect(`${baseUrl}/${handle}`, 302)
+    return c.redirect(`${baseUrl}/${handle}`, 302);
   }
 };

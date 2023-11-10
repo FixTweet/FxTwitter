@@ -4,20 +4,22 @@ import { Strings } from './strings';
 import { userAPI } from './providers/twitter/profile';
 
 export const returnError = (c: Context, error: string): Response => {
-  return c.html(Strings.BASE_HTML.format({
-    lang: '',
-    headers: [
-      `<meta property="og:title" content="${Constants.BRANDING_NAME}"/>`,
-      `<meta property="og:description" content="${error}"/>`
-    ].join('')
-  }));
+  return c.html(
+    Strings.BASE_HTML.format({
+      lang: '',
+      headers: [
+        `<meta property="og:title" content="${Constants.BRANDING_NAME}"/>`,
+        `<meta property="og:description" content="${error}"/>`
+      ].join('')
+    })
+  );
 };
 
 /* Handler for Twitter users */
 export const handleProfile = async (
   c: Context,
   username: string,
-  flags: InputFlags,
+  flags: InputFlags
 ): Promise<Response> => {
   console.log('Direct?', flags?.direct);
 
@@ -51,8 +53,10 @@ export const handleProfile = async (
   // TODO Add card creation logic here
 
   /* Finally, after all that work we return the response HTML! */
-  return c.html(Strings.BASE_HTML.format({
-    lang: `lang="en"`,
-    headers: headers.join('')
-  }));
+  return c.html(
+    Strings.BASE_HTML.format({
+      lang: `lang="en"`,
+      headers: headers.join('')
+    })
+  );
 };

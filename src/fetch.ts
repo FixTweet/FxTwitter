@@ -172,7 +172,9 @@ export const twitterFetch = async (
       }
       !useElongator &&
         c.executionCtx &&
-        c.executionCtx.waitUntil(cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true }));
+        c.executionCtx.waitUntil(
+          cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true })
+        );
       if (useElongator) {
         console.log('Elongator request failed, trying again without it');
         wasElongatorDisabled = true;
@@ -202,7 +204,9 @@ export const twitterFetch = async (
     if (!useElongator && remainingRateLimit < 10) {
       console.log(`Purging token on this edge due to low rate limit remaining`);
       c.executionCtx &&
-        c.executionCtx.waitUntil(cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true }));
+        c.executionCtx.waitUntil(
+          cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true })
+        );
     }
 
     if (!validateFunction(response)) {
@@ -250,7 +254,8 @@ export const fetchUser = async (
     typeof c.env.TwitterProxy !== 'undefined'
   )
 ): Promise<GraphQLUserResponse> => {
-  return (await twitterFetch(c,
+  return (await twitterFetch(
+    c,
     `${
       Constants.TWITTER_ROOT
     }/i/api/graphql/sLVLhk0bGj3MVFEKTdax1w/UserByScreenName?variables=${encodeURIComponent(

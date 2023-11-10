@@ -101,7 +101,8 @@ export const statusRequest = async (c: Context) => {
     }
 
     /* This throws the necessary data to handleStatus (in status.ts) */
-    const statusResponse = await handleStatus(c,
+    const statusResponse = await handleStatus(
+      c,
       id?.match(/\d{2,20}/)?.[0] || '0',
       mediaNumber ? parseInt(mediaNumber) : undefined,
       userAgent,
@@ -124,7 +125,7 @@ export const statusRequest = async (c: Context) => {
          Embeds will return as usual to bots as if direct media was never specified. */
       if (!isBotUA && !flags.api) {
         const baseUrl = getBaseRedirectUrl(c);
-        
+
         return c.redirect(`${baseUrl}/${handle || 'i'}/status/${id}`, 302);
       }
 

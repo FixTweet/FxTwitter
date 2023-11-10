@@ -63,17 +63,17 @@ export const cacheMiddleware = (): MiddlewareHandler => async (c, next) => {
     case 'DELETE':
       console.log('Purging cache as requested');
       await cache.delete(cacheKey);
-      return c.text('')
+      return c.text('');
     /* yes, we do give HEAD */
     case 'HEAD':
-      return c.text('')
+      return c.text('');
     /* We properly state our OPTIONS when asked */
     case 'OPTIONS':
-      c.header('allow', Constants.RESPONSE_HEADERS.allow)
-      c.status(204)
+      c.header('allow', Constants.RESPONSE_HEADERS.allow);
+      c.status(204);
       return c.text('');
     default:
       c.status(405);
-      return c.text('')
+      return c.text('');
   }
 };

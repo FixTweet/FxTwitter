@@ -10,13 +10,15 @@ import { constructTwitterThread } from '../providers/twitter/conversation';
 import { Context } from 'hono';
 
 export const returnError = (c: Context, error: string): Response => {
-  return c.text(Strings.BASE_HTML.format({
-    lang: '',
-    headers: [
-      `<meta property="og:title" content="${Constants.BRANDING_NAME}"/>`,
-      `<meta property="og:description" content="${error}"/>`
-    ].join('')
-  }));
+  return c.text(
+    Strings.BASE_HTML.format({
+      lang: '',
+      headers: [
+        `<meta property="og:title" content="${Constants.BRANDING_NAME}"/>`,
+        `<meta property="og:description" content="${error}"/>`
+      ].join('')
+    })
+  );
 };
 /* Handler for Twitter statuses (Tweets).
    Like Twitter, we use the terminologies interchangably. */
@@ -26,7 +28,7 @@ export const handleStatus = async (
   mediaNumber: number | undefined,
   userAgent: string,
   flags: InputFlags,
-  language: string,
+  language: string
   // eslint-disable-next-line sonarjs/cognitive-complexity
 ): Promise<Response> => {
   console.log('Direct?', flags?.direct);
@@ -423,9 +425,11 @@ export const handleStatus = async (
   const lang = tweet.lang === null ? 'en' : tweet.lang || 'en';
 
   /* Finally, after all that work we return the response HTML! */
-  return c.html(Strings.BASE_HTML.format({
-    lang: `lang="${lang}"`,
-    headers: headers.join(''),
-    body: ivbody
-  }).replace(/>(\s+)</gm, '><'));
+  return c.html(
+    Strings.BASE_HTML.format({
+      lang: `lang="${lang}"`,
+      headers: headers.join(''),
+      body: ivbody
+    }).replace(/>(\s+)</gm, '><')
+  );
 };

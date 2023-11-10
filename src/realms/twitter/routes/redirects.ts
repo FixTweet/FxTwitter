@@ -13,7 +13,7 @@ export const genericTwitterRedirect = async (c: Context) => {
   if (cacheControl) {
     c.header('cache-control', cacheControl);
   }
-  
+
   return c.redirect(`${baseUrl}${url.pathname}`, 302);
 };
 
@@ -27,22 +27,31 @@ export const setRedirectRequest = async (c: Context) => {
   if (origin && !Constants.STANDARD_DOMAIN_LIST.includes(new URL(origin).hostname)) {
     c.status(403);
 
-    return c.html(Strings.MESSAGE_HTML.format({
-      message: `Failed to set base redirect: Your request seems to be originating from another domain, please open this up in a new tab if you are trying to set your base redirect.`
-    }))
+    return c.html(
+      Strings.MESSAGE_HTML.format({
+        message: `Failed to set base redirect: Your request seems to be originating from another domain, please open this up in a new tab if you are trying to set your base redirect.`
+      })
+    );
   }
 
   if (!url) {
-    
     /* Remove redirect URL */
     // eslint-disable-next-line sonarjs/no-duplicate-string
-    c.header('set-cookie', `base_redirect=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; HttpOnly`);
+    c.header(
+      'set-cookie',
+      `base_redirect=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; HttpOnly`
+    );
     // eslint-disable-next-line sonarjs/no-duplicate-string
-    c.header('content-security-policy', `frame-ancestors ${Constants.STANDARD_DOMAIN_LIST.join(' ')};`);
+    c.header(
+      'content-security-policy',
+      `frame-ancestors ${Constants.STANDARD_DOMAIN_LIST.join(' ')};`
+    );
     c.status(200);
-    return c.html(Strings.MESSAGE_HTML.format({
-      message: `Your base redirect has been cleared. To set one, please pass along the <code>url</code> parameter.`
-    }))
+    return c.html(
+      Strings.MESSAGE_HTML.format({
+        message: `Your base redirect has been cleared. To set one, please pass along the <code>url</code> parameter.`
+      })
+    );
   }
 
   try {
@@ -54,21 +63,36 @@ export const setRedirectRequest = async (c: Context) => {
       /* URL is not well-formed, remove */
       console.log('Invalid base redirect URL, removing cookie before redirect');
 
-      c.header('set-cookie', `base_redirect=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; HttpOnly`);
-      c.header('content-security-policy', `frame-ancestors ${Constants.STANDARD_DOMAIN_LIST.join(' ')};`);
+      c.header(
+        'set-cookie',
+        `base_redirect=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; HttpOnly`
+      );
+      c.header(
+        'content-security-policy',
+        `frame-ancestors ${Constants.STANDARD_DOMAIN_LIST.join(' ')};`
+      );
       c.status(200);
-      return c.html(Strings.MESSAGE_HTML.format({
-        message: `Your URL does not appear to be well-formed. Example: ?url=https://nitter.net`
-      }))
+      return c.html(
+        Strings.MESSAGE_HTML.format({
+          message: `Your URL does not appear to be well-formed. Example: ?url=https://nitter.net`
+        })
+      );
     }
 
     url = `https://${url}`;
   }
 
   c.header('set-cookie', `base_redirect=${url}; path=/; max-age=63072000; secure; HttpOnly`);
-  c.header('content-security-policy', `frame-ancestors ${Constants.STANDARD_DOMAIN_LIST.join(' ')};`);
+  c.header(
+    'content-security-policy',
+    `frame-ancestors ${Constants.STANDARD_DOMAIN_LIST.join(' ')};`
+  );
 
-  return c.html(Strings.MESSAGE_HTML.format({
-    message: `Successfully set base redirect, you will now be redirected to ${sanitizeText(url)} rather than ${Constants.TWITTER_ROOT}`
-  }))
+  return c.html(
+    Strings.MESSAGE_HTML.format({
+      message: `Successfully set base redirect, you will now be redirected to ${sanitizeText(
+        url
+      )} rather than ${Constants.TWITTER_ROOT}`
+    })
+  );
 };
