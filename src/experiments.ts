@@ -24,7 +24,7 @@ const Experiments: { [key in Experiment]: ExperimentConfig } = {
   [Experiment.TWEET_DETAIL_API]: {
     name: 'Tweet detail API',
     description: 'Use Tweet Detail API (where available with elongator)',
-    percentage: 0.4
+    percentage: 0.5
   }
 };
 

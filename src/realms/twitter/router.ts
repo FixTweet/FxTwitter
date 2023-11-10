@@ -43,7 +43,7 @@ twitter.get(
 
 twitter.get('/version', versionRoute);
 twitter.get('/set_base_redirect', setRedirectRequest);
-twitter.get('/oembed', oembed);
+twitter.get('/owoembed', oembed);
 
 twitter.get('/robots.txt', async c => c.text(Strings.ROBOTS_TXT));
 

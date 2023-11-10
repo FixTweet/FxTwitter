@@ -7,7 +7,6 @@ import { Strings } from '../../../strings';
 /* Handler for status (Tweet) request */
 export const statusRequest = async (c: Context) => {
   const { prefix, handle, id, mediaNumber, language } = c.req.param();
-  console.log('req', JSON.stringify(c.req))
   const url = new URL(c.req.url);
   const flags: InputFlags = {};
 
