@@ -1,17 +1,18 @@
-import { IRequest } from 'itty-router';
 import { Constants } from '../../constants';
 import { twitterFetch } from '../../fetch';
 import { buildAPITweet } from './processor';
 import { Experiment, experimentCheck } from '../../experiments';
 import { isGraphQLTweet } from '../../helpers/graphql';
+import { Context } from 'hono';
 
 export const fetchTweetDetail = async (
+  c: Context,
   status: string,
-  event: FetchEvent,
-  useElongator = typeof TwitterProxy !== 'undefined',
+  useElongator = typeof c.env?.TwitterProxy !== 'undefined',
   cursor: string | null = null
 ): Promise<TweetDetailResult> => {
   return (await twitterFetch(
+    c,
     `${
       Constants.TWITTER_ROOT
     }/i/api/graphql/7xdlmKfKUJQP7D7woCL5CA/TweetDetail?variables=${encodeURIComponent(
@@ -56,7 +57,6 @@ export const fetchTweetDetail = async (
         withArticleRichContentState: true
       })
     )}`,
-    event,
     useElongator,
     (_conversation: unknown) => {
       const conversation = _conversation as TweetDetailResult;
@@ -90,13 +90,14 @@ export const fetchTweetDetail = async (
 
 export const fetchByRestId = async (
   status: string,
-  event: FetchEvent,
+  c: Context,
   useElongator = experimentCheck(
     Experiment.ELONGATOR_BY_DEFAULT,
-    typeof TwitterProxy !== 'undefined'
+    typeof c.env?.TwitterProxy !== 'undefined'
   )
 ): Promise<TweetResultsByRestIdResult> => {
   return (await twitterFetch(
+    c,
     `${
       Constants.TWITTER_ROOT
     }/i/api/graphql/2ICDjqPd81tulZcYrtpTuQ/TweetResultByRestId?variables=${encodeURIComponent(
@@ -133,7 +134,6 @@ export const fetchByRestId = async (
         withArticleRichContentState: true
       })
     )}`,
-    event,
     useElongator,
     (_conversation: unknown) => {
       const conversation = _conversation as TweetResultsByRestIdResult;
@@ -273,7 +273,7 @@ const filterBucketTweets = (tweets: GraphQLTweet[], original: GraphQLTweet) => {
 export const constructTwitterThread = async (
   id: string,
   processThread = false,
-  request: IRequest,
+  c: Context,
   language: string | undefined,
   legacyAPI = false
 ): Promise<SocialThread> => {
@@ -286,9 +286,13 @@ export const constructTwitterThread = async (
      
      Also - dirty hack. Right now, TweetDetail requests aren't working with language and I haven't figured out why.
      I'll figure out why eventually, but for now just don't use TweetDetail for this. */
-  if (typeof TwitterProxy !== 'undefined' && !language && (experimentCheck(Experiment.TWEET_DETAIL_API) || processThread)) {
+  if (
+    typeof c.env?.TwitterProxy !== 'undefined' &&
+    !language &&
+    (experimentCheck(Experiment.TWEET_DETAIL_API) || processThread)
+  ) {
     console.log('Using TweetDetail for request...');
-    response = (await fetchTweetDetail(id, request.event)) as TweetDetailResult;
+    response = (await fetchTweetDetail(c, id)) as TweetDetailResult;
 
     console.log(response);
 
@@ -312,7 +316,7 @@ export const constructTwitterThread = async (
   /* If we didn't get a response from TweetDetail we should ignore threads and try TweetResultsByRestId */
   if (!response) {
     console.log('Using TweetResultsByRestId for request...');
-    response = (await fetchByRestId(id, request.event)) as TweetResultsByRestIdResult;
+    response = (await fetchByRestId(id, c)) as TweetResultsByRestIdResult;
 
     const result = response?.data?.tweetResult?.result as GraphQLTweet;
 
@@ -320,7 +324,7 @@ export const constructTwitterThread = async (
       return { post: null, thread: null, author: null, code: 404 };
     }
 
-    const buildPost = await buildAPITweet(result, language, false, legacyAPI);
+    const buildPost = await buildAPITweet(c, result, language, false, legacyAPI);
 
     if ((buildPost as FetchResults)?.status === 401) {
       return { post: null, thread: null, author: null, code: 401 };
@@ -343,7 +347,7 @@ export const constructTwitterThread = async (
     return { post: null, thread: null, author: null, code: 404 };
   }
 
-  post = (await buildAPITweet(originalTweet, undefined, false, legacyAPI)) as APITweet;
+  post = (await buildAPITweet(c, originalTweet, undefined, false, legacyAPI)) as APITweet;
 
   if (post === null) {
     return { post: null, thread: null, author: null, code: 404 };
@@ -400,7 +404,7 @@ export const constructTwitterThread = async (
       let loadCursor: TweetDetailResult;
 
       try {
-        loadCursor = await fetchTweetDetail(id, request.event, true, cursor.value);
+        loadCursor = await fetchTweetDetail(c, id, true, cursor.value);
 
         if (
           typeof loadCursor?.data?.threaded_conversation_with_injections_v2?.instructions ===
@@ -464,7 +468,7 @@ export const constructTwitterThread = async (
       let loadCursor: TweetDetailResult;
 
       try {
-        loadCursor = await fetchTweetDetail(id, request.event, true, cursor.value);
+        loadCursor = await fetchTweetDetail(c, id, true, cursor.value);
 
         if (
           typeof loadCursor?.data?.threaded_conversation_with_injections_v2?.instructions ===
@@ -501,18 +505,21 @@ export const constructTwitterThread = async (
   };
 
   threadTweets.forEach(async tweet => {
-    socialThread.thread?.push((await buildAPITweet(tweet, undefined, true, false)) as APITweet);
+    socialThread.thread?.push((await buildAPITweet(c, tweet, undefined, true, false)) as APITweet);
   });
 
   return socialThread;
 };
 
-export const threadAPIProvider = async (request: IRequest) => {
-  const { id } = request.params;
+export const threadAPIProvider = async (c: Context) => {
+  const id = c.req.param('id') as string;
 
-  const processedResponse = await constructTwitterThread(id, true, request, undefined);
+  const processedResponse = await constructTwitterThread(id, true, c, undefined);
 
-  return new Response(JSON.stringify(processedResponse), {
-    headers: { ...Constants.RESPONSE_HEADERS, ...Constants.API_RESPONSE_HEADERS }
-  });
+  c.status(processedResponse.code);
+  // Add every header from Constants.API_RESPONSE_HEADERS
+  for (const [header, value] of Object.entries(Constants.API_RESPONSE_HEADERS)) {
+    c.header(header, value);
+  }
+  return c.json(processedResponse);
 };

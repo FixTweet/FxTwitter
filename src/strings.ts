@@ -203,20 +203,6 @@ This is caused by Twitter API downtime or a new bug. Try again in a little while
 
 # Check out the docs at https://${API_HOST_LIST.split(',')[0]} to learn how to use it
 
-#        ________________
-#       /               /|
-#      /               / |
-#     /_______________/  |
-#    |  ___________  | / |
-#    | |          |  | / |
-#    | |          |  | / |
-#    | |  gaming  |  | / |
-#    | |__________|  | / |
-#    |               | / |
-#    |        _____  | / |
-#    | _____________ |  /
-#     |_____________| /
-
 # Good luck, have fun and try not to take over the world!
 
 # Instructions below are for robots only, beep boop
@@ -242,5 +228,7 @@ Disallow: /owoembed/
 Allow: /watch?v=dQw4w9WgXcQ
 
 # 0100011101101111011011110110010000100000011000100110111101110100`,
-  X_DOMAIN_NOTICE: 'FixTweet - 🆕 x.com link? Try fixupx.com'
+  ROBOTS_TXT_API: `# Crawlers should not crawl API endpoints
+User-agent: *
+Disallow: /`
 };

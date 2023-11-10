@@ -1,4 +1,4 @@
-import { cacheWrapper } from '../src/worker';
+import { app } from '../src/worker';
 
 const botHeaders = { 'User-Agent': 'Discordbot/2.0' };
 const humanHeaders = {
@@ -29,13 +29,13 @@ if (!globalThis.performance.now) {
 }
 
 test('Home page redirect', async () => {
-  const result = await cacheWrapper(
+  const result = await app.request(
     new Request('https://fxtwitter.com', {
       method: 'GET',
       headers: botHeaders
     })
   );
-  const resultHuman = await cacheWrapper(
+  const resultHuman = await app.request(
     new Request('https://fxtwitter.com', {
       method: 'GET',
       headers: humanHeaders
@@ -48,7 +48,7 @@ test('Home page redirect', async () => {
 });
 
 test('Tweet redirect human', async () => {
-  const result = await cacheWrapper(
+  const result = await app.request(
     new Request('https://fxtwitter.com/jack/status/20', {
       method: 'GET',
       headers: humanHeaders
@@ -59,7 +59,7 @@ test('Tweet redirect human', async () => {
 });
 
 test('Tweet redirect human custom base redirect', async () => {
-  const result = await cacheWrapper(
+  const result = await app.request(
     new Request('https://fxtwitter.com/jack/status/20', {
       method: 'GET',
       headers: {
@@ -73,7 +73,7 @@ test('Tweet redirect human custom base redirect', async () => {
 });
 
 test('Twitter moment redirect', async () => {
-  const result = await cacheWrapper(
+  const result = await app.request(
     new Request(
       'https://fxtwitter.com/i/events/1572638642127966214?t=0UK7Ny-Jnsp-dUGzlb-M8w&s=35',
       {
@@ -87,7 +87,7 @@ test('Twitter moment redirect', async () => {
 });
 
 test('Tweet response robot', async () => {
-  const result = await cacheWrapper(
+  const result = await app.request(
     new Request('https://fxtwitter.com/jack/status/20', {
       method: 'GET',
       headers: botHeaders
@@ -97,7 +97,7 @@ test('Tweet response robot', async () => {
 });
 
 test('API fetch basic Tweet', async () => {
-  const result = await cacheWrapper(
+  const result = await app.request(
     new Request('https://api.fxtwitter.com/status/20', {
       method: 'GET',
       headers: botHeaders
@@ -132,7 +132,7 @@ test('API fetch basic Tweet', async () => {
 });
 
 // test('API fetch video Tweet', async () => {
-//   const result = await cacheWrapper(
+//   const result = await app.request(
 //     new Request('https://api.fxtwitter.com/X/status/854416760933556224', {
 //       method: 'GET',
 //       headers: botHeaders
@@ -177,7 +177,7 @@ test('API fetch basic Tweet', async () => {
 // });
 
 // test('API fetch multi-photo Tweet', async () => {
-//   const result = await cacheWrapper(
+//   const result = await app.request(
 //     new Request('https://api.fxtwitter.com/Twitter/status/1445094085593866246', {
 //       method: 'GET',
 //       headers: botHeaders
@@ -224,7 +224,7 @@ test('API fetch basic Tweet', async () => {
 // });
 
 // test('API fetch poll Tweet', async () => {
-//   const result = await cacheWrapper(
+//   const result = await app.request(
 //     new Request('https://api.fxtwitter.com/status/1055475950543167488', {
 //       method: 'GET',
 //       headers: botHeaders
@@ -273,7 +273,7 @@ test('API fetch basic Tweet', async () => {
 // });
 
 test('API fetch user', async () => {
-  const result = await cacheWrapper(
+  const result = await app.request(
     new Request('https://api.fxtwitter.com/x', {
       method: 'GET',
       headers: botHeaders
@@ -303,7 +303,7 @@ test('API fetch user', async () => {
 });
 
 test('API fetch user that does not exist', async () => {
-  const result = await cacheWrapper(
+  const result = await app.request(
     new Request('https://api.fxtwitter.com/usesaahah123', {
       method: 'GET',
       headers: botHeaders

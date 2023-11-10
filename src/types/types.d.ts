@@ -37,12 +37,6 @@ interface RenderProperties {
   flags?: InputFlags;
 }
 
-interface Request {
-  params: {
-    [param: string]: string;
-  };
-}
-
 interface TweetAPIResponse {
   code: number;
   message: string;

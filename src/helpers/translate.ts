@@ -1,10 +1,12 @@
+import { Context } from 'hono';
 import { Constants } from '../constants';
 
 /* Handles translating Tweets when asked! */
 export const translateTweet = async (
   tweet: GraphQLTweet,
   guestToken: string,
-  language: string
+  language: string,
+  c: Context
 ): Promise<TranslationPartial | null> => {
   const csrfToken = crypto.randomUUID().replace(/-/g, ''); // Generate a random CSRF token, this doesn't matter, Twitter just cares that header and cookie match
 
@@ -44,14 +46,14 @@ export const translateTweet = async (
   headers['x-twitter-client-language'] = language;
 
   /* As of August 2023, you can no longer fetch translations with guest token */
-  if (typeof TwitterProxy === 'undefined') {
+  if (typeof c.env?.TwitterProxy === 'undefined') {
     return null;
   }
 
   try {
     const url = `${Constants.TWITTER_ROOT}/i/api/1.1/strato/column/None/tweetId=${tweet.rest_id},destinationLanguage=None,translationSource=Some(Google),feature=None,timeout=None,onlyCached=None/translation/service/translateTweet`;
     console.log(url, headers);
-    translationApiResponse = await TwitterProxy.fetch(url, {
+    translationApiResponse = await c.env?.TwitterProxy.fetch(url, {
       method: 'GET',
       headers: headers
     });

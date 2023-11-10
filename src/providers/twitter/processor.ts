@@ -7,8 +7,10 @@ import { unescapeText } from '../../helpers/utils';
 import { processMedia } from '../../helpers/media';
 import { convertToApiUser } from './profile';
 import { translateTweet } from '../../helpers/translate';
+import { Context } from 'hono';
 
 export const buildAPITweet = async (
+  c: Context,
   tweet: GraphQLTweet,
   language: string | undefined,
   threadPiece = false,
@@ -149,19 +151,13 @@ export const buildAPITweet = async (
   /* We found a quote tweet, let's process that too */
   const quoteTweet = tweet.quoted_status_result;
   if (quoteTweet) {
-    const buildQuote = (await buildAPITweet(
-      quoteTweet,
-      language,
-      threadPiece,
-      legacyAPI
-    ));
+    const buildQuote = await buildAPITweet(c, quoteTweet, language, threadPiece, legacyAPI);
     if ((buildQuote as FetchResults).status) {
-      apiTweet.quote = undefined
+      apiTweet.quote = undefined;
     } else {
       apiTweet.quote = buildQuote as APITweet;
     }
 
-    
     /* Only override the embed_card if it's a basic tweet, since media always takes precedence  */
     if (apiTweet.embed_card === 'tweet' && typeof apiTweet.quote !== 'undefined') {
       apiTweet.embed_card = apiTweet.quote.embed_card;
@@ -237,12 +233,12 @@ export const buildAPITweet = async (
     apiTweet.embed_card = 'player';
   }
 
-  console.log('language?', language)
+  console.log('language?', language);
 
   /* If a language is specified in API or by user, let's try translating it! */
   if (typeof language === 'string' && language.length === 2 && language !== tweet.legacy.lang) {
     console.log(`Attempting to translate Tweet to ${language}...`);
-    const translateAPI = await translateTweet(tweet, '', language);
+    const translateAPI = await translateTweet(tweet, '', language, c);
     if (translateAPI !== null && translateAPI?.translation) {
       apiTweet.translation = {
         text: unescapeText(

@@ -1,3 +1,4 @@
+import { Context } from 'hono';
 import { Constants } from '../../constants';
 import { fetchUser } from '../../fetch';
 import { linkFixer } from '../../helpers/linkFixer';
@@ -79,10 +80,10 @@ const populateUserProperties = async (
    available for free using api.fxtwitter.com. */
 export const userAPI = async (
   username: string,
-  event: FetchEvent
+  c: Context
   // flags?: InputFlags
 ): Promise<UserAPIResponse> => {
-  const userResponse = await fetchUser(username, event);
+  const userResponse = await fetchUser(username, c);
   if (!userResponse || !Object.keys(userResponse).length) {
     return {
       code: 404,

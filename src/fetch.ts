@@ -1,3 +1,4 @@
+import { Context } from 'hono';
 import { Constants } from './constants';
 import { Experiment, experimentCheck } from './experiments';
 import { generateUserAgent } from './helpers/useragent';
@@ -5,25 +6,18 @@ import { generateUserAgent } from './helpers/useragent';
 const API_ATTEMPTS = 3;
 let wasElongatorDisabled = false;
 
-/* TODO: Figure out why TS globals were broken when not forcing globalThis */
-declare const globalThis: {
-  fetchCompletedTime: number;
-};
-
 const generateSnowflake = () => {
   const epoch = 1288834974657n; /* Twitter snowflake epoch */
   const timestamp = BigInt(Date.now()) - epoch;
   return String((timestamp << 22n) | BigInt(Math.floor(Math.random() * 696969)));
 };
 
-globalThis.fetchCompletedTime = 0;
-
 export const twitterFetch = async (
+  c: Context,
   url: string,
-  event: FetchEvent,
   useElongator = experimentCheck(
     Experiment.ELONGATOR_BY_DEFAULT,
-    typeof TwitterProxy !== 'undefined'
+    typeof c.env?.TwitterProxy !== 'undefined'
   ),
   validateFunction: (response: unknown) => boolean,
   elongatorRequired = false
@@ -140,10 +134,10 @@ export const twitterFetch = async (
     let apiRequest;
 
     try {
-      if (useElongator && typeof TwitterProxy !== 'undefined') {
+      if (useElongator && typeof c.env?.TwitterProxy !== 'undefined') {
         console.log('Fetching using elongator');
         const performanceStart = performance.now();
-        apiRequest = await TwitterProxy.fetch(url, {
+        apiRequest = await c.env?.TwitterProxy.fetch(url, {
           method: 'GET',
           headers: headers
         });
@@ -169,9 +163,15 @@ export const twitterFetch = async (
         console.log('Tweet was not found');
         return {};
       }
-      !useElongator &&
-        event &&
-        event.waitUntil(cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true }));
+      try{
+        !useElongator &&
+          c.executionCtx &&
+          c.executionCtx.waitUntil(
+            cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true })
+          );
+      } catch (error) {
+        console.error((error as Error).stack);
+      }
       if (useElongator) {
         console.log('Elongator request failed, trying again without it');
         wasElongatorDisabled = true;
@@ -181,12 +181,11 @@ export const twitterFetch = async (
       continue;
     }
 
-    globalThis.fetchCompletedTime = performance.now();
 
     if (
       !wasElongatorDisabled &&
       !useElongator &&
-      typeof TwitterProxy !== 'undefined' &&
+      typeof c.env?.TwitterProxy !== 'undefined' &&
       (response as TweetResultsByRestIdResult)?.data?.tweetResult?.result?.reason ===
         'NsfwLoggedOut'
     ) {
@@ -200,8 +199,14 @@ export const twitterFetch = async (
     /* Running out of requests within our rate limit, let's purge the cache */
     if (!useElongator && remainingRateLimit < 10) {
       console.log(`Purging token on this edge due to low rate limit remaining`);
-      event &&
-        event.waitUntil(cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true }));
+      try {
+        c.executionCtx &&
+          c.executionCtx.waitUntil(
+            cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true })
+          );
+      } catch (error) {
+        console.error((error as Error).stack);
+      }
     }
 
     if (!validateFunction(response)) {
@@ -218,16 +223,20 @@ export const twitterFetch = async (
       newTokenGenerated = true;
       continue;
     }
-    /* If we've generated a new token, we'll cache it */
-    if (event && newTokenGenerated && activate) {
-      const cachingResponse = new Response(await activate.clone().text(), {
-        headers: {
-          ...tokenHeaders,
-          'cache-control': `max-age=${Constants.GUEST_TOKEN_MAX_AGE}`
-        }
-      });
-      console.log('Caching guest token');
-      event.waitUntil(cache.put(guestTokenRequestCacheDummy.clone(), cachingResponse));
+    try {
+      /* If we've generated a new token, we'll cache it */
+      if (c.executionCtx && newTokenGenerated && activate) {
+        const cachingResponse = new Response(await activate.clone().text(), {
+          headers: {
+            ...tokenHeaders,
+            'cache-control': `max-age=${Constants.GUEST_TOKEN_MAX_AGE}`
+          }
+        });
+        console.log('Caching guest token');
+        c.executionCtx.waitUntil(cache.put(guestTokenRequestCacheDummy.clone(), cachingResponse));
+      }
+    } catch (error) {
+      console.error((error as Error).stack);
     }
 
     // @ts-expect-error - We'll pin the guest token to whatever response we have
@@ -243,13 +252,14 @@ export const twitterFetch = async (
 
 export const fetchUser = async (
   username: string,
-  event: FetchEvent,
+  c: Context,
   useElongator = experimentCheck(
     Experiment.ELONGATOR_PROFILE_API,
-    typeof TwitterProxy !== 'undefined'
+    typeof c.env?.TwitterProxy !== 'undefined'
   )
 ): Promise<GraphQLUserResponse> => {
   return (await twitterFetch(
+    c,
     `${
       Constants.TWITTER_ROOT
     }/i/api/graphql/sLVLhk0bGj3MVFEKTdax1w/UserByScreenName?variables=${encodeURIComponent(
@@ -266,7 +276,6 @@ export const fetchUser = async (
         verified_phone_label_enabled: true
       })
     )}`,
-    event,
     useElongator,
     // Validator function
     (_res: unknown) => {

@@ -17,9 +17,8 @@
     "REDIRECT_URL": "https://github.com/FixTweet/FixTweet",
     "EMBED_URL": "https://github.com/FixTweet/FixTweet",
     "RELEASE_NAME": "fixtweet-test",
-    "TEST": true
+    "SENTRY_DSN": null
   },
   "testRegex": "/test/.*\\.test\\.ts$",
-  "collectCoverageFrom": ["src/**/*.{ts,js}"],
-  "useESM": true
+  "collectCoverageFrom": ["src/**/*.{ts,js}"]
 }
