@@ -42,19 +42,21 @@ export const app = new Hono<{
   }
 });
 
-app.use(
-  '*',
-  sentry({
-    dsn: SENTRY_DSN,
-    requestDataOptions: {
-      allowedHeaders: /(.*)/,
-      allowedSearchParams: /(.*)/
-    },
+if (SENTRY_DSN) {
+  app.use(
+    '*',
+    sentry({
+      dsn: SENTRY_DSN,
+      requestDataOptions: {
+        allowedHeaders: /(.*)/,
+        allowedSearchParams: /(.*)/
+      },
 
-    // integrations: [new RewriteFrames({ root: '/' }) as any],
-    release: RELEASE_NAME
-  })
-);
+      // integrations: [new RewriteFrames({ root: '/' }) as any],
+      release: RELEASE_NAME
+    })
+  );
+}
 
 app.use('*', async (c, next) => {
   /* Apply all headers from Constants.RESPONSE_HEADERS */

@@ -20,6 +20,5 @@
     "TEST": true
   },
   "testRegex": "/test/.*\\.test\\.ts$",
-  "collectCoverageFrom": ["src/**/*.{ts,js}"],
-  "useESM": true
+  "collectCoverageFrom": ["src/**/*.{ts,js}"]
 }
