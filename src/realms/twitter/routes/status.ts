@@ -141,8 +141,7 @@ export const statusRequest = async (c: Context) => {
     /* A human has clicked a fxtwitter.com/:screen_name/status/:id link!
        Obviously we just need to redirect to the Tweet directly.*/
     console.log('Matched human UA', userAgent);
-
-    c.redirect(`${baseUrl}/${handle || 'i'}/status/${id?.match(/\d{2,20}/)?.[0]}`, 302);
-    return c.text('');
+    
+    return c.redirect(`${baseUrl}/${handle || 'i'}/status/${id?.match(/\d{2,20}/)?.[0]}`, 302);
   }
 };
