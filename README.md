@@ -1,6 +1,6 @@
 # FixTweet / FixupX <img src="https://abs-0.twimg.com/emoji/v2/svg/1f527.svg" height="28">
 
-## Embed X / Twitter videos, polls, translations, & more on Discord, Telegram, and more!
+## Embed X / Twitter videos, polls, translations, & more on Discord, Telegram, and others!
 
 ![][icons]
 
@@ -69,13 +69,11 @@ There are a few supported ways to do this:
 
 - Add `d.` or `dl.` before the domain (so, `d.fxtwitter.com` or `dl.fxtwitter.com`)
 - Add `.mp4` to the end of videos or `.jpg` to the end of images, after the post ID
-- Add `/dl` or `/dir` between the domain and the username
 
 Examples from above:
 
 - `https://d.fxtwitter.com/dangeredwolf/status/1548119328498728960`
 - `https://fxtwitter.com/dangeredwolf/status/1548117889437208581.jpg`
-- `https://fxtwitter.com/dl/dangeredwolf/status/1548117889437208581`
 
 Posts with multiple images are supported, so you can do something like this and it will pick the correct one:
 
@@ -111,25 +109,25 @@ On a different note, if the person who posted a FixTweet link forgot to strip tr
 
 In many ways, FixTweet has richer embeds and does more. Here's a table comparing some of FixTweet's features compared to Twitter default embeds as well as other embedding services
 
-|                                         |                      FixTweet                      |         Twitter default          |              vxTwitter (BetterTwitFix)              |
-| --------------------------------------- | :------------------------------------------------: | :------------------------------: | :-------------------------------------------------: |
-| Embed Posts / Images                    |                 :heavy_check_mark:                 |        :heavy_check_mark:        |                 :heavy_check_mark:                  |
-| Embed profile pictures on text posts    |                 :heavy_check_mark:                 |               :x:                |                 :heavy_check_mark:                  |
-| Embed Twitter Videos                    |                 :heavy_check_mark:                 | :heavy_minus_sign: Discord Only¹ |                 :heavy_check_mark:                  |
-| Embed External Videos (YouTube, etc.)   |                :heavy_check_mark:⁴                 |               :x:                |                        :x:³                         |
-| Embed Poll results                      |                 :heavy_check_mark:                 |               :x:                |            [:heavy_check_mark:][polladd]            |
-| Embed Quotes                            |                 :heavy_check_mark:                 |               :x:                |        :ballot_box_with_check: Without Media        |
-| Embed Multiple Images                   |                 :heavy_check_mark:                 | :heavy_minus_sign: Discord Only² |                 :heavy_check_mark:                  |
-| Translate Posts                         |                 :heavy_check_mark:                 |               :x:                |                         :x:                         |
-| Replace t.co with original links        |                 :heavy_check_mark:                 |               :x:                |                         :x:                         |
-| Redirect to media file (without embed)  |                 :heavy_check_mark:                 |               :x:                | :ballot_box_with_check: Subdomain broken, no images |
-| Strip Twitter tracking info on redirect |                 :heavy_check_mark:                 |               :x:                |                 :heavy_check_mark:                  |
-| Show retweet, like, reply counts        | :heavy_minus_sign: Discord / Telegram Instant View | :heavy_minus_sign: Discord Only² |         :ballot_box_with_check: No replies          |
-| Discord sed replace (`s/`) friendly     |        :ballot_box_with_check: twittpr.com         |               N/A                |                         :x:                         |
-| Domain for X.com links                  |         :ballot_box_with_check: fixupx.com         |               N/A                |          :ballot_box_with_check: fixvx.com          |
-| Status fetch API for Developers         |                 :heavy_check_mark:                 |               N/A                |                         :x:                         |
-| DDoS protection & low latency globally  |                 :heavy_check_mark:                 |               N/A                |                         :x:                         |
-| Last commit                             |                   [![][flc]][fc]                   |               N/A                |                   [![][vlc]][vc]                    |
+|                                        |                      FixTweet                      |         Twitter default          |              vxTwitter (BetterTwitFix)              |
+| -------------------------------------- | :------------------------------------------------: | :------------------------------: | :-------------------------------------------------: |
+| Embed Posts / Images                   |                 :heavy_check_mark:                 |        :heavy_check_mark:        |                 :heavy_check_mark:                  |
+| Embed profile pictures on text posts   |                 :heavy_check_mark:                 |               :x:                |                 :heavy_check_mark:                  |
+| Embed Twitter Videos                   |                 :heavy_check_mark:                 | :heavy_minus_sign: Discord Only¹ |                 :heavy_check_mark:                  |
+| Embed External Videos (YouTube, etc.)  |                :heavy_check_mark:⁴                 |               :x:                |                        :x:³                         |
+| Embed Poll results                     |                 :heavy_check_mark:                 |               :x:                |            [:heavy_check_mark:][polladd]            |
+| Embed Quotes                           |                 :heavy_check_mark:                 |               :x:                |        :ballot_box_with_check: Without Media        |
+| Embed Multiple Images                  |                 :heavy_check_mark:                 | :heavy_minus_sign: Discord Only² |                 :heavy_check_mark:                  |
+| Translate Posts                        |                 :heavy_check_mark:                 |               :x:                |                         :x:                         |
+| Replace t.co with original links       |                 :heavy_check_mark:                 |               :x:                |                         :x:                         |
+| Redirect to media file (without embed) |                 :heavy_check_mark:                 |               :x:                | :ballot_box_with_check: Subdomain broken, no images |
+| Strip tracking info on redirect        |                 :heavy_check_mark:                 |               :x:                |                 :heavy_check_mark:                  |
+| Show retweet, like, reply counts       | :heavy_minus_sign: Discord / Telegram Instant View | :heavy_minus_sign: Discord Only² |         :ballot_box_with_check: No replies          |
+| Discord sed replace (`s/`) friendly    |        :ballot_box_with_check: twittpr.com         |               N/A                |                         :x:                         |
+| Domain for X.com links                 |         :ballot_box_with_check: fixupx.com         |               N/A                |          :ballot_box_with_check: fixvx.com          |
+| Status fetch API for Developers        |                 :heavy_check_mark:                 |               N/A                |                         :x:                         |
+| DDoS protection & low latency globally |                 :heavy_check_mark:                 |               N/A                |                         :x:                         |
+| Last commit                            |                   [![][flc]][fc]                   |               N/A                |                   [![][vlc]][vc]                    |
 
 [flc]: https://img.shields.io/github/last-commit/FixTweet/FixTweet?label
 [vlc]: https://img.shields.io/github/last-commit/dylanpdx/BetterTwitFix?label
