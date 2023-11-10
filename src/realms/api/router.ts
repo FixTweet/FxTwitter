@@ -13,4 +13,4 @@ api.get('/robots.txt', async c => c.text(Strings.ROBOTS_TXT_API));
 
 api.get('/:handle', profileRequest);
 
-api.all('*', async c => c.redirect(Constants.API_DOCS_URL, 302));
+api.get('/', async c => c.redirect(Constants.API_DOCS_URL, 302));
