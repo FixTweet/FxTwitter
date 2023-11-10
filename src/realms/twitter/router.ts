@@ -28,6 +28,7 @@ export const getBaseRedirectUrl = (c: Context) => {
 
 /* Workaround for some dumb maybe-build time issue where statusRequest isn't ready or something because none of these trigger*/
 const tweetRequest = async (c: Context) => await statusRequest(c);
+const _profileRequest = async (c: Context) => await profileRequest(c);
 
 twitter.get('/:prefix?/:handle?/:endpoint{status(es)?}/:id/:language?', tweetRequest);
 twitter.get(':handle?/:endpoint{status(es)?}/:id/:language?', tweetRequest);
@@ -49,6 +50,6 @@ twitter.get('/robots.txt', async c => c.text(Strings.ROBOTS_TXT));
 twitter.get('/i/events/:id', genericTwitterRedirect);
 twitter.get('/hashtag/:hashtag', genericTwitterRedirect);
 
-twitter.get('/:handle', profileRequest);
+twitter.get('/:handle', _profileRequest);
 
 twitter.all('*', async c => c.redirect(Constants.REDIRECT_URL, 302));
