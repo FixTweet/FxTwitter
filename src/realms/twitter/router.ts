@@ -55,6 +55,7 @@ twitter.get(
   tweetRequest
 );
 
+twitter.get('/version/', versionRoute);
 twitter.get('/version', versionRoute);
 twitter.get('/set_base_redirect', setRedirectRequest);
 twitter.get('/owoembed', oembed);
@@ -64,6 +65,7 @@ twitter.get('/robots.txt', async c => c.text(Strings.ROBOTS_TXT));
 twitter.get('/i/events/:id', genericTwitterRedirect);
 twitter.get('/hashtag/:hashtag', genericTwitterRedirect);
 
+twitter.get('/:handle/', _profileRequest);
 twitter.get('/:handle', _profileRequest);
 
 twitter.all('*', async c => c.redirect(Constants.REDIRECT_URL, 302));
