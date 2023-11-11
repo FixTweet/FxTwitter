@@ -58,6 +58,17 @@ test('Tweet redirect human', async () => {
   expect(result.headers.get('location')).toEqual('https://twitter.com/jack/status/20');
 });
 
+test('Tweet redirect human trailing slash', async () => {
+  const result = await app.request(
+    new Request('https://fxtwitter.com/jack/status/20/', {
+      method: 'GET',
+      headers: humanHeaders
+    })
+  );
+  expect(result.status).toEqual(302);
+  expect(result.headers.get('location')).toEqual('https://twitter.com/jack/status/20');
+});
+
 test('Tweet redirect human custom base redirect', async () => {
   const result = await app.request(
     new Request('https://fxtwitter.com/jack/status/20', {
@@ -89,6 +100,16 @@ test('Twitter moment redirect', async () => {
 test('Tweet response robot', async () => {
   const result = await app.request(
     new Request('https://fxtwitter.com/jack/status/20', {
+      method: 'GET',
+      headers: botHeaders
+    })
+  );
+  expect(result.status).toEqual(200);
+});
+
+test('Tweet response robot (trailing slash/query string)', async () => {
+  const result = await app.request(
+    new Request('https://fxtwitter.com/jack/status/20/?asdf=ghjk&klop;', {
       method: 'GET',
       headers: botHeaders
     })
