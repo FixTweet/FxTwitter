@@ -67,7 +67,7 @@ Want to link directly to a post's media without the embed? You can easily do tha
 
 There are a few supported ways to do this:
 
-- Add `d.` or `dl.` before the domain (so, `d.fxtwitter.com` or `dl.fxtwitter.com`)
+- Add `d.` before the domain (so, `d.fxtwitter.com`)
 - Add `.mp4` to the end of videos or `.jpg` to the end of images, after the post ID
 
 Examples from above:
