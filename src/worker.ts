@@ -108,7 +108,7 @@ export default {
       return await app.fetch(request, env, ctx);
     } catch (err) {
       console.error(err);
-      console.log('Ouch, that error hurt so much Sentry couldnt catch it');
+      console.log(`Ouch, that error hurt so much Sentry couldn't catch it`);
 
       return new Response(Strings.ERROR_HTML, {
         headers: {
