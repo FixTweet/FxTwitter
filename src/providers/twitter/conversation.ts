@@ -306,7 +306,7 @@ export const constructTwitterThread = async (
     ) {
       console.log('tweet is private');
       return { post: null, thread: null, author: null, code: 401 };
-    } else if (!response.data) {
+    } else if (!response?.data) {
       return { post: null, thread: null, author: null, code: 404 };
     }
   }
