@@ -32,6 +32,29 @@ export const truncateWithEllipsis = (str: string, maxLength: number): string => 
   return truncated.length < str.length ? truncated + '…' : truncated;
 };
 
+export async function withTimeout<T>(
+  asyncTask: (signal: AbortSignal) => Promise<T>, 
+  timeout: number = 3000
+): Promise<T> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+  try {
+      const result = await asyncTask(controller.signal);
+      /* Clear the timeout if the task completes in time */
+      clearTimeout(timeoutId); 
+      console.log(`Clearing timeout after ${timeout}ms`);
+      return result;
+  } catch (error) {
+      if ((error as Error).name === 'AbortError') {
+          throw new Error('Asynchronous task was aborted due to timeout');
+      } else {
+        /* Re-throw other errors for further handling */
+          throw error as Error; 
+      }
+  }
+}
+
 const numberFormat = new Intl.NumberFormat('en-US');
 
 export const formatNumber = (num: number) => numberFormat.format(num);

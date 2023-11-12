@@ -2,6 +2,7 @@ import { Context } from 'hono';
 import { Constants } from './constants';
 import { Experiment, experimentCheck } from './experiments';
 import { generateUserAgent } from './helpers/useragent';
+import { withTimeout } from './helpers/utils';
 
 const API_ATTEMPTS = 3;
 let wasElongatorDisabled = false;
@@ -131,24 +132,26 @@ export const twitterFetch = async (
     headers['x-guest-token'] = guestToken;
 
     let response: unknown;
-    let apiRequest;
+    let apiRequest: Response | null = null;
 
     try {
       if (useElongator && typeof c.env?.TwitterProxy !== 'undefined') {
         console.log('Fetching using elongator');
         const performanceStart = performance.now();
-        apiRequest = await c.env?.TwitterProxy.fetch(url, {
+        apiRequest = await withTimeout((signal: AbortSignal) => c.env?.TwitterProxy.fetch(url, {
           method: 'GET',
-          headers: headers
-        });
+          headers: headers,
+          signal: signal
+        }));
         const performanceEnd = performance.now();
         console.log(`Elongator request successful after ${performanceEnd - performanceStart}ms`);
       } else {
         const performanceStart = performance.now();
-        apiRequest = await fetch(url, {
+        apiRequest = await withTimeout((signal: AbortSignal) => fetch(url, {
           method: 'GET',
-          headers: headers
-        });
+          headers: headers,
+          signal: signal
+        }));
         const performanceEnd = performance.now();
         console.log(`Guest API request successful after ${performanceEnd - performanceStart}ms`);
       }
@@ -159,9 +162,9 @@ export const twitterFetch = async (
          It's uncommon, but it happens */
       console.error('Unknown error while fetching from API', e);
       /* Elongator returns strings to communicate downstream errors */
-      if (String(e).indexOf('Status not found')) {
+      if (String(e).indexOf('Status not found') !== -1) {
         console.log('Tweet was not found');
-        return {};
+        return null;
       }
       try{
         !useElongator &&
@@ -194,7 +197,7 @@ export const twitterFetch = async (
       continue;
     }
 
-    const remainingRateLimit = parseInt(apiRequest.headers.get('x-rate-limit-remaining') || '0');
+    const remainingRateLimit = parseInt(apiRequest?.headers.get('x-rate-limit-remaining') || '0');
     console.log(`Remaining rate limit: ${remainingRateLimit} requests`);
     /* Running out of requests within our rate limit, let's purge the cache */
     if (!useElongator && remainingRateLimit < 10) {
@@ -247,7 +250,7 @@ export const twitterFetch = async (
 
   console.log('Twitter has repeatedly denied our requests, so we give up now');
 
-  return {};
+  return null;
 };
 
 export const fetchUser = async (
@@ -287,7 +290,7 @@ export const fetchUser = async (
       }
       return !(
         response?.data?.user?.result?.__typename !== 'User' ||
-        typeof response.data.user.result.legacy === 'undefined'
+        typeof response?.data?.user?.result?.legacy === 'undefined'
       );
       /*
       return !(

@@ -1,5 +1,6 @@
 import { Context } from 'hono';
 import { Constants } from '../constants';
+import { withTimeout } from './utils';
 
 /* Handles translating Tweets when asked! */
 export const translateTweet = async (
@@ -53,10 +54,11 @@ export const translateTweet = async (
   try {
     const url = `${Constants.TWITTER_ROOT}/i/api/1.1/strato/column/None/tweetId=${tweet.rest_id},destinationLanguage=None,translationSource=Some(Google),feature=None,timeout=None,onlyCached=None/translation/service/translateTweet`;
     console.log(url, headers);
-    translationApiResponse = await c.env?.TwitterProxy.fetch(url, {
+    translationApiResponse = await withTimeout((signal: AbortSignal) => c.env?.TwitterProxy.fetch(url, {
       method: 'GET',
-      headers: headers
-    });
+      headers: headers,
+      signal: signal
+    })) as Response;
     translationResults = (await translationApiResponse.json()) as TranslationPartial;
 
     console.log(`translationResults`, translationResults);
@@ -69,6 +71,6 @@ export const translateTweet = async (
     return translationResults;
   } catch (e: unknown) {
     console.error('Unknown error while fetching from Translation API', e);
-    return {} as TranslationPartial; // No work to do
+    return null;
   }
 };

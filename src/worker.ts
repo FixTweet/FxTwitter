@@ -8,6 +8,7 @@ import { Constants } from './constants';
 import { api } from './realms/api/router';
 import { twitter } from './realms/twitter/router';
 import { cacheMiddleware } from './caches';
+import { withTimeout } from './helpers/utils';
 
 const noCache = 'max-age=0, no-cache, no-store, must-revalidate';
 
@@ -79,7 +80,15 @@ app.use('*', async (c, next) => {
 app.onError((err, c) => {
   c.get('sentry')?.captureException?.(err);
   console.error(err.stack);
-  c.status(200);
+  let errorCode = 500;
+  if (err.name === 'AbortError') {
+    errorCode = 504;
+  }
+  /* We return it as a 200 so embedded applications can display the error */
+  if (c.req.header('User-Agent')?.match(/(discordbot|telegrambot|facebook|whatsapp|firefox\/92|vkshare)/gi)) {
+    errorCode = 200;
+  }
+  c.status(errorCode);
   c.header('cache-control', noCache);
 
   return c.html(Strings.ERROR_HTML);
@@ -107,25 +116,41 @@ app.route(`/twitter`, twitter);
 
 app.all('/error', async c => {
   c.header('cache-control', noCache);
+  
+  if (c.req.header('User-Agent')?.match(/(discordbot|telegrambot|facebook|whatsapp|firefox\/92|vkshare)/gi)) {
+    c.status(200);
+    return c.html(Strings.ERROR_HTML);
+  }
   c.status(400);
+  /* We return it as a 200 so embedded applications can display the error */
   return c.body('');
 });
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext) {
     try {
-      return await app.fetch(request, env, ctx);
+      return await withTimeout(async () => app.fetch(request, env, ctx), 10);
     } catch (err) {
       console.error(err);
+      const e = err as Error;
       console.log(`Ouch, that error hurt so much Sentry couldn't catch it`);
+      console.log(e.stack);
+      let errorCode = 500;
+      if (e.name === 'AbortError') {
+        errorCode = 504;
+      }
+      /* We return it as a 200 so embedded applications can display the error */
+      if (request.headers.get('user-agent')?.match(/(discordbot|telegrambot|facebook|whatsapp|firefox\/92|vkshare)/gi)) {
+        errorCode = 200;
+      }
 
-      return new Response(Strings.ERROR_HTML, {
+      return new Response(e.name === 'AbortError' ? Strings.TIMEOUT_ERROR_HTML : Strings.ERROR_HTML, {
         headers: {
           ...Constants.RESPONSE_HEADERS,
           'content-type': 'text/html;charset=utf-8',
           'cache-control': noCache
         },
-        status: 200
+        status: errorCode
       });
     }
   }

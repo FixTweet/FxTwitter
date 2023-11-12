@@ -70,9 +70,13 @@ export const convertToApiUser = (user: GraphQLUser, legacyAPI = false): APIUser 
 const populateUserProperties = async (
   response: GraphQLUserResponse,
   legacyAPI = false
-): Promise<APIUser> => {
-  const user = response.data.user.result;
-  return convertToApiUser(user, legacyAPI);
+): Promise<APIUser | null> => {
+  const user = response?.data?.user?.result;
+  if (user) {
+    return convertToApiUser(user, legacyAPI);
+  }
+  
+  return null;
 };
 
 /* API for Twitter profiles (Users)
@@ -95,7 +99,7 @@ export const userAPI = async (
   const apiUser: APIUser = (await populateUserProperties(userResponse, true)) as APIUser;
 
   /* Currently, we haven't rolled this out as it's part of the proto-v2 API */
-  delete apiUser.global_screen_name;
+  delete apiUser?.global_screen_name;
 
   /* Finally, staple the User to the response and return it */
   response.user = apiUser;

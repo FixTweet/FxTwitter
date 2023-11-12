@@ -62,15 +62,14 @@ export const fetchTweetDetail = async (
       const conversation = _conversation as TweetDetailResult;
       const tweet = findTweetInBucket(
         status,
-        processResponse(conversation.data?.threaded_conversation_with_injections_v2?.instructions)
+        processResponse(conversation?.data?.threaded_conversation_with_injections_v2?.instructions)
       );
       if (tweet && isGraphQLTweet(tweet)) {
         return true;
       }
       console.log('invalid graphql tweet', conversation);
       const firstInstruction = (
-        conversation.data?.threaded_conversation_with_injections_v2
-          .instructions?.[0] as TimelineAddEntriesInstruction
+        conversation?.data?.threaded_conversation_with_injections_v2?.instructions?.[0] as TimelineAddEntriesInstruction
       )?.entries?.[0];
       if (
         (
@@ -297,8 +296,7 @@ export const constructTwitterThread = async (
     console.log(response);
 
     const firstInstruction = (
-      response.data?.threaded_conversation_with_injections_v2
-        .instructions?.[0] as TimelineAddEntriesInstruction
+      response?.data?.threaded_conversation_with_injections_v2?.instructions?.[0] as TimelineAddEntriesInstruction
     )?.entries?.[0];
     if (
       (
@@ -338,7 +336,7 @@ export const constructTwitterThread = async (
   }
 
   const bucket = processResponse(
-    response.data.threaded_conversation_with_injections_v2.instructions
+    response?.data?.threaded_conversation_with_injections_v2?.instructions ?? []
   );
   const originalTweet = findTweetInBucket(id, bucket);
 
@@ -482,7 +480,7 @@ export const constructTwitterThread = async (
         break;
       }
       const cursorResponse = processResponse(
-        loadCursor.data.threaded_conversation_with_injections_v2.instructions
+        loadCursor?.data?.threaded_conversation_with_injections_v2.instructions
       );
       bucket.tweets = cursorResponse.tweets.concat(
         filterBucketTweets(bucket.tweets, originalTweet)
