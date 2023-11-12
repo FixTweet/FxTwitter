@@ -34,25 +34,29 @@ export const truncateWithEllipsis = (str: string, maxLength: number): string => 
 
 export async function withTimeout<T>(
   asyncTask: (signal: AbortSignal) => Promise<T>,
-  timeout: number = 3000
+  timeout: number = 3500,
+  retries: number = 3
 ): Promise<T> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
 
   try {
     const result = await asyncTask(controller.signal);
-    /* Clear the timeout if the task completes in time */
     clearTimeout(timeoutId);
     return result;
   } catch (error) {
     if ((error as Error).name === 'AbortError') {
-      throw new Error('Asynchronous task was aborted due to timeout');
+      if (retries > 0) {
+        // Try again, reducing the retries count
+        return withTimeout(asyncTask, timeout, retries - 1);
+      }
+      throw new Error('Request has timed out too many times');
     } else {
-      /* Re-throw other errors for further handling */
       throw error as Error;
     }
   }
 }
+
 
 const numberFormat = new Intl.NumberFormat('en-US');
 

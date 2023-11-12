@@ -8,7 +8,6 @@ import { Constants } from './constants';
 import { api } from './realms/api/router';
 import { twitter } from './realms/twitter/router';
 import { cacheMiddleware } from './caches';
-import { withTimeout } from './helpers/utils';
 
 const noCache = 'max-age=0, no-cache, no-store, must-revalidate';
 
@@ -137,7 +136,7 @@ app.all('/error', async c => {
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext) {
     try {
-      return await withTimeout(async () => app.fetch(request, env, ctx), 10);
+      return await app.fetch(request, env, ctx);
     } catch (err) {
       console.error(err);
       const e = err as Error;
