@@ -85,7 +85,11 @@ app.onError((err, c) => {
     errorCode = 504;
   }
   /* We return it as a 200 so embedded applications can display the error */
-  if (c.req.header('User-Agent')?.match(/(discordbot|telegrambot|facebook|whatsapp|firefox\/92|vkshare)/gi)) {
+  if (
+    c.req
+      .header('User-Agent')
+      ?.match(/(discordbot|telegrambot|facebook|whatsapp|firefox\/92|vkshare)/gi)
+  ) {
     errorCode = 200;
   }
   c.status(errorCode);
@@ -116,8 +120,12 @@ app.route(`/twitter`, twitter);
 
 app.all('/error', async c => {
   c.header('cache-control', noCache);
-  
-  if (c.req.header('User-Agent')?.match(/(discordbot|telegrambot|facebook|whatsapp|firefox\/92|vkshare)/gi)) {
+
+  if (
+    c.req
+      .header('User-Agent')
+      ?.match(/(discordbot|telegrambot|facebook|whatsapp|firefox\/92|vkshare)/gi)
+  ) {
     c.status(200);
     return c.html(Strings.ERROR_HTML);
   }
@@ -140,18 +148,25 @@ export default {
         errorCode = 504;
       }
       /* We return it as a 200 so embedded applications can display the error */
-      if (request.headers.get('user-agent')?.match(/(discordbot|telegrambot|facebook|whatsapp|firefox\/92|vkshare)/gi)) {
+      if (
+        request.headers
+          .get('user-agent')
+          ?.match(/(discordbot|telegrambot|facebook|whatsapp|firefox\/92|vkshare)/gi)
+      ) {
         errorCode = 200;
       }
 
-      return new Response(e.name === 'AbortError' ? Strings.TIMEOUT_ERROR_HTML : Strings.ERROR_HTML, {
-        headers: {
-          ...Constants.RESPONSE_HEADERS,
-          'content-type': 'text/html;charset=utf-8',
-          'cache-control': noCache
-        },
-        status: errorCode
-      });
+      return new Response(
+        e.name === 'AbortError' ? Strings.TIMEOUT_ERROR_HTML : Strings.ERROR_HTML,
+        {
+          headers: {
+            ...Constants.RESPONSE_HEADERS,
+            'content-type': 'text/html;charset=utf-8',
+            'cache-control': noCache
+          },
+          status: errorCode
+        }
+      );
     }
   }
 };

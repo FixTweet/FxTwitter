@@ -75,7 +75,7 @@ const populateUserProperties = async (
   if (user) {
     return convertToApiUser(user, legacyAPI);
   }
-  
+
   return null;
 };
 

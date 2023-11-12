@@ -23,13 +23,12 @@ export const cacheMiddleware = (): MiddlewareHandler => async (c, next) => {
 
   try {
     cacheKey = new Request(cacheUrl.toString(), request);
-  } catch(e) {
+  } catch (e) {
     /* In Miniflare, you can't really create requests like this, so we ignore caching in the test environment */
     await next();
     return c.res.clone();
   }
 
-  
   const cache = caches.default;
 
   switch (request.method) {
@@ -58,8 +57,7 @@ export const cacheMiddleware = (): MiddlewareHandler => async (c, next) => {
          Use waitUntil so you can return the response without blocking on
          writing to cache */
       try {
-        c.executionCtx &&
-        c.executionCtx.waitUntil(cache.put(cacheKey, response.clone()));
+        c.executionCtx && c.executionCtx.waitUntil(cache.put(cacheKey, response.clone()));
       } catch (error) {
         console.error((error as Error).stack);
       }

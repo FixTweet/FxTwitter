@@ -80,9 +80,7 @@ export const statusRequest = async (c: Context) => {
 
   const baseUrl = getBaseRedirectUrl(c);
 
-  if (
-    Constants.API_HOST_LIST.includes(url.hostname)
-  ) {
+  if (Constants.API_HOST_LIST.includes(url.hostname)) {
     console.log('JSON API request');
     flags.api = true;
   }
@@ -136,7 +134,7 @@ export const statusRequest = async (c: Context) => {
     /* A human has clicked a fxtwitter.com/:screen_name/status/:id link!
        Obviously we just need to redirect to the Tweet directly.*/
     console.log('Matched human UA', userAgent);
-    
+
     return c.redirect(`${baseUrl}/${handle || 'i'}/status/${id?.match(/\d{2,20}/)?.[0]}`, 302);
   }
 };

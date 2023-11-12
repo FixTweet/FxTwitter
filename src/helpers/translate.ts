@@ -54,11 +54,14 @@ export const translateTweet = async (
   try {
     const url = `${Constants.TWITTER_ROOT}/i/api/1.1/strato/column/None/tweetId=${tweet.rest_id},destinationLanguage=None,translationSource=Some(Google),feature=None,timeout=None,onlyCached=None/translation/service/translateTweet`;
     console.log(url, headers);
-    translationApiResponse = await withTimeout((signal: AbortSignal) => c.env?.TwitterProxy.fetch(url, {
-      method: 'GET',
-      headers: headers,
-      signal: signal
-    })) as Response;
+    translationApiResponse = (await withTimeout(
+      (signal: AbortSignal) =>
+        c.env?.TwitterProxy.fetch(url, {
+          method: 'GET',
+          headers: headers,
+          signal: signal
+        })
+    )) as Response;
     translationResults = (await translationApiResponse.json()) as TranslationPartial;
 
     console.log(`translationResults`, translationResults);

@@ -31,7 +31,7 @@ export const Strings = {
 ███   Worker build ${RELEASE_NAME}
 
 --><head>{headers}</head><body>{body}</body></html>`,
-ERROR_HTML: `<!DOCTYPE html>
+  ERROR_HTML: `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -63,8 +63,8 @@ This may be caused by API downtime or a new bug. Try again in a little while." p
     <p>${RELEASE_NAME}</p>
   </body>
 </html>`
-  .replace(/( {2})/g, '')
-  .replace(/>\s+</gm, '><'),
+    .replace(/( {2})/g, '')
+    .replace(/>\s+</gm, '><'),
   TIMEOUT_ERROR_HTML: `<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -156,8 +156,8 @@ This may be caused by API downtime or a new bug. Try again in a little while." p
       {ua}</h2>
     </body>
   </html>`
-  .replace(/( {2})/g, '')
-  .replace(/>\s+</gm, '><'),
+    .replace(/( {2})/g, '')
+    .replace(/>\s+</gm, '><'),
   MESSAGE_HTML: `<!DOCTYPE html>
   <html lang="en">
     <head>
@@ -190,8 +190,8 @@ This may be caused by API downtime or a new bug. Try again in a little while." p
       <h2>{message}</h2>
     </body>
   </html>`
-  .replace(/( {2})/g, '')
-  .replace(/>\s+</gm, '><'),
+    .replace(/( {2})/g, '')
+    .replace(/>\s+</gm, '><'),
   DEFAULT_AUTHOR_TEXT: 'Twitter',
 
   QUOTE_TEXT: `↘️ Quoting {name} (@{screen_name})`,

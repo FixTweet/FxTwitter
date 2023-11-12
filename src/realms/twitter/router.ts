@@ -32,10 +32,19 @@ const _profileRequest = async (c: Context) => await profileRequest(c);
 
 twitter.get('/:endpoint{status(es)?}/:id{.+}/:language{[a-z]+}?', tweetRequest);
 twitter.get('/:endpoint{status(es)?}/:id{.+}/', tweetRequest);
-twitter.get('/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id{.+}/:language{[a-z]+}?', tweetRequest);
+twitter.get(
+  '/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id{.+}/:language{[a-z]+}?',
+  tweetRequest
+);
 twitter.get('/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id{.+}/', tweetRequest);
-twitter.get('/:prefix{(dir|dl)}/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id{.+}/:language{[a-z]+}?', tweetRequest);
-twitter.get('/:prefix{(dir|dl)}/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id{.+}/', tweetRequest);
+twitter.get(
+  '/:prefix{(dir|dl)}/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id{.+}/:language{[a-z]+}?',
+  tweetRequest
+);
+twitter.get(
+  '/:prefix{(dir|dl)}/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id{.+}/',
+  tweetRequest
+);
 twitter.get(
   '/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id{.+}/:mediaType{(photos?|videos?)}/:mediaNumber{[1-4]}/',
   tweetRequest

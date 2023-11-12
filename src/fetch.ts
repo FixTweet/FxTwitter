@@ -138,20 +138,25 @@ export const twitterFetch = async (
       if (useElongator && typeof c.env?.TwitterProxy !== 'undefined') {
         console.log('Fetching using elongator');
         const performanceStart = performance.now();
-        apiRequest = await withTimeout((signal: AbortSignal) => c.env?.TwitterProxy.fetch(url, {
-          method: 'GET',
-          headers: headers,
-          signal: signal
-        }));
+        apiRequest = await withTimeout(
+          (signal: AbortSignal) =>
+            c.env?.TwitterProxy.fetch(url, {
+              method: 'GET',
+              headers: headers,
+              signal: signal
+            })
+        );
         const performanceEnd = performance.now();
         console.log(`Elongator request successful after ${performanceEnd - performanceStart}ms`);
       } else {
         const performanceStart = performance.now();
-        apiRequest = await withTimeout((signal: AbortSignal) => fetch(url, {
-          method: 'GET',
-          headers: headers,
-          signal: signal
-        }));
+        apiRequest = await withTimeout((signal: AbortSignal) =>
+          fetch(url, {
+            method: 'GET',
+            headers: headers,
+            signal: signal
+          })
+        );
         const performanceEnd = performance.now();
         console.log(`Guest API request successful after ${performanceEnd - performanceStart}ms`);
       }
@@ -166,7 +171,7 @@ export const twitterFetch = async (
         console.log('Tweet was not found');
         return null;
       }
-      try{
+      try {
         !useElongator &&
           c.executionCtx &&
           c.executionCtx.waitUntil(
@@ -183,7 +188,6 @@ export const twitterFetch = async (
       useElongator = false;
       continue;
     }
-
 
     if (
       !wasElongatorDisabled &&
