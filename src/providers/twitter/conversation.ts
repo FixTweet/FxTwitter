@@ -417,7 +417,7 @@ export const constructTwitterThread = async (
       }
 
       const cursorResponse = processResponse(
-        loadCursor.data.threaded_conversation_with_injections_v2.instructions
+        loadCursor?.data?.threaded_conversation_with_injections_v2?.instructions ?? []
       );
       bucket.tweets = bucket.tweets.concat(
         filterBucketTweets(cursorResponse.tweets, originalTweet)
@@ -480,7 +480,7 @@ export const constructTwitterThread = async (
         break;
       }
       const cursorResponse = processResponse(
-        loadCursor?.data?.threaded_conversation_with_injections_v2.instructions
+        loadCursor?.data?.threaded_conversation_with_injections_v2?.instructions ?? []
       );
       bucket.tweets = cursorResponse.tweets.concat(
         filterBucketTweets(bucket.tweets, originalTweet)
