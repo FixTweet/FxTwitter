@@ -43,7 +43,6 @@ export async function withTimeout<T>(
       const result = await asyncTask(controller.signal);
       /* Clear the timeout if the task completes in time */
       clearTimeout(timeoutId); 
-      console.log(`Clearing timeout after ${timeout}ms`);
       return result;
   } catch (error) {
       if ((error as Error).name === 'AbortError') {
