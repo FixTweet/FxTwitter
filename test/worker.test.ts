@@ -107,9 +107,9 @@ test('Tweet response robot', async () => {
   expect(result.status).toEqual(200);
 });
 
-test('Tweet response robot (trailing slash/query string)', async () => {
+test('Tweet response robot (trailing slash/query string and extra characters)', async () => {
   const result = await app.request(
-    new Request('https://fxtwitter.com/jack/status/20/?asdf=ghjk&klop;', {
+    new Request('https://fxtwitter.com/jack/status/20||/?asdf=ghjk&klop;', {
       method: 'GET',
       headers: botHeaders
     })
