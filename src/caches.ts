@@ -7,13 +7,15 @@ export const cacheMiddleware = (): MiddlewareHandler => async (c, next) => {
   const request = c.req;
   const userAgent = request.header('User-Agent') ?? '';
   // https://developers.cloudflare.com/workers/examples/cache-api/
-  const cacheUrl = new URL(
-    userAgent.includes('Telegram')
-      ? `${request.url}&telegram`
-      : userAgent.includes('Discord')
-      ? `${request.url}&discord`
-      : request.url
-  );
+  let cacheUrl = new URL(request.url);
+
+  if (userAgent.includes('Telegram')) {
+    cacheUrl = new URL(`${request.url}&telegram`);
+  } else if (userAgent.includes('Discord')) {
+    cacheUrl = new URL(`${request.url}&discord`);
+  } else if (userAgent.match(Constants.BOT_UA_REGEX)) {
+    cacheUrl = new URL(`${request.url}&bot`);
+  }
 
   console.log('cacheUrl', cacheUrl);
 
