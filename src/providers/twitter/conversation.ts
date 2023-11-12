@@ -68,19 +68,6 @@ export const fetchTweetDetail = async (
         return true;
       }
       console.log('invalid graphql tweet', conversation);
-      const firstInstruction = (
-        conversation?.data?.threaded_conversation_with_injections_v2
-          ?.instructions?.[0] as TimelineAddEntriesInstruction
-      )?.entries?.[0];
-      if (
-        (
-          (firstInstruction as { content: GraphQLTimelineItem })?.content
-            ?.itemContent as GraphQLTimelineTweet
-        )?.tweet_results?.result?.__typename === 'TweetTombstone'
-      ) {
-        console.log('tweet is private');
-        return true;
-      }
 
       return Array.isArray(conversation?.errors);
     },
@@ -294,21 +281,9 @@ export const constructTwitterThread = async (
     console.log('Using TweetDetail for request...');
     response = (await fetchTweetDetail(c, id)) as TweetDetailResult;
 
-    console.log(response);
+    console.log('response', response);
 
-    const firstInstruction = (
-      response?.data?.threaded_conversation_with_injections_v2
-        ?.instructions?.[0] as TimelineAddEntriesInstruction
-    )?.entries?.[0];
-    if (
-      (
-        (firstInstruction as { content: GraphQLTimelineItem })?.content
-          ?.itemContent as GraphQLTimelineTweet
-      )?.tweet_results?.result?.__typename === 'TweetTombstone' /* If a tweet is private */
-    ) {
-      console.log('tweet is private');
-      return { post: null, thread: null, author: null, code: 401 };
-    } else if (!response?.data) {
+    if (!response?.data) {
       return { post: null, thread: null, author: null, code: 404 };
     }
   }
