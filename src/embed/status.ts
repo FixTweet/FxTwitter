@@ -194,6 +194,8 @@ export const handleStatus = async (
     }
   }
 
+  console.log('translation', tweet.translation)
+
   /* This Tweet has a translation attached to it, so we'll render it. */
   if (tweet.translation) {
     const { translation } = tweet;

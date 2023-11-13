@@ -50,7 +50,6 @@ export const profileRequest = async (c: Context) => {
       console.log('Bypass bot check');
     }
 
-    /* This throws the necessary data to handleStatus (in status.ts) */
     const profileResponse = await handleProfile(c, username, flags);
     /* Check for custom redirect */
 
