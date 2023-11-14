@@ -6,6 +6,13 @@ import { Constants } from '../../constants';
 
 export const api = new Hono();
 
+api.use('*', async (c, next) => {
+  if (!c.req.header('user-agent')) {
+    c.status(401);
+    return c.text('You must identify yourself with a User-Agent header in order to use the FixTweet API. We recommend using a descriptive User-Agent header to identify your app, such as "MyAwesomeBot/1.0 (+http://example.com/myawesomebot)". We don\'t track or save what kinds of data you are pulling, but you may be blocked if you send too many requests from an unidentifiable user agent.');
+  }
+  await next();
+});
 /* Current v1 API endpoints. Currently, these still go through the Twitter embed requests. API v2+ won't do this. */
 api.get('/status/:id', statusRequest);
 api.get('/status/:id/', statusRequest);
