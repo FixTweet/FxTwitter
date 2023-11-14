@@ -114,6 +114,7 @@ app.use('*', async (c, next) => {
     console.log(`🌐 ${c.req.header('x-real-ip') ?? ''}`);
   }
   console.log('🕵️‍♂️', c.req.header('user-agent'));
+  console.log('------------------')
   await next();
 });
 
