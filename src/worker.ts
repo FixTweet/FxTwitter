@@ -105,9 +105,15 @@ app.use('*', logger(customLogger));
 
 app.use('*', async (c, next) => {
   if (c.req.raw.cf) {
-    console.log(`Hello from ⛅ ${c.req.raw.cf.colo ?? 'UNK'}`);
+    const cf = c.req.raw.cf;
+    console.log(`Hello from ⛅ ${cf.colo ?? 'UNK'}`);
+    console.log(`📶 ${cf.httpProtocol ?? 'Unknown HTTP Protocol'} 🏓 ${cf.clientTcpRtt ?? 'N/A'} ms RTT 🔒 ${cf.tlsVersion ?? 'Unencrypted Connection'} (${cf.tlsCipher ?? ''})`)
+    console.log(`🗺️  ${cf.city ?? 'Unknown City'}, ${cf.regionCode ? (cf.regionCode + ', ') : ''}${cf.country ?? 'Unknown Country'} ${cf.isEUCountry ? '(EU)' : ''}`);
+    console.log(`🌐 ${c.req.header('x-real-ip') ?? ''} (${cf.asn ? ('AS' + cf.asn) : 'Unknown ASN'}, ${cf.asOrganization ?? 'Unknown Organization'})`);
+  } else {
+    console.log(`🌐 ${c.req.header('x-real-ip') ?? ''}`);
   }
-  console.log('userAgent', c.req.header('user-agent'));
+  console.log('🕵️‍♂️', c.req.header('user-agent'));
   await next();
 });
 
