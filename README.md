@@ -125,7 +125,7 @@ In many ways, FixTweet has richer embeds and does more. Here's a table comparing
 | Show retweet, like, reply, view counts | :heavy_minus_sign: Discord / Telegram Instant View | :heavy_minus_sign: Discord Only² |      :ballot_box_with_check: No replies / views     |
 | Discord sed replace (`s/`) friendly    |        :ballot_box_with_check: twittpr.com         |               N/A                |                         :x:                         |
 | Domain for X.com links                 |         :ballot_box_with_check: fixupx.com         |               N/A                |          :ballot_box_with_check: fixvx.com          |
-| Status fetch API for Developers        |                 :heavy_check_mark:                 |               N/A                |                         :x:                         |
+| Status fetch API for Developers        |                 :heavy_check_mark:                 |               N/A                |                 :heavy_check_mark:                  |
 | Last commit                            |                   [![][flc]][fc]                   |               N/A                |                   [![][vlc]][vc]                    |
 
 [flc]: https://img.shields.io/github/last-commit/FixTweet/FixTweet?label
