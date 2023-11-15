@@ -1,3 +1,4 @@
+import { Context } from 'hono';
 import { Constants } from '../constants';
 import { handleQuote } from '../helpers/quote';
 import { formatNumber, sanitizeText, truncateWithEllipsis } from '../helpers/utils';
@@ -7,7 +8,6 @@ import { renderPhoto } from '../render/photo';
 import { renderVideo } from '../render/video';
 import { renderInstantView } from '../render/instantview';
 import { constructTwitterThread } from '../providers/twitter/conversation';
-import { Context } from 'hono';
 
 export const returnError = (c: Context, error: string): Response => {
   return c.text(
@@ -148,6 +148,11 @@ export const handleStatus = async (
     }
   }
 
+  /* User requested gallery view, but this isn't a post with media */
+  if (flags.gallery && (tweet.media?.all?.length ?? 0) < 1) {
+    flags.gallery = false;
+  }
+
   /* At this point, we know we're going to have to create a
      regular embed because it's not an API or direct media request */
 
@@ -160,11 +165,16 @@ export const handleStatus = async (
   const headers = [
     `<link rel="canonical" href="${Constants.TWITTER_ROOT}/${tweet.author.screen_name}/status/${tweet.id}"/>`,
     `<meta property="og:url" content="${Constants.TWITTER_ROOT}/${tweet.author.screen_name}/status/${tweet.id}"/>`,
-    `<meta property="theme-color" content="#00a8fc"/>`,
     `<meta property="twitter:site" content="@${tweet.author.screen_name}"/>`,
     `<meta property="twitter:creator" content="@${tweet.author.screen_name}"/>`,
-    `<meta property="twitter:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`
   ];
+
+  if (!flags.gallery) {
+    headers.push(
+      `<meta property="theme-color" content="#00a8fc"/>`,
+      `<meta property="twitter:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`
+    );
+  }
 
   /* This little thing ensures if by some miracle a FixTweet embed is loaded in a browser,
      it will gracefully redirect to the destination instead of just seeing a blank screen.
@@ -389,13 +399,19 @@ export const handleStatus = async (
 
   const useCard = tweet.embed_card === 'tweet' ? tweet.quote?.embed_card : tweet.embed_card;
 
+  
   /* Push basic headers relating to author, Tweet text, and site name */
   headers.push(
     `<meta property="og:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`,
-    `<meta property="og:description" content="${text}"/>`,
-    `<meta property="og:site_name" content="${siteName}"/>`,
     `<meta property="twitter:card" content="${useCard}"/>`
   );
+
+  if (!flags.gallery) {
+    headers.push(
+      `<meta property="og:description" content="${text}"/>`,
+      `<meta property="og:site_name" content="${siteName}"/>`,
+    );
+  }
 
   /* Special reply handling if authorText is not overriden */
   if (tweet.replying_to && authorText === Strings.DEFAULT_AUTHOR_TEXT) {
@@ -408,20 +424,22 @@ export const handleStatus = async (
     authorText = `↪ A part of @${tweet.author.screen_name}'s thread`;
   }
 
-  /* The additional oembed is pulled by Discord to enable improved embeds.
-     Telegram does not use this. */
-  headers.push(
-    `<link rel="alternate" href="{base}/owoembed?text={text}{deprecatedFlag}&status={status}&author={author}" type="application/json+oembed" title="{name}">`.format(
-      {
-        base: Constants.HOST_URL,
-        text: encodeURIComponent(truncateWithEllipsis(authorText, 255)),
-        deprecatedFlag: flags?.deprecated ? '&deprecated=true' : '',
-        status: encodeURIComponent(status),
-        author: encodeURIComponent(tweet.author?.screen_name || ''),
-        name: tweet.author.name || ''
-      }
-    )
-  );
+  if (!flags.gallery) {
+    /* The additional oembed is pulled by Discord to enable improved embeds.
+      Telegram does not use this. */
+    headers.push(
+      `<link rel="alternate" href="{base}/owoembed?text={text}{deprecatedFlag}&status={status}&author={author}" type="application/json+oembed" title="{name}">`.format(
+        {
+          base: Constants.HOST_URL,
+          text: encodeURIComponent(truncateWithEllipsis(authorText, 255)),
+          deprecatedFlag: flags?.deprecated ? '&deprecated=true' : '',
+          status: encodeURIComponent(status),
+          author: encodeURIComponent(tweet.author?.screen_name || ''),
+          name: tweet.author.name || ''
+        }
+      )
+    );
+  }
 
   /* When dealing with a Tweet of unknown lang, fall back to en */
   const lang = tweet.lang === null ? 'en' : tweet.lang || 'en';

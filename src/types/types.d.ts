@@ -10,6 +10,7 @@ type InputFlags = {
   isXDomain?: boolean;
   forceInstantView?: boolean;
   archive?: boolean;
+  gallery?: boolean;
 };
 
 interface StatusResponse {

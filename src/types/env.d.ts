@@ -3,6 +3,7 @@ declare const STANDARD_DOMAIN_LIST: string;
 declare const DIRECT_MEDIA_DOMAINS: string;
 declare const TEXT_ONLY_DOMAINS: string;
 declare const INSTANT_VIEW_DOMAINS: string;
+declare const GALLERY_DOMAINS: string;
 declare const DEPRECATED_DOMAIN_LIST: string;
 declare const DEPRECATED_DOMAIN_EPOCH: string;
 declare const HOST_URL: string;
