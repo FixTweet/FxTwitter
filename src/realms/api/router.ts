@@ -27,4 +27,5 @@ api.get('/robots.txt', async c => c.text(Strings.ROBOTS_TXT_API));
 api.get('/:handle', profileRequest);
 api.get('/:handle/', profileRequest);
 
-api.get('/', async c => c.redirect(Constants.API_DOCS_URL, 302));
+/* TODO: Figure out why / won't resolve but * does */
+api.get('*', async c => c.redirect(Constants.API_DOCS_URL, 302));
