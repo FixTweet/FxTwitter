@@ -98,6 +98,7 @@ twitter.get(
 twitter.get('/version/', versionRoute);
 twitter.get('/version', versionRoute);
 twitter.get('/set_base_redirect', setRedirectRequest);
+/* Yes, I actually made the endpoint /owoembed. Deal with it. */
 twitter.get('/owoembed', oembed);
 
 twitter.get('/robots.txt', async c => c.text(Strings.ROBOTS_TXT));

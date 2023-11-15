@@ -102,6 +102,7 @@ export const handleStatus = async (
   let useIV =
     isTelegram /*&& !tweet.possibly_sensitive*/ &&
     !flags?.direct &&
+    !flags?.gallery &&
     !flags?.api &&
     (tweet.media?.photos?.[0] || // Force instant view for photos for now https://bugs.telegram.org/c/33679
       tweet.media?.mosaic ||
@@ -402,15 +403,19 @@ export const handleStatus = async (
   
   /* Push basic headers relating to author, Tweet text, and site name */
   headers.push(
-    `<meta property="og:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`,
     `<meta property="twitter:card" content="${useCard}"/>`
   );
 
   if (!flags.gallery) {
     headers.push(
+      `<meta property="og:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`,
       `<meta property="og:description" content="${text}"/>`,
       `<meta property="og:site_name" content="${siteName}"/>`,
     );
+  } else {
+    headers.push(
+      `<meta property="og:title" content="${tweet.author.name}"/>`
+    )
   }
 
   /* Special reply handling if authorText is not overriden */
@@ -431,10 +436,10 @@ export const handleStatus = async (
       `<link rel="alternate" href="{base}/owoembed?text={text}{deprecatedFlag}&status={status}&author={author}" type="application/json+oembed" title="{name}">`.format(
         {
           base: Constants.HOST_URL,
-          text: encodeURIComponent(truncateWithEllipsis(authorText, 255)),
+          text: flags.gallery ? tweet.author.name : encodeURIComponent(truncateWithEllipsis(authorText, 255)),
           deprecatedFlag: flags?.deprecated ? '&deprecated=true' : '',
           status: encodeURIComponent(status),
-          author: encodeURIComponent(tweet.author?.screen_name || ''),
+          author: encodeURIComponent(tweet.author.screen_name || ''),
           name: tweet.author.name || ''
         }
       )

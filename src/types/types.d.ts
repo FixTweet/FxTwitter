@@ -197,3 +197,13 @@ interface SocialThread {
 interface FetchResults {
   status: number;
 }
+
+interface OEmbed {
+  author_name?: string;
+  author_url?: string;
+  provider_name?: string;
+  provider_url?: string;
+  title?: string | null;
+  type: 'link';
+  version: '1.0';
+}
