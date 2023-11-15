@@ -413,9 +413,15 @@ export const handleStatus = async (
       `<meta property="og:site_name" content="${siteName}"/>`,
     );
   } else {
-    headers.push(
-      `<meta property="og:title" content="${tweet.author.name}"/>`
-    )
+    if (isTelegram) {
+      headers.push(
+        `<meta property="og:site_name" content="${tweet.author.name}"/>`
+      )
+    } else {
+      headers.push(
+        `<meta property="og:title" content="${tweet.author.name}"/>`
+      )
+    }
   }
 
   /* Special reply handling if authorText is not overriden */
