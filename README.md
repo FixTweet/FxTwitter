@@ -70,6 +70,14 @@ There are a few supported ways to do this:
 - Add `d.` before the domain (so, `d.fxtwitter.com`)
 - Add `.mp4` to the end of videos or `.jpg` to the end of images, after the post ID
 
+## Telegram Instant View (Beta)
+
+View the full contents of tweets without leaving Telegram or opening a browser! We automatically enable instant view in these cases:
+- The domain is i.fxtwitter.com / i.fixupx.com
+- The post contains photos, translations, or is over 280 characters
+
+In the future we plan to do even more with Instant View such as embedding entire threads.
+
 Examples from above:
 
 - `https://d.fxtwitter.com/dangeredwolf/status/1548119328498728960`
@@ -125,6 +133,7 @@ In many ways, FixTweet has richer embeds and does more. Here's a table comparing
 | Show retweet, like, reply, view counts | :heavy_minus_sign: Discord / Telegram Instant View | :heavy_minus_sign: Discord Only² |      :ballot_box_with_check: No replies / views     |
 | Discord sed replace (`s/`) friendly    |        :ballot_box_with_check: twittpr.com         |               N/A                |                         :x:                         |
 | Domain for X.com links                 |         :ballot_box_with_check: fixupx.com         |               N/A                |          :ballot_box_with_check: fixvx.com          |
+| Telegram Instant View                  |                 :heavy_check_mark:                 |               :x:                |                         :x:                         |
 | Status fetch API for Developers        |                 :heavy_check_mark:                 |               N/A                |                 :heavy_check_mark:                  |
 | Last commit                            |                   [![][flc]][fc]                   |               N/A                |                   [![][vlc]][vc]                    |
 
