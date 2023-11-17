@@ -415,11 +415,11 @@ export const handleStatus = async (
   } else {
     if (isTelegram) {
       headers.push(
-        `<meta property="og:site_name" content="${tweet.author.name}"/>`
+        `<meta property="og:site_name" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`
       )
     } else {
       headers.push(
-        `<meta property="og:title" content="${tweet.author.name}"/>`
+        `<meta property="og:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`
       )
     }
   }
