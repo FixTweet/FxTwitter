@@ -162,10 +162,10 @@ const processResponse = (instructions: ThreadInstruction[]): GraphQLProcessBucke
     tweets: [],
     cursors: []
   };
-  instructions.forEach?.(instruction => {
+  instructions?.forEach?.(instruction => {
     if (instruction.type === 'TimelineAddEntries' || instruction.type === 'TimelineAddToModule') {
       // @ts-expect-error Use entries or moduleItems depending on the type
-      (instruction?.entries ?? instruction.moduleItems).forEach(_entry => {
+      (instruction?.entries ?? instruction?.moduleItems)?.forEach(_entry => {
         const entry = _entry as
           | GraphQLTimelineTweetEntry
           | GraphQLConversationThread
