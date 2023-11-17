@@ -119,7 +119,7 @@ export const statusRequest = async (c: Context) => {
 
          Since we obviously have no media to give the user, we'll just redirect to the Tweet.
          Embeds will return as usual to bots as if direct media was never specified. */
-      if (!isBotUA && !flags.api) {
+      if (!isBotUA && !flags.api && !flags.direct) {
         const baseUrl = getBaseRedirectUrl(c);
 
         return c.redirect(`${baseUrl}/${handle || 'i'}/status/${id}`, 302);
