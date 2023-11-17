@@ -10,7 +10,7 @@ import { renderInstantView } from '../render/instantview';
 import { constructTwitterThread } from '../providers/twitter/conversation';
 
 export const returnError = (c: Context, error: string): Response => {
-  return c.text(
+  return c.html(
     Strings.BASE_HTML.format({
       lang: '',
       headers: [
@@ -18,7 +18,7 @@ export const returnError = (c: Context, error: string): Response => {
         `<meta property="og:description" content="${error}"/>`
       ].join('')
     })
-  );
+  ) as Response;
 };
 /* Handler for Twitter statuses (Tweets).
    Like Twitter, we use the terminologies interchangably. */
