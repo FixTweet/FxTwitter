@@ -12,7 +12,7 @@ export const returnError = (c: Context, error: string): Response => {
         `<meta property="og:description" content="${error}"/>`
       ].join('')
     })
-  );
+  ) as Response;
 };
 
 /* Handler for Twitter users */

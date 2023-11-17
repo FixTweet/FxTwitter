@@ -125,7 +125,7 @@ test('API fetch basic Tweet', async () => {
     })
   );
   expect(result.status).toEqual(200);
-  const response = (await result.json()) as TweetAPIResponse;
+  const response = (await result.json()) as V1TweetAPIResponse;
   expect(response).toBeTruthy();
   expect(response.code).toEqual(200);
   expect(response.message).toEqual('OK');
@@ -160,7 +160,7 @@ test('API fetch basic Tweet', async () => {
 //     })
 //   );
 //   expect(result.status).toEqual(200);
-//   const response = (await result.json()) as TweetAPIResponse;
+//   const response = (await result.json()) as V1TweetAPIResponse;
 //   expect(response).toBeTruthy();
 //   expect(response.code).toEqual(200);
 //   expect(response.message).toEqual('OK');
@@ -205,7 +205,7 @@ test('API fetch basic Tweet', async () => {
 //     })
 //   );
 //   expect(result.status).toEqual(200);
-//   const response = (await result.json()) as TweetAPIResponse;
+//   const response = (await result.json()) as V1TweetAPIResponse;
 //   expect(response).toBeTruthy();
 //   expect(response.code).toEqual(200);
 //   expect(response.message).toEqual('OK');
@@ -252,7 +252,7 @@ test('API fetch basic Tweet', async () => {
 //     })
 //   );
 //   expect(result.status).toEqual(200);
-//   const response = (await result.json()) as TweetAPIResponse;
+//   const response = (await result.json()) as V1TweetAPIResponse;
 //   expect(response).toBeTruthy();
 //   expect(response.code).toEqual(200);
 //   expect(response.message).toEqual('OK');

@@ -3,6 +3,8 @@ import { statusRequest } from '../twitter/routes/status';
 import { profileRequest } from '../twitter/routes/profile';
 import { Strings } from '../../strings';
 import { Constants } from '../../constants';
+import { twitterStatusAPIProvider, twitterThreadAPIProvider } from '../../providers/twitter/conversation';
+import { activityPubStatusAPIProvider } from '../../providers/activitypub/conversation';
 
 export const api = new Hono();
 
@@ -26,6 +28,10 @@ api.get('/robots.txt', async c => c.text(Strings.ROBOTS_TXT_API));
 
 api.get('/:handle', profileRequest);
 api.get('/:handle/', profileRequest);
+
+api.get('/v2_alpha/twitter/status/:id', twitterStatusAPIProvider);
+api.get('/v2_alpha/twitter/thread/:id', twitterThreadAPIProvider);
+api.get('/v2_alpha/activitypub/status/:id', activityPubStatusAPIProvider);
 
 /* TODO: Figure out why / won't resolve but * does */
 api.get('*', async c => c.redirect(Constants.API_DOCS_URL, 302));

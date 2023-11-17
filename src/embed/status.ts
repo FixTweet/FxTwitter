@@ -18,7 +18,7 @@ export const returnError = (c: Context, error: string): Response => {
         `<meta property="og:description" content="${error}"/>`
       ].join('')
     })
-  );
+  ) as Response;
 };
 /* Handler for Twitter statuses (Tweets).
    Like Twitter, we use the terminologies interchangably. */
@@ -54,7 +54,7 @@ export const handleStatus = async (
     code: thread.code,
     message: '',
     tweet: tweet
-  };
+  } as V1TweetAPIResponse;
 
   switch (api.code) {
     case 200:

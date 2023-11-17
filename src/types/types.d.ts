@@ -38,7 +38,7 @@ interface RenderProperties {
   flags?: InputFlags;
 }
 
-interface TweetAPIResponse {
+interface V1TweetAPIResponse {
   code: number;
   message: string;
   tweet?: APITweet;
