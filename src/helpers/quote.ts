@@ -1,7 +1,7 @@
 import { Strings } from '../strings';
 
 /* Helper for Quote Tweets */
-export const handleQuote = (quote: APIPost): string | null => {
+export const handleQuote = (quote: APIStatus): string | null => {
   console.log('Quoting status ', quote.id);
 
   let str = `\n`;

@@ -72,7 +72,7 @@ export const buildAPITweet = async (
       followers: apiUser.followers,
       following: apiUser.following,
       joined: apiUser.joined,
-      posts: apiUser.posts,
+      statuses: apiUser.statuses,
       likes: apiUser.likes,
       protected: apiUser.protected,
       birthday: apiUser.birthday,
@@ -85,13 +85,13 @@ export const buildAPITweet = async (
     apiTweet.retweets = tweet.legacy.retweet_count;
 
     // @ts-expect-error `tweets` is only part of legacy API
-    apiTweet.author.tweets = apiTweet.author.posts;
+    apiTweet.author.tweets = apiTweet.author.statuses;
     // @ts-expect-error Part of legacy API that we no longer are able to track
     apiTweet.author.avatar_color = null;
     // @ts-expect-error Use retweets for legacy API
     delete apiTweet.reposts;
     // @ts-expect-error Use tweets and not posts for legacy API
-    delete apiTweet.author.posts;
+    delete apiTweet.author.statuses;
     delete apiTweet.author.global_screen_name;
   } else {
     apiTweet.reposts = tweet.legacy.retweet_count;

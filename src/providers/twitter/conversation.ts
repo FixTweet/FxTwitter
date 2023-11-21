@@ -267,7 +267,7 @@ export const constructTwitterThread = async (
   console.log('language', language);
 
   let response: TweetDetailResult | TweetResultsByRestIdResult | null = null;
-  let post: APITweet;
+  let status: APITweet;
   /* We can use TweetDetail on elongator accounts to increase per-account rate limit.
      We also use TweetDetail to process threads (WIP)
      
@@ -284,7 +284,7 @@ export const constructTwitterThread = async (
     console.log('response', response);
 
     if (!response?.data) {
-      return { post: null, thread: null, author: null, code: 404 };
+      return { status: null, thread: null, author: null, code: 404 };
     }
   }
 
@@ -296,20 +296,20 @@ export const constructTwitterThread = async (
     const result = response?.data?.tweetResult?.result as GraphQLTweet;
 
     if (typeof result === 'undefined') {
-      return { post: null, thread: null, author: null, code: 404 };
+      return { status: null, thread: null, author: null, code: 404 };
     }
 
-    const buildPost = await buildAPITweet(c, result, language, false, legacyAPI);
+    const buildStatus = await buildAPITweet(c, result, language, false, legacyAPI);
 
-    if ((buildPost as FetchResults)?.status === 401) {
-      return { post: null, thread: null, author: null, code: 401 };
-    } else if (buildPost === null || (buildPost as FetchResults)?.status === 404) {
-      return { post: null, thread: null, author: null, code: 404 };
+    if ((buildStatus as FetchResults)?.status === 401) {
+      return { status: null, thread: null, author: null, code: 401 };
+    } else if (buildStatus === null || (buildStatus as FetchResults)?.status === 404) {
+      return { status: null, thread: null, author: null, code: 404 };
     }
 
-    post = buildPost as APITweet;
+    status = buildStatus as APITweet;
 
-    return { post: post, thread: null, author: post.author, code: 200 };
+    return { status: status, thread: null, author: status.author, code: 200 };
   }
 
   const bucket = processResponse(
@@ -319,20 +319,20 @@ export const constructTwitterThread = async (
 
   /* Don't bother processing thread on a null tweet */
   if (originalTweet === null) {
-    return { post: null, thread: null, author: null, code: 404 };
+    return { status: null, thread: null, author: null, code: 404 };
   }
 
-  post = (await buildAPITweet(c, originalTweet, undefined, false, legacyAPI)) as APITweet;
+  status = (await buildAPITweet(c, originalTweet, undefined, false, legacyAPI)) as APITweet;
 
-  if (post === null) {
-    return { post: null, thread: null, author: null, code: 404 };
+  if (status === null) {
+    return { status: null, thread: null, author: null, code: 404 };
   }
 
-  const author = post.author;
+  const author = status.author;
 
   /* If we're not processing threads, let's be done here */
   if (!processThread) {
-    return { post: post, thread: null, author: author, code: 200 };
+    return { status: status, thread: null, author: author, code: 200 };
   }
 
   const threadTweets = [originalTweet];
@@ -473,7 +473,7 @@ export const constructTwitterThread = async (
   }
 
   const socialThread: SocialThread = {
-    post: post,
+    status: status,
     thread: [],
     author: author,
     code: 200

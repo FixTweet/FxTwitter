@@ -15,7 +15,7 @@ export const convertToApiUser = (user: GraphQLUser, legacyAPI = false): APIUser 
     // @ts-expect-error Use tweets for legacy API
     apiUser.tweets = user.legacy.statuses_count;
   } else {
-    apiUser.posts = user.legacy.statuses_count;
+    apiUser.statuses = user.legacy.statuses_count;
   }
   apiUser.name = user.legacy.name;
   apiUser.screen_name = user.legacy.screen_name;

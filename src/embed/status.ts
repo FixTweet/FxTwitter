@@ -48,7 +48,7 @@ export const handleStatus = async (
     flags?.api ?? false
   );
 
-  const tweet = thread?.post as APITweet;
+  const tweet = thread?.status as APITweet;
 
   const api = {
     code: thread.code,

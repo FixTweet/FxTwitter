@@ -4,7 +4,7 @@ import { getSocialTextIV } from '../helpers/author';
 import { sanitizeText } from '../helpers/utils';
 import { Strings } from '../strings';
 
-const populateUserLinks = (tweet: APIPost, text: string): string => {
+const populateUserLinks = (tweet: APIStatus, text: string): string => {
   /* TODO: Maybe we can add username splices to our API so only genuinely valid users are linked? */
   text.match(/@(\w{1,15})/g)?.forEach(match => {
     const username = match.replace('@', '');
@@ -16,7 +16,7 @@ const populateUserLinks = (tweet: APIPost, text: string): string => {
   return text;
 };
 
-const generateTweetMedia = (tweet: APIPost): string => {
+const generateTweetMedia = (tweet: APIStatus): string => {
   let media = '';
   if (tweet.media?.all?.length) {
     tweet.media.all.forEach(mediaItem => {
@@ -117,7 +117,7 @@ const truncateSocialCount = (count: number): string => {
   }
 };
 
-const generateTweetFooter = (tweet: APIPost, isQuote = false): string => {
+const generateTweetFooter = (tweet: APIStatus, isQuote = false): string => {
   const { author } = tweet;
 
   let description = author.description;
@@ -156,12 +156,12 @@ const generateTweetFooter = (tweet: APIPost, isQuote = false): string => {
           joined: author.joined ? `📆 ${formatDate(new Date(author.joined))}` : '',
           following: truncateSocialCount(author.following),
           followers: truncateSocialCount(author.followers),
-          tweets: truncateSocialCount(author.posts)
+          tweets: truncateSocialCount(author.statuses)
         })
   });
 };
 
-const generateTweet = (tweet: APIPost, isQuote = false): string => {
+const generateTweet = (tweet: APIStatus, isQuote = false): string => {
   let text = paragraphify(sanitizeText(tweet.text), isQuote);
   text = htmlifyLinks(text);
   text = htmlifyHashtags(text);
