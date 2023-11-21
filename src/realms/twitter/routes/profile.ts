@@ -53,7 +53,7 @@ export const profileRequest = async (c: Context) => {
     const profileResponse = await handleProfile(c, username, flags);
     /* Check for custom redirect */
 
-    if (!isBotUA) {
+    if (!isBotUA && !flags.api) {
       return c.redirect(`${baseUrl}/${handle}`, 302);
     }
 
