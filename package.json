@@ -25,7 +25,7 @@
     "@typescript-eslint/parser": "^6.13.1",
     "dotenv": "^16.3.1",
     "eslint": "^8.55.0",
-    "eslint-config-prettier": "^9.0.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-config-typescript": "^3.0.0",
     "eslint-plugin-optimize-regex": "^1.2.1",
     "eslint-plugin-sonarjs": "^0.23.0",
