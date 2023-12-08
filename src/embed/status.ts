@@ -20,8 +20,7 @@ export const returnError = (c: Context, error: string): Response => {
     })
   ) as Response;
 };
-/* Handler for Twitter statuses (Tweets).
-   Like Twitter, we use the terminologies interchangably. */
+/* Handler for statuses */
 export const handleStatus = async (
   c: Context,
   statusId: string,
