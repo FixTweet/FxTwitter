@@ -205,10 +205,9 @@ No problem! You can pick any specific photo from a post using Twitter's own URL 
 
 **Licensed under the permissive MIT license. Feel free to send a pull request!**
 
-## Things to tackle in the future
+## Star History
 
-- Improved support for multi-image with large height differences
-- Discord bot
+[![Star History Chart](https://api.star-history.com/svg?repos=FixTweet/FixTweet&type=Date)](https://star-history.com/#FixTweet/FixTweet&Date)
 
 ## Bugs or issues?
 
