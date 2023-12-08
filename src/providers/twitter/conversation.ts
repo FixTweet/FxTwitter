@@ -1,8 +1,8 @@
 import { Constants } from '../../constants';
 import { twitterFetch } from '../../fetch';
-import { buildAPITweet } from './processor';
+import { buildAPITwitterStatus } from './processor';
 import { Experiment, experimentCheck } from '../../experiments';
-import { isGraphQLTweet } from '../../helpers/graphql';
+import { isGraphQLTwitterStatus } from '../../helpers/graphql';
 import { Context } from 'hono';
 
 export const fetchTweetDetail = async (
@@ -60,11 +60,11 @@ export const fetchTweetDetail = async (
     useElongator,
     (_conversation: unknown) => {
       const conversation = _conversation as TweetDetailResult;
-      const tweet = findTweetInBucket(
+      const tweet = findStatusInBucket(
         status,
         processResponse(conversation?.data?.threaded_conversation_with_injections_v2?.instructions)
       );
-      if (tweet && isGraphQLTweet(tweet)) {
+      if (tweet && isGraphQLTwitterStatus(tweet)) {
         return true;
       }
       console.log('invalid graphql tweet', conversation);
@@ -126,7 +126,7 @@ export const fetchByRestId = async (
       const conversation = _conversation as TweetResultsByRestIdResult;
       // If we get a not found error it's still a valid response
       const tweet = conversation.data?.tweetResult?.result;
-      if (isGraphQLTweet(tweet)) {
+      if (isGraphQLTwitterStatus(tweet)) {
         return true;
       }
       console.log('invalid graphql tweet');
@@ -159,13 +159,13 @@ export const fetchByRestId = async (
 
 const processResponse = (instructions: ThreadInstruction[]): GraphQLProcessBucket => {
   const bucket: GraphQLProcessBucket = {
-    tweets: [],
+    statuses: [],
     cursors: []
   };
-  instructions.forEach?.(instruction => {
+  instructions?.forEach?.(instruction => {
     if (instruction.type === 'TimelineAddEntries' || instruction.type === 'TimelineAddToModule') {
       // @ts-expect-error Use entries or moduleItems depending on the type
-      (instruction?.entries ?? instruction.moduleItems).forEach(_entry => {
+      (instruction?.entries ?? instruction?.moduleItems)?.forEach(_entry => {
         const entry = _entry as
           | GraphQLTimelineTweetEntry
           | GraphQLConversationThread
@@ -181,10 +181,14 @@ const processResponse = (instructions: ThreadInstruction[]): GraphQLProcessBucke
           if (itemContentType === 'TimelineTweet') {
             const entryType = content.itemContent.tweet_results.result.__typename;
             if (entryType === 'Tweet') {
-              bucket.tweets.push(content.itemContent.tweet_results.result as GraphQLTweet);
+              bucket.statuses.push(
+                content.itemContent.tweet_results.result as GraphQLTwitterStatus
+              );
             }
             if (entryType === 'TweetWithVisibilityResults') {
-              bucket.tweets.push(content.itemContent.tweet_results.result.tweet as GraphQLTweet);
+              bucket.statuses.push(
+                content.itemContent.tweet_results.result.tweet as GraphQLTwitterStatus
+              );
             }
           } else if (itemContentType === 'TimelineTimelineCursor') {
             bucket.cursors.push(content.itemContent as GraphQLTimelineCursor);
@@ -197,11 +201,13 @@ const processResponse = (instructions: ThreadInstruction[]): GraphQLProcessBucke
             if (itemContentType === 'TimelineTweet') {
               const entryType = item.item.itemContent.tweet_results?.result?.__typename;
               if (entryType === 'Tweet') {
-                bucket.tweets.push(item.item.itemContent.tweet_results.result as GraphQLTweet);
+                bucket.statuses.push(
+                  item.item.itemContent.tweet_results.result as GraphQLTwitterStatus
+                );
               }
               if (entryType === 'TweetWithVisibilityResults') {
-                bucket.tweets.push(
-                  item.item.itemContent.tweet_results.result.tweet as GraphQLTweet
+                bucket.statuses.push(
+                  item.item.itemContent.tweet_results.result.tweet as GraphQLTwitterStatus
                 );
               }
             } else if (itemContentType === 'TimelineTimelineCursor') {
@@ -216,22 +222,26 @@ const processResponse = (instructions: ThreadInstruction[]): GraphQLProcessBucke
   return bucket;
 };
 
-const findTweetInBucket = (id: string, bucket: GraphQLProcessBucket): GraphQLTweet | null => {
-  return bucket.tweets.find(tweet => (tweet.rest_id ?? tweet.legacy?.id_str) === id) ?? null;
+const findStatusInBucket = (
+  id: string,
+  bucket: GraphQLProcessBucket
+): GraphQLTwitterStatus | null => {
+  return bucket.statuses.find(status => (status.rest_id ?? status.legacy?.id_str) === id) ?? null;
 };
 
-const findNextTweet = (id: string, bucket: GraphQLProcessBucket): number => {
-  return bucket.tweets.findIndex(tweet => tweet.legacy?.in_reply_to_status_id_str === id);
+const findNextStatus = (id: string, bucket: GraphQLProcessBucket): number => {
+  return bucket.statuses.findIndex(status => status.legacy?.in_reply_to_status_id_str === id);
 };
 
-const findPreviousTweet = (id: string, bucket: GraphQLProcessBucket): number => {
-  const tweet = bucket.tweets.find(tweet => (tweet.rest_id ?? tweet.legacy?.id_str) === id);
-  if (!tweet) {
+const findPreviousStatus = (id: string, bucket: GraphQLProcessBucket): number => {
+  const status = bucket.statuses.find(status => (status.rest_id ?? status.legacy?.id_str) === id);
+  if (!status) {
     console.log('uhhh, we could not even find that tweet, dunno how that happened');
     return -1;
   }
-  return bucket.tweets.findIndex(
-    _tweet => (_tweet.rest_id ?? _tweet.legacy?.id_str) === tweet.legacy?.in_reply_to_status_id_str
+  return bucket.statuses.findIndex(
+    _status =>
+      (_status.rest_id ?? _status.legacy?.id_str) === status.legacy?.in_reply_to_status_id_str
   );
 };
 
@@ -249,7 +259,7 @@ const consolidateCursors = (
   });
 };
 
-const filterBucketTweets = (tweets: GraphQLTweet[], original: GraphQLTweet) => {
+const filterBucketStatuses = (tweets: GraphQLTwitterStatus[], original: GraphQLTwitterStatus) => {
   return tweets.filter(
     tweet =>
       tweet.core?.user_results?.result?.rest_id === original.core?.user_results?.result?.rest_id
@@ -267,7 +277,7 @@ export const constructTwitterThread = async (
   console.log('language', language);
 
   let response: TweetDetailResult | TweetResultsByRestIdResult | null = null;
-  let post: APITweet;
+  let status: APITwitterStatus;
   /* We can use TweetDetail on elongator accounts to increase per-account rate limit.
      We also use TweetDetail to process threads (WIP)
      
@@ -284,7 +294,7 @@ export const constructTwitterThread = async (
     console.log('response', response);
 
     if (!response?.data) {
-      return { post: null, thread: null, author: null, code: 404 };
+      return { status: null, thread: null, author: null, code: 404 };
     }
   }
 
@@ -293,57 +303,63 @@ export const constructTwitterThread = async (
     console.log('Using TweetResultsByRestId for request...');
     response = (await fetchByRestId(id, c)) as TweetResultsByRestIdResult;
 
-    const result = response?.data?.tweetResult?.result as GraphQLTweet;
+    const result = response?.data?.tweetResult?.result as GraphQLTwitterStatus;
 
     if (typeof result === 'undefined') {
-      return { post: null, thread: null, author: null, code: 404 };
+      return { status: null, thread: null, author: null, code: 404 };
     }
 
-    const buildPost = await buildAPITweet(c, result, language, false, legacyAPI);
+    const buildStatus = await buildAPITwitterStatus(c, result, language, false, legacyAPI);
 
-    if ((buildPost as FetchResults)?.status === 401) {
-      return { post: null, thread: null, author: null, code: 401 };
-    } else if (buildPost === null || (buildPost as FetchResults)?.status === 404) {
-      return { post: null, thread: null, author: null, code: 404 };
+    if ((buildStatus as FetchResults)?.status === 401) {
+      return { status: null, thread: null, author: null, code: 401 };
+    } else if (buildStatus === null || (buildStatus as FetchResults)?.status === 404) {
+      return { status: null, thread: null, author: null, code: 404 };
     }
 
-    post = buildPost as APITweet;
+    status = buildStatus as APITwitterStatus;
 
-    return { post: post, thread: null, author: post.author, code: 200 };
+    return { status: status, thread: null, author: status.author, code: 200 };
   }
 
   const bucket = processResponse(
     response?.data?.threaded_conversation_with_injections_v2?.instructions ?? []
   );
-  const originalTweet = findTweetInBucket(id, bucket);
+  const originalStatus = findStatusInBucket(id, bucket);
 
   /* Don't bother processing thread on a null tweet */
-  if (originalTweet === null) {
-    return { post: null, thread: null, author: null, code: 404 };
+  if (originalStatus === null) {
+    return { status: null, thread: null, author: null, code: 404 };
   }
 
-  post = (await buildAPITweet(c, originalTweet, undefined, false, legacyAPI)) as APITweet;
+  status = (await buildAPITwitterStatus(
+    c,
+    originalStatus,
+    undefined,
+    false,
+    legacyAPI
+  )) as APITwitterStatus;
 
-  if (post === null) {
-    return { post: null, thread: null, author: null, code: 404 };
+  if (status === null) {
+    return { status: null, thread: null, author: null, code: 404 };
   }
 
-  const author = post.author;
+  const author = status.author;
 
   /* If we're not processing threads, let's be done here */
   if (!processThread) {
-    return { post: post, thread: null, author: author, code: 200 };
+    return { status: status, thread: null, author: author, code: 200 };
   }
 
-  const threadTweets = [originalTweet];
-  bucket.tweets = filterBucketTweets(bucket.tweets, originalTweet);
+  const threadStatuses = [originalStatus];
+  bucket.statuses = filterBucketStatuses(bucket.statuses, originalStatus);
 
   let currentId = id;
 
   /* Process tweets that are following the current one in the thread */
-  while (findNextTweet(currentId, bucket) !== -1) {
-    const index = findNextTweet(currentId, bucket);
-    const tweet = bucket.tweets[index];
+  while (findNextStatus(currentId, bucket) !== -1) {
+    const index = findNextStatus(currentId, bucket);
+    const tweet = bucket.statuses[index];
 
     const newCurrentId = tweet.rest_id ?? tweet.legacy?.id_str;
 
@@ -357,15 +373,15 @@ export const constructTwitterThread = async (
       'in bucket'
     );
 
-    threadTweets.push(tweet);
+    threadStatuses.push(tweet);
 
     currentId = newCurrentId;
 
-    console.log('Current index', index, 'of', bucket.tweets.length);
+    console.log('Current index', index, 'of', bucket.statuses.length);
 
-    /* Reached the end of the current list of tweets in thread) */
-    if (index >= bucket.tweets.length - 1) {
-      /* See if we have a cursor to fetch more tweets */
+    /* Reached the end of the current list of statuses in thread) */
+    if (index >= bucket.statuses.length - 1) {
+      /* See if we have a cursor to fetch more statuses */
       const cursor = bucket.cursors.find(
         cursor => cursor.cursorType === 'Bottom' || cursor.cursorType === 'ShowMore'
       );
@@ -396,26 +412,26 @@ export const constructTwitterThread = async (
       const cursorResponse = processResponse(
         loadCursor?.data?.threaded_conversation_with_injections_v2?.instructions ?? []
       );
-      bucket.tweets = bucket.tweets.concat(
-        filterBucketTweets(cursorResponse.tweets, originalTweet)
+      bucket.statuses = bucket.statuses.concat(
+        filterBucketStatuses(cursorResponse.statuses, originalStatus)
       );
       /* Remove old cursor and add new bottom cursor if necessary */
       consolidateCursors(bucket.cursors, cursorResponse.cursors);
       console.log('updated bucket of cursors', bucket.cursors);
     }
 
-    console.log('Preview of next tweet:', findNextTweet(currentId, bucket));
+    console.log('Preview of next status:', findNextStatus(currentId, bucket));
   }
 
   currentId = id;
 
-  while (findPreviousTweet(currentId, bucket) !== -1) {
-    const index = findPreviousTweet(currentId, bucket);
-    const tweet = bucket.tweets[index];
-    const newCurrentId = tweet.rest_id ?? tweet.legacy?.id_str;
+  while (findPreviousStatus(currentId, bucket) !== -1) {
+    const index = findPreviousStatus(currentId, bucket);
+    const status = bucket.statuses[index];
+    const newCurrentId = status.rest_id ?? status.legacy?.id_str;
 
     console.log(
-      'adding previous tweet to thread',
+      'adding previous status to thread',
       newCurrentId,
       'from',
       currentId,
@@ -424,12 +440,12 @@ export const constructTwitterThread = async (
       'in bucket'
     );
 
-    threadTweets.unshift(tweet);
+    threadStatuses.unshift(status);
 
     currentId = newCurrentId;
 
     if (index === 0) {
-      /* See if we have a cursor to fetch more tweets */
+      /* See if we have a cursor to fetch more statuses */
       const cursor = bucket.cursors.find(
         cursor => cursor.cursorType === 'Top' || cursor.cursorType === 'ShowMore'
       );
@@ -438,7 +454,7 @@ export const constructTwitterThread = async (
         console.log('No cursor present, stopping pagination up');
         break;
       }
-      console.log('Cursor present, fetching more tweets up');
+      console.log('Cursor present, fetching more statuses up');
 
       let loadCursor: TweetDetailResult;
 
@@ -459,28 +475,30 @@ export const constructTwitterThread = async (
       const cursorResponse = processResponse(
         loadCursor?.data?.threaded_conversation_with_injections_v2?.instructions ?? []
       );
-      bucket.tweets = cursorResponse.tweets.concat(
-        filterBucketTweets(bucket.tweets, originalTweet)
+      bucket.statuses = cursorResponse.statuses.concat(
+        filterBucketStatuses(bucket.statuses, originalStatus)
       );
       /* Remove old cursor and add new top cursor if necessary */
       consolidateCursors(bucket.cursors, cursorResponse.cursors);
 
-      // console.log('updated bucket of tweets', bucket.tweets);
+      // console.log('updated bucket of statuses', bucket.statuses);
       console.log('updated bucket of cursors', bucket.cursors);
     }
 
-    console.log('Preview of previous tweet:', findPreviousTweet(currentId, bucket));
+    console.log('Preview of previous status:', findPreviousStatus(currentId, bucket));
   }
 
   const socialThread: SocialThread = {
-    post: post,
+    status: status,
     thread: [],
     author: author,
     code: 200
   };
 
-  threadTweets.forEach(async tweet => {
-    socialThread.thread?.push((await buildAPITweet(c, tweet, undefined, true, false)) as APITweet);
+  threadStatuses.forEach(async status => {
+    socialThread.thread?.push(
+      (await buildAPITwitterStatus(c, status, undefined, true, false)) as APITwitterStatus
+    );
   });
 
   return socialThread;

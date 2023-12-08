@@ -57,7 +57,6 @@ export async function withTimeout<T>(
   }
 }
 
-
 const numberFormat = new Intl.NumberFormat('en-US');
 
 export const formatNumber = (num: number) => numberFormat.format(num);

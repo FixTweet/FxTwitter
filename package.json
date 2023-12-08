@@ -16,16 +16,16 @@
   "author": "dangered wolf",
   "license": "MIT",
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20231025.0",
+    "@cloudflare/workers-types": "^4.20231121.0",
     "@microsoft/eslint-formatter-sarif": "^3.0.0",
-    "@sentry/esbuild-plugin": "^2.10.1",
-    "@sentry/integrations": "^7.80.1",
-    "@types/jest": "^29.5.8",
-    "@typescript-eslint/eslint-plugin": "^6.11.0",
-    "@typescript-eslint/parser": "^6.11.0",
+    "@sentry/esbuild-plugin": "^2.10.2",
+    "@sentry/integrations": "^7.86.0",
+    "@types/jest": "^29.5.11",
+    "@typescript-eslint/eslint-plugin": "^6.13.2",
+    "@typescript-eslint/parser": "^6.13.2",
     "dotenv": "^16.3.1",
-    "eslint": "^8.53.0",
-    "eslint-config-prettier": "^9.0.0",
+    "eslint": "^8.55.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-config-typescript": "^3.0.0",
     "eslint-plugin-optimize-regex": "^1.2.1",
     "eslint-plugin-sonarjs": "^0.23.0",
@@ -34,11 +34,11 @@
     "prettier": "^3.1.0",
     "ts-jest": "^29.1.1",
     "ts-loader": "^9.5.1",
-    "typescript": "^5.2.2",
-    "wrangler": "^3.15.0"
+    "typescript": "^5.3.3",
+    "wrangler": "^3.19.0"
   },
   "dependencies": {
     "@hono/sentry": "^1.0.0",
-    "hono": "^3.9.2"
+    "hono": "^3.11.3"
   }
 }

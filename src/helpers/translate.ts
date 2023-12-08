@@ -2,9 +2,9 @@ import { Context } from 'hono';
 import { Constants } from '../constants';
 import { withTimeout } from './utils';
 
-/* Handles translating Tweets when asked! */
-export const translateTweet = async (
-  tweet: GraphQLTweet,
+/* Handles translating statuses when asked! */
+export const translateStatus = async (
+  tweet: GraphQLTwitterStatus,
   guestToken: string,
   language: string,
   c: Context
@@ -52,7 +52,9 @@ export const translateTweet = async (
   }
 
   try {
-    const url = `${Constants.TWITTER_ROOT}/i/api/1.1/strato/column/None/tweetId=${tweet.rest_id ?? tweet.legacy?.id_str},destinationLanguage=None,translationSource=Some(Google),feature=None,timeout=None,onlyCached=None/translation/service/translateTweet`;
+    const url = `${Constants.TWITTER_ROOT}/i/api/1.1/strato/column/None/tweetId=${
+      tweet.rest_id ?? tweet.legacy?.id_str
+    },destinationLanguage=None,translationSource=Some(Google),feature=None,timeout=None,onlyCached=None/translation/service/translateTweet`;
     console.log(url, headers);
     translationApiResponse = (await withTimeout(
       (signal: AbortSignal) =>

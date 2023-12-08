@@ -28,7 +28,7 @@ interface ResponseInstructions {
 }
 
 interface RenderProperties {
-  tweet: APITweet;
+  status: APITwitterStatus;
   siteText?: string;
   authorText?: string;
   engagementText?: string;
@@ -41,13 +41,13 @@ interface RenderProperties {
 interface V1TweetAPIResponse {
   code: number;
   message: string;
-  tweet?: APITweet;
+  tweet?: APITwitterStatus;
 }
 
-interface SocialPostAPIResponse {
+interface StatusAPIResponse {
   code: number;
   message: string;
-  post?: APITweet;
+  status?: APITwitterStatus;
 }
 
 interface UserAPIResponse {
@@ -110,7 +110,7 @@ interface APIMosaicPhoto extends APIMedia {
   };
 }
 
-interface APIPost {
+interface APIStatus {
   id: string;
   url: string;
   text: string;
@@ -121,7 +121,7 @@ interface APIPost {
   reposts: number;
   replies: number;
 
-  quote?: APIPost;
+  quote?: APIStatus;
   poll?: APIPoll;
   author: APIUser;
 
@@ -146,7 +146,7 @@ interface APIPost {
   embed_card: 'tweet' | 'summary' | 'summary_large_image' | 'player';
 }
 
-interface APITweet extends APIPost {
+interface APITwitterStatus extends APIStatus {
   views?: number | null;
   translation?: APITranslate;
 
@@ -168,7 +168,7 @@ interface APIUser {
   protected: boolean;
   followers: number;
   following: number;
-  posts: number;
+  statuses: number;
   likes: number;
   joined: string;
   website: {
@@ -183,13 +183,13 @@ interface APIUser {
 }
 
 interface SocialPost {
-  post: APIPost | APITweet | null;
+  status: APIStatus | APITwitterStatus | null;
   author: APIUser | null;
 }
 
 interface SocialThread {
-  post: APIPost | APITweet | null;
-  thread: (APIPost | APITweet)[] | null;
+  status: APIStatus | APITwitterStatus | null;
+  thread: (APIStatus | APITwitterStatus)[] | null;
   author: APIUser | null;
   code: number;
 }

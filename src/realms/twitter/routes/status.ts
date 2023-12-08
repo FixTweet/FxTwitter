@@ -4,7 +4,7 @@ import { getBaseRedirectUrl } from '../router';
 import { handleStatus } from '../../../embed/status';
 import { Strings } from '../../../strings';
 
-/* Handler for status (Tweet) request */
+/* Handler for status request */
 export const statusRequest = async (c: Context) => {
   const { prefix, handle, id, mediaNumber, language } = c.req.param();
   const url = new URL(c.req.url);
@@ -35,8 +35,8 @@ export const statusRequest = async (c: Context) => {
   const isBotUA = userAgent.match(Constants.BOT_UA_REGEX) !== null || flags?.archive;
 
   /* Check if domain is a direct media domain (i.e. d.fxtwitter.com),
-     the tweet is prefixed with /dl/ or /dir/ (for TwitFix interop), or the
-     tweet ends in .mp4, .jpg, .jpeg, or .png
+     the status is prefixed with /dl/ or /dir/ (for TwitFix interop), or the
+     status ends in .mp4, .jpg, .jpeg, or .png
       
      Note that .png is not documented because images always redirect to a jpg,
      but it will help someone who does it mistakenly on something like Discord
@@ -63,7 +63,7 @@ export const statusRequest = async (c: Context) => {
     flags.direct = true;
   }
 
-  /* The pxtwitter.com domain is deprecated and Tweets posted after deprecation
+  /* The pxtwitter.com domain is deprecated and statuses posted after deprecation
      date will have a notice saying we've moved to fxtwitter.com! */
   if (
     Constants.DEPRECATED_DOMAIN_LIST.includes(url.hostname) &&
@@ -115,9 +115,9 @@ export const statusRequest = async (c: Context) => {
 
     if (statusResponse) {
       /* We're checking if the User Agent is a bot again specifically in case they requested
-         direct media (d.fxtwitter.com, .mp4/.jpg, etc) but the Tweet contains no media.
+         direct media (d.fxtwitter.com, .mp4/.jpg, etc) but the status contains no media.
 
-         Since we obviously have no media to give the user, we'll just redirect to the Tweet.
+         Since we obviously have no media to give the user, we'll just redirect to the status.
          Embeds will return as usual to bots as if direct media was never specified. */
       if (!isBotUA && !flags.api && !flags.direct) {
         const baseUrl = getBaseRedirectUrl(c);
@@ -135,7 +135,7 @@ export const statusRequest = async (c: Context) => {
     }
   } else {
     /* A human has clicked a fxtwitter.com/:screen_name/status/:id link!
-       Obviously we just need to redirect to the Tweet directly.*/
+       Obviously we just need to redirect to the status directly.*/
     console.log('Matched human UA', userAgent);
 
     return c.redirect(`${baseUrl}/${handle || 'i'}/status/${id?.match(/\d{2,20}/)?.[0]}`, 302);

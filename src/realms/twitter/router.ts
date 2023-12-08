@@ -27,72 +27,66 @@ export const getBaseRedirectUrl = (c: Context) => {
 };
 
 /* Workaround for some dumb maybe-build time issue where statusRequest isn't ready or something because none of these trigger*/
-const tweetRequest = async (c: Context) => await statusRequest(c);
+const twitterStatusRequest = async (c: Context) => await statusRequest(c);
 const _profileRequest = async (c: Context) => await profileRequest(c);
 /* How can hono not handle trailing slashes? This is so stupid,
 
 serious TODO: Figure out how to make this not stupid. */
-twitter.get('/:endpoint{status(es)?}/:id', tweetRequest);
-twitter.get('/:endpoint{status(es)?}/:id/', tweetRequest);
-twitter.get('/:endpoint{status(es)?}/:id/:language/', tweetRequest);
-twitter.get('/:endpoint{status(es)?}/:id/:language', tweetRequest);
-twitter.get(
-  '/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:language',
-  tweetRequest
-);
-twitter.get(
-  '/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:language/',
-  tweetRequest
-);
-twitter.get('/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id', tweetRequest);
-twitter.get('/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/', tweetRequest);
+twitter.get('/:endpoint{status(es)?}/:id', twitterStatusRequest);
+twitter.get('/:endpoint{status(es)?}/:id/', twitterStatusRequest);
+twitter.get('/:endpoint{status(es)?}/:id/:language/', twitterStatusRequest);
+twitter.get('/:endpoint{status(es)?}/:id/:language', twitterStatusRequest);
+twitter.get('/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:language', twitterStatusRequest);
+twitter.get('/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:language/', twitterStatusRequest);
+twitter.get('/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id', twitterStatusRequest);
+twitter.get('/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/', twitterStatusRequest);
 twitter.get(
   '/:prefix{(dir|dl)}/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:language',
-  tweetRequest
+  twitterStatusRequest
 );
 twitter.get(
   '/:prefix{(dir|dl)}/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:language/',
-  tweetRequest
+  twitterStatusRequest
 );
 twitter.get(
   '/:prefix{(dir|dl)}/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id',
-  tweetRequest
+  twitterStatusRequest
 );
 twitter.get(
   '/:prefix{(dir|dl)}/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/',
-  tweetRequest
+  twitterStatusRequest
 );
 twitter.get(
   '/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:mediaType{(photos?|videos?)}/:mediaNumber{[1-4]}',
-  tweetRequest
+  twitterStatusRequest
 );
 twitter.get(
   '/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:mediaType{(photos?|videos?)}/:mediaNumber{[1-4]}/',
-  tweetRequest
+  twitterStatusRequest
 );
 twitter.get(
   '/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:mediaType{(photos?|videos?)}/:mediaNumber{[1-4]}/:language',
-  tweetRequest
+  twitterStatusRequest
 );
 twitter.get(
   '/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:mediaType{(photos?|videos?)}/:mediaNumber{[1-4]}/:language/',
-  tweetRequest
+  twitterStatusRequest
 );
 twitter.get(
   '/:prefix{(dir|dl)}/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:mediaType{(photos?|videos?)}/:mediaNumber{[1-4]}',
-  tweetRequest
+  twitterStatusRequest
 );
 twitter.get(
   '/:prefix{(dir|dl)}/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:mediaType{(photos?|videos?)}/:mediaNumber{[1-4]}/',
-  tweetRequest
+  twitterStatusRequest
 );
 twitter.get(
   '/:prefix{(dir|dl)}/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:mediaType{(photos?|videos?)}/:mediaNumber{[1-4]}/:language',
-  tweetRequest
+  twitterStatusRequest
 );
 twitter.get(
   '/:prefix{(dir|dl)}/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:mediaType{(photos?|videos?)}/:mediaNumber{[1-4]}/:language/',
-  tweetRequest
+  twitterStatusRequest
 );
 
 twitter.get('/version/', versionRoute);
