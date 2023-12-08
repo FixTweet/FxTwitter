@@ -59,6 +59,12 @@ Just append a post with its 2-letter ISO language code. So for English, add `/en
 
 ![](https://cdn.discordapp.com/attachments/165560751363325952/1006333011136102400/FixTweet.png)
 
+## Gallery view
+
+Use `g.fxtwitter.com` or `g.fixupx.com` to generate minimal embeds with just the post's media and author information without other distractions. This can be particularly useful for read-only channels dedicated to sharing media.
+
+![](https://cdn.discordapp.com/attachments/165560751363325952/1182788212482117662/gallery.png)
+
 ## Direct media links
 
 Want to link directly to a post's media without the embed? You can easily do that using FixTweet.
@@ -70,9 +76,10 @@ There are a few supported ways to do this:
 - Add `d.` before the domain (so, `d.fxtwitter.com`)
 - Add `.mp4` to the end of videos or `.jpg` to the end of images, after the post ID
 
-## Telegram Instant View (Beta)
+## Telegram Instant View
 
 View the full contents of tweets without leaving Telegram or opening a browser! We automatically enable instant view in these cases:
+
 - The domain is i.fxtwitter.com / i.fixupx.com
 - The post contains photos, translations, or is over 280 characters
 
@@ -129,8 +136,9 @@ In many ways, FixTweet has richer embeds and does more. Here's a table comparing
 | Translate Posts                        |                 :heavy_check_mark:                 |               :x:                |                         :x:                         |
 | Replace t.co with original links       |                 :heavy_check_mark:                 |               :x:                |                 :heavy_check_mark:                  |
 | Redirect to media file (without embed) |                 :heavy_check_mark:                 |               :x:                | :ballot_box_with_check: Subdomain broken, no images |
+| Gallery view                           |                 :heavy_check_mark:                 |               :x:                |                         :x:                         |
 | Strip tracking info on redirect        |                 :heavy_check_mark:                 |               :x:                |                 :heavy_check_mark:                  |
-| Show retweet, like, reply, view counts | :heavy_minus_sign: Discord / Telegram Instant View | :heavy_minus_sign: Discord Only² |      :ballot_box_with_check: No replies / views     |
+| Show retweet, like, reply, view counts | :heavy_minus_sign: Discord / Telegram Instant View | :heavy_minus_sign: Discord Only² |     :ballot_box_with_check: No replies / views      |
 | Discord sed replace (`s/`) friendly    |        :ballot_box_with_check: twittpr.com         |               N/A                |                         :x:                         |
 | Domain for X.com links                 |         :ballot_box_with_check: fixupx.com         |               N/A                |          :ballot_box_with_check: fixvx.com          |
 | Telegram Instant View                  |                 :heavy_check_mark:                 |               :x:                |                         :x:                         |
