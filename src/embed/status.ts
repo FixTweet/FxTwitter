@@ -54,7 +54,7 @@ export const handleStatus = async (
     code: thread.code,
     message: '',
     tweet: status
-  };
+  } as V1TweetAPIResponse;
 
   switch (api.code) {
     case 200:

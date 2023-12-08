@@ -1,0 +1,3 @@
+type ActivityPubStatus = {
+  id: string;
+}

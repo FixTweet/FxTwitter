@@ -504,7 +504,7 @@ export const constructTwitterThread = async (
   return socialThread;
 };
 
-export const threadAPIProvider = async (c: Context) => {
+export const twitterThreadAPIProvider = async (c: Context) => {
   const id = c.req.param('id') as string;
 
   const processedResponse = await constructTwitterThread(id, true, c, undefined);
@@ -516,3 +516,16 @@ export const threadAPIProvider = async (c: Context) => {
   }
   return c.json(processedResponse);
 };
+
+export const twitterStatusAPIProvider = async (c: Context) => {
+  const id = c.req.param('id') as string;
+
+  const processedResponse = await constructTwitterThread(id, false, c, undefined);
+
+  c.status(processedResponse.code);
+  // Add every header from Constants.API_RESPONSE_HEADERS
+  for (const [header, value] of Object.entries(Constants.API_RESPONSE_HEADERS)) {
+    c.header(header, value);
+  }
+  return c.json(processedResponse);
+}
