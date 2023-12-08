@@ -67,5 +67,6 @@ export const Constants = {
     'content-type': 'application/json'
   },
   POLL_TWEET_CACHE: 'max-age=60',
-  DEFAULT_COLOR: '#10A3FF'
+  DEFAULT_COLOR: '#10A3FF',
+  FRIENDLY_USER_AGENT: `Mozilla/5.0 FixEmbedBot/1.0 (like Twitterbot; +https://fxtwitter.com/crawler)`
 };
