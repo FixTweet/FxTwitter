@@ -19,7 +19,7 @@ export const Constants = {
   TWITTER_GLOBAL_NAME_ROOT: 'twitter.com',
   TWITTER_API_ROOT: 'https://api.twitter.com',
   BOT_UA_REGEX:
-    /bot|facebook|embed|got|firefox\/92|firefox\/38|curl|wget|go-http|yahoo|generator|whatsapp|preview|link|proxy|vkshare|images|analyzer|index|crawl|spider|python|cfnetwork|node|mastodon|http\.rb/gi,
+    /bot|facebook|embed|got|firefox\/92|firefox\/38|curl|wget|go-http|yahoo|generator|whatsapp|preview|link|proxy|vkshare|images|analyzer|index|crawl|spider|python|cfnetwork|node|mastodon|http\.rb|ruby|bun\/|fiddler/gi,
   /* 3 hours */
   GUEST_TOKEN_MAX_AGE: 3 * 60 * 60,
   /* Twitter Web App actually uses Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA
