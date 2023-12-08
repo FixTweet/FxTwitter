@@ -28,7 +28,7 @@ interface ResponseInstructions {
 }
 
 interface RenderProperties {
-  tweet: APITweet;
+  status: APITwitterStatus;
   siteText?: string;
   authorText?: string;
   engagementText?: string;
@@ -41,13 +41,13 @@ interface RenderProperties {
 interface TweetAPIResponse {
   code: number;
   message: string;
-  tweet?: APITweet;
+  tweet?: APITwitterStatus;
 }
 
-interface SocialPostAPIResponse {
+interface StatusAPIResponse {
   code: number;
   message: string;
-  post?: APITweet;
+  status?: APITwitterStatus;
 }
 
 interface UserAPIResponse {
@@ -146,7 +146,7 @@ interface APIStatus {
   embed_card: 'tweet' | 'summary' | 'summary_large_image' | 'player';
 }
 
-interface APITweet extends APIStatus {
+interface APITwitterStatus extends APIStatus {
   views?: number | null;
   translation?: APITranslate;
 
@@ -183,13 +183,13 @@ interface APIUser {
 }
 
 interface SocialPost {
-  status: APIStatus | APITweet | null;
+  status: APIStatus | APITwitterStatus | null;
   author: APIUser | null;
 }
 
 interface SocialThread {
-  status: APIStatus | APITweet | null;
-  thread: (APIStatus | APITweet)[] | null;
+  status: APIStatus | APITwitterStatus | null;
+  thread: (APIStatus | APITwitterStatus)[] | null;
   author: APIUser | null;
   code: number;
 }

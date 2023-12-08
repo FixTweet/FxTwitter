@@ -4,7 +4,7 @@ import { getSocialTextIV } from '../helpers/author';
 import { sanitizeText } from '../helpers/utils';
 import { Strings } from '../strings';
 
-const populateUserLinks = (tweet: APIStatus, text: string): string => {
+const populateUserLinks = (status: APIStatus, text: string): string => {
   /* TODO: Maybe we can add username splices to our API so only genuinely valid users are linked? */
   text.match(/@(\w{1,15})/g)?.forEach(match => {
     const username = match.replace('@', '');
@@ -16,10 +16,10 @@ const populateUserLinks = (tweet: APIStatus, text: string): string => {
   return text;
 };
 
-const generateTweetMedia = (tweet: APIStatus): string => {
+const generateStatusMedia = (status: APIStatus): string => {
   let media = '';
-  if (tweet.media?.all?.length) {
-    tweet.media.all.forEach(mediaItem => {
+  if (status.media?.all?.length) {
+    status.media.all.forEach(mediaItem => {
       switch (mediaItem.type) {
         case 'photo':
           // eslint-disable-next-line no-case-declarations
@@ -30,10 +30,10 @@ const generateTweetMedia = (tweet: APIStatus): string => {
           });
           break;
         case 'video':
-          media += `<video src="${mediaItem.url}" alt="${tweet.author.name}'s video. Alt text not available."/>`;
+          media += `<video src="${mediaItem.url}" alt="${status.author.name}'s video. Alt text not available."/>`;
           break;
         case 'gif':
-          media += `<video src="${mediaItem.url}" alt="${tweet.author.name}'s gif. Alt text not available."/>`;
+          media += `<video src="${mediaItem.url}" alt="${status.author.name}'s gif. Alt text not available."/>`;
           break;
       }
     });
@@ -82,23 +82,23 @@ function paragraphify(text: string, isQuote = false): string {
     .join('\n');
 }
 
-function getTranslatedText(tweet: APITweet, isQuote = false): string | null {
-  if (!tweet.translation) {
+function getTranslatedText(status: APITwitterStatus, isQuote = false): string | null {
+  if (!status.translation) {
     return null;
   }
-  let text = paragraphify(sanitizeText(tweet.translation?.text), isQuote);
+  let text = paragraphify(sanitizeText(status.translation?.text), isQuote);
   text = htmlifyLinks(text);
   text = htmlifyHashtags(text);
-  text = populateUserLinks(tweet, text);
+  text = populateUserLinks(status, text);
 
   const formatText =
-    tweet.translation.target_lang === 'en'
+    status.translation.target_lang === 'en'
       ? Strings.TRANSLATE_TEXT.format({
-          language: tweet.translation.source_lang_en
+          language: status.translation.source_lang_en
         })
       : Strings.TRANSLATE_TEXT_INTL.format({
-          source: tweet.translation.source_lang.toUpperCase(),
-          destination: tweet.translation.target_lang.toUpperCase()
+          source: status.translation.source_lang.toUpperCase(),
+          destination: status.translation.target_lang.toUpperCase()
         });
 
   return `<h4>${formatText}</h4>${text}<h4>Original</h4>`;
@@ -117,13 +117,13 @@ const truncateSocialCount = (count: number): string => {
   }
 };
 
-const generateTweetFooter = (tweet: APIStatus, isQuote = false): string => {
-  const { author } = tweet;
+const generateStatusFooter = (status: APIStatus, isQuote = false): string => {
+  const { author } = status;
 
   let description = author.description;
   description = htmlifyLinks(description);
   description = htmlifyHashtags(description);
-  description = populateUserLinks(tweet, description);
+  description = populateUserLinks(status, description);
 
   return `
     <p>{socialText}</p>
@@ -131,8 +131,8 @@ const generateTweetFooter = (tweet: APIStatus, isQuote = false): string => {
     <!-- Embed profile picture, display name, and screen name in table -->
     {aboutSection}
     `.format({
-    socialText: getSocialTextIV(tweet as APITweet) || '',
-    viewOriginal: !isQuote ? `<a href="${tweet.url}">View original post</a>` : notApplicableComment,
+    socialText: getSocialTextIV(status as APITwitterStatus) || '',
+    viewOriginal: !isQuote ? `<a href="${status.url}">View original post</a>` : notApplicableComment,
     aboutSection: isQuote
       ? ''
       : `<h2>About author</h2>
@@ -144,7 +144,7 @@ const generateTweetFooter = (tweet: APIStatus, isQuote = false): string => {
         <p>
           {following} <b>Following</b> 
           {followers} <b>Followers</b> 
-          {tweets} <b>Posts</b>
+          {statuses} <b>Posts</b>
         </p>`.format({
           pfp: `<img src="${author.avatar_url?.replace('_200x200', '_400x400')}" alt="${
             author.name
@@ -156,44 +156,44 @@ const generateTweetFooter = (tweet: APIStatus, isQuote = false): string => {
           joined: author.joined ? `📆 ${formatDate(new Date(author.joined))}` : '',
           following: truncateSocialCount(author.following),
           followers: truncateSocialCount(author.followers),
-          tweets: truncateSocialCount(author.statuses)
+          statuses: truncateSocialCount(author.statuses)
         })
   });
 };
 
-const generateTweet = (tweet: APIStatus, isQuote = false): string => {
-  let text = paragraphify(sanitizeText(tweet.text), isQuote);
+const generateStatus = (status: APIStatus, isQuote = false): string => {
+  let text = paragraphify(sanitizeText(status.text), isQuote);
   text = htmlifyLinks(text);
   text = htmlifyHashtags(text);
-  text = populateUserLinks(tweet, text);
+  text = populateUserLinks(status, text);
 
-  const translatedText = getTranslatedText(tweet as APITweet, isQuote);
+  const translatedText = getTranslatedText(status as APITwitterStatus, isQuote);
 
   return `<!-- Telegram Instant View -->
   {quoteHeader}
-  <!-- Embed Tweet media -->
-  ${generateTweetMedia(tweet)} 
+  <!-- Embed media -->
+  ${generateStatusMedia(status)} 
   <!-- Translated text (if applicable) -->
   ${translatedText ? translatedText : notApplicableComment}
-  <!-- Embed Tweet text -->
+  <!-- Embed Status text -->
   ${text}
-  <!-- Embedded quote tweet -->
-  ${!isQuote && tweet.quote ? generateTweet(tweet.quote, true) : notApplicableComment}
-  ${!isQuote ? generateTweetFooter(tweet) : ''}
-  <br>${!isQuote ? `<a href="${tweet.url}">View original post</a>` : notApplicableComment}
+  <!-- Embedded quote status -->
+  ${!isQuote && status.quote ? generateStatus(status.quote, true) : notApplicableComment}
+  ${!isQuote ? generateStatusFooter(status) : ''}
+  <br>${!isQuote ? `<a href="${status.url}">View original post</a>` : notApplicableComment}
   `.format({
     quoteHeader: isQuote
-      ? `<h4><a href="${tweet.url}">Quoting</a> ${tweet.author.name} (<a href="${Constants.TWITTER_ROOT}/${tweet.author.screen_name}">@${tweet.author.screen_name}</a>)</h4>`
+      ? `<h4><a href="${status.url}">Quoting</a> ${status.author.name} (<a href="${Constants.TWITTER_ROOT}/${status.author.screen_name}">@${status.author.screen_name}</a>)</h4>`
       : ''
   });
 };
 
 export const renderInstantView = (properties: RenderProperties): ResponseInstructions => {
   console.log('Generating Instant View...');
-  const { tweet, flags } = properties;
+  const { status, flags } = properties;
   const instructions: ResponseInstructions = { addHeaders: [] };
   /* Use ISO date for Medium template */
-  const postDate = new Date(tweet.created_at).toISOString();
+  const statusDate = new Date(status.created_at).toISOString();
 
   /* Pretend to be Medium to allow Instant View to work.
      Thanks to https://nikstar.me/post/instant-view/ for the help!
@@ -202,7 +202,7 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
      contact me https://t.me/dangeredwolf */
   instructions.addHeaders = [
     `<meta property="al:android:app_name" content="Medium"/>`,
-    `<meta property="article:published_time" content="${postDate}"/>`,
+    `<meta property="article:published_time" content="${statusDate}"/>`,
     flags?.archive
       ? `<style>img,video{width:100%;max-width:500px}html{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif}</style>`
       : ``
@@ -216,13 +216,13 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
       flags?.archive
         ? `${Constants.BRANDING_NAME} archive`
         : 'If you can see this, your browser is doing something weird with your user agent.'
-    } <a href="${tweet.url}">View original post</a>
+    } <a href="${status.url}">View original post</a>
     </section>
     <article>
-    <sub><a href="${tweet.url}">View original</a></sub>
-    <h1>${tweet.author.name} (@${tweet.author.screen_name})</h1>
+    <sub><a href="${status.url}">View original</a></sub>
+    <h1>${status.author.name} (@${status.author.screen_name})</h1>
 
-    ${generateTweet(tweet)}
+    ${generateStatus(status)}
   </article>`;
 
   return instructions;

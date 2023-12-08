@@ -1,26 +1,26 @@
 import { formatNumber } from './utils';
 
 /* The embed "author" text we populate with replies, retweets, and likes unless it's a video */
-export const getAuthorText = (tweet: APITweet): string | null => {
+export const getAuthorText = (status: APITwitterStatus): string | null => {
   /* Build out reply, retweet, like counts */
   if (
-    tweet.likes > 0 ||
-    tweet.reposts > 0 ||
-    tweet.replies > 0 ||
-    (tweet.views ? tweet.views > 0 : false)
+    status.likes > 0 ||
+    status.reposts > 0 ||
+    status.replies > 0 ||
+    (status.views ? status.views > 0 : false)
   ) {
     let authorText = '';
-    if (tweet.replies > 0) {
-      authorText += `${formatNumber(tweet.replies)} 💬    `;
+    if (status.replies > 0) {
+      authorText += `${formatNumber(status.replies)} 💬    `;
     }
-    if (tweet.reposts > 0) {
-      authorText += `${formatNumber(tweet.reposts)} 🔁    `;
+    if (status.reposts > 0) {
+      authorText += `${formatNumber(status.reposts)} 🔁    `;
     }
-    if (tweet.likes > 0) {
-      authorText += `${formatNumber(tweet.likes)} ❤️    `;
+    if (status.likes > 0) {
+      authorText += `${formatNumber(status.likes)} ❤️    `;
     }
-    if (tweet.views && tweet.views > 0) {
-      authorText += `${formatNumber(tweet.views)} 👁️    `;
+    if (status.views && status.views > 0) {
+      authorText += `${formatNumber(status.views)} 👁️    `;
     }
     authorText = authorText.trim();
 
@@ -30,22 +30,22 @@ export const getAuthorText = (tweet: APITweet): string | null => {
   return null;
 };
 
-/* The embed "author" text we populate with replies, retweets, and likes unless it's a video */
-export const getSocialTextIV = (tweet: APITweet): string | null => {
-  /* Build out reply, retweet, like counts */
-  if (tweet.likes > 0 || tweet.reposts > 0 || tweet.replies > 0) {
+/* The embed "author" text we populate with replies, reposts, and likes unless it's a video */
+export const getSocialTextIV = (status: APITwitterStatus): string | null => {
+  /* Build out reply, repost, like counts */
+  if (status.likes > 0 || status.reposts > 0 || status.replies > 0) {
     let authorText = '';
-    if (tweet.replies > 0) {
-      authorText += `💬 ${formatNumber(tweet.replies)} `;
+    if (status.replies > 0) {
+      authorText += `💬 ${formatNumber(status.replies)} `;
     }
-    if (tweet.reposts > 0) {
-      authorText += `🔁 ${formatNumber(tweet.reposts)} `;
+    if (status.reposts > 0) {
+      authorText += `🔁 ${formatNumber(status.reposts)} `;
     }
-    if (tweet.likes > 0) {
-      authorText += `❤️ ${formatNumber(tweet.likes)} `;
+    if (status.likes > 0) {
+      authorText += `❤️ ${formatNumber(status.likes)} `;
     }
-    if (tweet.views && tweet.views > 0) {
-      authorText += `👁️ ${formatNumber(tweet.views)} `;
+    if (status.views && status.views > 0) {
+      authorText += `👁️ ${formatNumber(status.views)} `;
     }
     authorText = authorText.trim();
 

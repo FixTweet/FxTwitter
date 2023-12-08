@@ -5,15 +5,15 @@ export const renderPhoto = (
   properties: RenderProperties,
   photo: APIPhoto | APIMosaicPhoto
 ): ResponseInstructions => {
-  const { tweet, engagementText, authorText, isOverrideMedia, userAgent } = properties;
+  const { status, engagementText, authorText, isOverrideMedia, userAgent } = properties;
   const instructions: ResponseInstructions = { addHeaders: [] };
 
-  if ((tweet.media?.photos?.length || 0) > 1 && (!tweet.media?.mosaic || isOverrideMedia)) {
+  if ((status.media?.photos?.length || 0) > 1 && (!status.media?.mosaic || isOverrideMedia)) {
     photo = photo as APIPhoto;
 
-    const all = tweet.media?.all as APIMedia[];
+    const all = status.media?.all as APIMedia[];
     const baseString =
-      all.length === tweet.media?.photos?.length ? Strings.PHOTO_COUNT : Strings.MEDIA_COUNT;
+      all.length === status.media?.photos?.length ? Strings.PHOTO_COUNT : Strings.MEDIA_COUNT;
 
     const photoCounter = baseString.format({
       number: String(all.indexOf(photo) + 1),

@@ -24,7 +24,7 @@ export const returnError = (c: Context, error: string): Response => {
    Like Twitter, we use the terminologies interchangably. */
 export const handleStatus = async (
   c: Context,
-  status: string,
+  statusId: string,
   mediaNumber: number | undefined,
   userAgent: string,
   flags: InputFlags,
@@ -41,19 +41,19 @@ export const handleStatus = async (
   }
 
   const thread = await constructTwitterThread(
-    status,
+    statusId,
     fetchWithThreads,
     c,
     language,
     flags?.api ?? false
   );
 
-  const tweet = thread?.status as APITweet;
+  const status = thread?.status as APITwitterStatus;
 
   const api = {
     code: thread.code,
     message: '',
-    tweet: tweet
+    tweet: status
   };
 
   switch (api.code) {
@@ -82,7 +82,7 @@ export const handleStatus = async (
     return c.json(api);
   }
 
-  if (tweet === null) {
+  if (status === null) {
     return returnError(c, Strings.ERROR_TWEET_NOT_FOUND);
   }
 
@@ -98,17 +98,17 @@ export const handleStatus = async (
   }
 
   const isTelegram = (userAgent || '').indexOf('Telegram') > -1;
-  /* Should sensitive posts be allowed Instant View? */
+  /* Should sensitive statuses be allowed Instant View? */
   let useIV =
-    isTelegram /*&& !tweet.possibly_sensitive*/ &&
+    isTelegram /*&& !status.possibly_sensitive*/ &&
     !flags?.direct &&
     !flags?.gallery &&
     !flags?.api &&
-    (tweet.media?.photos?.[0] || // Force instant view for photos for now https://bugs.telegram.org/c/33679
-      tweet.media?.mosaic ||
-      tweet.is_note_tweet ||
-      tweet.quote ||
-      tweet.translation ||
+    (status.media?.photos?.[0] || // Force instant view for photos for now https://bugs.telegram.org/c/33679
+    status.media?.mosaic ||
+    status.is_note_tweet ||
+    status.quote ||
+    status.translation ||
       flags?.forceInstantView);
 
   /* Force enable IV for archivers */
@@ -120,20 +120,20 @@ export const handleStatus = async (
 
   let overrideMedia: APIMedia | undefined;
 
-  // Check if mediaNumber exists, and if that media exists in tweet.media.all. If it does, we'll store overrideMedia variable
-  if (mediaNumber && tweet.media && tweet.media.all && tweet.media.all[mediaNumber - 1]) {
-    overrideMedia = tweet.media.all[mediaNumber - 1];
+  // Check if mediaNumber exists, and if that media exists in status.media.all. If it does, we'll store overrideMedia variable
+  if (mediaNumber && status.media && status.media.all && status.media.all[mediaNumber - 1]) {
+    overrideMedia = status.media.all[mediaNumber - 1];
   }
 
   /* Catch direct media request (d.fxtwitter.com, or .mp4 / .jpg) */
-  if (flags?.direct && !flags?.textOnly && tweet.media) {
+  if (flags?.direct && !flags?.textOnly && status.media) {
     let redirectUrl: string | null = null;
-    const all = tweet.media.all || [];
-    // if (tweet.media.videos) {
-    //   const { videos } = tweet.media;
+    const all = status.media.all || [];
+    // if (status.media.videos) {
+    //   const { videos } = status.media;
     //   redirectUrl = (videos[(mediaNumber || 1) - 1] || videos[0]).url;
-    // } else if (tweet.media.photos) {
-    //   const { photos } = tweet.media;
+    // } else if (status.media.photos) {
+    //   const { photos } = status.media;
     //   redirectUrl = (photos[(mediaNumber || 1) - 1] || photos[0]).url;
     // }
 
@@ -149,48 +149,48 @@ export const handleStatus = async (
     }
   }
 
-  /* User requested gallery view, but this isn't a post with media */
-  if (flags.gallery && (tweet.media?.all?.length ?? 0) < 1) {
+  /* User requested gallery view, but this isn't a status with media */
+  if (flags.gallery && (status.media?.all?.length ?? 0) < 1) {
     flags.gallery = false;
   }
 
   /* At this point, we know we're going to have to create a
      regular embed because it's not an API or direct media request */
 
-  let authorText = getAuthorText(tweet) || Strings.DEFAULT_AUTHOR_TEXT;
+  let authorText = getAuthorText(status) || Strings.DEFAULT_AUTHOR_TEXT;
   const engagementText = authorText.replace(/ {4}/g, ' ');
   let siteName = Constants.BRANDING_NAME;
-  let newText = tweet.text;
+  let newText = status.text;
 
   /* Base headers included in all responses */
   const headers = [
-    `<link rel="canonical" href="${Constants.TWITTER_ROOT}/${tweet.author.screen_name}/status/${tweet.id}"/>`,
-    `<meta property="og:url" content="${Constants.TWITTER_ROOT}/${tweet.author.screen_name}/status/${tweet.id}"/>`,
-    `<meta property="twitter:site" content="@${tweet.author.screen_name}"/>`,
-    `<meta property="twitter:creator" content="@${tweet.author.screen_name}"/>`,
+    `<link rel="canonical" href="${Constants.TWITTER_ROOT}/${status.author.screen_name}/status/${status.id}"/>`,
+    `<meta property="og:url" content="${Constants.TWITTER_ROOT}/${status.author.screen_name}/status/${status.id}"/>`,
+    `<meta property="twitter:site" content="@${status.author.screen_name}"/>`,
+    `<meta property="twitter:creator" content="@${status.author.screen_name}"/>`,
   ];
 
   if (!flags.gallery) {
     headers.push(
       `<meta property="theme-color" content="#00a8fc"/>`,
-      `<meta property="twitter:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`
+      `<meta property="twitter:title" content="${status.author.name} (@${status.author.screen_name})"/>`
     );
   }
 
-  /* This little thing ensures if by some miracle a FixTweet embed is loaded in a browser,
+  /* This little thing ensures if by some miracle a Fixstatus embed is loaded in a browser,
      it will gracefully redirect to the destination instead of just seeing a blank screen.
 
      Telegram is dumb and it just gets stuck if this is included, so we never include it for Telegram UAs. */
   if (!isTelegram) {
     headers.push(
-      `<meta http-equiv="refresh" content="0;url=${Constants.TWITTER_ROOT}/${tweet.author.screen_name}/status/${tweet.id}"/>`
+      `<meta http-equiv="refresh" content="0;url=${Constants.TWITTER_ROOT}/${status.author.screen_name}/status/${status.id}"/>`
     );
   }
 
   if (useIV) {
     try {
       const instructions = renderInstantView({
-        tweet: tweet,
+        status: status,
         text: newText,
         flags: flags
       });
@@ -205,11 +205,11 @@ export const handleStatus = async (
     }
   }
 
-  console.log('translation', tweet.translation)
+  console.log('translation', status.translation)
 
-  /* This Tweet has a translation attached to it, so we'll render it. */
-  if (tweet.translation) {
-    const { translation } = tweet;
+  /* This status has a translation attached to it, so we'll render it. */
+  if (status.translation) {
+    const { translation } = status;
 
     const formatText =
       language === 'en'
@@ -228,16 +228,16 @@ export const handleStatus = async (
 
   if (!flags?.textOnly) {
     const media =
-      tweet.media?.all && tweet.media?.all.length > 0 ? tweet.media : tweet.quote?.media || {};
+      status.media?.all && status.media?.all.length > 0 ? status.media : status.quote?.media || {};
     if (overrideMedia) {
       let instructions: ResponseInstructions;
 
       switch (overrideMedia.type) {
         case 'photo':
-          /* This Tweet has a photo to render. */
+          /* This status has a photo to render. */
           instructions = renderPhoto(
             {
-              tweet: tweet,
+              status: status,
               authorText: authorText,
               engagementText: engagementText,
               userAgent: userAgent,
@@ -253,13 +253,13 @@ export const handleStatus = async (
             siteName = instructions.siteName;
           }
           /* Overwrite our Twitter Card if overriding media, so it displays correctly in Discord */
-          if (tweet.embed_card === 'player') {
-            tweet.embed_card = 'summary_large_image';
+          if (status.embed_card === 'player') {
+            status.embed_card = 'summary_large_image';
           }
           break;
         case 'video':
           instructions = renderVideo(
-            { tweet: tweet, userAgent: userAgent, text: newText, isOverrideMedia: true },
+            { status: status, userAgent: userAgent, text: newText, isOverrideMedia: true },
             overrideMedia as APIVideo
           );
           headers.push(...instructions.addHeaders);
@@ -270,15 +270,15 @@ export const handleStatus = async (
             siteName = instructions.siteName;
           }
           /* Overwrite our Twitter Card if overriding media, so it displays correctly in Discord */
-          if (tweet.embed_card !== 'player') {
-            tweet.embed_card = 'player';
+          if (status.embed_card !== 'player') {
+            status.embed_card = 'player';
           }
-          /* This Tweet has a video to render. */
+          /* This status has a video to render. */
           break;
       }
     } else if (media?.videos) {
       const instructions = renderVideo(
-        { tweet: tweet, userAgent: userAgent, text: newText },
+        { status: status, userAgent: userAgent, text: newText },
         media.videos[0]
       );
       headers.push(...instructions.addHeaders);
@@ -291,7 +291,7 @@ export const handleStatus = async (
     } else if (media?.mosaic) {
       const instructions = renderPhoto(
         {
-          tweet: tweet,
+          status: status,
           authorText: authorText,
           engagementText: engagementText,
           userAgent: userAgent
@@ -302,7 +302,7 @@ export const handleStatus = async (
     } else if (media?.photos) {
       const instructions = renderPhoto(
         {
-          tweet: tweet,
+          status: status,
           authorText: authorText,
           engagementText: engagementText,
           userAgent: userAgent
@@ -326,9 +326,9 @@ export const handleStatus = async (
     }
   }
 
-  /* This Tweet contains a poll, so we'll render it */
-  if (tweet.poll) {
-    const { poll } = tweet;
+  /* This status contains a poll, so we'll render it */
+  if (status.poll) {
+    const { poll } = status;
     let barLength = 32;
     let str = '';
 
@@ -338,7 +338,7 @@ export const handleStatus = async (
     }
 
     /* Render each poll choice */
-    tweet.poll.choices.forEach(choice => {
+    status.poll.choices.forEach(choice => {
       const bar = '█'.repeat((choice.percentage / 100) * barLength);
       // eslint-disable-next-line no-irregular-whitespace
       str += `${bar}\n${choice.label}  (${choice.percentage}%)\n`;
@@ -366,14 +366,14 @@ export const handleStatus = async (
 
   /* If we have no media to display, instead we'll display the user profile picture in the embed */
   if (
-    !tweet.media?.videos &&
-    !tweet.media?.photos &&
-    !tweet.quote?.media?.photos &&
-    !tweet.quote?.media?.videos &&
+    !status.media?.videos &&
+    !status.media?.photos &&
+    !status.quote?.media?.photos &&
+    !status.quote?.media?.videos &&
     !flags?.textOnly
   ) {
     /* Use a slightly higher resolution image for profile pics */
-    const avatar = tweet.author.avatar_url;
+    const avatar = status.author.avatar_url;
     if (!useIV) {
       headers.push(
         `<meta property="og:image" content="${avatar}"/>`,
@@ -398,7 +398,7 @@ export const handleStatus = async (
      and we have to pretend to be Medium in order to get working IV, but haven't figured if the template is causing issues.  */
   const text = useIV ? sanitizeText(newText).replace(/\n/g, '<br>') : sanitizeText(newText);
 
-  const useCard = tweet.embed_card === 'tweet' ? tweet.quote?.embed_card : tweet.embed_card;
+  const useCard = status.embed_card === 'tweet' ? status.quote?.embed_card : status.embed_card;
 
   
   /* Push basic headers relating to author, Tweet text, and site name */
@@ -408,31 +408,31 @@ export const handleStatus = async (
 
   if (!flags.gallery) {
     headers.push(
-      `<meta property="og:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`,
+      `<meta property="og:title" content="${status.author.name} (@${status.author.screen_name})"/>`,
       `<meta property="og:description" content="${text}"/>`,
       `<meta property="og:site_name" content="${siteName}"/>`,
     );
   } else {
     if (isTelegram) {
       headers.push(
-        `<meta property="og:site_name" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`
+        `<meta property="og:site_name" content="${status.author.name} (@${status.author.screen_name})"/>`
       )
     } else {
       headers.push(
-        `<meta property="og:title" content="${tweet.author.name} (@${tweet.author.screen_name})"/>`
+        `<meta property="og:title" content="${status.author.name} (@${status.author.screen_name})"/>`
       )
     }
   }
 
   /* Special reply handling if authorText is not overriden */
-  if (tweet.replying_to && authorText === Strings.DEFAULT_AUTHOR_TEXT) {
-    authorText = `↪ Replying to @${tweet.replying_to.screen_name}`;
+  if (status.replying_to && authorText === Strings.DEFAULT_AUTHOR_TEXT) {
+    authorText = `↪ Replying to @${status.replying_to.screen_name}`;
     /* We'll assume it's a thread if it's a reply to themselves */
   } else if (
-    tweet.replying_to?.screen_name === tweet.author.screen_name &&
+    status.replying_to?.screen_name === status.author.screen_name &&
     authorText === Strings.DEFAULT_AUTHOR_TEXT
   ) {
-    authorText = `↪ A part of @${tweet.author.screen_name}'s thread`;
+    authorText = `↪ A part of @${status.author.screen_name}'s thread`;
   }
 
   if (!flags.gallery) {
@@ -442,18 +442,18 @@ export const handleStatus = async (
       `<link rel="alternate" href="{base}/owoembed?text={text}{deprecatedFlag}&status={status}&author={author}" type="application/json+oembed" title="{name}">`.format(
         {
           base: Constants.HOST_URL,
-          text: flags.gallery ? tweet.author.name : encodeURIComponent(truncateWithEllipsis(authorText, 255)),
+          text: flags.gallery ? status.author.name : encodeURIComponent(truncateWithEllipsis(authorText, 255)),
           deprecatedFlag: flags?.deprecated ? '&deprecated=true' : '',
-          status: encodeURIComponent(status),
-          author: encodeURIComponent(tweet.author.screen_name || ''),
-          name: tweet.author.name || ''
+          status: encodeURIComponent(statusId),
+          author: encodeURIComponent(status.author.screen_name || ''),
+          name: status.author.name || ''
         }
       )
     );
   }
 
   /* When dealing with a Tweet of unknown lang, fall back to en */
-  const lang = tweet.lang === null ? 'en' : tweet.lang || 'en';
+  const lang = status.lang === null ? 'en' : status.lang || 'en';
 
   /* Finally, after all that work we return the response HTML! */
   return c.html(

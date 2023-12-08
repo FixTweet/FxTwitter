@@ -6,10 +6,10 @@ export const renderVideo = (
   properties: RenderProperties,
   video: APIVideo
 ): ResponseInstructions => {
-  const { tweet, userAgent, text } = properties;
+  const { status, userAgent, text } = properties;
   const instructions: ResponseInstructions = { addHeaders: [] };
 
-  const all = tweet.media?.all as APIMedia[];
+  const all = status.media?.all as APIMedia[];
 
   /* This fix is specific to Discord not wanting to render videos that are too large,
       or rendering low quality videos too small.
@@ -32,7 +32,7 @@ export const renderVideo = (
       we'll put an indicator if there are more than one video */
   if (all && all.length > 1 && (userAgent?.indexOf('Telegram') ?? 0) > -1) {
     const baseString =
-      all.length === tweet.media?.videos?.length ? Strings.VIDEO_COUNT : Strings.MEDIA_COUNT;
+      all.length === status.media?.videos?.length ? Strings.VIDEO_COUNT : Strings.MEDIA_COUNT;
     const videoCounter = baseString.format({
       number: String(all.indexOf(video) + 1),
       total: String(all.length)
@@ -41,10 +41,10 @@ export const renderVideo = (
     instructions.siteName = `${Constants.BRANDING_NAME} - ${videoCounter}`;
   }
 
-  instructions.authorText = tweet.translation?.text || text || '';
+  instructions.authorText = status.translation?.text || text || '';
 
-  if (instructions.authorText.length < 40 && tweet.quote) {
-    instructions.authorText += `\n${handleQuote(tweet.quote)}`;
+  if (instructions.authorText.length < 40 && status.quote) {
+    instructions.authorText += `\n${handleQuote(status.quote)}`;
   }
 
   /* Push the raw video-related headers */

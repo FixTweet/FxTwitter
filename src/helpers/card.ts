@@ -2,7 +2,7 @@ import { calculateTimeLeftString } from './pollTime';
 
 /* Renders card for polls and non-Twitter video embeds (i.e. YouTube) */
 export const renderCard = (
-  card: GraphQLTweet['card']
+  card: GraphQLTwitterStatus['card']
 ): { poll?: APIPoll; external_media?: APIExternalMedia } => {
   if (!Array.isArray(card.legacy.binding_values)) {
     return {};

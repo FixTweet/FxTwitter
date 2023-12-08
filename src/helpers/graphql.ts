@@ -1,6 +1,6 @@
-export const isGraphQLTweetNotFoundResponse = (
+export const isGraphQLTwitterStatusNotFoundResponse = (
   response: unknown
-): response is GraphQLTweetNotFoundResponse => {
+): response is GraphQLTwitterStatusNotFoundResponse => {
   return (
     typeof response === 'object' &&
     response !== null &&
@@ -12,12 +12,12 @@ export const isGraphQLTweetNotFoundResponse = (
   );
 };
 
-export const isGraphQLTweet = (response: unknown): response is GraphQLTweet => {
+export const isGraphQLTwitterStatus = (response: unknown): response is GraphQLTwitterStatus => {
   return (
     typeof response === 'object' &&
     response !== null &&
     (('__typename' in response &&
       (response.__typename === 'Tweet' || response.__typename === 'TweetWithVisibilityResults')) ||
-      typeof (response as GraphQLTweet).legacy?.full_text === 'string')
+      typeof (response as GraphQLTwitterStatus).legacy?.full_text === 'string')
   );
 };

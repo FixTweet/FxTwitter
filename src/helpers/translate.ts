@@ -2,9 +2,9 @@ import { Context } from 'hono';
 import { Constants } from '../constants';
 import { withTimeout } from './utils';
 
-/* Handles translating Tweets when asked! */
-export const translateTweet = async (
-  tweet: GraphQLTweet,
+/* Handles translating statuses when asked! */
+export const translateStatus = async (
+  tweet: GraphQLTwitterStatus,
   guestToken: string,
   language: string,
   c: Context

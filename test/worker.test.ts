@@ -47,7 +47,7 @@ test('Home page redirect', async () => {
   expect(resultHuman.headers.get('location')).toEqual(githubUrl);
 });
 
-test('Tweet redirect human', async () => {
+test('Status redirect human', async () => {
   const result = await app.request(
     new Request('https://fxtwitter.com/jack/status/20', {
       method: 'GET',
@@ -58,7 +58,7 @@ test('Tweet redirect human', async () => {
   expect(result.headers.get('location')).toEqual('https://twitter.com/jack/status/20');
 });
 
-test('Tweet redirect human trailing slash', async () => {
+test('Status redirect human trailing slash', async () => {
   const result = await app.request(
     new Request('https://fxtwitter.com/jack/status/20/', {
       method: 'GET',
@@ -69,7 +69,7 @@ test('Tweet redirect human trailing slash', async () => {
   expect(result.headers.get('location')).toEqual('https://twitter.com/jack/status/20');
 });
 
-test('Tweet redirect human custom base redirect', async () => {
+test('Status redirect human custom base redirect', async () => {
   const result = await app.request(
     new Request('https://fxtwitter.com/jack/status/20', {
       method: 'GET',
@@ -97,7 +97,7 @@ test('Twitter moment redirect', async () => {
   expect(result.headers.get('location')).toEqual(`${twitterBaseUrl}/i/events/1572638642127966214`);
 });
 
-test('Tweet response robot', async () => {
+test('Status response robot', async () => {
   const result = await app.request(
     new Request('https://fxtwitter.com/jack/status/20', {
       method: 'GET',
@@ -107,7 +107,7 @@ test('Tweet response robot', async () => {
   expect(result.status).toEqual(200);
 });
 
-test('Tweet response robot (trailing slash/query string and extra characters)', async () => {
+test('Status response robot (trailing slash/query string and extra characters)', async () => {
   const result = await app.request(
     new Request('https://fxtwitter.com/jack/status/20||/?asdf=ghjk&klop;', {
       method: 'GET',
@@ -117,7 +117,7 @@ test('Tweet response robot (trailing slash/query string and extra characters)', 
   expect(result.status).toEqual(200);
 });
 
-test('API fetch basic Tweet', async () => {
+test('API fetch basic Status', async () => {
   const result = await app.request(
     new Request('https://api.fxtwitter.com/status/20', {
       method: 'GET',
@@ -130,29 +130,29 @@ test('API fetch basic Tweet', async () => {
   expect(response.code).toEqual(200);
   expect(response.message).toEqual('OK');
 
-  const tweet = response.tweet as APITweet;
-  expect(tweet).toBeTruthy();
-  expect(tweet.url).toEqual(`${twitterBaseUrl}/jack/status/20`);
-  expect(tweet.id).toEqual('20');
-  expect(tweet.text).toEqual('just setting up my twttr');
-  expect(tweet.author.screen_name?.toLowerCase()).toEqual('jack');
-  expect(tweet.author.id).toEqual('12');
-  expect(tweet.author.name).toBeTruthy();
-  expect(tweet.author.avatar_url).toBeTruthy();
-  expect(tweet.author.banner_url).toBeTruthy();
-  expect(tweet.replies).toBeGreaterThan(0);
+  const status = response.tweet as APITwitterStatus;
+  expect(status).toBeTruthy();
+  expect(status.url).toEqual(`${twitterBaseUrl}/jack/status/20`);
+  expect(status.id).toEqual('20');
+  expect(status.text).toEqual('just setting up my twttr');
+  expect(status.author.screen_name?.toLowerCase()).toEqual('jack');
+  expect(status.author.id).toEqual('12');
+  expect(status.author.name).toBeTruthy();
+  expect(status.author.avatar_url).toBeTruthy();
+  expect(status.author.banner_url).toBeTruthy();
+  expect(status.replies).toBeGreaterThan(0);
   // @ts-expect-error retweets only in legacy API
-  expect(tweet.retweets).toBeGreaterThan(0);
-  expect(tweet.likes).toBeGreaterThan(0);
+  expect(status.retweets).toBeGreaterThan(0);
+  expect(status.likes).toBeGreaterThan(0);
   // @ts-expect-error twitter_card only in legacy API
-  expect(tweet.twitter_card).toEqual('tweet');
-  expect(tweet.created_at).toEqual('Tue Mar 21 20:50:14 +0000 2006');
-  expect(tweet.created_timestamp).toEqual(1142974214);
-  expect(tweet.lang).toEqual('en');
-  expect(tweet.replying_to).toBeNull();
+  expect(status.twitter_card).toEqual('tweet');
+  expect(status.created_at).toEqual('Tue Mar 21 20:50:14 +0000 2006');
+  expect(status.created_timestamp).toEqual(1142974214);
+  expect(status.lang).toEqual('en');
+  expect(status.replying_to).toBeNull();
 });
 
-// test('API fetch video Tweet', async () => {
+// test('API fetch video Status', async () => {
 //   const result = await app.request(
 //     new Request('https://api.fxtwitter.com/X/status/854416760933556224', {
 //       method: 'GET',
@@ -165,27 +165,27 @@ test('API fetch basic Tweet', async () => {
 //   expect(response.code).toEqual(200);
 //   expect(response.message).toEqual('OK');
 
-//   const tweet = response.tweet as APITweet;
-//   expect(tweet).toBeTruthy();
-//   expect(tweet.url).toEqual(`${twitterBaseUrl}/X/status/854416760933556224`);
-//   expect(tweet.id).toEqual('854416760933556224');
-//   expect(tweet.text).toEqual(
+//   const status = response.tweet as APITwitterStatus;
+//   expect(status).toBeTruthy();
+//   expect(status.url).toEqual(`${twitterBaseUrl}/X/status/854416760933556224`);
+//   expect(status.id).toEqual('854416760933556224');
+//   expect(status.text).toEqual(
 //     'Get the sauces ready, #NuggsForCarter has 3 million+ Retweets.'
 //   );
-//   expect(tweet.author.screen_name?.toLowerCase()).toEqual('x');
-//   expect(tweet.author.id).toEqual('783214');
-//   expect(tweet.author.name).toBeTruthy();
-//   expect(tweet.author.avatar_url).toBeTruthy();
-//   expect(tweet.author.banner_url).toBeTruthy();
-//   expect(tweet.replies).toBeGreaterThan(0);
-//   expect(tweet.retweets).toBeGreaterThan(0);
-//   expect(tweet.likes).toBeGreaterThan(0);
-//   expect(tweet.twitter_card).toEqual('player');
-//   expect(tweet.created_at).toEqual('Tue Apr 18 19:30:04 +0000 2017');
-//   expect(tweet.created_timestamp).toEqual(1492543804);
-//   expect(tweet.lang).toEqual('en');
-//   expect(tweet.replying_to).toBeNull();
-//   const video = tweet.media?.videos?.[0] as APIVideo;
+//   expect(status.author.screen_name?.toLowerCase()).toEqual('x');
+//   expect(status.author.id).toEqual('783214');
+//   expect(status.author.name).toBeTruthy();
+//   expect(status.author.avatar_url).toBeTruthy();
+//   expect(status.author.banner_url).toBeTruthy();
+//   expect(status.replies).toBeGreaterThan(0);
+//   expect(status.retweets).toBeGreaterThan(0);
+//   expect(status.likes).toBeGreaterThan(0);
+//   expect(status.twitter_card).toEqual('player');
+//   expect(status.created_at).toEqual('Tue Apr 18 19:30:04 +0000 2017');
+//   expect(status.created_timestamp).toEqual(1492543804);
+//   expect(status.lang).toEqual('en');
+//   expect(status.replying_to).toBeNull();
+//   const video = status.media?.videos?.[0] as APIVideo;
 //   expect(video.url).toEqual(
 //     'https://video.twimg.com/amplify_video/854415175776059393/vid/720x720/dNEi0crU-jA4mTtr.mp4'
 //   );
@@ -197,7 +197,7 @@ test('API fetch basic Tweet', async () => {
 //   expect(video.type).toEqual('video');
 // });
 
-// test('API fetch multi-photo Tweet', async () => {
+// test('API fetch multi-photo status', async () => {
 //   const result = await app.request(
 //     new Request('https://api.fxtwitter.com/Twitter/status/1445094085593866246', {
 //       method: 'GET',
@@ -210,22 +210,22 @@ test('API fetch basic Tweet', async () => {
 //   expect(response.code).toEqual(200);
 //   expect(response.message).toEqual('OK');
 
-//   const tweet = response.tweet as APITweet;
-//   expect(tweet).toBeTruthy();
-//   expect(tweet.url).toEqual(`${twitterBaseUrl}/X/status/1445094085593866246`);
-//   expect(tweet.id).toEqual('1445094085593866246');
-//   expect(tweet.text).toEqual('@netflix');
-//   expect(tweet.author.screen_name?.toLowerCase()).toEqual('x');
-//   expect(tweet.author.id).toEqual('783214');
-//   expect(tweet.author.name).toBeTruthy();
-//   expect(tweet.author.avatar_url).toBeTruthy();
-//   expect(tweet.author.banner_url).toBeTruthy();
-//   expect(tweet.twitter_card).toEqual('summary_large_image');
-//   expect(tweet.created_at).toEqual('Mon Oct 04 18:30:53 +0000 2021');
-//   expect(tweet.created_timestamp).toEqual(1633372253);
-//   expect(tweet.replying_to?.toLowerCase()).toEqual('netflix');
-//   expect(tweet.media?.photos).toBeTruthy();
-//   const photos = tweet.media?.photos as APIPhoto[];
+//   const status = response.tweet as APITwitterStatus;
+//   expect(status).toBeTruthy();
+//   expect(status.url).toEqual(`${twitterBaseUrl}/X/status/1445094085593866246`);
+//   expect(status.id).toEqual('1445094085593866246');
+//   expect(status.text).toEqual('@netflix');
+//   expect(status.author.screen_name?.toLowerCase()).toEqual('x');
+//   expect(status.author.id).toEqual('783214');
+//   expect(status.author.name).toBeTruthy();
+//   expect(status.author.avatar_url).toBeTruthy();
+//   expect(status.author.banner_url).toBeTruthy();
+//   expect(status.twitter_card).toEqual('summary_large_image');
+//   expect(status.created_at).toEqual('Mon Oct 04 18:30:53 +0000 2021');
+//   expect(status.created_timestamp).toEqual(1633372253);
+//   expect(status.replying_to?.toLowerCase()).toEqual('netflix');
+//   expect(status.media?.photos).toBeTruthy();
+//   const photos = status.media?.photos as APIPhoto[];
 //   expect(photos[0].url).toEqual('https://pbs.twimg.com/media/FA4BaFaXoBUV3di.jpg');
 //   expect(photos[0].width).toEqual(950);
 //   expect(photos[0].height).toEqual(620);
@@ -234,8 +234,8 @@ test('API fetch basic Tweet', async () => {
 //   expect(photos[1].width).toEqual(1386);
 //   expect(photos[1].height).toEqual(706);
 //   expect(photos[1].altText).toBeTruthy();
-//   expect(tweet.media?.mosaic).toBeTruthy();
-//   const mosaic = tweet.media?.mosaic as APIMosaicPhoto;
+//   expect(status.media?.mosaic).toBeTruthy();
+//   const mosaic = status.media?.mosaic as APIMosaicPhoto;
 //   expect(mosaic.formats?.jpeg).toEqual(
 //     'https://mosaic.fxtwitter.com/jpeg/1445094085593866246/FA4BaFaXoBUV3di/FA4BaUyXEAcAHvK'
 //   );
@@ -244,7 +244,7 @@ test('API fetch basic Tweet', async () => {
 //   );
 // });
 
-// test('API fetch poll Tweet', async () => {
+// test('API fetch poll status', async () => {
 //   const result = await app.request(
 //     new Request('https://api.fxtwitter.com/status/1055475950543167488', {
 //       method: 'GET',
@@ -257,23 +257,23 @@ test('API fetch basic Tweet', async () => {
 //   expect(response.code).toEqual(200);
 //   expect(response.message).toEqual('OK');
 
-//   const tweet = response.tweet as APITweet;
-//   expect(tweet).toBeTruthy();
-//   expect(tweet.url).toEqual(`${twitterBaseUrl}/X/status/1055475950543167488`);
-//   expect(tweet.id).toEqual('1055475950543167488');
-//   expect(tweet.text).toEqual('A poll:');
-//   expect(tweet.author.screen_name?.toLowerCase()).toEqual('x');
-//   expect(tweet.author.id).toEqual('783214');
-//   expect(tweet.author.name).toBeTruthy();
-//   expect(tweet.author.avatar_url).toBeTruthy();
-//   expect(tweet.author.banner_url).toBeTruthy();
-//   expect(tweet.twitter_card).toEqual('tweet');
-//   expect(tweet.created_at).toEqual('Thu Oct 25 15:07:31 +0000 2018');
-//   expect(tweet.created_timestamp).toEqual(1540480051);
-//   expect(tweet.lang).toEqual('en');
-//   expect(tweet.replying_to).toBeNull();
-//   expect(tweet.poll).toBeTruthy();
-//   const poll = tweet.poll as APIPoll;
+//   const status = response.tweet as APITwitterStatus;
+//   expect(status).toBeTruthy();
+//   expect(status.url).toEqual(`${twitterBaseUrl}/X/status/1055475950543167488`);
+//   expect(status.id).toEqual('1055475950543167488');
+//   expect(status.text).toEqual('A poll:');
+//   expect(status.author.screen_name?.toLowerCase()).toEqual('x');
+//   expect(status.author.id).toEqual('783214');
+//   expect(status.author.name).toBeTruthy();
+//   expect(status.author.avatar_url).toBeTruthy();
+//   expect(status.author.banner_url).toBeTruthy();
+//   expect(status.twitter_card).toEqual('tweet');
+//   expect(status.created_at).toEqual('Thu Oct 25 15:07:31 +0000 2018');
+//   expect(status.created_timestamp).toEqual(1540480051);
+//   expect(status.lang).toEqual('en');
+//   expect(status.replying_to).toBeNull();
+//   expect(status.poll).toBeTruthy();
+//   const poll = status.poll as APIPoll;
 //   expect(poll.ends_at).toEqual('2018-10-26T03:07:30Z');
 //   expect(poll.time_left_en).toEqual('Final results');
 //   expect(poll.total_votes).toEqual(54703);

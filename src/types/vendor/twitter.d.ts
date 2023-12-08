@@ -308,7 +308,7 @@ type GraphQLUser = {
   };
 };
 
-type GraphQLTweetLegacy = {
+type GraphQLTwitterStatusLegacy = {
   id_str: string; // "1674824189176590336"
   created_at: string; // "Tue Sep 14 20:00:00 +0000 2021"
   conversation_id_str: string; // "1674824189176590336"
@@ -351,9 +351,9 @@ type GraphQLTweetLegacy = {
   };
 };
 
-type GraphQLTweet = {
+type GraphQLTwitterStatus = {
   // Workaround
-  result: GraphQLTweet;
+  result: GraphQLTwitterStatus;
   __typename: 'Tweet' | 'TweetWithVisibilityResults' | 'TweetUnavailable';
   reason: string; // used for errors
   rest_id: string; // "1674824189176590336",
@@ -364,7 +364,7 @@ type GraphQLTweet = {
     };
   };
   tweet?: {
-    legacy: GraphQLTweetLegacy;
+    legacy: GraphQLTwitterStatusLegacy;
     views: {
       count: string; // "562"
       state: string; // "EnabledWithCount"
@@ -383,8 +383,8 @@ type GraphQLTweet = {
     state: string; // "EnabledWithCount"
   };
   source: string; // "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Web App</a>"
-  quoted_status_result?: GraphQLTweet;
-  legacy: GraphQLTweetLegacy;
+  quoted_status_result?: GraphQLTwitterStatus;
+  legacy: GraphQLTwitterStatusLegacy;
   note_tweet: {
     is_expandable: boolean;
     note_tweet_results: {
@@ -450,7 +450,7 @@ type GraphQLTimelineTweet = {
   item: 'TimelineTweet';
   __typename: 'TimelineTweet';
   tweet_results: {
-    result: GraphQLTweet | TweetTombstone;
+    result: GraphQLTwitterStatus | TweetTombstone;
   };
 };
 
@@ -521,7 +521,7 @@ type TimelineTerminateTimelineInstruction = {
   type: 'TimelineTerminateTimeline';
   direction: 'Top';
 };
-type GraphQLTweetNotFoundResponse = {
+type GraphQLTwitterStatusNotFoundResponse = {
   errors: [
     {
       message: string; // "_Missing: No status found with that ID"
@@ -560,7 +560,7 @@ type TweetResultsByRestIdResult = {
   errors?: unknown[];
   data?: {
     tweetResult?: {
-      result?: TweetStub | GraphQLTweet;
+      result?: TweetStub | GraphQLTwitterStatus;
     };
   };
 };
@@ -571,6 +571,6 @@ type TweetStub = {
 };
 
 interface GraphQLProcessBucket {
-  tweets: GraphQLTweet[];
+  statuses: GraphQLTwitterStatus[];
   cursors: GraphQLTimelineCursor[];
 }
