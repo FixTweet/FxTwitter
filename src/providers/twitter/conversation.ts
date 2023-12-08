@@ -181,10 +181,14 @@ const processResponse = (instructions: ThreadInstruction[]): GraphQLProcessBucke
           if (itemContentType === 'TimelineTweet') {
             const entryType = content.itemContent.tweet_results.result.__typename;
             if (entryType === 'Tweet') {
-              bucket.statuses.push(content.itemContent.tweet_results.result as GraphQLTwitterStatus);
+              bucket.statuses.push(
+                content.itemContent.tweet_results.result as GraphQLTwitterStatus
+              );
             }
             if (entryType === 'TweetWithVisibilityResults') {
-              bucket.statuses.push(content.itemContent.tweet_results.result.tweet as GraphQLTwitterStatus);
+              bucket.statuses.push(
+                content.itemContent.tweet_results.result.tweet as GraphQLTwitterStatus
+              );
             }
           } else if (itemContentType === 'TimelineTimelineCursor') {
             bucket.cursors.push(content.itemContent as GraphQLTimelineCursor);
@@ -197,7 +201,9 @@ const processResponse = (instructions: ThreadInstruction[]): GraphQLProcessBucke
             if (itemContentType === 'TimelineTweet') {
               const entryType = item.item.itemContent.tweet_results?.result?.__typename;
               if (entryType === 'Tweet') {
-                bucket.statuses.push(item.item.itemContent.tweet_results.result as GraphQLTwitterStatus);
+                bucket.statuses.push(
+                  item.item.itemContent.tweet_results.result as GraphQLTwitterStatus
+                );
               }
               if (entryType === 'TweetWithVisibilityResults') {
                 bucket.statuses.push(
@@ -216,7 +222,10 @@ const processResponse = (instructions: ThreadInstruction[]): GraphQLProcessBucke
   return bucket;
 };
 
-const findStatusInBucket = (id: string, bucket: GraphQLProcessBucket): GraphQLTwitterStatus | null => {
+const findStatusInBucket = (
+  id: string,
+  bucket: GraphQLProcessBucket
+): GraphQLTwitterStatus | null => {
   return bucket.statuses.find(status => (status.rest_id ?? status.legacy?.id_str) === id) ?? null;
 };
 
@@ -231,7 +240,8 @@ const findPreviousStatus = (id: string, bucket: GraphQLProcessBucket): number =>
     return -1;
   }
   return bucket.statuses.findIndex(
-    _status => (_status.rest_id ?? _status.legacy?.id_str) === status.legacy?.in_reply_to_status_id_str
+    _status =>
+      (_status.rest_id ?? _status.legacy?.id_str) === status.legacy?.in_reply_to_status_id_str
   );
 };
 
@@ -322,7 +332,13 @@ export const constructTwitterThread = async (
     return { status: null, thread: null, author: null, code: 404 };
   }
 
-  status = (await buildAPITwitterStatus(c, originalStatus, undefined, false, legacyAPI)) as APITwitterStatus;
+  status = (await buildAPITwitterStatus(
+    c,
+    originalStatus,
+    undefined,
+    false,
+    legacyAPI
+  )) as APITwitterStatus;
 
   if (status === null) {
     return { status: null, thread: null, author: null, code: 404 };
@@ -480,7 +496,9 @@ export const constructTwitterThread = async (
   };
 
   threadStatuses.forEach(async status => {
-    socialThread.thread?.push((await buildAPITwitterStatus(c, status, undefined, true, false)) as APITwitterStatus);
+    socialThread.thread?.push(
+      (await buildAPITwitterStatus(c, status, undefined, true, false)) as APITwitterStatus
+    );
   });
 
   return socialThread;

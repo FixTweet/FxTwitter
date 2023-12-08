@@ -105,10 +105,10 @@ export const handleStatus = async (
     !flags?.gallery &&
     !flags?.api &&
     (status.media?.photos?.[0] || // Force instant view for photos for now https://bugs.telegram.org/c/33679
-    status.media?.mosaic ||
-    status.is_note_tweet ||
-    status.quote ||
-    status.translation ||
+      status.media?.mosaic ||
+      status.is_note_tweet ||
+      status.quote ||
+      status.translation ||
       flags?.forceInstantView);
 
   /* Force enable IV for archivers */
@@ -167,7 +167,7 @@ export const handleStatus = async (
     `<link rel="canonical" href="${Constants.TWITTER_ROOT}/${status.author.screen_name}/status/${status.id}"/>`,
     `<meta property="og:url" content="${Constants.TWITTER_ROOT}/${status.author.screen_name}/status/${status.id}"/>`,
     `<meta property="twitter:site" content="@${status.author.screen_name}"/>`,
-    `<meta property="twitter:creator" content="@${status.author.screen_name}"/>`,
+    `<meta property="twitter:creator" content="@${status.author.screen_name}"/>`
   ];
 
   if (!flags.gallery) {
@@ -205,7 +205,7 @@ export const handleStatus = async (
     }
   }
 
-  console.log('translation', status.translation)
+  console.log('translation', status.translation);
 
   /* This status has a translation attached to it, so we'll render it. */
   if (status.translation) {
@@ -400,27 +400,24 @@ export const handleStatus = async (
 
   const useCard = status.embed_card === 'tweet' ? status.quote?.embed_card : status.embed_card;
 
-  
   /* Push basic headers relating to author, Tweet text, and site name */
-  headers.push(
-    `<meta property="twitter:card" content="${useCard}"/>`
-  );
+  headers.push(`<meta property="twitter:card" content="${useCard}"/>`);
 
   if (!flags.gallery) {
     headers.push(
       `<meta property="og:title" content="${status.author.name} (@${status.author.screen_name})"/>`,
       `<meta property="og:description" content="${text}"/>`,
-      `<meta property="og:site_name" content="${siteName}"/>`,
+      `<meta property="og:site_name" content="${siteName}"/>`
     );
   } else {
     if (isTelegram) {
       headers.push(
         `<meta property="og:site_name" content="${status.author.name} (@${status.author.screen_name})"/>`
-      )
+      );
     } else {
       headers.push(
         `<meta property="og:title" content="${status.author.name} (@${status.author.screen_name})"/>`
-      )
+      );
     }
   }
 
@@ -442,7 +439,9 @@ export const handleStatus = async (
       `<link rel="alternate" href="{base}/owoembed?text={text}{deprecatedFlag}&status={status}&author={author}" type="application/json+oembed" title="{name}">`.format(
         {
           base: Constants.HOST_URL,
-          text: flags.gallery ? status.author.name : encodeURIComponent(truncateWithEllipsis(authorText, 255)),
+          text: flags.gallery
+            ? status.author.name
+            : encodeURIComponent(truncateWithEllipsis(authorText, 255)),
           deprecatedFlag: flags?.deprecated ? '&deprecated=true' : '',
           status: encodeURIComponent(statusId),
           author: encodeURIComponent(status.author.screen_name || ''),

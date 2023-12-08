@@ -36,14 +36,8 @@ twitter.get('/:endpoint{status(es)?}/:id', twitterStatusRequest);
 twitter.get('/:endpoint{status(es)?}/:id/', twitterStatusRequest);
 twitter.get('/:endpoint{status(es)?}/:id/:language/', twitterStatusRequest);
 twitter.get('/:endpoint{status(es)?}/:id/:language', twitterStatusRequest);
-twitter.get(
-  '/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:language',
-  twitterStatusRequest
-);
-twitter.get(
-  '/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:language/',
-  twitterStatusRequest
-);
+twitter.get('/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:language', twitterStatusRequest);
+twitter.get('/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:language/', twitterStatusRequest);
 twitter.get('/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id', twitterStatusRequest);
 twitter.get('/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/', twitterStatusRequest);
 twitter.get(

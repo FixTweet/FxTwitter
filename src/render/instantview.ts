@@ -132,7 +132,9 @@ const generateStatusFooter = (status: APIStatus, isQuote = false): string => {
     {aboutSection}
     `.format({
     socialText: getSocialTextIV(status as APITwitterStatus) || '',
-    viewOriginal: !isQuote ? `<a href="${status.url}">View original post</a>` : notApplicableComment,
+    viewOriginal: !isQuote
+      ? `<a href="${status.url}">View original post</a>`
+      : notApplicableComment,
     aboutSection: isQuote
       ? ''
       : `<h2>About author</h2>
