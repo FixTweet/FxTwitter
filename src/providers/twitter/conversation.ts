@@ -1,5 +1,5 @@
 import { Constants } from '../../constants';
-import { twitterFetch } from '../../fetch';
+import { twitterFetch } from './fetch';
 import { buildAPITwitterStatus } from './processor';
 import { Experiment, experimentCheck } from '../../experiments';
 import { isGraphQLTwitterStatus } from '../../helpers/graphql';

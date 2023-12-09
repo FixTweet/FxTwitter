@@ -1,6 +1,6 @@
 import { Context } from 'hono';
 import { Constants } from '../../constants';
-import { fetchUser } from '../../fetch';
+import { fetchUser } from './fetch';
 import { linkFixer } from '../../helpers/linkFixer';
 
 export const convertToApiUser = (user: GraphQLUser, legacyAPI = false): APIUser => {

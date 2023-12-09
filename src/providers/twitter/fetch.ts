@@ -1,8 +1,8 @@
 import { Context } from 'hono';
-import { Constants } from './constants';
-import { Experiment, experimentCheck } from './experiments';
-import { generateUserAgent } from './helpers/useragent';
-import { withTimeout } from './helpers/utils';
+import { Constants } from '../../constants';
+import { Experiment, experimentCheck } from '../../experiments';
+import { generateUserAgent } from '../../helpers/useragent';
+import { withTimeout } from '../../helpers/utils';
 
 const API_ATTEMPTS = 3;
 let wasElongatorDisabled = false;
