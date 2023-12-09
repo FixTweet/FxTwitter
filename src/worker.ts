@@ -44,7 +44,7 @@ export const app = new Hono<{
     } else {
       console.log(`Domain not assigned to realm, falling back to Twitter: ${url.hostname}`);
     }
-    /* Defaults to Twitter realm if unknown domain specified (such as the *.workers.dev hostname or deprecated domain) */
+    /* Defaults to Twitter realm if unknown domain specified (such as the *.workers.dev hostname) */
 
     console.log(`/${realm}${url.pathname}`);
     return `/${realm}${url.pathname}`;

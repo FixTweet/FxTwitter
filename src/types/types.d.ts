@@ -5,7 +5,6 @@ type InputFlags = {
   standard?: boolean;
   direct?: boolean;
   api?: boolean;
-  deprecated?: boolean;
   textOnly?: boolean;
   isXDomain?: boolean;
   forceInstantView?: boolean;

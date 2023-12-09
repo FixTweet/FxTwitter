@@ -63,15 +63,6 @@ export const statusRequest = async (c: Context) => {
     flags.direct = true;
   }
 
-  /* The pxtwitter.com domain is deprecated and statuses posted after deprecation
-     date will have a notice saying we've moved to fxtwitter.com! */
-  if (
-    Constants.DEPRECATED_DOMAIN_LIST.includes(url.hostname)
-  ) {
-    console.log('Request to deprecated domain');
-    flags.deprecated = true;
-  }
-
   /* TODO: Figure out what we're doing with FixTweet / FixupX branding in future */
   if (/fixup/g.test(url.href)) {
     console.log(`We're using x domain`);

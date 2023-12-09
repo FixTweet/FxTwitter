@@ -384,10 +384,6 @@ export const handleStatus = async (
     }
   }
 
-  /* Notice that user is using deprecated domain */
-  if (flags?.deprecated) {
-    siteName = Strings.DEPRECATED_DOMAIN_NOTICE;
-  }
   /* For supporting Telegram IV, we have to replace newlines with <br> within the og:description <meta> tag because of its weird (undocumented?) behavior.
      If you don't use IV, it uses newlines just fine. Just like Discord and others. But with IV, suddenly newlines don't actually break the line anymore.
 
@@ -438,13 +434,12 @@ export const handleStatus = async (
     let providerEngagementText = getSocialProof(status) ?? Strings.DEFAULT_AUTHOR_TEXT;
     providerEngagementText = providerEngagementText.replace(/ {4}/g, '  ');
     headers.push(
-      `<link rel="alternate" href="{base}/owoembed?text={text}{deprecatedFlag}&status={status}&author={author}{provider}" type="application/json+oembed" title="{name}">`.format(
+      `<link rel="alternate" href="{base}/owoembed?text={text}&status={status}&author={author}{provider}" type="application/json+oembed" title="{name}">`.format(
         {
           base: Constants.HOST_URL,
           text: flags.gallery
             ? status.author.name
             : encodeURIComponent(truncateWithEllipsis(authorText, 255)),
-          deprecatedFlag: flags?.deprecated ? '&deprecated=true' : '',
           status: encodeURIComponent(statusId),
           author: encodeURIComponent(status.author.screen_name || ''),
           name: status.author.name || '',

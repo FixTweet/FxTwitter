@@ -11,7 +11,6 @@
     "STANDARD_DOMAIN_LIST": "fxtwitter.com,fixupx.com,twittpr.com",
     "DIRECT_MEDIA_DOMAINS": "d.fxtwitter.com,dl.fxtwitter.com,d.fixupx.com,dl.fixupx.com",
     "MOSAIC_DOMAIN_LIST": "mosaic.fxtwitter.com",
-    "DEPRECATED_DOMAIN_LIST": "pxtwitter.com,www.pxtwitter.com",
     "API_HOST_LIST": "api.fxtwitter.com",
     "HOST_URL": "https://fxtwitter.com",
     "REDIRECT_URL": "https://github.com/FixTweet/FixTweet",

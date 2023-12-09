@@ -43,8 +43,7 @@ let envVariables = [
   'EMBED_URL',
   'MOSAIC_DOMAIN_LIST',
   'API_HOST_LIST',
-  'SENTRY_DSN',
-  'DEPRECATED_DOMAIN_LIST'
+  'SENTRY_DSN'
 ];
 
 // Create defines for all environment variables

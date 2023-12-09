@@ -218,9 +218,6 @@ This may be caused by API downtime or a new bug. Try again in a little while." p
   ERROR_USER_NOT_FOUND: `Sorry, that user doesn't exist :(`,
   ERROR_UNKNOWN: `Unknown error occurred, sorry about that :(`,
 
-  DEPRECATED_DOMAIN_NOTICE: `We've moved! ➡ fxtwitter.com`,
-  DEPRECATED_DOMAIN_NOTICE_DISCORD: `We've moved! ➡ fxtwitter.com`,
-
   ROBOTS_TXT: `# /-------------------------------------------\\
 # | _______                                   |
 # | |     |                                   |
