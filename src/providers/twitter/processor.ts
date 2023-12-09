@@ -217,6 +217,7 @@ export const buildAPITwitterStatus = async (
   if (status.card) {
     const card = renderCard(status.card);
     if (card.external_media) {
+      apiStatus.embed_card = 'player';
       apiStatus.media.external = card.external_media;
       if (apiStatus.media.external.url.match('https://www.youtube.com/embed/')) {
         /* Add YouTube thumbnail URL */
@@ -245,8 +246,6 @@ export const buildAPITwitterStatus = async (
         height: 720
       };
 
-      console.log(apiStatus.media.external)
-      
       apiStatus.embed_card = 'player';
     }
   }
