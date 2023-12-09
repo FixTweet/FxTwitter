@@ -436,7 +436,7 @@ export const handleStatus = async (
     /* The additional oembed is pulled by Discord to enable improved embeds.
       Telegram does not use this. */
     let providerEngagementText = getSocialProof(status) ?? Strings.DEFAULT_AUTHOR_TEXT;
-    providerEngagementText = providerEngagementText.replace(/ {4}/g, '   ');
+    providerEngagementText = providerEngagementText.replace(/ {4}/g, '  ');
     headers.push(
       `<link rel="alternate" href="{base}/owoembed?text={text}{deprecatedFlag}&status={status}&author={author}{provider}" type="application/json+oembed" title="{name}">`.format(
         {
