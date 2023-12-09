@@ -4,7 +4,7 @@ import { calculateTimeLeftString } from './pollTime';
 export const renderCard = (
   card: GraphQLTwitterStatus['card']
 ): { poll?: APIPoll; external_media?: APIExternalMedia } => {
-  if (!Array.isArray(card.legacy.binding_values)) {
+  if (!Array.isArray(card.legacy?.binding_values)) {
     return {};
   }
 
