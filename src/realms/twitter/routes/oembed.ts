@@ -15,13 +15,13 @@ export const oembed = async (c: Context) => {
   const random = Math.floor(Math.random() * Object.keys(motd).length);
   const [name, url] = Object.entries(motd)[random];
 
+  const statusUrl = `${Constants.TWITTER_ROOT}/${encodeURIComponent(author)}/status/${status}`;
+
   const data: OEmbed = {
     author_name: text,
-    author_url: `${Constants.TWITTER_ROOT}/${encodeURIComponent(author)}/status/${status}`,
-    /* Change provider name if status is on deprecated domain. */
-    provider_name:
-      searchParams.get('deprecated') === 'true' ? Strings.DEPRECATED_DOMAIN_NOTICE_DISCORD : name,
-    provider_url: url,
+    author_url: statusUrl,
+    provider_name: searchParams.get('provider') ?? name,
+    provider_url: searchParams.get('provider') ? statusUrl : url,
     title: Strings.DEFAULT_AUTHOR_TEXT,
     type: 'link',
     version: '1.0'

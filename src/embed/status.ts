@@ -3,7 +3,7 @@ import { Constants } from '../constants';
 import { handleQuote } from '../helpers/quote';
 import { formatNumber, sanitizeText, truncateWithEllipsis } from '../helpers/utils';
 import { Strings } from '../strings';
-import { getAuthorText } from '../helpers/author';
+import { getSocialProof } from '../helpers/socialproof';
 import { renderPhoto } from '../render/photo';
 import { renderVideo } from '../render/video';
 import { renderInstantView } from '../render/instantview';
@@ -157,7 +157,7 @@ export const handleStatus = async (
   /* At this point, we know we're going to have to create a
      regular embed because it's not an API or direct media request */
 
-  let authorText = getAuthorText(status) || Strings.DEFAULT_AUTHOR_TEXT;
+  let authorText = getSocialProof(status) || Strings.DEFAULT_AUTHOR_TEXT;
   const engagementText = authorText.replace(/ {4}/g, ' ');
   let siteName = Constants.BRANDING_NAME;
   let newText = status.text;
@@ -435,8 +435,10 @@ export const handleStatus = async (
   if (!flags.gallery) {
     /* The additional oembed is pulled by Discord to enable improved embeds.
       Telegram does not use this. */
+    let providerEngagementText = getSocialProof(status) ?? Strings.DEFAULT_AUTHOR_TEXT;
+    providerEngagementText = providerEngagementText.replace(/ {4}/g, '   ');
     headers.push(
-      `<link rel="alternate" href="{base}/owoembed?text={text}{deprecatedFlag}&status={status}&author={author}" type="application/json+oembed" title="{name}">`.format(
+      `<link rel="alternate" href="{base}/owoembed?text={text}{deprecatedFlag}&status={status}&author={author}{provider}" type="application/json+oembed" title="{name}">`.format(
         {
           base: Constants.HOST_URL,
           text: flags.gallery
@@ -445,7 +447,8 @@ export const handleStatus = async (
           deprecatedFlag: flags?.deprecated ? '&deprecated=true' : '',
           status: encodeURIComponent(statusId),
           author: encodeURIComponent(status.author.screen_name || ''),
-          name: status.author.name || ''
+          name: status.author.name || '',
+          provider: (status.embed_card === 'player' && providerEngagementText !== Strings.DEFAULT_AUTHOR_TEXT) ? `&provider=${encodeURIComponent(providerEngagementText)}` : ''
         }
       )
     );
