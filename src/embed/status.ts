@@ -310,8 +310,9 @@ export const handleStatus = async (
         media.photos[0]
       );
       headers.push(...instructions.addHeaders);
-    } else if (media?.external) {
-      const { external } = media;
+    }
+    if (status.media?.external && !(status.media.videos?.length)) {
+      const { external } = status.media;
       authorText = newText || '';
       headers.push(
         `<meta property="twitter:player" content="${external.url}">`,
@@ -323,9 +324,14 @@ export const handleStatus = async (
         `<meta property="og:video:width" content="${external.width}">`,
         `<meta property="og:video:height" content="${external.height}">`
       );
+      if (external.thumbnail_url && !status.media.photos?.length) {
+        headers.push(`<meta property="og:image" content="${external.thumbnail_url}">`);
+      }
     }
   }
 
+  
+    
   /* This status contains a poll, so we'll render it */
   if (status.poll) {
     const { poll } = status;

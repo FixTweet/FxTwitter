@@ -218,9 +218,36 @@ export const buildAPITwitterStatus = async (
     const card = renderCard(status.card);
     if (card.external_media) {
       apiStatus.media.external = card.external_media;
+      if (apiStatus.media.external.url.match('https://www.youtube.com/embed/')) {
+        /* Add YouTube thumbnail URL */
+        apiStatus.media.external.thumbnail_url = `https://img.youtube.com/vi/${apiStatus.media.external.url.replace(
+          'https://www.youtube.com/embed/',
+          ''
+        )}/maxresdefault.jpg`;
+      }
     }
     if (card.poll) {
       apiStatus.poll = card.poll;
+    }
+  } else {
+    /* Determine if the status contains a YouTube link (either youtube.com or youtu.be) so we can include it */
+    const youtubeIdRegex = /(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([^\s&]+)/;
+    const matches = apiStatus.text.match(youtubeIdRegex);
+
+    const youtubeId = matches ? matches[4] : null;
+
+    if (youtubeId) {
+      apiStatus.media.external = {
+        type: 'video',
+        url: `https://www.youtube.com/embed/${youtubeId}`,
+        thumbnail_url: `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`,
+        width: 1280,
+        height: 720
+      };
+
+      console.log(apiStatus.media.external)
+      
+      apiStatus.embed_card = 'player';
     }
   }
 

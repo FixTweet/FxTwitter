@@ -65,8 +65,9 @@ interface APITranslate {
 interface APIExternalMedia {
   type: 'video';
   url: string;
-  height: number;
-  width: number;
+  thumbnail_url?: string;
+  height?: number;
+  width?: number;
 }
 
 interface APIPollChoice {
