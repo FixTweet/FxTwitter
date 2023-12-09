@@ -66,8 +66,7 @@ export const statusRequest = async (c: Context) => {
   /* The pxtwitter.com domain is deprecated and statuses posted after deprecation
      date will have a notice saying we've moved to fxtwitter.com! */
   if (
-    Constants.DEPRECATED_DOMAIN_LIST.includes(url.hostname) &&
-    BigInt(id?.match(/\d{2,20}/g)?.[0] || 0) > Constants.DEPRECATED_DOMAIN_EPOCH
+    Constants.DEPRECATED_DOMAIN_LIST.includes(url.hostname)
   ) {
     console.log('Request to deprecated domain');
     flags.deprecated = true;

@@ -44,8 +44,7 @@ let envVariables = [
   'MOSAIC_DOMAIN_LIST',
   'API_HOST_LIST',
   'SENTRY_DSN',
-  'DEPRECATED_DOMAIN_LIST',
-  'DEPRECATED_DOMAIN_EPOCH'
+  'DEPRECATED_DOMAIN_LIST'
 ];
 
 // Create defines for all environment variables

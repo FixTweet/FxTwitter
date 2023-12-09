@@ -1,7 +1,7 @@
 import { formatNumber } from './utils';
 
 /* The embed "author" text we populate with replies, retweets, and likes unless it's a video */
-export const getAuthorText = (status: APITwitterStatus): string | null => {
+export const getSocialProof = (status: APITwitterStatus): string | null => {
   /* Build out reply, retweet, like counts */
   if (
     status.likes > 0 ||
