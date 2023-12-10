@@ -439,6 +439,12 @@ export const handleStatus = async (
       Telegram does not use this. */
     let providerEngagementText = getSocialProof(status) ?? Strings.DEFAULT_AUTHOR_TEXT;
     providerEngagementText = providerEngagementText.replace(/ {4}/g, '  ');
+
+    /* Workaround to prevent us from accidentally doubling up the engagement text in both provider and author fields */
+    if (status.text.trim().length === 0) {
+      providerEngagementText = Strings.DEFAULT_AUTHOR_TEXT;
+    }
+
     headers.push(
       `<link rel="alternate" href="{base}/owoembed?text={text}&status={status}&author={author}{provider}" type="application/json+oembed" title="{name}">`.format(
         {
