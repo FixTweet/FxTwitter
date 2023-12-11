@@ -58,6 +58,7 @@ export const renderVideo = (
     `<meta property="og:video:height" content="${video.height * sizeMultiplier}"/>`,
     `<meta property="og:video:width" content="${video.width * sizeMultiplier}"/>`,
     `<meta property="og:video:type" content="${video.format}"/>`,
+    `<meta property="og:image" content="${video.thumbnail_url}"/>`,
     `<meta property="twitter:image" content="0"/>`
   ];
 
