@@ -157,7 +157,7 @@ In many ways, FixTweet has richer embeds and does more. Here's a table comparing
 
 ² Discord uses a custom embed container for Twitter.com to enable multi-image, which is unfortunately not available to other websites.
 
-³ On GitHub, BetterTwitFix (vxTwitter) claims to support this feature, however in my testing as of mid-July 2022, this does not seem to work. (TODO: Check if this is still the case)
+³ On GitHub, BetterTwitFix (vxTwitter) claims to support this feature, however in my testing as of December 2023, this does not seem to work.
 
 ⁴ External media requiring web containers, such as YouTube, won't embed in Telegram because Telegram doesn't support it. Plain media will work in Telegram, and it works either way inside Discord.
 
