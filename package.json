@@ -39,6 +39,6 @@
   },
   "dependencies": {
     "@hono/sentry": "^1.0.0",
-    "hono": "^3.11.5"
+    "hono": "^3.11.6"
   }
 }
