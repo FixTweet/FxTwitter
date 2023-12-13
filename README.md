@@ -35,7 +35,7 @@
 
 We all have videos of memes and other things from Twitter we want to quickly share with friends. With normal Twitter links, embedding videos is often broken on Discord and impossible on Telegram. But using FixTweet, we embed the raw mp4 file so it's compatible with just about anything supporting video embeds.
 
-![](https://cdn.discordapp.com/attachments/165560751363325952/1006337645737156758/FixTweet.png)
+![](https://cdn.discordapp.com/attachments/165560751363325952/1184627562811494461/video.png)
 
 On Discord, we'll also automatically embed videos linked from other platforms, such as YouTube, so they can play without having to open a browser.
 
