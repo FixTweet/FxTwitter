@@ -49,7 +49,7 @@ If you want to share the results of a Twitter poll, you can do so by just linkin
 
 Quotes and their media can provide important context to a post. So we'll automatically add said context, and even media if there isn't already media embedded in the quote.
 
-![](https://cdn.discordapp.com/attachments/165560751363325952/1006334041202630757/FixTweet.png)
+![](https://cdn.discordapp.com/attachments/165560751363325952/1184630052797816863/quote.png)
 
 ## Translate Posts
 
