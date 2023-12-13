@@ -57,7 +57,7 @@ You can translate a post into any other supported language, with the original an
 
 Just append a post with its 2-letter ISO language code. So for English, add `/en` at the end.
 
-![](https://cdn.discordapp.com/attachments/165560751363325952/1006333011136102400/FixTweet.png)
+![](https://cdn.discordapp.com/attachments/165560751363325952/1184625715522572298/translation.png)
 
 ## Gallery view
 
