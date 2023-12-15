@@ -185,7 +185,7 @@ In 2023, Twitter began blocking posts with NSFW media from the guest API. We use
 
 ---
 
-## Q&A
+## FAQ
 
 ### What's the difference between `fxtwitter.com`, `twittpr.com`, and `fixupx.com`?
 
@@ -196,6 +196,10 @@ They all run the exact same worker and function identically... mostly.
 ### How come embedding takes so long / is not working in Telegram?
 
 Telegram's embedding servers sometimes never even send us a request to embed a URL, possibly due to their servers being overloaded. If you have a link that is broken you can try one of FixTweet's other domains (`fxtwitter.com`, `twittpr.com`) or use [Webpage Bot](https://t.me/WebpageBot) to try to clear the cache of the embed.
+
+### Why do video embeds look different on Discord?
+
+Discord hides the text when videos are attached to a website embed. As a result, we have to mess around with other parameters to display embeds correctly.
 
 ### What if I don't want FixTweet to combine my post's images together with multi-image?
 
