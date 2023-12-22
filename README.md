@@ -23,9 +23,9 @@
 
 ## Written in TypeScript as a Cloudflare Worker to scale, packed with more features and [best-in-class user privacy 🔒](#built-with-privacy-in-mind).
 
-### Add `fx` before your `twitter.com` link to make it `fxtwitter.com`, OR
+### Add `fx` before your `twitter.com` link to make it `fxtwitter.com`
 
-### Change `x.com` to `fixupx.com` in your link
+### OR: Add `fixup` before your `x.com` link to make it `fixupx.com`
 
 ### For `twitter.com` links on Discord, send a link and type `s/e/p` to make `twittpr.com`.
 
