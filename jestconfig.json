@@ -4,7 +4,7 @@
     "^.+\\.(t|j)sx?$": "ts-jest"
   },
   "globals": {
-    "BRANDING_NAME": "FixTweet",
+    "BRANDING_NAME": "FxTwitter / FixupX",
     "TEXT_ONLY_DOMAINS": "t.fxtwitter.com,t.twittpr.com,t.fixupx.com",
     "INSTANT_VIEW_DOMAINS": "i.fxtwitter.com,i.twittpr.com,i.fixupx.com",
     "GALLERY_DOMAINS": "g.fxtwitter.com,g.twittpr.com,g.fixupx.com",
@@ -13,8 +13,8 @@
     "MOSAIC_DOMAIN_LIST": "mosaic.fxtwitter.com",
     "API_HOST_LIST": "api.fxtwitter.com",
     "HOST_URL": "https://fxtwitter.com",
-    "REDIRECT_URL": "https://github.com/FixTweet/FixTweet",
-    "EMBED_URL": "https://github.com/FixTweet/FixTweet",
+    "REDIRECT_URL": "https://github.com/FixTweet/FxTwitter",
+    "EMBED_URL": "https://github.com/FixTweet/FxTwitter",
     "RELEASE_NAME": "fixtweet-test",
     "SENTRY_DSN": null
   },

@@ -1,4 +1,4 @@
-# FixTweet / FixupX <img src="https://abs-0.twimg.com/emoji/v2/svg/1f527.svg" height="28">
+# FxTwitter / FixupX <img src="https://abs-0.twimg.com/emoji/v2/svg/1f527.svg" height="28">
 
 ## Embed X / Twitter videos, polls, translations, & more on Discord, Telegram, and others!
 
@@ -12,12 +12,12 @@
 <!-- Links & Badges -->
 
 [icons]: https://skillicons.dev/icons?i=typescript,workers
-[build]: https://github.com/FixTweet/FixTweet/actions/workflows/build.yml
-[buildbadge]: https://github.com/FixTweet/FixTweet/actions/workflows/build.yml/badge.svg
-[tests]: https://github.com/FixTweet/FixTweet/actions/workflows/tests.yml
-[testsbadge]: https://github.com/FixTweet/FixTweet/actions/workflows/tests.yml/badge.svg
-[license]: https://github.com/FixTweet/FixTweet/blob/main/LICENSE.md
-[licensebadge]: https://img.shields.io/github/license/FixTweet/FixTweet
+[build]: https://github.com/FixTweet/FxTwitter/actions/workflows/build.yml
+[buildbadge]: https://github.com/FixTweet/FxTwitter/actions/workflows/build.yml/badge.svg
+[tests]: https://github.com/FixTweet/FxTwitter/actions/workflows/tests.yml
+[testsbadge]: https://github.com/FixTweet/FxTwitter/actions/workflows/tests.yml/badge.svg
+[license]: https://github.com/FixTweet/FxTwitter/blob/main/LICENSE.md
+[licensebadge]: https://img.shields.io/github/license/FixTweet/FxTwitter
 [status]: https://status.fxtwitter.com
 [statusbadge]: https://status.fxtwitter.com/api/badge/8/uptime/720?label=Uptime%2030d
 
@@ -33,7 +33,7 @@
 
 ## Embed Videos
 
-We all have videos of memes and other things from Twitter we want to quickly share with friends. With normal Twitter links, embedding videos is often broken on Discord and impossible on Telegram. But using FixTweet, we embed the raw mp4 file so it's compatible with just about anything supporting video embeds.
+We all have videos of memes and other things from Twitter we want to quickly share with friends. With normal Twitter links, embedding videos is often broken on Discord and impossible on Telegram. But using FxTwitter, we embed the raw mp4 file so it's compatible with just about anything supporting video embeds.
 
 ![](https://cdn.discordapp.com/attachments/165560751363325952/1184627562811494461/video.png)
 
@@ -41,7 +41,7 @@ On Discord, we'll also automatically embed videos linked from other platforms, s
 
 ## Embed Polls
 
-If you want to share the results of a Twitter poll, you can do so by just linking the post using FixTweet.
+If you want to share the results of a Twitter poll, you can do so by just linking the post using FxTwitter.
 
 ![](https://cdn.discordapp.com/attachments/165560751363325952/1006331192372629544/FixTweet.png)
 
@@ -67,7 +67,7 @@ Use `g.fxtwitter.com` or `g.fixupx.com` to generate minimal embeds with just the
 
 ## Direct media links
 
-Want to link directly to a post's media without the embed? You can easily do that using FixTweet.
+Want to link directly to a post's media without the embed? You can easily do that using FxTwitter.
 
 ![Image demonstrating the feature](https://cdn.discordapp.com/attachments/165560751363325952/1006338772192989194/FixTweet.png)
 
@@ -110,21 +110,21 @@ At this time, the cookie is only set on the domain you set it on, so if you set 
 
 ## Built with privacy in mind
 
-FixTweet doesn't save logs of what posts you're sending, nor do we have a public record of what posts are being embedded by FixTweet.
+FxTwitter doesn't save logs of what posts you're sending, nor do we have a public record of what posts are being embedded by FxTwitter.
 
-In fact, because our core embedding and API service uses Cloudflare Workers, FixTweet can only run when you send it a request. Its memory doesn't stick around, and it doesn't have a file system or database to read from at all. That is how we keep our privacy promise by building it into the architecture. We use Cloudflare Analytics Engine to aggregate basic, anonymous statistics, which do not include information that could identify individual users or posts. My goal is always to provide a good public service, and FixTweet doesn't have any ads or tracking to make money off of, nor do we sell data.
+In fact, because our core embedding and API service uses Cloudflare Workers, FxTwitter can only run when you send it a request. Its memory doesn't stick around, and it doesn't have a file system or database to read from at all. That is how we keep our privacy promise by building it into the architecture. We use Cloudflare Analytics Engine to aggregate basic, anonymous statistics, which do not include information that could identify individual users or posts. My goal is always to provide a good public service, and FxTwitter doesn't have any ads or tracking to make money off of, nor do we sell data.
 
-Note: We use Cloudflare to cache FixTweet responses to make repeat access faster, which have a maximum TTL of 1 hour. Temporary real-time logging in the terminal (specifically `wrangler tail`) may be used only by the developer while the Worker is being serviced or debugged (to make sure things work as they should), however these logs are only shown in the terminal and are never saved or used for any other purpose. URLs that cause runtime errors in the script (aka Exceptions, usually exceedingly rare unless there was a faulty update pushed out or Twitter API is down) may be logged for a developer to diagnose the issue that is preventing your embed from working.
+Note: We use Cloudflare to cache FxTwitter responses to make repeat access faster, which have a maximum TTL of 1 hour. Temporary real-time logging in the terminal (specifically `wrangler tail`) may be used only by the developer while the Worker is being serviced or debugged (to make sure things work as they should), however these logs are only shown in the terminal and are never saved or used for any other purpose. URLs that cause runtime errors in the script (aka Exceptions, usually exceedingly rare unless there was a faulty update pushed out or Twitter API is down) may be logged for a developer to diagnose the issue that is preventing your embed from working.
 
-On a different note, if the person who posted a FixTweet link forgot to strip tracking parameters (like `?s` and `&t`), we strip it upon redirecting to the post as they are only used for Twitter telemetry and advertising.
+On a different note, if the person who posted a FxTwitter link forgot to strip tracking parameters (like `?s` and `&t`), we strip it upon redirecting to the post as they are only used for Twitter telemetry and advertising.
 
 ---
 
-## Why use FixTweet?
+## Why use FxTwitter?
 
-In many ways, FixTweet has richer embeds and does more. Here's a table comparing some of FixTweet's features compared to Twitter default embeds as well as other embedding services
+In many ways, FxTwitter has richer embeds and does more. Here's a table comparing some of FxTwitter's features compared to Twitter default embeds as well as other embedding services
 
-|                                        |                      FixTweet                      |         Twitter default          |              vxTwitter (BetterTwitFix)              |
+|                                        |                      FxTwitter                      |         Twitter default          |              vxTwitter (BetterTwitFix)              |
 | -------------------------------------- | :------------------------------------------------: | :------------------------------: | :-------------------------------------------------: |
 | Embed Posts / Images                   |                 :heavy_check_mark:                 |        :heavy_check_mark:        |                 :heavy_check_mark:                  |
 | Embed profile pictures on text posts   |                 :heavy_check_mark:                 |               :x:                |                 :heavy_check_mark:                  |
@@ -145,10 +145,10 @@ In many ways, FixTweet has richer embeds and does more. Here's a table comparing
 | Status fetch API for Developers        |                 :heavy_check_mark:                 |               N/A                |                 :heavy_check_mark:                  |
 | Last commit                            |                   [![][flc]][fc]                   |               N/A                |                   [![][vlc]][vc]                    |
 
-[flc]: https://img.shields.io/github/last-commit/FixTweet/FixTweet?label
+[flc]: https://img.shields.io/github/last-commit/FixTweet/FxTwitter?label
 [vlc]: https://img.shields.io/github/last-commit/dylanpdx/BetterTwitFix?label
 [slc]: https://img.shields.io/github/last-commit/Twxtter/Twxtter-main?label
-[fc]: https://github.com/FixTweet/FixTweet/commits
+[fc]: https://github.com/FixTweet/FxTwitter/commits
 [vc]: https://github.com/dylanpdx/BetterTwitFix/commits
 [sc]: https://github.com/Twxtter/Twxtter-main/commits
 [polladd]: https://github.com/dylanpdx/BetterTwitFix/issues/17
@@ -163,13 +163,13 @@ In many ways, FixTweet has richer embeds and does more. Here's a table comparing
 
 ---
 
-## Why FixTweet is nicer to develop for and deploy
+## Why FxTwitter is nicer to develop for and deploy
 
-FixTweet was originally designed for edge computing in mind meaning it's easy to run closer to your users (which has significant latency advantages for people in a lot of regions). The way we use it and recommend deployment is using Cloudflare Workers, which are completely free for up to 100,000 requests per day, per account. Cloudflare Workers are [fast to set up](https://developers.cloudflare.com/workers/get-started/guide/) and your script is distributed in their datacenters around the world for lower latency. It may be possible to run it on other platforms that support Hono, but at this time we do not provide documentation to do so yet.
+FxTwitter was originally designed for edge computing in mind meaning it's easy to run closer to your users (which has significant latency advantages for people in a lot of regions). The way we use it and recommend deployment is using Cloudflare Workers, which are completely free for up to 100,000 requests per day, per account. Cloudflare Workers are [fast to set up](https://developers.cloudflare.com/workers/get-started/guide/) and your script is distributed in their datacenters around the world for lower latency. It may be possible to run it on other platforms that support Hono, but at this time we do not provide documentation to do so yet.
 
-FixTweet does not need a database nor a Twitter API key: It takes a similar approach to `youtube-dl` where it pretends to be a logged-out Twitter web user, fetching a guest token and making API requests from there. At one point, this meant "unlimited" read-only access to Twitter's API, including things they don't expose in their public API, useful for polls and other features. It's been locked down pretty heavily after Elon Musk took over Twitter, but the guest token API does still work.
+FxTwitter does not need a database nor a Twitter API key: It takes a similar approach to `youtube-dl` where it pretends to be a logged-out Twitter web user, fetching a guest token and making API requests from there. At one point, this meant "unlimited" read-only access to Twitter's API, including things they don't expose in their public API, useful for polls and other features. It's been locked down pretty heavily after Elon Musk took over Twitter, but the guest token API does still work.
 
-## Deploy FixTweet yourself
+## Deploy FxTwitter yourself
 
 ℹ️ Currently, we only provide assistance with deploying with Cloudflare Workers, [but it may be possible to run on other web standards-compliant runtimes](https://hono.dev/getting-started/basic).
 
@@ -191,17 +191,17 @@ In 2023, Twitter began blocking posts with NSFW media from the guest API. We use
 
 They all run the exact same worker and function identically... mostly.
 
-`fxtwitter.com` is the primary domain, with `twittpr.com` as an alternative that allows for quick sed replacement for Twitter links. With `fixupx.com`, you can easily fix `x.com` links as well (Very short .com domains are expensive, sorry I didn't get something shorter)
+`fxtwitter.com` is the primary domain and `fixupx.com` exists to make it easy to fix `x.com` links as well (Very short .com domains are expensive, sorry I didn't get something shorter). Also, with `twittpr.com` you can do quick sed replacement on Twitter links by sending a Twitter link and sending `s/e/p` afterward to automatically edit it.
 
 ### How come embedding takes so long / is not working in Telegram?
 
-Telegram's embedding servers sometimes never even send us a request to embed a URL, possibly due to their servers being overloaded. If you have a link that is broken you can try one of FixTweet's other domains (`fxtwitter.com`, `twittpr.com`) or use [Webpage Bot](https://t.me/WebpageBot) to try to clear the cache of the embed.
+Telegram's embedding servers sometimes never even send us a request to embed a URL, possibly due to their servers being overloaded. If you have a link that is broken you can try one of our other domains (`fxtwitter.com`, `fixupx.com`) or use [Webpage Bot](https://t.me/WebpageBot) to try to clear the cache of the embed.
 
 ### Why do video embeds look different on Discord?
 
 Discord hides the text when videos are attached to a website embed. As a result, we have to mess around with other parameters to display embeds correctly.
 
-### What if I don't want FixTweet to combine my post's images together with multi-image?
+### What if I don't want FxTwitter to combine my post's images together with multi-image?
 
 No problem! You can pick any specific photo from a post using Twitter's own URL syntax (`/photo/1` is the first photo of a post) and we'll render you the full-resolution original image.
 
@@ -211,17 +211,17 @@ No problem! You can pick any specific photo from a post using Twitter's own URL 
 
 ## Star History
 
-<a href="https://star-history.com/#FixTweet/FixTweet&Timeline">
+<a href="https://star-history.com/#FixTweet/FxTwitter&Timeline">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=FixTweet/FixTweet&type=Timeline&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=FixTweet/FixTweet&type=Timeline" />
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=FixTweet/FixTweet&type=Timeline" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=FixTweet/FxTwitter&type=Timeline&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=FixTweet/FxTwitter&type=Timeline" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=FixTweet/FxTwitter&type=Timeline" />
   </picture>
 </a>
 
 ## Bugs or issues?
 
-Feel free to [open an issue](https://github.com/FixTweet/FixTweet/issues)
+Feel free to [open an issue](https://github.com/FixTweet/FxTwitter/issues)
 
 ## Additional Credits
 
