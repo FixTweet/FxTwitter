@@ -10,6 +10,7 @@ import { twitter } from './realms/twitter/router';
 import { cacheMiddleware } from './caches';
 
 const noCache = 'max-age=0, no-cache, no-store, must-revalidate';
+const embeddingClientRegex = /(discordbot|telegrambot|facebook|whatsapp|firefox\/92|vkshare)/gi;
 
 /* This is the root app which contains route trees for multiple "realms".
 
@@ -84,11 +85,7 @@ app.onError((err, c) => {
     errorCode = 504;
   }
   /* We return it as a 200 so embedded applications can display the error */
-  if (
-    c.req
-      .header('User-Agent')
-      ?.match(/(discordbot|telegrambot|facebook|whatsapp|firefox\/92|vkshare)/gi)
-  ) {
+  if (c.req.header('User-Agent')?.match(embeddingClientRegex)) {
     errorCode = 200;
   }
   c.status(errorCode);
@@ -139,11 +136,7 @@ app.route(`/twitter`, twitter);
 app.all('/error', async c => {
   c.header('cache-control', noCache);
 
-  if (
-    c.req
-      .header('User-Agent')
-      ?.match(/(discordbot|telegrambot|facebook|whatsapp|firefox\/92|vkshare)/gi)
-  ) {
+  if (c.req.header('User-Agent')?.match(embeddingClientRegex)) {
     c.status(200);
     return c.html(Strings.ERROR_HTML);
   }
@@ -166,11 +159,7 @@ export default {
         errorCode = 504;
       }
       /* We return it as a 200 so embedded applications can display the error */
-      if (
-        request.headers
-          .get('user-agent')
-          ?.match(/(discordbot|telegrambot|facebook|whatsapp|firefox\/92|vkshare)/gi)
-      ) {
+      if (request.headers.get('user-agent')?.match(embeddingClientRegex)) {
         errorCode = 200;
       }
 
