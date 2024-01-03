@@ -29,8 +29,15 @@ export const translateStatus = async (
   let translationApiResponse;
   let translationResults: TranslationPartial;
 
-  /* Fix up some language codes that may be mistakenly used */
+  /* Clean up language codes so we can use them with Twitter API */
   switch (language) {
+    case 'zh':
+    case 'cn':
+      language = 'zh-cn';
+      break;
+    case 'tw':
+      language = 'zh-tw';
+      break;
     case 'jp':
       language = 'ja';
       break;
