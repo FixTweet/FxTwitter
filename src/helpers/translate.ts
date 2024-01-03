@@ -31,6 +31,7 @@ export const translateStatus = async (
 
   /* Clean up language codes so we can use them with Twitter API */
   switch (language) {
+    /* Twitter does not accept plain zh, requires either zh-cn or zh-tw. https://github.com/FixTweet/FxTwitter/issues/580 */
     case 'zh':
     case 'cn':
       language = 'zh-cn';
