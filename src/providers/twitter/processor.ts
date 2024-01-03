@@ -261,7 +261,11 @@ export const buildAPITwitterStatus = async (
   console.log('language?', language);
 
   /* If a language is specified in API or by user, let's try translating it! */
-  if (typeof language === 'string' && (language.length === 2 || language.length === 5) && language !== status.legacy.lang) {
+  if (
+    typeof language === 'string' &&
+    (language.length === 2 || language.length === 5) &&
+    language !== status.legacy.lang
+  ) {
     console.log(`Attempting to translate status to ${language}...`);
     const translateAPI = await translateStatus(status, '', language, c);
     if (translateAPI !== null && translateAPI?.translation) {

@@ -311,7 +311,7 @@ export const handleStatus = async (
       );
       headers.push(...instructions.addHeaders);
     }
-    if (status.media?.external && !(status.media.videos?.length)) {
+    if (status.media?.external && !status.media.videos?.length) {
       const { external } = status.media;
       authorText = newText || '';
       headers.push(
@@ -330,8 +330,6 @@ export const handleStatus = async (
     }
   }
 
-  
-    
   /* This status contains a poll, so we'll render it */
   if (status.poll) {
     const { poll } = status;
@@ -455,7 +453,10 @@ export const handleStatus = async (
           status: encodeURIComponent(statusId),
           author: encodeURIComponent(status.author.screen_name || ''),
           name: status.author.name || '',
-          provider: (status.embed_card === 'player' && providerEngagementText !== Strings.DEFAULT_AUTHOR_TEXT) ? `&provider=${encodeURIComponent(providerEngagementText)}` : ''
+          provider:
+            status.embed_card === 'player' && providerEngagementText !== Strings.DEFAULT_AUTHOR_TEXT
+              ? `&provider=${encodeURIComponent(providerEngagementText)}`
+              : ''
         }
       )
     );

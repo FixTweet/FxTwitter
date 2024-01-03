@@ -124,7 +124,7 @@ On a different note, if the person who posted a FxTwitter link forgot to strip t
 
 In many ways, FxTwitter has richer embeds and does more. Here's a table comparing some of FxTwitter's features compared to Twitter default embeds as well as other embedding services
 
-|                                        |                      FxTwitter                      |         Twitter default          |              vxTwitter (BetterTwitFix)              |
+|                                        |                     FxTwitter                      |         Twitter default          |              vxTwitter (BetterTwitFix)              |
 | -------------------------------------- | :------------------------------------------------: | :------------------------------: | :-------------------------------------------------: |
 | Embed Posts / Images                   |                 :heavy_check_mark:                 |        :heavy_check_mark:        |                 :heavy_check_mark:                  |
 | Embed profile pictures on text posts   |                 :heavy_check_mark:                 |               :x:                |                 :heavy_check_mark:                  |
