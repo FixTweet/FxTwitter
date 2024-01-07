@@ -11,16 +11,16 @@ export const getSocialProof = (status: APITwitterStatus): string | null => {
   ) {
     let authorText = '';
     if (status.replies > 0) {
-      authorText += `${formatNumber(status.replies)} 💬    `;
+      authorText += `💬 ${formatNumber(status.replies)}   `;
     }
     if (status.reposts > 0) {
-      authorText += `${formatNumber(status.reposts)} 🔁    `;
+      authorText += `🔁 ${formatNumber(status.reposts)}   `;
     }
     if (status.likes > 0) {
-      authorText += `${formatNumber(status.likes)} ❤️    `;
+      authorText += `❤️ ${formatNumber(status.likes)}   `;
     }
     if (status.views && status.views > 0) {
-      authorText += `${formatNumber(status.views)} 👁️    `;
+      authorText += `👁️ ${formatNumber(status.views)}   `;
     }
     authorText = authorText.trim();
 
