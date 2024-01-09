@@ -103,7 +103,7 @@ export const buildAPITwitterStatus = async (
 
   apiStatus.possibly_sensitive = status.legacy.possibly_sensitive;
 
-  if (status.views.state === 'EnabledWithCount') {
+  if (status.views?.state === 'EnabledWithCount') {
     apiStatus.views = parseInt(status.views.count || '0') ?? null;
   } else {
     apiStatus.views = null;
