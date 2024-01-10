@@ -169,6 +169,9 @@ FxTwitter was originally designed for edge computing in mind meaning it's easy t
 
 FxTwitter does not need a database nor a Twitter API key: It takes a similar approach to `youtube-dl` where it pretends to be a logged-out Twitter web user, fetching a guest token and making API requests from there. At one point, this meant "unlimited" read-only access to Twitter's API, including things they don't expose in their public API, useful for polls and other features. It's been locked down pretty heavily after Elon Musk took over Twitter, but the guest token API does still work.
 
+##  Get the Chrome Extension:
+Share tweets with friends hassle-free. Click 'copy link,' and the extension ensures a polished, better-looking link for Discord. Elevate your Twitter sharing experience on Discord! Install the FXTwitter Embeds Fixer extension now and enjoy seamless, beautifully embedded Twitter content. [Get it here.](https://chromewebstore.google.com/detail/fxtwitter-embeds-fixer-fo/ogmkfillcnchpbgglmjomkmaepehidoc)
+
 ## Deploy FxTwitter yourself
 
 ℹ️ Currently, we only provide assistance with deploying with Cloudflare Workers, [but it may be possible to run on other web standards-compliant runtimes](https://hono.dev/getting-started/basic).
