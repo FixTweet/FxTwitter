@@ -8,6 +8,7 @@ type InputFlags = {
   textOnly?: boolean;
   isXDomain?: boolean;
   forceInstantView?: boolean;
+  instantViewUnrollThreads?: boolean;
   archive?: boolean;
   gallery?: boolean;
 };

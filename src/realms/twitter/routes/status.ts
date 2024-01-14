@@ -55,6 +55,10 @@ export const statusRequest = async (c: Context) => {
   } else if (Constants.INSTANT_VIEW_DOMAINS.includes(url.hostname)) {
     console.log('Forced instant view request');
     flags.forceInstantView = true;
+  } else if (Constants.INSTANT_VIEW_THREADS_DOMAINS.includes(url.hostname)) {
+    console.log('Forced unroll instant view');
+    flags.forceInstantView = true;
+    flags.instantViewUnrollThreads = true;
   } else if (Constants.GALLERY_DOMAINS.includes(url.hostname)) {
     console.log('Gallery embed request');
     flags.gallery = true;

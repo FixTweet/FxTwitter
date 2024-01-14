@@ -3,6 +3,7 @@ declare const STANDARD_DOMAIN_LIST: string;
 declare const DIRECT_MEDIA_DOMAINS: string;
 declare const TEXT_ONLY_DOMAINS: string;
 declare const INSTANT_VIEW_DOMAINS: string;
+declare const INSTANT_VIEW_THREADS_DOMAINS: string;
 declare const GALLERY_DOMAINS: string;
 declare const HOST_URL: string;
 declare const EMBED_URL: string;
