@@ -68,7 +68,7 @@ const htmlifyHashtags = (input: string): string => {
   const hashtagPattern = /#([a-zA-Z_]\w*)/g;
   return input.replace(hashtagPattern, (match, hashtag) => {
     const encodedHashtag = encodeURIComponent(hashtag);
-    return `<a href="${Constants.TWITTER_ROOT}/hashtag/${encodedHashtag}?src=hashtag_click">${match}</a>`;
+    return `  <a href="${Constants.TWITTER_ROOT}/hashtag/${encodedHashtag}?src=hashtag_click">${match}</a>  `;
   });
 };
 
@@ -117,9 +117,7 @@ const truncateSocialCount = (count: number): string => {
   }
 };
 
-const generateStatusFooter = (status: APIStatus, isQuote = false): string => {
-  const { author } = status;
-
+const generateStatusFooter = (status: APIStatus, isQuote = false, author: APIUser): string => {
   let description = author.description;
   description = htmlifyLinks(description);
   description = htmlifyHashtags(description);
@@ -163,7 +161,7 @@ const generateStatusFooter = (status: APIStatus, isQuote = false): string => {
   });
 };
 
-const generateStatus = (status: APIStatus, isQuote = false): string => {
+const generateStatus = (status: APIStatus, author: APIUser, isQuote = false): string => {
   let text = paragraphify(sanitizeText(status.text), isQuote);
   text = htmlifyLinks(text);
   text = htmlifyHashtags(text);
@@ -180,20 +178,23 @@ const generateStatus = (status: APIStatus, isQuote = false): string => {
   <!-- Embed Status text -->
   ${text}
   <!-- Embedded quote status -->
-  ${!isQuote && status.quote ? generateStatus(status.quote, true) : notApplicableComment}
-  ${!isQuote ? generateStatusFooter(status) : ''}
-  <br>${!isQuote ? `<a href="${status.url}">View original post</a>` : notApplicableComment}
+  ${!isQuote && status.quote ? generateStatus(status.quote, author, true) : notApplicableComment}
   `.format({
     quoteHeader: isQuote
-      ? `<h4><a href="${status.url}">Quoting</a> ${status.author.name} (<a href="${Constants.TWITTER_ROOT}/${status.author.screen_name}">@${status.author.screen_name}</a>)</h4>`
+      ? `<h4><a href="${status.url}">Quoting</a> ${author.name} (<a href="${Constants.TWITTER_ROOT}/${author.screen_name}">@${author.screen_name}</a>)</h4>`
       : ''
   });
 };
 
 export const renderInstantView = (properties: RenderProperties): ResponseInstructions => {
   console.log('Generating Instant View...');
-  const { status, flags } = properties;
+  const { status, thread, flags } = properties;
   const instructions: ResponseInstructions = { addHeaders: [] };
+
+  if (!status) {
+    throw new Error('Status is undefined');
+  }
+
   /* Use ISO date for Medium template */
   const statusDate = new Date(status.created_at).toISOString();
 
@@ -210,6 +211,8 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
       : ``
   ];
 
+  console.log('thread', thread?.thread)
+
   instructions.text = `
     <section class="section-backgroundImage">
       <figure class="graf--layoutFillWidth"></figure>
@@ -224,7 +227,9 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
     <sub><a href="${status.url}">View original</a></sub>
     <h1>${status.author.name} (@${status.author.screen_name})</h1>
 
-    ${generateStatus(status)}
+    ${thread?.thread?.map(status => generateStatus(status, thread?.author ?? status.author, false)).join('')}
+    ${generateStatusFooter(status, false, thread?.author ?? status.author)}
+    <br>${`<a href="${status.url}">View original post</a>`}
   </article>`;
 
   return instructions;

@@ -28,7 +28,8 @@ interface ResponseInstructions {
 }
 
 interface RenderProperties {
-  status: APITwitterStatus;
+  status?: APITwitterStatus;
+  thread?: SocialThread;
   siteText?: string;
   authorText?: string;
   engagementText?: string;

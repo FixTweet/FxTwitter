@@ -494,11 +494,25 @@ export const constructTwitterThread = async (
     author: author,
     code: 200
   };
+  
+  await Promise.all(threadStatuses.map(async status => {
+    console.log('Processing status for', status)
+    const builtStatus = await buildAPITwitterStatus(c, status, undefined, true, false) as APITwitterStatus;
+    console.log('builtStatus', builtStatus);
+    socialThread.thread?.push(builtStatus);
+  }));
 
-  threadStatuses.forEach(async status => {
-    socialThread.thread?.push(
-      (await buildAPITwitterStatus(c, status, undefined, true, false)) as APITwitterStatus
-    );
+  // Sort socialThread.thread by id converted to bigint
+  socialThread.thread?.sort((a, b) => {
+    const aId = BigInt(a.id);
+    const bId = BigInt(b.id);
+    if (aId < bId) {
+      return -1;
+    }
+    if (aId > bId) {
+      return 1;
+    }
+    return 0;
   });
 
   return socialThread;

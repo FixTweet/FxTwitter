@@ -35,9 +35,8 @@ export const handleStatus = async (
 
   let fetchWithThreads = false;
 
-  /* TODO: Enable actually pulling threads once we can actually do something with them */
-  if (c.req.header('user-agent')?.includes('Telegram') && !flags?.direct) {
-    fetchWithThreads = false;
+  if (c.req.header('user-agent')?.includes('Telegram') && !flags?.direct && flags.instantViewUnrollThreads) {
+    fetchWithThreads = true;
   }
 
   const thread = await constructTwitterThread(
@@ -47,6 +46,8 @@ export const handleStatus = async (
     language,
     flags?.api ?? false
   );
+
+  console.log('twitterThread', thread);
 
   const status = thread?.status as APITwitterStatus;
 
@@ -191,6 +192,7 @@ export const handleStatus = async (
     try {
       const instructions = renderInstantView({
         status: status,
+        thread: thread,
         text: newText,
         flags: flags
       });
