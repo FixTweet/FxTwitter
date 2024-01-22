@@ -8,6 +8,7 @@ import { renderPhoto } from '../render/photo';
 import { renderVideo } from '../render/video';
 import { renderInstantView } from '../render/instantview';
 import { constructTwitterThread } from '../providers/twitter/conversation';
+import { Experiment, experimentCheck } from '../experiments';
 
 export const returnError = (c: Context, error: string): Response => {
   return c.html(
@@ -98,6 +99,7 @@ export const handleStatus = async (
   }
 
   const isTelegram = (userAgent || '').indexOf('Telegram') > -1;
+  const isDiscord = (userAgent || '').indexOf('Discord') > -1;
   /* Should sensitive statuses be allowed Instant View? */
   let useIV =
     isTelegram /*&& !status.possibly_sensitive*/ &&
@@ -289,16 +291,33 @@ export const handleStatus = async (
         siteName = instructions.siteName;
       }
     } else if (media?.mosaic) {
-      const instructions = renderPhoto(
-        {
-          status: status,
-          authorText: authorText,
-          engagementText: engagementText,
-          userAgent: userAgent
-        },
-        media.mosaic
-      );
-      headers.push(...instructions.addHeaders);
+      if (experimentCheck(Experiment.DISCORD_NATIVE_MULTI_IMAGE, isDiscord) && !flags.forceMosaic) {
+        const photos = status.media?.photos || [];
+
+        photos.forEach(photo => {
+          const instructions = renderPhoto(
+            {
+              status: status,
+              authorText: authorText,
+              engagementText: engagementText,
+              userAgent: userAgent
+            },
+            photo
+          );
+          headers.push(...instructions.addHeaders);
+        });
+      } else {
+        const instructions = renderPhoto(
+          {
+            status: status,
+            authorText: authorText,
+            engagementText: engagementText,
+            userAgent: userAgent
+          },
+          media.mosaic
+        );
+        headers.push(...instructions.addHeaders);
+      }
     } else if (media?.photos) {
       const instructions = renderPhoto(
         {

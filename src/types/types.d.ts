@@ -10,6 +10,7 @@ type InputFlags = {
   forceInstantView?: boolean;
   archive?: boolean;
   gallery?: boolean;
+  forceMosaic?: boolean;
 };
 
 interface StatusResponse {
