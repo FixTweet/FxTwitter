@@ -211,8 +211,6 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
       : ``
   ];
 
-  console.log('thread', thread?.thread)
-
   instructions.text = `
     <section class="section-backgroundImage">
       <figure class="graf--layoutFillWidth"></figure>

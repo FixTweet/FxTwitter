@@ -67,7 +67,7 @@ export const fetchTweetDetail = async (
       if (tweet && isGraphQLTwitterStatus(tweet)) {
         return true;
       }
-      console.log('invalid graphql tweet', conversation);
+      console.log('invalid graphql tweet', JSON.stringify(conversation));
 
       return Array.isArray(conversation?.errors);
     },
@@ -496,9 +496,7 @@ export const constructTwitterThread = async (
   };
   
   await Promise.all(threadStatuses.map(async status => {
-    console.log('Processing status for', status)
     const builtStatus = await buildAPITwitterStatus(c, status, undefined, true, false) as APITwitterStatus;
-    console.log('builtStatus', builtStatus);
     socialThread.thread?.push(builtStatus);
   }));
 

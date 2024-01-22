@@ -47,8 +47,6 @@ export const handleStatus = async (
     flags?.api ?? false
   );
 
-  console.log('twitterThread', thread);
-
   const status = thread?.status as APITwitterStatus;
 
   const api = {
