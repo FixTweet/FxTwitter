@@ -30,7 +30,7 @@ const Experiments: { [key in Experiment]: ExperimentConfig } = {
   [Experiment.DISCORD_NATIVE_MULTI_IMAGE]: {
     name: 'Discord native multi-image',
     description: 'Use Discord native multi-image',
-    percentage: 0.5
+    percentage: 0
   }
 };
 
