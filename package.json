@@ -18,7 +18,7 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240117.0",
     "@microsoft/eslint-formatter-sarif": "^3.0.0",
-    "@sentry/esbuild-plugin": "^2.10.2",
+    "@sentry/esbuild-plugin": "^2.10.3",
     "@sentry/integrations": "^7.94.1",
     "@types/jest": "^29.5.11",
     "@typescript-eslint/eslint-plugin": "^6.19.0",
