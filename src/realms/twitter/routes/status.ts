@@ -58,7 +58,7 @@ export const statusRequest = async (c: Context) => {
   } else if (Constants.GALLERY_DOMAINS.includes(url.hostname)) {
     console.log('Gallery embed request');
     flags.gallery = true;
-  }  else if (Constants.FORCE_MOSAIC_DOMAINS.includes(url.hostname)) {
+  } else if (Constants.FORCE_MOSAIC_DOMAINS.includes(url.hostname)) {
     console.log('Force mosaic request');
     flags.forceMosaic = true;
   } else if (prefix === 'dl' || prefix === 'dir') {

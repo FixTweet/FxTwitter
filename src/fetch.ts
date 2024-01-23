@@ -138,13 +138,12 @@ export const twitterFetch = async (
       if (useElongator && typeof c.env?.TwitterProxy !== 'undefined') {
         console.log('Fetching using elongator');
         const performanceStart = performance.now();
-        apiRequest = await withTimeout(
-          (signal: AbortSignal) =>
-            c.env?.TwitterProxy.fetch(url, {
-              method: 'GET',
-              headers: headers,
-              signal: signal
-            })
+        apiRequest = await withTimeout((signal: AbortSignal) =>
+          c.env?.TwitterProxy.fetch(url, {
+            method: 'GET',
+            headers: headers,
+            signal: signal
+          })
         );
         const performanceEnd = performance.now();
         console.log(`Elongator request successful after ${performanceEnd - performanceStart}ms`);
