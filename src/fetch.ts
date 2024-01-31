@@ -59,7 +59,7 @@ export const twitterFetch = async (
     }
   );
 
-  const cache = caches.default;
+  const cache = typeof caches !== 'undefined' ? caches.default : null;
 
   while (apiAttempts < API_ATTEMPTS) {
     /* Generate a random CSRF token, Twitter just cares that header and cookie match,
@@ -75,7 +75,12 @@ export const twitterFetch = async (
 
     let activate: Response | null = null;
 
-    if (!newTokenGenerated && !useElongator) {
+    if (cache === null) {
+      console.log('Caching unavailable, requesting new token');
+      newTokenGenerated = true;
+    }
+
+    if (!newTokenGenerated && !useElongator && cache) {
       const timeBefore = performance.now();
       const cachedResponse = await cache.match(guestTokenRequestCacheDummy.clone());
       const timeAfter = performance.now();
@@ -172,6 +177,7 @@ export const twitterFetch = async (
       }
       try {
         !useElongator &&
+          cache &&
           c.executionCtx &&
           c.executionCtx.waitUntil(
             cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true })
@@ -207,6 +213,7 @@ export const twitterFetch = async (
       console.log(`Purging token on this edge due to low rate limit remaining`);
       try {
         c.executionCtx &&
+          cache &&
           c.executionCtx.waitUntil(
             cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true })
           );
@@ -231,7 +238,7 @@ export const twitterFetch = async (
     }
     try {
       /* If we've generated a new token, we'll cache it */
-      if (c.executionCtx && newTokenGenerated && activate) {
+      if (c.executionCtx && newTokenGenerated && activate && cache) {
         const cachingResponse = new Response(await activate.clone().text(), {
           headers: {
             ...tokenHeaders,

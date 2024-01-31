@@ -22,6 +22,12 @@ export const cacheMiddleware = (): MiddlewareHandler => async (c, next) => {
   let cacheKey: Request;
   const returnAsJson = Constants.API_HOST_LIST.includes(cacheUrl.hostname);
 
+  /* If caching unavailable, ignore the rest of the cache middleware */
+  if (typeof caches === 'undefined') {
+    await next();
+    return c.res.clone();
+  }
+
   try {
     cacheKey = new Request(cacheUrl.toString(), request);
   } catch (e) {
