@@ -63,7 +63,7 @@ export const twitterFetch = async (
 
   while (apiAttempts < API_ATTEMPTS) {
     /* Generate a random CSRF token, Twitter just cares that header and cookie match,
-    REST can use shorter csrf tokens (32 bytes) but graphql prefers 160 bytes */
+    REST can use shorter csrf tokens (32 bytes) but graphql uses a 160 byte one. */
     const csrfToken = crypto.randomUUID().replace(/-/g, '');
 
     const headers: Record<string, string> = {

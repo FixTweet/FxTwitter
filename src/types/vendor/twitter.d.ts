@@ -420,7 +420,8 @@ type GraphQLTwitterStatus = {
           | 'last_updated_datetime_utc'
           | 'duration_minutes'
           | 'api'
-          | 'card_url';
+          | 'card_url'
+          | 'unified_card';
         value:
           | {
               string_value: string; // "Option text"

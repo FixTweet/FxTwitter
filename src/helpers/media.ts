@@ -20,7 +20,8 @@ export const processMedia = (media: TweetMedia): APIPhoto | APIVideo | null => {
       width: media.original_info?.width,
       height: media.original_info?.height,
       format: bestVariant?.content_type || '',
-      type: media.type === 'animated_gif' ? 'gif' : 'video'
+      type: media.type === 'animated_gif' ? 'gif' : 'video',
+      variants: media.video_info?.variants ?? []
     };
   }
   return null;
