@@ -1,0 +1,59 @@
+{
+  "en": {
+    "translation": {
+      "translatedFrom": "Translated from {language}",
+      "quotedFrom": "Quoting {name} (@{screen_name})",
+      "replyingTo": "Replying to @{screen_name}",
+      "threadPartHeader": "A part of @${status.author.screen_name}'s thread",
+
+      "videoAltTextUnavailable": "{author}'s video. Alt text not available.",
+      "gifAltTextUnavailable": "{author}'s GIF. Alt text not available.",
+
+      "ivOriginalText": "Original text",
+      "ivViewOriginal": "View full thread",
+      "ivViewOriginalStatus": "View full thread",
+      "ivAboutAuthor": "About author",
+      "ivProfileFollowing": "Following",
+      "ivProfileFollowers": "Followers",
+      "ivProfileStatuses": "Posts",
+
+      "ivFallbackText": "If you can see this, your browser is doing something weird with your user agent.",
+      "ivInternetArchiveText": "{brandingName} archive",
+
+      "pollFinalResults": "Final results",
+      "pollVotes": "{voteCount} votes · {timeLeft}",
+
+      "ivQuoteHeader": "<a href=\"{url}\">Quoting</a> {authorName} (<a href=\"{authorURL}\">@{authorHandle}</a>)",
+
+      "language_af": "Afrikaans",
+      "language_ar": "Arabic",
+      "language_ca": "Catalan",
+      "language_cs": "Czech",
+      "language_da": "Danish",
+      "language_de": "German",
+      "language_en": "English",
+      "language_el": "Greek",
+      "language_es": "Spanish",
+      "language_fi": "Finnish",
+      "language_fr": "French",
+      "language_he": "Hebrew",
+      "language_hu": "Hungarian",
+      "language_it": "Italian",
+      "language_ja": "Japanese",
+      "language_ko": "Korean",
+      "language_nl": "Dutch",
+      "language_no": "Norwegian",
+      "language_pl": "Polish",
+      "language_pt": "Portuguese",
+      "language_ro": "Romanian",
+      "language_ru": "Russian",
+      "language_sr": "Serbian",
+      "language_sv": "Swedish",
+      "language_tr": "Turkish",
+      "language_uk": "Ukrainian",
+      "language_vi": "Vietnamese",
+      "language_zh-CN": "Chinese",
+      "language_zh-TW": "Chinese"
+    }
+  }
+}

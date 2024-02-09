@@ -1,8 +1,8 @@
 /* eslint-disable no-irregular-whitespace */
+import i18next from 'i18next';
 import { Constants } from '../constants';
 import { getSocialTextIV } from '../helpers/socialproof';
 import { sanitizeText } from '../helpers/utils';
-import { Strings } from '../strings';
 
 enum AuthorActionType {
   Reply = 'Reply',
@@ -36,10 +36,10 @@ const generateStatusMedia = (status: APIStatus, author: APIUser): string => {
           });
           break;
         case 'video':
-          media += `<video src="${mediaItem.url}" alt="${author.name}'s video. Alt text not available."/>`;
+          media += `<video src="${mediaItem.url}" alt="${i18next.t('videoAltTextUnavailable').format({ author: status.author.name })}"/>`;
           break;
         case 'gif':
-          media += `<video src="${mediaItem.url}" alt="${author.name}'s gif. Alt text not available."/>`;
+          media += `<video src="${mediaItem.url}" alt="${i18next.t('gifAltTextUnavailable').format({ author: status.author.name })}"/>`;
           break;
       }
     });
@@ -97,17 +97,13 @@ function getTranslatedText(status: APITwitterStatus, isQuote = false): string | 
   text = htmlifyHashtags(text);
   text = populateUserLinks(status, text);
 
-  const formatText =
-    status.translation.target_lang === 'en'
-      ? Strings.TRANSLATE_TEXT.format({
-          language: status.translation.source_lang_en
-        })
-      : Strings.TRANSLATE_TEXT_INTL.format({
-          source: status.translation.source_lang.toUpperCase(),
-          destination: status.translation.target_lang.toUpperCase()
-        });
+  const formatText = `📑 {translation}`.format({
+    translation: i18next.t('translatedFrom').format({
+      language: i18next.t(`language_${status.translation.source_lang}`)
+    })
+  });
 
-  return `<h4>${formatText}</h4>${text}<h4>Original</h4>`;
+  return `<h4>${formatText}</h4>${text}<h4>${i18next.t('ivOriginalText')}</h4>`;
 }
 
 const notApplicableComment = '<!-- N/A -->';
@@ -171,19 +167,21 @@ const generateStatusFooter = (status: APIStatus, isQuote = false, author: APIUse
     {aboutSection}
     `.format({
     socialText: getSocialTextIV(status as APITwitterStatus) || '',
-    viewOriginal: !isQuote ? `<a href="${status.url}">View full thread</a>` : notApplicableComment,
+    viewOriginal: !isQuote
+      ? `<a href="${status.url}">${i18next.t('ivViewOriginalStatus')}</a>`
+      : notApplicableComment,
     aboutSection: isQuote
       ? ''
-      : `<h2>About author</h2>
+      : `<h2>${i18next.t('ivAboutAuthor')}</h2>
         {pfp}
         <h2>${author.name}</h2>
         <p><a href="${author.url}">@${author.screen_name}</a></p>
         <p><b>${description}</b></p>
         <p>{location} {website} {joined}</p>
         <p>
-          {following} <b>Following</b> 
-          {followers} <b>Followers</b> 
-          {statuses} <b>Posts</b>
+          {following} <b>${i18next.t('ivProfileFollowing')}</b> 
+          {followers} <b>${i18next.t('ivProfileFollowers')}</b> 
+          {statuses} <b>${i18next.t('ivProfileStatuses')}</b>
         </p>`.format({
           pfp: `<img src="${author.avatar_url?.replace('_200x200', '_400x400')}" alt="${
             author.name
@@ -288,9 +286,18 @@ const generateStatus = (
   ${status.poll ? generatePoll(status.poll, status.lang ?? 'en') : notApplicableComment}
   <!-- Embedded quote status -->
   ${!isQuote && status.quote ? generateStatus(status.quote, author, true, null) : notApplicableComment}
+  ${!isQuote ? generateStatusFooter(status, true, author) : ''}
+  <br>${!isQuote ? `<a href="${status.url}">${i18next.t('ivViewOriginalStatus')}</a>` : notApplicableComment}
   `.format({
     quoteHeader: isQuote
-      ? `<h4><a href="${status.url}">Quoting</a> ${author.name} (<a href="${Constants.TWITTER_ROOT}/${author.screen_name}">@${author.screen_name}</a>)</h4>`
+      ? '<h4>' +
+        i18next.t('ivQuoteHeader').format({
+          url: status.url,
+          authorName: status.author.name,
+          authorHandle: status.author.screen_name,
+          authorURL: `${Constants.TWITTER_ROOT}/${status.author.screen_name}`
+        }) +
+        '</h4>'
       : ''
   });
 };
@@ -329,12 +336,12 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
     </section>
     <section class="section--first">${
       flags?.archive
-        ? `${Constants.BRANDING_NAME} archive`
-        : 'If you can see this, your browser is doing something weird with your user agent.'
-    } <a href="${status.url}">View full thread</a>
+        ? i18next.t('ivInternetArchiveText').format({ brandingName: Constants.BRANDING_NAME })
+        : i18next.t('ivFallbackText')
+    } <a href="${status.url}">${i18next.t('ivViewOriginalStatus')}</a>
     </section>
     <article>
-    <sub><a href="${status.url}">View full thread</a></sub>
+    <sub><a href="${status.url}">${i18next.t('ivViewOriginal')}</a></sub>
     <h1>${status.author.name} (@${status.author.screen_name})</h1>
 
     ${thread?.thread
