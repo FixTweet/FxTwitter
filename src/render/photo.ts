@@ -1,3 +1,4 @@
+import i18next from 'i18next';
 import { Constants } from '../constants';
 import { Strings } from '../strings';
 
@@ -13,7 +14,7 @@ export const renderPhoto = (
 
     const all = status.media?.all as APIMedia[];
     const baseString =
-      all.length === status.media?.photos?.length ? Strings.PHOTO_COUNT : Strings.MEDIA_COUNT;
+      all.length === status.media?.photos?.length ? i18next.t('photoCount') : i18next.t('mediaCount');
 
     const photoCounter = baseString.format({
       number: String(all.indexOf(photo) + 1),
