@@ -5,6 +5,10 @@
       "quotedFrom": "Quoting {name} (@{screen_name})",
       "replyingTo": "Replying to @{screen_name}",
       "threadPartHeader": "A part of @${status.author.screen_name}'s thread",
+      
+      "photoCount": "Photo {number} / {total}",
+      "videoCount": "Video {number} / {total}",
+      "mediaCount": "Media {number} / {total}",
 
       "videoAltTextUnavailable": "{author}'s video. Alt text not available.",
       "gifAltTextUnavailable": "{author}'s GIF. Alt text not available.",
