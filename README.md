@@ -228,3 +228,7 @@ Feel free to [open an issue](https://github.com/FixTweet/FxTwitter/issues)
 [Mosaic](https://github.com/FixTweet/mosaic) Multi-image combiner by [Antonio32A](https://github.com/Antonio32A)
 
 & other contributions by [Antonio32A](https://github.com/Antonio32A), [Burner](https://github.com/YaBoiBurner), [Deer-Spangle](https://github.com/Deer-Spangle), [Eramdam](https://github.com/Eramdam), [SirStendec](https://github.com/SirStendec), [SpeedyFolf](https://github.com/SpeedyFolf), [Wazbat](https://github.com/Wazbat)
+
+## Disclaimer
+
+Twitter, Tweet, and X are trademarks of X Corp. This project is not affiliated in any way with X Corp or Twitter.
