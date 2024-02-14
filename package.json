@@ -38,7 +38,7 @@
     "wrangler": "^3.28.2"
   },
   "dependencies": {
-    "@hono/sentry": "^1.0.0",
+    "@hono/sentry": "^1.0.1",
     "hono": "^3.12.12"
   }
 }
