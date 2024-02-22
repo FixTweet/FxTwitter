@@ -29,12 +29,12 @@ api.get('/:handle/status/:id/:language', statusRequest);
 api.get('/:handle/status/:id/:language/', statusRequest);
 api.get('/robots.txt', async c => c.text(Strings.ROBOTS_TXT_API));
 
-api.get('/2/twitter/status/:id', statusAPIRequest);
-api.get('/2/twitter/status/:id/', statusAPIRequest);
-api.get('/2/twitter/thread/:id', threadAPIRequest);
-api.get('/2/twitter/thread/:id/', threadAPIRequest);
-api.get('/2/twitter/profile/:handle', profileAPIRequest);
-api.get('/2/twitter/profile/:handle/', profileAPIRequest);
+api.get('/2/status/:id', statusAPIRequest);
+api.get('/2/status/:id/', statusAPIRequest);
+api.get('/2/thread/:id', threadAPIRequest);
+api.get('/2/thread/:id/', threadAPIRequest);
+api.get('/2/profile/:handle', profileAPIRequest);
+api.get('/2/profile/:handle/', profileAPIRequest);
 api.get('/2/owoembed', oembed);
 
 api.get('/:handle', profileRequest);
