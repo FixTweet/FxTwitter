@@ -463,9 +463,9 @@ export const handleStatus = async (
     }
 
     headers.push(
-      `<link rel="alternate" href="{base}/owoembed?text={text}&status={status}&author={author}{provider}" type="application/json+oembed" title="{name}">`.format(
+      `<link rel="alternate" href="{base}/2/owoembed?text={text}&status={status}&author={author}{provider}" type="application/json+oembed" title="{name}">`.format(
         {
-          base: Constants.HOST_URL,
+          base: Constants.API_HOST_ROOT,
           text: flags.gallery
             ? status.author.name
             : encodeURIComponent(truncateWithEllipsis(authorText, 255)),

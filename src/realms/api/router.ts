@@ -3,6 +3,8 @@ import { statusRequest } from '../twitter/routes/status';
 import { profileRequest } from '../twitter/routes/profile';
 import { Strings } from '../../strings';
 import { Constants } from '../../constants';
+import { profileAPIRequest, statusAPIRequest, threadAPIRequest } from './routes/twitter';
+import { oembed } from './routes/oembed';
 
 export const api = new Hono();
 
@@ -26,6 +28,14 @@ api.get('/:handle/status/:id/', statusRequest);
 api.get('/:handle/status/:id/:language', statusRequest);
 api.get('/:handle/status/:id/:language/', statusRequest);
 api.get('/robots.txt', async c => c.text(Strings.ROBOTS_TXT_API));
+
+api.get('/2/twitter/status/:id', statusAPIRequest);
+api.get('/2/twitter/status/:id/', statusAPIRequest);
+api.get('/2/twitter/thread/:id', threadAPIRequest);
+api.get('/2/twitter/thread/:id/', threadAPIRequest);
+api.get('/2/twitter/profile/:handle', profileAPIRequest);
+api.get('/2/twitter/profile/:handle/', profileAPIRequest);
+api.get('/2/owoembed', oembed);
 
 api.get('/:handle', profileRequest);
 api.get('/:handle/', profileRequest);
