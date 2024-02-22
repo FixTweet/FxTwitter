@@ -29,13 +29,13 @@
 
 ### For `twitter.com` links on Discord, send a link and type `s/e/p` to make `twittpr.com`.
 
-<img src="https://cdn.discordapp.com/attachments/165560751363325952/1006346785985417307/fixtweet.webp">
+<img src="https://raw.githubusercontent.com/FixTweet/FxTwitter/main/.github/readme/fixtweet.webp">
 
 ## Embed Videos
 
 We all have videos of memes and other things from Twitter we want to quickly share with friends. With normal Twitter links, embedding videos is often broken on Discord and impossible on Telegram. But using FxTwitter, we embed the raw mp4 file so it's compatible with just about anything supporting video embeds.
 
-![](https://cdn.discordapp.com/attachments/165560751363325952/1184627562811494461/video.png)
+![](https://raw.githubusercontent.com/FixTweet/FxTwitter/main/.github/readme/videos.png)
 
 On Discord, we'll also automatically embed videos linked from other platforms, such as YouTube, so they can play without having to open a browser.
 
@@ -43,13 +43,13 @@ On Discord, we'll also automatically embed videos linked from other platforms, s
 
 If you want to share the results of a Twitter poll, you can do so by just linking the post using FxTwitter.
 
-![](https://cdn.discordapp.com/attachments/165560751363325952/1006331192372629544/FixTweet.png)
+![](https://raw.githubusercontent.com/FixTweet/FxTwitter/main/.github/readme/poll.png)
 
 ## Embed Quotes & Media
 
 Quotes and their media can provide important context to a post. So we'll automatically add said context, and even media if there isn't already media embedded in the quote.
 
-![](https://cdn.discordapp.com/attachments/165560751363325952/1184630052797816863/quote.png)
+![](https://raw.githubusercontent.com/FixTweet/FxTwitter/main/.github/readme/quote.png)
 
 ## Translate Posts
 
@@ -57,19 +57,19 @@ You can translate a post into any other supported language, with the original an
 
 Just append a post with its 2-letter ISO language code. So for English, add `/en` at the end.
 
-![](https://cdn.discordapp.com/attachments/165560751363325952/1184625715522572298/translation.png)
+![](https://raw.githubusercontent.com/FixTweet/FxTwitter/main/.github/readme/translate.png)
 
 ## Gallery view
 
 Use `g.fxtwitter.com` or `g.fixupx.com` to generate minimal embeds with just the post's media and author information without other distractions. This can be particularly useful for read-only channels dedicated to sharing media.
 
-![](https://cdn.discordapp.com/attachments/165560751363325952/1182788212482117662/gallery.png)
+![](https://raw.githubusercontent.com/FixTweet/FxTwitter/main/.github/readme/gallery.png)
 
 ## Direct media links
 
 Want to link directly to a post's media without the embed? You can easily do that using FxTwitter.
 
-![Image demonstrating the feature](https://cdn.discordapp.com/attachments/165560751363325952/1006338772192989194/FixTweet.png)
+![Image demonstrating the feature](https://raw.githubusercontent.com/FixTweet/FxTwitter/main/.github/readme/directmedia.png)
 
 There are a few supported ways to do this:
 
@@ -87,12 +87,12 @@ In the future we plan to do even more with Instant View such as embedding entire
 
 Examples from above:
 
-- `https://d.fxtwitter.com/dangeredwolf/status/1548119328498728960`
-- `https://fxtwitter.com/dangeredwolf/status/1548117889437208581.jpg`
+- `https://d.fxtwitter.com/example/status/1548119328498728960`
+- `https://fxtwitter.com/example/status/1548117889437208581.jpg`
 
 Posts with multiple images are supported, so you can do something like this and it will pick the correct one:
 
-`https://d.fxtwitter.com/dangeredwolf/status/1547514042146865153/photo/3`
+`https://d.fxtwitter.com/example/status/1547514042146865153/photo/3`
 
 Otherwise, it will default to the first image.
 
@@ -100,7 +100,7 @@ Otherwise, it will default to the first image.
 
 The default Twitter embeds include t.co link shorteners, which make it difficult to know where the link is heading. We automatically replace t.co links with their original links to make things clearer.
 
-![](https://cdn.discordapp.com/attachments/165560751363325952/1006348698659344464/FixTweet.png)
+![](https://github.com/FixTweet/FxTwitter/blob/main/.github/readme/tco.png)
 
 ## Redirect to Nitter or other custom instances
 
