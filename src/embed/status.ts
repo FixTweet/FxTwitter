@@ -34,6 +34,8 @@ export const handleStatus = async (
 ): Promise<Response> => {
   console.log('Direct?', flags?.direct);
 
+  const sentry = c.get('sentry') ?? null;
+
   let fetchWithThreads = false;
 
   /* TODO: Enable actually pulling threads once we can actually do something with them */
@@ -84,17 +86,25 @@ export const handleStatus = async (
   }
 
   if (status === null) {
+    await sentry?.captureSession(false);
+    console.log('Capturing sentry message', await sentry?.captureMessage('Tweet not found', 'warning'))
     return returnError(c, Strings.ERROR_TWEET_NOT_FOUND);
   }
 
   /* If there was any errors fetching the Tweet, we'll return it */
   switch (api.code) {
     case 401:
+      await sentry?.captureSession(false);
+      console.log('Capturing sentry message', await sentry?.captureMessage('Private tweet', 'warning'));
       return returnError(c, Strings.ERROR_PRIVATE);
     case 404:
+      await sentry?.captureSession(false);
+      console.log('Capturing sentry message', await sentry?.captureMessage('Tweet not found', 'warning'))
       return returnError(c, Strings.ERROR_TWEET_NOT_FOUND);
     case 500:
       console.log(api);
+      await sentry?.captureSession(false);
+      console.log('Capturing sentry message', await sentry?.captureMessage('API fail', 'error'))
       return returnError(c, Strings.ERROR_API_FAIL);
   }
 

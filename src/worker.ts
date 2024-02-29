@@ -138,12 +138,10 @@ app.all('/error', async c => {
   c.header('cache-control', noCache);
 
   if (c.req.header('User-Agent')?.match(embeddingClientRegex)) {
-    c.status(200);
-    return c.html(Strings.ERROR_HTML);
+    return c.html(Strings.ERROR_HTML, 200);
   }
-  c.status(400);
   /* We return it as a 200 so embedded applications can display the error */
-  return c.body('');
+  return c.body('', 400);
 });
 
 export default {
