@@ -16,7 +16,7 @@ const populateUserLinks = (status: APIStatus, text: string): string => {
   return text;
 };
 
-const generateStatusMedia = (status: APIStatus): string => {
+const generateStatusMedia = (status: APIStatus, author: APIUser): string => {
   let media = '';
   if (status.media?.all?.length) {
     status.media.all.forEach(mediaItem => {
@@ -30,10 +30,10 @@ const generateStatusMedia = (status: APIStatus): string => {
           });
           break;
         case 'video':
-          media += `<video src="${mediaItem.url}" alt="${status.author.name}'s video. Alt text not available."/>`;
+          media += `<video src="${mediaItem.url}" alt="${author.name}'s video. Alt text not available."/>`;
           break;
         case 'gif':
-          media += `<video src="${mediaItem.url}" alt="${status.author.name}'s gif. Alt text not available."/>`;
+          media += `<video src="${mediaItem.url}" alt="${author.name}'s gif. Alt text not available."/>`;
           break;
       }
     });
@@ -172,7 +172,7 @@ const generateStatus = (status: APIStatus, author: APIUser, isQuote = false): st
   return `<!-- Telegram Instant View -->
   {quoteHeader}
   <!-- Embed media -->
-  ${generateStatusMedia(status)} 
+  ${generateStatusMedia(status, author)} 
   <!-- Translated text (if applicable) -->
   ${translatedText ? translatedText : notApplicableComment}
   <!-- Embed Status text -->
