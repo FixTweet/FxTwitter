@@ -55,14 +55,10 @@ for (let envVar of envVariables) {
 
 defines['RELEASE_NAME'] = `"${releaseName}"`;
 
-await esbuild.build({
-  entryPoints: ['src/worker.ts'],
-  sourcemap: 'external',
-  outdir: 'dist',
-  minify: true,
-  bundle: true,
-  format: 'esm',
-  plugins: [
+const plugins = [];
+
+if (process.env.SENTRY_DSN) {
+  plugins.push(
     sentryEsbuildPlugin({
       org: process.env.SENTRY_ORG,
       project: process.env.SENTRY_PROJECT,
@@ -83,7 +79,16 @@ await esbuild.build({
       // https://sentry.io/orgredirect/organizations/:orgslug/settings/auth-tokens/
       authToken: process.env.SENTRY_AUTH_TOKEN
     })
-  ],
+  )
+}
 
+await esbuild.build({
+  entryPoints: ['src/worker.ts'],
+  sourcemap: 'external',
+  outdir: 'dist',
+  minify: true,
+  bundle: true,
+  format: 'esm',
+  plugins: plugins,
   define: defines
 });

@@ -60,14 +60,16 @@ export const fetchTweetDetail = async (
     useElongator,
     (_conversation: unknown) => {
       const conversation = _conversation as TweetDetailResult;
+      const response = processResponse(conversation?.data?.threaded_conversation_with_injections_v2?.instructions);
       const tweet = findStatusInBucket(
         status,
-        processResponse(conversation?.data?.threaded_conversation_with_injections_v2?.instructions)
+        response
       );
       if (tweet && isGraphQLTwitterStatus(tweet)) {
         return true;
       }
-      console.log('invalid graphql tweet', JSON.stringify(conversation));
+      console.log('invalid graphql tweet', tweet);
+      console.log('from response', response)
 
       return Array.isArray(conversation?.errors);
     },
@@ -278,6 +280,8 @@ export const constructTwitterThread = async (
 
   let response: TweetDetailResult | TweetResultsByRestIdResult | null = null;
   let status: APITwitterStatus;
+
+  console.log('env', c.env)
   /* We can use TweetDetail on elongator accounts to increase per-account rate limit.
      We also use TweetDetail to process threads (WIP)
      
