@@ -278,7 +278,7 @@ export const handleStatus = async (
           /* This status has a video to render. */
           break;
       }
-    } else if (media?.videos) {
+    } else if (media?.videos && !flags.nativeMultiImage) {
       const instructions = renderVideo(
         { status: status, userAgent: userAgent, text: newText },
         media.videos[0]
@@ -330,7 +330,7 @@ export const handleStatus = async (
       );
       headers.push(...instructions.addHeaders);
     }
-    if (status.media?.external && !status.media.videos?.length) {
+    if (status.media?.external && !status.media.videos?.length && !flags.nativeMultiImage) {
       const { external } = status.media;
       authorText = newText || '';
       headers.push(
