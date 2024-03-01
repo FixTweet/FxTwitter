@@ -102,5 +102,8 @@ twitter.get('/hashtag/:hashtag', genericTwitterRedirect);
 
 twitter.get('/:handle/', _profileRequest);
 twitter.get('/:handle', _profileRequest);
+/* Redirect profile subpages in case someone links them for some reason (https://github.com/FixTweet/FxTwitter/issues/603) */
+twitter.get('/:handle/:subpage', genericTwitterRedirect);
+twitter.get('/:handle/:subpage/', genericTwitterRedirect);
 
 twitter.all('*', async c => c.redirect(Constants.REDIRECT_URL, 302));

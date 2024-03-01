@@ -3,7 +3,11 @@ import { calculateTimeLeftString } from './pollTime';
 /* Renders card for polls and non-Twitter video embeds (i.e. YouTube) */
 export const renderCard = (
   card: GraphQLTwitterStatus['card']
-): { poll?: APIPoll; external_media?: APIExternalMedia } => {
+): {
+  poll?: APIPoll;
+  external_media?: APIExternalMedia;
+  media?: { videos: TweetMedia[]; photos: TweetMedia[] };
+} => {
   if (!Array.isArray(card.legacy?.binding_values)) {
     return {};
   }
@@ -56,6 +60,38 @@ export const renderCard = (
         height: parseInt((binding_values.player_height?.string_value || '720').replace('px', ''))
       }
     };
+  }
+
+  if (binding_values.unified_card?.string_value) {
+    try {
+      const card = JSON.parse(binding_values.unified_card.string_value);
+      const mediaEntities = card?.media_entities as Record<string, TweetMedia>;
+
+      if (mediaEntities) {
+        const media = {
+          videos: [] as TweetMedia[],
+          photos: [] as TweetMedia[]
+        };
+        Object.keys(mediaEntities).forEach(key => {
+          const mediaItem = mediaEntities[key];
+          switch (mediaItem.type) {
+            case 'photo':
+              media.photos.push(mediaItem);
+              break;
+            case 'animated_gif':
+            case 'video':
+              media.videos.push(mediaItem);
+              break;
+          }
+        });
+
+        console.log('media', media);
+
+        return { media: media };
+      }
+    } catch (e) {
+      console.error('Failed to parse unified card JSON', e);
+    }
   }
 
   return {};

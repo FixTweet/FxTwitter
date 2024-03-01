@@ -43,7 +43,7 @@ export const statusRequest = async (c: Context) => {
       
      Also note that all we're doing here is setting the direct flag. If someone
      links a video and ends it with .jpg, it will still redirect to a .mp4! */
-  if (url.pathname.match(/\/status(es)?\/\d{2,20}\.(mp4|png|jpe?g)/g)) {
+  if (url.pathname.match(/\/status(es)?\/\d{2,20}\.(mp4|png|jpe?g|gifv?)/g)) {
     console.log('Direct media request by extension');
     flags.direct = true;
   } else if (Constants.DIRECT_MEDIA_DOMAINS.includes(url.hostname)) {
@@ -58,7 +58,7 @@ export const statusRequest = async (c: Context) => {
   } else if (Constants.GALLERY_DOMAINS.includes(url.hostname)) {
     console.log('Gallery embed request');
     flags.gallery = true;
-  }  else if (Constants.NATIVE_MULTI_IMAGE_DOMAINS.includes(url.hostname)) {
+  } else if (Constants.NATIVE_MULTI_IMAGE_DOMAINS.includes(url.hostname)) {
     console.log('Force mosaic request');
     flags.nativeMultiImage = true;
   } else if (prefix === 'dl' || prefix === 'dir') {

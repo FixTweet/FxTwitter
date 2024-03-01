@@ -20,6 +20,13 @@ export const cacheMiddleware = (): MiddlewareHandler => async (c, next) => {
   console.log('cacheUrl', cacheUrl);
 
   let cacheKey: Request;
+  const returnAsJson = Constants.API_HOST_LIST.includes(cacheUrl.hostname);
+
+  /* If caching unavailable, ignore the rest of the cache middleware */
+  if (typeof caches === 'undefined') {
+    await next();
+    return c.res.clone();
+  }
 
   try {
     cacheKey = new Request(cacheUrl.toString(), request);
@@ -74,17 +81,21 @@ export const cacheMiddleware = (): MiddlewareHandler => async (c, next) => {
     case 'DELETE':
       console.log('Purging cache as requested');
       await cache.delete(cacheKey);
-      return c.text('');
+      if (returnAsJson) return c.json('');
+      return c.html('');
     /* yes, we do give HEAD */
     case 'HEAD':
-      return c.text('');
+      if (returnAsJson) return c.json('');
+      return c.html('');
     /* We properly state our OPTIONS when asked */
     case 'OPTIONS':
       c.header('allow', Constants.RESPONSE_HEADERS.allow);
       c.status(204);
-      return c.text('');
+      if (returnAsJson) return c.json('');
+      return c.html('');
     default:
       c.status(405);
-      return c.text('');
+      if (returnAsJson) return c.json('');
+      return c.html('');
   }
 };

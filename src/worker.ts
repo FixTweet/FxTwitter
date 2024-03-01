@@ -10,7 +10,8 @@ import { twitter } from './realms/twitter/router';
 import { cacheMiddleware } from './caches';
 
 const noCache = 'max-age=0, no-cache, no-store, must-revalidate';
-const embeddingClientRegex = /(discordbot|telegrambot|facebook|whatsapp|firefox\/92|vkshare|revoltchat|preview)/gi;
+const embeddingClientRegex =
+  /(discordbot|telegrambot|facebook|whatsapp|firefox\/92|vkshare|revoltchat|preview|iframely)/gi;
 
 /* This is the root app which contains route trees for multiple "realms".
 

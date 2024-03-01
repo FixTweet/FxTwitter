@@ -64,13 +64,12 @@ export const translateStatus = async (
       tweet.rest_id ?? tweet.legacy?.id_str
     },destinationLanguage=None,translationSource=Some(Google),feature=None,timeout=None,onlyCached=None/translation/service/translateTweet`;
     console.log(url, headers);
-    translationApiResponse = (await withTimeout(
-      (signal: AbortSignal) =>
-        c.env?.TwitterProxy.fetch(url, {
-          method: 'GET',
-          headers: headers,
-          signal: signal
-        })
+    translationApiResponse = (await withTimeout((signal: AbortSignal) =>
+      c.env?.TwitterProxy.fetch(url, {
+        method: 'GET',
+        headers: headers,
+        signal: signal
+      })
     )) as Response;
     translationResults = (await translationApiResponse.json()) as TranslationPartial;
 
