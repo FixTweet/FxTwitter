@@ -295,6 +295,10 @@ export const handleStatus = async (
         const photos = status.media?.photos || [];
 
         photos.forEach(photo => {
+          /* Override the card type */
+          status.embed_card = 'summary_large_image';
+          console.log('set embed_card to summary_large_image')
+
           const instructions = renderPhoto(
             {
               status: status,
