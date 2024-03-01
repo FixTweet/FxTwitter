@@ -291,7 +291,7 @@ export const handleStatus = async (
         siteName = instructions.siteName;
       }
     } else if (media?.mosaic) {
-      if (experimentCheck(Experiment.DISCORD_NATIVE_MULTI_IMAGE, isDiscord) && !flags.forceMosaic) {
+      if (experimentCheck(Experiment.DISCORD_NATIVE_MULTI_IMAGE, isDiscord) && flags.nativeMultiImage) {
         const photos = status.media?.photos || [];
 
         photos.forEach(photo => {
