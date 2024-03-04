@@ -19,7 +19,7 @@
     "@cloudflare/workers-types": "^4.20240222.0",
     "@microsoft/eslint-formatter-sarif": "^3.0.0",
     "@sentry/esbuild-plugin": "^2.14.2",
-    "@sentry/integrations": "^7.104.0",
+    "@sentry/integrations": "^7.105.0",
     "@types/jest": "^29.5.12",
     "@typescript-eslint/eslint-plugin": "^7.1.1",
     "@typescript-eslint/parser": "^7.1.1",
