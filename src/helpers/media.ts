@@ -1,5 +1,7 @@
+import { Context } from "hono";
+
 /* Help populate API response for media */
-export const processMedia = (media: TweetMedia): APIPhoto | APIVideo | null => {
+export const processMedia = (c: Context, media: TweetMedia): APIPhoto | APIVideo | null => {
   if (media.type === 'photo') {
     return {
       type: 'photo',
@@ -11,7 +13,7 @@ export const processMedia = (media: TweetMedia): APIPhoto | APIVideo | null => {
   } else if (media.type === 'video' || media.type === 'animated_gif') {
     /* Find the variant with the highest bitrate */
     const bestVariant = media.video_info?.variants?.filter?.((format) => {
-      return !format.url.includes('hevc')
+      return c.req.header('user-agent')?.includes('Telegram') || !format.url.includes('hevc')
     }).reduce?.((a, b) =>
       (a.bitrate ?? 0) > (b.bitrate ?? 0) ? a : b
     );
