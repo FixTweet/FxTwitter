@@ -171,7 +171,7 @@ export const buildAPITwitterStatus = async (
 
   /* Populate status media */
   mediaList.forEach(media => {
-    const mediaObject = processMedia(c, media);
+    const mediaObject = processMedia(media);
     if (mediaObject) {
       apiStatus.media.all = apiStatus.media?.all ?? [];
       apiStatus.media?.all?.push(mediaObject);
@@ -234,7 +234,7 @@ export const buildAPITwitterStatus = async (
     if (card.media) {
       if (card.media.videos) {
         card.media.videos.forEach(video => {
-          const mediaObject = processMedia(c, video) as APIVideo;
+          const mediaObject = processMedia(video) as APIVideo;
           if (mediaObject) {
             apiStatus.media.all = apiStatus.media?.all ?? [];
             apiStatus.media?.all?.push(mediaObject);
@@ -245,7 +245,7 @@ export const buildAPITwitterStatus = async (
       }
       if (card.media.photos) {
         card.media.photos.forEach(photo => {
-          const mediaObject = processMedia(c, photo) as APIPhoto;
+          const mediaObject = processMedia(photo) as APIPhoto;
           if (mediaObject) {
             apiStatus.media.all = apiStatus.media?.all ?? [];
             apiStatus.media?.all?.push(mediaObject);
