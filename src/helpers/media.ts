@@ -10,8 +10,10 @@ export const processMedia = (media: TweetMedia): APIPhoto | APIVideo | null => {
     };
   } else if (media.type === 'video' || media.type === 'animated_gif') {
     /* Find the variant with the highest bitrate */
-    const bestVariant = media.video_info?.variants?.reduce?.((a, b) =>
-      !a.url.includes('/hevc/') && (a.bitrate ?? 0) > (b.bitrate ?? 0) ? a : b
+    const bestVariant = media.video_info?.variants?.filter?.((format) => {
+      return !format.url.includes('hevc')
+    }).reduce?.((a, b) =>
+      (a.bitrate ?? 0) > (b.bitrate ?? 0) ? a : b
     );
     return {
       url: bestVariant?.url || '',
