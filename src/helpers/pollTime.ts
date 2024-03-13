@@ -12,6 +12,7 @@ export const calculateTimeLeft = (date: Date) => {
   return { days, hours, minutes, seconds };
 };
 
+/* TODO: Refactor to support pluralization of other languages */
 export const calculateTimeLeftString = (date: Date) => {
   const { days, hours, minutes, seconds } = calculateTimeLeft(date);
   const daysString =

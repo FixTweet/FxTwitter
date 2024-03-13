@@ -1,3 +1,4 @@
+import i18next from 'i18next';
 import { Constants } from '../constants';
 import { handleQuote } from '../helpers/quote';
 import { Strings } from '../strings';
@@ -32,7 +33,7 @@ export const renderVideo = (
       we'll put an indicator if there are more than one video */
   if (all && all.length > 1 && (userAgent?.indexOf('Telegram') ?? 0) > -1) {
     const baseString =
-      all.length === status.media?.videos?.length ? Strings.VIDEO_COUNT : Strings.MEDIA_COUNT;
+      all.length === status.media?.videos?.length ? i18next.t('videoCount') : i18next.t('mediaCount');
     const videoCounter = baseString.format({
       number: String(all.indexOf(video) + 1),
       total: String(all.length)

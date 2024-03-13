@@ -139,8 +139,8 @@ interface APIStatus {
   possibly_sensitive: boolean;
 
   replying_to: {
-    screen_name: string | null;
-    post: string | null;
+    screen_name: string;
+    post: string;
   } | null;
 
   source: string | null;
