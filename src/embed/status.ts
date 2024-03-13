@@ -283,7 +283,7 @@ export const handleStatus = async (
           /* This status has a video to render. */
           break;
       }
-    } else if (media?.videos) {
+    } else if (media?.videos && !flags.nativeMultiImage) {
       const instructions = renderVideo(
         { status: status, userAgent: userAgent, text: newText },
         media.videos[0]
@@ -296,10 +296,14 @@ export const handleStatus = async (
         siteName = instructions.siteName;
       }
     } else if (media?.mosaic) {
-      if (experimentCheck(Experiment.DISCORD_NATIVE_MULTI_IMAGE, isDiscord) && !flags.forceMosaic) {
+      if (experimentCheck(Experiment.DISCORD_NATIVE_MULTI_IMAGE, isDiscord) && flags.nativeMultiImage) {
         const photos = status.media?.photos || [];
 
         photos.forEach(photo => {
+          /* Override the card type */
+          status.embed_card = 'summary_large_image';
+          console.log('set embed_card to summary_large_image')
+
           const instructions = renderPhoto(
             {
               status: status,
@@ -335,7 +339,7 @@ export const handleStatus = async (
       );
       headers.push(...instructions.addHeaders);
     }
-    if (status.media?.external && !status.media.videos?.length) {
+    if (status.media?.external && !status.media.videos?.length && !flags.nativeMultiImage) {
       const { external } = status.media;
       authorText = newText || '';
       headers.push(
