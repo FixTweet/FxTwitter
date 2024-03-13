@@ -16,7 +16,7 @@
   "author": "dangered wolf",
   "license": "MIT",
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20240222.0",
+    "@cloudflare/workers-types": "^4.20240312.0",
     "@microsoft/eslint-formatter-sarif": "^3.0.0",
     "@sentry/esbuild-plugin": "^2.14.3",
     "@sentry/integrations": "^7.106.1",
@@ -35,7 +35,7 @@
     "ts-jest": "^29.1.2",
     "ts-loader": "^9.5.1",
     "typescript": "^5.4.2",
-    "wrangler": "^3.32.0"
+    "wrangler": "^3.33.0"
   },
   "dependencies": {
     "@hono/sentry": "^1.0.1",
