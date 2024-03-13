@@ -13,7 +13,19 @@ export const processMedia = (c: Context, media: TweetMedia): APIPhoto | APIVideo
   } else if (media.type === 'video' || media.type === 'animated_gif') {
     /* Find the variant with the highest bitrate */
     const bestVariant = media.video_info?.variants?.filter?.((format) => {
-      return c.req.header('user-agent')?.includes('Telegram') || !format.url.includes('hevc')
+      if (c.req.header('user-agent')?.includes('Telegram') && format.bitrate) {
+        // Telegram doesn't support videos over 20 MB, so we need to filter them out
+        const bitrate = format.bitrate || 0;
+        const length = (media.video_info?.duration_millis || 0) / 1000;
+        // Calculate file size in bytes
+        const fileSizeBytes: number = (bitrate * length) / 8;
+        
+        // Convert file size to megabytes (MB)
+        const fileSizeMB: number = fileSizeBytes / (1024 * 1024);
+
+        console.log(`Estimated file size: ${fileSizeMB.toFixed(2)} MB for bitrate ${bitrate/1000} kbps`);
+      }
+      return !format.url.includes('hevc');
     }).reduce?.((a, b) =>
       (a.bitrate ?? 0) > (b.bitrate ?? 0) ? a : b
     );
