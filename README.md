@@ -63,7 +63,7 @@ Just append a post with its 2-letter ISO language code. So for English, add `/en
 
 Use `g.fxtwitter.com` or `g.fixupx.com` to generate minimal embeds with just the post's media and author information without other distractions. This can be particularly useful for read-only channels dedicated to sharing media.
 
-![](https://raw.githubusercontent.com/FixTweet/FxTwitter/main/.github/readme/gallery.png)
+![](https://raw.githubusercontent.com/FixTweet/FxTwitter/main/.github/readme/gallery.png?a)
 
 ## Text-only view
 
