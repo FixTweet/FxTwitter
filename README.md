@@ -65,6 +65,10 @@ Use `g.fxtwitter.com` or `g.fixupx.com` to generate minimal embeds with just the
 
 ![](https://raw.githubusercontent.com/FixTweet/FxTwitter/main/.github/readme/gallery.png)
 
+## Text-only view
+
+Basically the opposite of gallery view, use `t.fxtwitter.com` / `t.fixupx.com` to exclude photos/videos and only display text.
+
 ## Direct media links
 
 Want to link directly to a post's media without the embed? You can easily do that using FxTwitter.
