@@ -1,13 +1,16 @@
+import { Context } from 'hono';
 import { calculateTimeLeftString } from './pollTime';
+import { fetchLiveVideoStream } from '../providers/twitter/broadcast';
 
 /* Renders card for polls and non-Twitter video embeds (i.e. YouTube) */
-export const renderCard = (
+export const renderCard = async (
+  c: Context,
   card: GraphQLTwitterStatus['card']
-): {
+): Promise<{
   poll?: APIPoll;
   external_media?: APIExternalMedia;
-  media?: { videos: TweetMedia[]; photos: TweetMedia[] };
-} => {
+  media?: { videos: TweetMedia[]; photos: TweetMedia[]; };
+}> => {
   if (!Array.isArray(card.legacy?.binding_values)) {
     return {};
   }
@@ -58,6 +61,18 @@ export const renderCard = (
         url: binding_values.player_url.string_value,
         width: parseInt((binding_values.player_width?.string_value || '1280').replace('px', '')), // TODO: Replacing px might not be necessary, it's just there as a precaution
         height: parseInt((binding_values.player_height?.string_value || '720').replace('px', ''))
+      }
+    };
+  }
+
+  if (binding_values.broadcast_media_key?.string_value) {
+    const livestream = await fetchLiveVideoStream(binding_values.broadcast_media_key.string_value, c);
+    return {
+      external_media: {
+        type: 'video',
+        url: livestream.source.location,
+        width: parseInt((binding_values.broadcast_width?.string_value || '1280').replace('px', '')), // TODO: Replacing px might not be necessary, it's just there as a precaution
+        height: parseInt((binding_values.broadcast_height?.string_value || '720').replace('px', ''))
       }
     };
   }

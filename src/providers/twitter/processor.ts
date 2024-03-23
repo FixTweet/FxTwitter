@@ -215,7 +215,7 @@ export const buildAPITwitterStatus = async (
   /* Populate a Twitter card */
 
   if (status.card) {
-    const card = renderCard(status.card);
+    const card = await renderCard(c, status.card);
     if (card.external_media) {
       apiStatus.embed_card = 'player';
       apiStatus.media.external = card.external_media;

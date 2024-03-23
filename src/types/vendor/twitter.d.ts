@@ -575,3 +575,18 @@ interface GraphQLProcessBucket {
   statuses: GraphQLTwitterStatus[];
   cursors: GraphQLTimelineCursor[];
 }
+
+
+type LiveStreamBroadcast = {
+  source: {
+    location: string;
+    noRedirectPlaybackUrl: string;
+    status: 'LIVE_PUBLIC';
+    stream_type: 'HLS';
+  };
+  sessionId: string;
+  chatToken: string;
+  lifecycleToken: string;
+  shareUrl: string;
+  guestToken: string;
+}
