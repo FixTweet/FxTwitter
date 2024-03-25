@@ -19,6 +19,7 @@ export const renderCard = async (
 
   card.legacy.binding_values.forEach(value => {
     if (value.key && value.value) {
+      // @ts-expect-error TODO: add image_value
       binding_values[value.key] = value.value;
     }
   });
@@ -66,11 +67,14 @@ export const renderCard = async (
   }
 
   if (binding_values.broadcast_media_key?.string_value) {
+    console.log('binding_values', binding_values);
     const livestream = await fetchLiveVideoStream(binding_values.broadcast_media_key.string_value, c);
     return {
       external_media: {
         type: 'video',
         url: livestream.source.location,
+        // @ts-expect-error TODO: add image_value
+        thumbnail_url: binding_values.broadcast_thumbnail_original?.image_value?.url,
         width: parseInt((binding_values.broadcast_width?.string_value || '1280').replace('px', '')), // TODO: Replacing px might not be necessary, it's just there as a precaution
         height: parseInt((binding_values.broadcast_height?.string_value || '720').replace('px', ''))
       }

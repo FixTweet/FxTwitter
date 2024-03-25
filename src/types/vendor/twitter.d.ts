@@ -94,9 +94,14 @@ type TweetMedia = {
 };
 
 type CardValue = {
-  type: 'BOOLEAN' | 'STRING';
+  type: 'BOOLEAN' | 'STRING' | 'IMAGE';
   boolean_value: boolean;
   string_value: string;
+  image_value: {
+    height: number;
+    width: number;
+    url: string;
+  };
 };
 
 type TweetCardBindingValues = {
@@ -421,7 +426,8 @@ type GraphQLTwitterStatus = {
           | 'duration_minutes'
           | 'api'
           | 'card_url'
-          | 'unified_card';
+          | 'unified_card'
+          | 'broadcast_thumbnail_original';
         value:
           | {
               string_value: string; // "Option text"
@@ -430,6 +436,14 @@ type GraphQLTwitterStatus = {
           | {
               boolean_value: boolean; // true
               type: 'BOOLEAN';
+            }
+          | {
+              image_value: {
+                height: number; // 720
+                width: number; // 1280
+                url: string; // "https://pbs.twimg.com/media/FAKEIMAGE.jpg"
+              };
+              type: 'IMAGE';
             };
       }[];
     };
