@@ -58,7 +58,7 @@ const formatDate = (date: Date): string => {
 };
 
 const htmlifyLinks = (input: string): string => {
-  const urlPattern = /\bhttps?:\/\/\S+/g;
+  const urlPattern = /\bhttps?:\/\/[\w.-]+\.\w+[/\w.-]*\w/g;
   return input.replace(urlPattern, url => {
     return `<a href="${url}">${url}</a>`;
   });
