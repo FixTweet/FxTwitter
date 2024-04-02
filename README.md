@@ -130,26 +130,26 @@ On a different note, if the person who posted a FxTwitter link forgot to strip t
 
 In many ways, FxTwitter has richer embeds and does more. Here's a table comparing some of FxTwitter's features compared to Twitter default embeds as well as other embedding services
 
-|                                        |                     FxTwitter                      |         Twitter default          |              vxTwitter (BetterTwitFix)              |
-| -------------------------------------- | :------------------------------------------------: | :------------------------------: | :-------------------------------------------------: |
-| Embed Posts / Images                   |                 :heavy_check_mark:                 |        :heavy_check_mark:        |                 :heavy_check_mark:                  |
-| Embed profile pictures on text posts   |                 :heavy_check_mark:                 |               :x:                |                 :heavy_check_mark:                  |
-| Embed Twitter Videos                   |                 :heavy_check_mark:                 | :heavy_minus_sign: Discord Only¹ |                 :heavy_check_mark:                  |
-| Embed External Videos (YouTube, etc.)  |                :heavy_check_mark:⁴                 |               :x:                |                        :x:³                         |
-| Embed Poll results                     |                 :heavy_check_mark:                 |               :x:                |            [:heavy_check_mark:][polladd]            |
-| Embed Quotes                           |                 :heavy_check_mark:                 |               :x:                |        :ballot_box_with_check: Without Media        |
-| Embed Multiple Images                  |                 :heavy_check_mark:                 | :heavy_minus_sign: Discord Only² |                 :heavy_check_mark:                  |
-| Translate Posts                        |                 :heavy_check_mark:                 |               :x:                |                         :x:                         |
-| Replace t.co with original links       |                 :heavy_check_mark:                 |               :x:                |                 :heavy_check_mark:                  |
-| Redirect to media file (without embed) |                 :heavy_check_mark:                 |               :x:                | :ballot_box_with_check: Subdomain broken, no images |
-| Gallery view                           |                 :heavy_check_mark:                 |               :x:                |                         :x:                         |
-| Strip tracking info on redirect        |                 :heavy_check_mark:                 |               :x:                |                 :heavy_check_mark:                  |
-| Show retweet, like, reply, view counts | :heavy_minus_sign: Discord / Telegram Instant View | :heavy_minus_sign: Discord Only² |     :ballot_box_with_check: No replies / views      |
-| Discord sed replace (`s/`) friendly    |        :ballot_box_with_check: twittpr.com         |               N/A                |                         :x:                         |
-| Domain for X.com links                 |         :ballot_box_with_check: fixupx.com         |               N/A                |          :ballot_box_with_check: fixvx.com          |
-| Telegram Instant View                  |                 :heavy_check_mark:                 |               :x:                |                         :x:                         |
-| Status fetch API for Developers        |                 :heavy_check_mark:                 |               N/A                |                 :heavy_check_mark:                  |
-| Last commit                            |                   [![][flc]][fc]                   |               N/A                |                   [![][vlc]][vc]                    |
+|                                        |                     FxTwitter                      |  Twitter default   |              vxTwitter (BetterTwitFix)              |
+| -------------------------------------- | :------------------------------------------------: | :----------------: | :-------------------------------------------------: |
+| Embed Posts / Images                   |                 :heavy_check_mark:                 | :heavy_check_mark: |                 :heavy_check_mark:                  |
+| Embed profile pictures on text posts   |                 :heavy_check_mark:                 |        :x:         |                 :heavy_check_mark:                  |
+| Embed Twitter Videos                   |                 :heavy_check_mark:                 |        :x:         |                 :heavy_check_mark:                  |
+| Embed External Videos (YouTube, etc.)  |                :heavy_check_mark:⁴                 |        :x:         |                        :x:³                         |
+| Embed Poll results                     |                 :heavy_check_mark:                 |        :x:         |            [:heavy_check_mark:][polladd]            |
+| Embed Quotes                           |                 :heavy_check_mark:                 |        :x:         |        :ballot_box_with_check: Without Media        |
+| Embed Multiple Images                  |                 :heavy_check_mark:                 |        :x:         |                 :heavy_check_mark:                  |
+| Translate Posts                        |                 :heavy_check_mark:                 |        :x:         |                         :x:                         |
+| Replace t.co with original links       |                 :heavy_check_mark:                 |        :x:         |                 :heavy_check_mark:                  |
+| Redirect to media file (without embed) |                 :heavy_check_mark:                 |        :x:         | :ballot_box_with_check: Subdomain broken, no images |
+| Gallery view                           |                 :heavy_check_mark:                 |        :x:         |                         :x:                         |
+| Strip tracking info on redirect        |                 :heavy_check_mark:                 |        :x:         |                 :heavy_check_mark:                  |
+| Show retweet, like, reply, view counts | :heavy_minus_sign: Discord / Telegram Instant View |        :x:         |     :ballot_box_with_check: No replies / views      |
+| Discord sed replace (`s/`) friendly    |        :ballot_box_with_check: twittpr.com         |        N/A         |                         :x:                         |
+| Domain for X.com links                 |         :ballot_box_with_check: fixupx.com         |        N/A         |          :ballot_box_with_check: fixvx.com          |
+| Telegram Instant View                  |                 :heavy_check_mark:                 |        :x:         |                         :x:                         |
+| Status fetch API for Developers        |                 :heavy_check_mark:                 |        N/A         |                 :heavy_check_mark:                  |
+| Last commit                            |                   [![][flc]][fc]                   |        N/A         |                   [![][vlc]][vc]                    |
 
 [flc]: https://img.shields.io/github/last-commit/FixTweet/FxTwitter?label
 [vlc]: https://img.shields.io/github/last-commit/dylanpdx/BetterTwitFix?label
