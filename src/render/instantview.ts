@@ -60,7 +60,7 @@ const formatDate = (date: Date): string => {
 const htmlifyLinks = (input: string): string => {
   const urlPattern = /\bhttps?:\/\/[\w.-]+\.\w+[/\w.-]*\w/g;
   return input.replace(urlPattern, url => {
-    return `<a href="${url}">${url}</a>`;
+    return `<a href="${wrapForeignLinks(url)}">${url}</a>`;
   });
 };
 
@@ -117,6 +117,27 @@ const truncateSocialCount = (count: number): string => {
   }
 };
 
+const wrapForeignLinks = (url: string) => {
+  let unwrap = false;
+  const whitelistedDomains = [
+    'twitter.com',
+    'x.com',
+    't.me',
+    'telegram.me'
+  ]
+  try {
+    const urlObj = new URL(url);
+
+    if (!whitelistedDomains.includes(urlObj.hostname)) {
+      unwrap = true;
+    }
+  } catch (error) {
+    unwrap = true;
+  }
+
+  return unwrap ? `https://${Constants.API_HOST_LIST[0]}/2/hit?url=${encodeURIComponent(url)}` : url;
+}
+
 const generateStatusFooter = (status: APIStatus, isQuote = false): string => {
   const { author } = status;
 
@@ -153,7 +174,7 @@ const generateStatusFooter = (status: APIStatus, isQuote = false): string => {
           }'s profile picture" />`,
           location: author.location ? `📌 ${author.location}` : '',
           website: author.website
-            ? `🔗 <a href=${author.website.url}>${author.website.display_url}</a>`
+            ? `🔗 <a rel="nofollow" href="${wrapForeignLinks(author.website.url)}">${author.website.display_url}</a>`
             : '',
           joined: author.joined ? `📆 ${formatDate(new Date(author.joined))}` : '',
           following: truncateSocialCount(author.following),
