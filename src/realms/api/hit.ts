@@ -1,4 +1,4 @@
-import { Context } from "hono";
+import { Context } from 'hono';
 
 export const linkHitRequest = async (c: Context) => {
   // eslint-disable-next-line sonarjs/no-duplicate-string
@@ -12,4 +12,4 @@ export const linkHitRequest = async (c: Context) => {
     const url = new URL(c.req.query('url') as string);
     return c.redirect(url.href, 302);
   }
-}
+};

@@ -254,8 +254,6 @@ export const buildAPITwitterStatus = async (
           }
         });
       }
-
-
     }
   } else {
     /* Determine if the status contains a YouTube link (either youtube.com or youtu.be) so we can include it */

@@ -119,12 +119,7 @@ const truncateSocialCount = (count: number): string => {
 
 const wrapForeignLinks = (url: string) => {
   let unwrap = false;
-  const whitelistedDomains = [
-    'twitter.com',
-    'x.com',
-    't.me',
-    'telegram.me'
-  ]
+  const whitelistedDomains = ['twitter.com', 'x.com', 't.me', 'telegram.me'];
   try {
     const urlObj = new URL(url);
 
@@ -135,8 +130,10 @@ const wrapForeignLinks = (url: string) => {
     unwrap = true;
   }
 
-  return unwrap ? `https://${Constants.API_HOST_LIST[0]}/2/hit?url=${encodeURIComponent(url)}` : url;
-}
+  return unwrap
+    ? `https://${Constants.API_HOST_LIST[0]}/2/hit?url=${encodeURIComponent(url)}`
+    : url;
+};
 
 const generateStatusFooter = (status: APIStatus, isQuote = false): string => {
   const { author } = status;
