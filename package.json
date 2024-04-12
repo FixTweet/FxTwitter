@@ -17,7 +17,7 @@
   "license": "MIT",
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240405.0",
-    "@microsoft/eslint-formatter-sarif": "^3.0.0",
+    "@microsoft/eslint-formatter-sarif": "^3.1.0",
     "@sentry/esbuild-plugin": "^2.16.1",
     "@sentry/integrations": "^7.110.0",
     "@types/jest": "^29.5.12",
