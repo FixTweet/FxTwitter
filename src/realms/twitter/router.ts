@@ -98,6 +98,7 @@ twitter.get('/owoembed', oembed);
 twitter.get('/robots.txt', async c => c.text(Strings.ROBOTS_TXT));
 
 twitter.get('/i/events/:id', genericTwitterRedirect);
+twitter.get('/i/trending/:id', genericTwitterRedirect);
 twitter.get('/hashtag/:hashtag', genericTwitterRedirect);
 
 twitter.get('/:handle/', _profileRequest);
