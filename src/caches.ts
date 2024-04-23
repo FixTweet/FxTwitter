@@ -91,8 +91,7 @@ export const cacheMiddleware = (): MiddlewareHandler => async (c, next) => {
     case 'OPTIONS':
       c.header('allow', Constants.RESPONSE_HEADERS.allow);
       c.status(204);
-      if (returnAsJson) return c.json('');
-      return c.html('');
+      return;
     default:
       c.status(405);
       if (returnAsJson) return c.json('');
