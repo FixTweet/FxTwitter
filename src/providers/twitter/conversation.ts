@@ -5,32 +5,35 @@ import { Experiment, experimentCheck } from '../../experiments';
 import { isGraphQLTwitterStatus } from '../../helpers/graphql';
 import { Context } from 'hono';
 
-const writeDataPoint = (c: Context, language: string | undefined, nsfw: boolean | null, returnCode: string, flags?: InputFlags) => {
+const writeDataPoint = (
+  c: Context,
+  language: string | undefined,
+  nsfw: boolean | null,
+  returnCode: string,
+  flags?: InputFlags
+) => {
   console.log('Writing data point...');
   if (typeof c.env?.AnalyticsEngine !== 'undefined') {
-    const flagString = Object.keys(flags || {})
-    // @ts-expect-error - TypeScript doesn't like iterating over the keys, but that's OK
-      .filter(flag => flags?.[flag])[0] || 'standard';
+    const flagString =
+      Object.keys(flags || {})
+        // @ts-expect-error - TypeScript doesn't like iterating over the keys, but that's OK
+        .filter(flag => flags?.[flag])[0] || 'standard';
 
-    console.log(flagString)
+    console.log(flagString);
 
     c.env?.AnalyticsEngine.writeDataPoint({
       blobs: [
-        c.req.raw.cf?.colo as string, /* Datacenter location */
-        c.req.raw.cf?.country as string, /* Country code */
-        c.req.header('user-agent') ?? '', /* User agent (for aggregating bots calling) */
-        returnCode, /* Return code */
-        flagString, /* Type of request */
-        language ?? '', /* For translate feature */
+        c.req.raw.cf?.colo as string /* Datacenter location */,
+        c.req.raw.cf?.country as string /* Country code */,
+        c.req.header('user-agent') ?? '' /* User agent (for aggregating bots calling) */,
+        returnCode /* Return code */,
+        flagString /* Type of request */,
+        language ?? '' /* For translate feature */
       ],
-      doubles: [
-        nsfw ? 1 : 0 /* NSFW media = 1, No NSFW Media = 0 */
-      ]
+      doubles: [nsfw ? 1 : 0 /* NSFW media = 1, No NSFW Media = 0 */]
     });
   }
-}
-
-
+};
 
 export const fetchTweetDetail = async (
   c: Context,
