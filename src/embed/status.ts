@@ -469,6 +469,17 @@ export const handleStatus = async (
       providerEngagementText = Strings.DEFAULT_AUTHOR_TEXT;
     }
 
+    let provider = '';
+    const mediaType = overrideMedia ?? status.media.videos?.[0]?.type;
+
+    if (mediaType === 'gif') {
+        provider = `GIF - ${Constants.BRANDING_NAME}`;
+    } else if (status.embed_card === 'player' && providerEngagementText !== Strings.DEFAULT_AUTHOR_TEXT) {
+        provider = providerEngagementText
+    }
+
+    // Now you can use the 'provider' variable
+
     headers.push(
       `<link rel="alternate" href="{base}/owoembed?text={text}&status={status}&author={author}{provider}" type="application/json+oembed" title="{name}">`.format(
         {
@@ -479,10 +490,7 @@ export const handleStatus = async (
           status: encodeURIComponent(statusId),
           author: encodeURIComponent(status.author.screen_name || ''),
           name: status.author.name || '',
-          provider:
-            status.embed_card === 'player' && providerEngagementText !== Strings.DEFAULT_AUTHOR_TEXT
-              ? `&provider=${encodeURIComponent(providerEngagementText)}`
-              : ''
+          provider: provider ? `&provider=${encodeURIComponent(provider)}` : ''
         }
       )
     );
