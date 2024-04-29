@@ -572,5 +572,6 @@ type TweetStub = {
 
 interface GraphQLProcessBucket {
   statuses: GraphQLTwitterStatus[];
+  allStatuses: GraphQLTwitterStatus[];
   cursors: GraphQLTimelineCursor[];
 }
