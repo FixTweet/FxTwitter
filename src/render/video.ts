@@ -52,7 +52,7 @@ export const renderVideo = (
 
   if (
     experimentCheck(Experiment.TRANSCODE_GIFS, !!Constants.GIF_TRANSCODE_DOMAIN) &&
-    !userAgent?.includes('TelegramBot') &&
+    !userAgent?.includes('Telegram') &&
     video.type === 'gif'
   ) {
     url = video.url.replace(
