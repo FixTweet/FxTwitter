@@ -59,6 +59,7 @@ export const renderVideo = (
       Constants.TWITTER_VIDEO_BASE,
       `https://${Constants.GIF_TRANSCODE_DOMAIN}`
     );
+    console.log('We passed checks for transcoding GIFs, feeding embed url', url);
   }
 
   /* Push the raw video-related headers */
