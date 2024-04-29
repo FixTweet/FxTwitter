@@ -163,6 +163,7 @@ export const fetchByRestId = async (
 const processResponse = (instructions: ThreadInstruction[]): GraphQLProcessBucket => {
   const bucket: GraphQLProcessBucket = {
     statuses: [],
+    allStatuses: [],
     cursors: []
   };
   instructions?.forEach?.(instruction => {
@@ -318,7 +319,7 @@ export const constructTwitterThread = async (
       return { status: null, thread: null, author: null, code: 404 };
     }
 
-    const buildStatus = await buildAPITwitterStatus(c, result, language, false, legacyAPI);
+    const buildStatus = await buildAPITwitterStatus(c, result, language, null, legacyAPI);
 
     if ((buildStatus as FetchResults)?.status === 401) {
       return { status: null, thread: null, author: null, code: 401 };
@@ -345,7 +346,7 @@ export const constructTwitterThread = async (
     c,
     originalStatus,
     undefined,
-    false,
+    null,
     legacyAPI
   )) as APITwitterStatus;
 
@@ -506,7 +507,7 @@ export const constructTwitterThread = async (
   };
   
   await Promise.all(threadStatuses.map(async status => {
-    const builtStatus = await buildAPITwitterStatus(c, status, undefined, true, false) as APITwitterStatus;
+    const builtStatus = await buildAPITwitterStatus(c, status, undefined, author, false) as APITwitterStatus;
     socialThread.thread?.push(builtStatus);
   }));
 

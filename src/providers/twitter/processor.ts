@@ -12,7 +12,7 @@ export const buildAPITwitterStatus = async (
   c: Context,
   status: GraphQLTwitterStatus,
   language: string | undefined,
-  threadPiece = false,
+  threadAuthor: null | APIUser,
   legacyAPI = false
   // eslint-disable-next-line sonarjs/cognitive-complexity
 ): Promise<APITwitterStatus | FetchResults | null> => {
@@ -58,7 +58,7 @@ export const buildAPITwitterStatus = async (
   apiStatus.text = unescapeText(
     linkFixer(status.legacy.entities?.urls, status.legacy.full_text || '')
   );
-  if (!threadPiece) {
+  // if (threadAuthor && threadAuthor.id !== apiUser.id) {
     apiStatus.author = {
       id: apiUser.id,
       name: apiUser.name,
@@ -77,7 +77,7 @@ export const buildAPITwitterStatus = async (
       birthday: apiUser.birthday,
       website: apiUser.website
     };
-  }
+  // }
   apiStatus.replies = status.legacy.reply_count;
   if (legacyAPI) {
     // @ts-expect-error Use retweets for legacy API
@@ -94,9 +94,9 @@ export const buildAPITwitterStatus = async (
     delete apiStatus.author.global_screen_name;
   } else {
     apiStatus.reposts = status.legacy.retweet_count;
-    if (!threadPiece) {
+    // if ((threadAuthor && threadAuthor.id !== apiUser.id)) {
       apiStatus.author.global_screen_name = apiUser.global_screen_name;
-    }
+    // }
   }
   apiStatus.likes = status.legacy.favorite_count;
   apiStatus.embed_card = 'tweet';
@@ -152,7 +152,7 @@ export const buildAPITwitterStatus = async (
   /* We found a quote, let's process that too */
   const quote = status.quoted_status_result;
   if (quote) {
-    const buildQuote = await buildAPITwitterStatus(c, quote, language, threadPiece, legacyAPI);
+    const buildQuote = await buildAPITwitterStatus(c, quote, language, threadAuthor, legacyAPI);
     if ((buildQuote as FetchResults).status) {
       apiStatus.quote = undefined;
     } else {
@@ -199,7 +199,7 @@ export const buildAPITwitterStatus = async (
   */
 
   /* Handle photos and mosaic if available */
-  if ((apiStatus?.media.photos?.length || 0) > 1 && !threadPiece) {
+  if ((apiStatus?.media.photos?.length || 0) > 1 && !threadAuthor) {
     const mosaic = await handleMosaic(apiStatus.media?.photos || [], id);
     if (typeof apiStatus.media !== 'undefined' && mosaic !== null) {
       apiStatus.media.mosaic = mosaic;

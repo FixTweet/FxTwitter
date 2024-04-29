@@ -117,6 +117,11 @@ const truncateSocialCount = (count: number): string => {
   }
 };
 
+const generateInlineAuthorHeader = (status: APIStatus, author: APIUser): string => {
+  return `<i><a href="${status.url}">Reply</a> from <b>${author.name}</b> (<a href="${author.url}">@${author.screen_name}</a>):</i>`;
+}
+
+
 const generateStatusFooter = (status: APIStatus, isQuote = false, author: APIUser): string => {
   let description = author.description;
   description = htmlifyLinks(description);
@@ -161,7 +166,7 @@ const generateStatusFooter = (status: APIStatus, isQuote = false, author: APIUse
   });
 };
 
-const generateStatus = (status: APIStatus, author: APIUser, isQuote = false): string => {
+const generateStatus = (status: APIStatus, author: APIUser, isQuote = false, differentAuthor = false): string => {
   let text = paragraphify(sanitizeText(status.text), isQuote);
   text = htmlifyLinks(text);
   text = htmlifyHashtags(text);
@@ -175,6 +180,8 @@ const generateStatus = (status: APIStatus, author: APIUser, isQuote = false): st
   ${generateStatusMedia(status, author)} 
   <!-- Translated text (if applicable) -->
   ${translatedText ? translatedText : notApplicableComment}
+  <!-- Inline author (if applicable) -->
+  ${differentAuthor ? generateInlineAuthorHeader(status, author) : ''}
   <!-- Embed Status text -->
   ${text}
   <!-- Embedded quote status -->
@@ -190,6 +197,8 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
   console.log('Generating Instant View...');
   const { status, thread, flags } = properties;
   const instructions: ResponseInstructions = { addHeaders: [] };
+
+  let previousThreadPieceAuthor: string | null = null;
 
   if (!status) {
     throw new Error('Status is undefined');
@@ -225,7 +234,12 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
     <sub><a href="${status.url}">View original</a></sub>
     <h1>${status.author.name} (@${status.author.screen_name})</h1>
 
-    ${thread?.thread?.map(status => generateStatus(status, thread?.author ?? status.author, false)).join('')}
+    ${thread?.thread?.map((status) => {
+      const differentAuthor = thread?.author?.id !== status.author?.id || (previousThreadPieceAuthor !== null && previousThreadPieceAuthor !== status.author?.id);
+      previousThreadPieceAuthor = status.author?.id;
+
+      return generateStatus(status, status.author ?? thread?.author, false, differentAuthor)
+    }).join('')}
     ${generateStatusFooter(status, false, thread?.author ?? status.author)}
     <br>${`<a href="${status.url}">View original post</a>`}
   </article>`;
