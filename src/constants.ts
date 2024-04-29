@@ -13,10 +13,12 @@ export const Constants = {
   EMBED_URL: EMBED_URL,
   REDIRECT_URL: REDIRECT_URL,
   RELEASE_NAME: RELEASE_NAME,
+  GIF_TRANSCODE_DOMAIN: GIF_TRANSCODE_DOMAIN,
   API_DOCS_URL: `https://github.com/dangeredwolf/FixTweet/wiki/API-Home`,
   TWITTER_ROOT: 'https://twitter.com',
   TWITTER_GLOBAL_NAME_ROOT: 'twitter.com',
   TWITTER_API_ROOT: 'https://api.twitter.com',
+  TWITTER_VIDEO_BASE: 'https://video.twimg.com',
   BOT_UA_REGEX:
     /bot|facebook|embed|got|firefox\/92|firefox\/38|curl|wget|go-http|yahoo|generator|whatsapp|revoltchat|preview|link|proxy|vkshare|images|analyzer|index|crawl|spider|python|cfnetwork|node|mastodon|http\.rb|ruby|bun\/|fiddler|iframely/gi,
   /* 3 hours */

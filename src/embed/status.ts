@@ -473,9 +473,12 @@ export const handleStatus = async (
     const mediaType = overrideMedia ?? status.media.videos?.[0]?.type;
 
     if (mediaType === 'gif') {
-        provider = `GIF - ${Constants.BRANDING_NAME}`;
-    } else if (status.embed_card === 'player' && providerEngagementText !== Strings.DEFAULT_AUTHOR_TEXT) {
-        provider = providerEngagementText
+      provider = `GIF - ${Constants.BRANDING_NAME}`;
+    } else if (
+      status.embed_card === 'player' &&
+      providerEngagementText !== Strings.DEFAULT_AUTHOR_TEXT
+    ) {
+      provider = providerEngagementText;
     }
 
     // Now you can use the 'provider' variable
