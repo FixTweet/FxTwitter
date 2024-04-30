@@ -1,4 +1,5 @@
 export enum Experiment {
+  IV_FORCE_THREAD_UNROLL = 'IV_FORCE_THREAD_UNROLL',
   ELONGATOR_BY_DEFAULT = 'ELONGATOR_BY_DEFAULT',
   ELONGATOR_PROFILE_API = 'ELONGATOR_PROFILE_API',
   TWEET_DETAIL_API = 'TWEET_DETAIL_API',
@@ -13,6 +14,11 @@ type ExperimentConfig = {
 };
 
 const Experiments: { [key in Experiment]: ExperimentConfig } = {
+  [Experiment.IV_FORCE_THREAD_UNROLL]: {
+    name: 'IV force thread unroll',
+    description: 'Force thread unroll for IVs',
+    percentage: 0.1
+  },
   [Experiment.ELONGATOR_BY_DEFAULT]: {
     name: 'Elongator by default',
     description: 'Enable Elongator by default (guest token lockout bypass)',

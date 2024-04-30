@@ -36,9 +36,12 @@ export const handleStatus = async (
 
   let fetchWithThreads = false;
 
-  /* TODO: Enable actually pulling threads once we can actually do something with them */
-  if (c.req.header('user-agent')?.includes('Telegram') && !flags?.direct) {
-    fetchWithThreads = false;
+  if (
+    c.req.header('user-agent')?.includes('Telegram') &&
+    !flags?.direct &&
+    flags.instantViewUnrollThreads
+  ) {
+    fetchWithThreads = true;
   }
 
   const thread = await constructTwitterThread(
@@ -111,6 +114,7 @@ export const handleStatus = async (
       status.is_note_tweet ||
       status.quote ||
       status.translation ||
+      status.community_note ||
       flags?.forceInstantView);
 
   /* Force enable IV for archivers */
@@ -193,6 +197,7 @@ export const handleStatus = async (
     try {
       const instructions = renderInstantView({
         status: status,
+        thread: thread,
         text: newText,
         flags: flags
       });

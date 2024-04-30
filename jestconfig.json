@@ -7,6 +7,7 @@
     "BRANDING_NAME": "FxTwitter / FixupX",
     "TEXT_ONLY_DOMAINS": "t.fxtwitter.com,t.twittpr.com,t.fixupx.com",
     "INSTANT_VIEW_DOMAINS": "i.fxtwitter.com,i.twittpr.com,i.fixupx.com",
+    "INSTANT_VIEW_THREADS_DOMAINS": "u.fxtwitter.com,u.twittpr.com,u.fixupx.com",
     "GALLERY_DOMAINS": "g.fxtwitter.com,g.twittpr.com,g.fixupx.com",
     "NATIVE_MULTI_IMAGE_DOMAINS": "m.fxtwitter.com,m.twittpr.com,m.fixupx.com",
     "STANDARD_DOMAIN_LIST": "fxtwitter.com,fixupx.com,twittpr.com",
@@ -17,6 +18,7 @@
     "REDIRECT_URL": "https://github.com/FixTweet/FxTwitter",
     "EMBED_URL": "https://github.com/FixTweet/FxTwitter",
     "RELEASE_NAME": "fixtweet-test",
+    "GIF_TRANSCODE_DOMAIN": "gif.fxtwitter.com",
     "SENTRY_DSN": null
   },
   "testRegex": "/test/.*\\.test\\.ts$",

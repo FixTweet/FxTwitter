@@ -3,6 +3,7 @@ import { Constants } from '../../../constants';
 import { getBaseRedirectUrl } from '../router';
 import { handleStatus } from '../../../embed/status';
 import { Strings } from '../../../strings';
+import { Experiment, experimentCheck } from '../../../experiments';
 
 /* Handler for status request */
 export const statusRequest = async (c: Context) => {
@@ -55,6 +56,13 @@ export const statusRequest = async (c: Context) => {
   } else if (Constants.INSTANT_VIEW_DOMAINS.includes(url.hostname)) {
     console.log('Forced instant view request');
     flags.forceInstantView = true;
+  } else if (
+    experimentCheck(Experiment.IV_FORCE_THREAD_UNROLL, userAgent.includes('Telegram')) ||
+    Constants.INSTANT_VIEW_THREADS_DOMAINS.includes(url.hostname)
+  ) {
+    console.log('Forced unroll instant view');
+    flags.forceInstantView = true;
+    flags.instantViewUnrollThreads = true;
   } else if (Constants.GALLERY_DOMAINS.includes(url.hostname)) {
     console.log('Gallery embed request');
     flags.gallery = true;

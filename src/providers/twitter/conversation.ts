@@ -90,14 +90,16 @@ export const fetchTweetDetail = async (
     useElongator,
     (_conversation: unknown) => {
       const conversation = _conversation as TweetDetailResult;
-      const tweet = findStatusInBucket(
-        status,
-        processResponse(conversation?.data?.threaded_conversation_with_injections_v2?.instructions)
+      const response = processResponse(
+        conversation?.data?.threaded_conversation_with_injections_v2?.instructions
       );
+      const tweet = findStatusInBucket(status, response);
       if (tweet && isGraphQLTwitterStatus(tweet)) {
         return true;
       }
-      console.log('invalid graphql tweet', conversation);
+      console.log('invalid graphql tweet', tweet);
+      console.log('finding status', status);
+      console.log('from response', JSON.stringify(response));
 
       return Array.isArray(conversation?.errors);
     },
@@ -190,6 +192,7 @@ export const fetchByRestId = async (
 const processResponse = (instructions: ThreadInstruction[]): GraphQLProcessBucket => {
   const bucket: GraphQLProcessBucket = {
     statuses: [],
+    allStatuses: [],
     cursors: []
   };
   instructions?.forEach?.(instruction => {
@@ -264,12 +267,18 @@ const findNextStatus = (id: string, bucket: GraphQLProcessBucket): number => {
 };
 
 const findPreviousStatus = (id: string, bucket: GraphQLProcessBucket): number => {
-  const status = bucket.statuses.find(status => (status.rest_id ?? status.legacy?.id_str) === id);
+  const status = bucket.allStatuses.find(
+    status => (status.rest_id ?? status.legacy?.id_str) === id
+  );
   if (!status) {
     console.log('uhhh, we could not even find that tweet, dunno how that happened');
     return -1;
   }
-  return bucket.statuses.findIndex(
+  if ((status.rest_id ?? status.legacy?.id_str) === status.legacy?.in_reply_to_status_id_str) {
+    console.log('Tweet does not have a parent');
+    return 0;
+  }
+  return bucket.allStatuses.findIndex(
     _status =>
       (_status.rest_id ?? _status.legacy?.id_str) === status.legacy?.in_reply_to_status_id_str
   );
@@ -308,6 +317,8 @@ export const constructTwitterThread = async (
 
   let response: TweetDetailResult | TweetResultsByRestIdResult | null = null;
   let status: APITwitterStatus;
+
+  console.log('env', c.env);
   /* We can use TweetDetail on elongator accounts to increase per-account rate limit.
      We also use TweetDetail to process threads (WIP)
      
@@ -341,7 +352,7 @@ export const constructTwitterThread = async (
       return { status: null, thread: null, author: null, code: 404 };
     }
 
-    const buildStatus = await buildAPITwitterStatus(c, result, language, false, legacyAPI);
+    const buildStatus = await buildAPITwitterStatus(c, result, language, null, legacyAPI);
 
     if ((buildStatus as FetchResults)?.status === 401) {
       writeDataPoint(c, language, null, '401');
@@ -372,7 +383,7 @@ export const constructTwitterThread = async (
     c,
     originalStatus,
     undefined,
-    false,
+    null,
     legacyAPI
   )) as APITwitterStatus;
 
@@ -390,6 +401,7 @@ export const constructTwitterThread = async (
   }
 
   const threadStatuses = [originalStatus];
+  bucket.allStatuses = bucket.statuses;
   bucket.statuses = filterBucketStatuses(bucket.statuses, originalStatus);
 
   let currentId = id;
@@ -465,7 +477,7 @@ export const constructTwitterThread = async (
 
   while (findPreviousStatus(currentId, bucket) !== -1) {
     const index = findPreviousStatus(currentId, bucket);
-    const status = bucket.statuses[index];
+    const status = bucket.allStatuses[index];
     const newCurrentId = status.rest_id ?? status.legacy?.id_str;
 
     console.log(
@@ -533,10 +545,30 @@ export const constructTwitterThread = async (
     code: 200
   };
 
-  threadStatuses.forEach(async status => {
-    socialThread.thread?.push(
-      (await buildAPITwitterStatus(c, status, undefined, true, false)) as APITwitterStatus
-    );
+  await Promise.all(
+    threadStatuses.map(async status => {
+      const builtStatus = (await buildAPITwitterStatus(
+        c,
+        status,
+        undefined,
+        author,
+        false
+      )) as APITwitterStatus;
+      socialThread.thread?.push(builtStatus);
+    })
+  );
+
+  // Sort socialThread.thread by id converted to bigint
+  socialThread.thread?.sort((a, b) => {
+    const aId = BigInt(a.id);
+    const bId = BigInt(b.id);
+    if (aId < bId) {
+      return -1;
+    }
+    if (aId > bId) {
+      return 1;
+    }
+    return 0;
   });
 
   return socialThread;
