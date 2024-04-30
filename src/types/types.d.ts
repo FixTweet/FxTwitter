@@ -11,6 +11,7 @@ type InputFlags = {
   instantViewUnrollThreads?: boolean;
   archive?: boolean;
   gallery?: boolean;
+  nativeMultiImage?: boolean;
 };
 
 interface StatusResponse {
@@ -102,6 +103,7 @@ interface APIVideo extends APIMedia {
   thumbnail_url: string;
   format: string;
   duration: number;
+  variants: TweetMediaFormat[];
 }
 
 interface APIMosaicPhoto extends APIMedia {

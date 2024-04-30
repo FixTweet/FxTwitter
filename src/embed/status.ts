@@ -8,6 +8,7 @@ import { renderPhoto } from '../render/photo';
 import { renderVideo } from '../render/video';
 import { renderInstantView } from '../render/instantview';
 import { constructTwitterThread } from '../providers/twitter/conversation';
+import { Experiment, experimentCheck } from '../experiments';
 
 export const returnError = (c: Context, error: string): Response => {
   return c.html(
@@ -97,6 +98,7 @@ export const handleStatus = async (
   }
 
   const isTelegram = (userAgent || '').indexOf('Telegram') > -1;
+  const isDiscord = (userAgent || '').indexOf('Discord') > -1;
   /* Should sensitive statuses be allowed Instant View? */
   let useIV =
     isTelegram /*&& !status.possibly_sensitive*/ &&
@@ -277,7 +279,7 @@ export const handleStatus = async (
           /* This status has a video to render. */
           break;
       }
-    } else if (media?.videos) {
+    } else if (media?.videos && !flags.nativeMultiImage) {
       const instructions = renderVideo(
         { status: status, userAgent: userAgent, text: newText },
         media.videos[0]
@@ -290,16 +292,40 @@ export const handleStatus = async (
         siteName = instructions.siteName;
       }
     } else if (media?.mosaic) {
-      const instructions = renderPhoto(
-        {
-          status: status,
-          authorText: authorText,
-          engagementText: engagementText,
-          userAgent: userAgent
-        },
-        media.mosaic
-      );
-      headers.push(...instructions.addHeaders);
+      if (
+        experimentCheck(Experiment.DISCORD_NATIVE_MULTI_IMAGE, isDiscord) &&
+        flags.nativeMultiImage
+      ) {
+        const photos = status.media?.photos || [];
+
+        photos.forEach(photo => {
+          /* Override the card type */
+          status.embed_card = 'summary_large_image';
+          console.log('set embed_card to summary_large_image');
+
+          const instructions = renderPhoto(
+            {
+              status: status,
+              authorText: authorText,
+              engagementText: engagementText,
+              userAgent: userAgent
+            },
+            photo
+          );
+          headers.push(...instructions.addHeaders);
+        });
+      } else {
+        const instructions = renderPhoto(
+          {
+            status: status,
+            authorText: authorText,
+            engagementText: engagementText,
+            userAgent: userAgent
+          },
+          media.mosaic
+        );
+        headers.push(...instructions.addHeaders);
+      }
     } else if (media?.photos) {
       const instructions = renderPhoto(
         {
@@ -312,7 +338,7 @@ export const handleStatus = async (
       );
       headers.push(...instructions.addHeaders);
     }
-    if (status.media?.external && !status.media.videos?.length) {
+    if (status.media?.external && !status.media.videos?.length && !flags.nativeMultiImage) {
       const { external } = status.media;
       authorText = newText || '';
       headers.push(
@@ -444,6 +470,20 @@ export const handleStatus = async (
       providerEngagementText = Strings.DEFAULT_AUTHOR_TEXT;
     }
 
+    let provider = '';
+    const mediaType = overrideMedia ?? status.media.videos?.[0]?.type;
+
+    if (mediaType === 'gif') {
+      provider = `GIF - ${Constants.BRANDING_NAME}`;
+    } else if (
+      status.embed_card === 'player' &&
+      providerEngagementText !== Strings.DEFAULT_AUTHOR_TEXT
+    ) {
+      provider = providerEngagementText;
+    }
+
+    // Now you can use the 'provider' variable
+
     headers.push(
       `<link rel="alternate" href="{base}/owoembed?text={text}&status={status}&author={author}{provider}" type="application/json+oembed" title="{name}">`.format(
         {
@@ -454,10 +494,7 @@ export const handleStatus = async (
           status: encodeURIComponent(statusId),
           author: encodeURIComponent(status.author.screen_name || ''),
           name: status.author.name || '',
-          provider:
-            status.embed_card === 'player' && providerEngagementText !== Strings.DEFAULT_AUTHOR_TEXT
-              ? `&provider=${encodeURIComponent(providerEngagementText)}`
-              : ''
+          provider: provider ? `&provider=${encodeURIComponent(provider)}` : ''
         }
       )
     );

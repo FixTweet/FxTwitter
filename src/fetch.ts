@@ -59,11 +59,11 @@ export const twitterFetch = async (
     }
   );
 
-  const cache = caches.default;
+  const cache = typeof caches !== 'undefined' ? caches.default : null;
 
   while (apiAttempts < API_ATTEMPTS) {
     /* Generate a random CSRF token, Twitter just cares that header and cookie match,
-    REST can use shorter csrf tokens (32 bytes) but graphql prefers 160 bytes */
+    REST can use shorter csrf tokens (32 bytes) but graphql uses a 160 byte one. */
     const csrfToken = crypto.randomUUID().replace(/-/g, '');
 
     const headers: Record<string, string> = {
@@ -75,7 +75,12 @@ export const twitterFetch = async (
 
     let activate: Response | null = null;
 
-    if (!newTokenGenerated && !useElongator) {
+    if (cache === null) {
+      console.log('Caching unavailable, requesting new token');
+      newTokenGenerated = true;
+    }
+
+    if (!newTokenGenerated && !useElongator && cache) {
       const timeBefore = performance.now();
       const cachedResponse = await cache.match(guestTokenRequestCacheDummy.clone());
       const timeAfter = performance.now();
@@ -138,13 +143,12 @@ export const twitterFetch = async (
       if (useElongator && typeof c.env?.TwitterProxy !== 'undefined') {
         console.log('Fetching using elongator');
         const performanceStart = performance.now();
-        apiRequest = await withTimeout(
-          (signal: AbortSignal) =>
-            c.env?.TwitterProxy.fetch(url, {
-              method: 'GET',
-              headers: headers,
-              signal: signal
-            })
+        apiRequest = await withTimeout((signal: AbortSignal) =>
+          c.env?.TwitterProxy.fetch(url, {
+            method: 'GET',
+            headers: headers,
+            signal: signal
+          })
         );
         const performanceEnd = performance.now();
         console.log(`Elongator request successful after ${performanceEnd - performanceStart}ms`);
@@ -173,6 +177,7 @@ export const twitterFetch = async (
       }
       try {
         !useElongator &&
+          cache &&
           c.executionCtx &&
           c.executionCtx.waitUntil(
             cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true })
@@ -208,6 +213,7 @@ export const twitterFetch = async (
       console.log(`Purging token on this edge due to low rate limit remaining`);
       try {
         c.executionCtx &&
+          cache &&
           c.executionCtx.waitUntil(
             cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true })
           );
@@ -232,7 +238,7 @@ export const twitterFetch = async (
     }
     try {
       /* If we've generated a new token, we'll cache it */
-      if (c.executionCtx && newTokenGenerated && activate) {
+      if (c.executionCtx && newTokenGenerated && activate && cache) {
         const cachingResponse = new Response(await activate.clone().text(), {
           headers: {
             ...tokenHeaders,

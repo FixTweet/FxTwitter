@@ -5,6 +5,36 @@ import { Experiment, experimentCheck } from '../../experiments';
 import { isGraphQLTwitterStatus } from '../../helpers/graphql';
 import { Context } from 'hono';
 
+const writeDataPoint = (
+  c: Context,
+  language: string | undefined,
+  nsfw: boolean | null,
+  returnCode: string,
+  flags?: InputFlags
+) => {
+  console.log('Writing data point...');
+  if (typeof c.env?.AnalyticsEngine !== 'undefined') {
+    const flagString =
+      Object.keys(flags || {})
+        // @ts-expect-error - TypeScript doesn't like iterating over the keys, but that's OK
+        .filter(flag => flags?.[flag])[0] || 'standard';
+
+    console.log(flagString);
+
+    c.env?.AnalyticsEngine.writeDataPoint({
+      blobs: [
+        c.req.raw.cf?.colo as string /* Datacenter location */,
+        c.req.raw.cf?.country as string /* Country code */,
+        c.req.header('user-agent') ?? '' /* User agent (for aggregating bots calling) */,
+        returnCode /* Return code */,
+        flagString /* Type of request */,
+        language ?? '' /* For translate feature */
+      ],
+      doubles: [nsfw ? 1 : 0 /* NSFW media = 1, No NSFW Media = 0 */]
+    });
+  }
+};
+
 export const fetchTweetDetail = async (
   c: Context,
   status: string,
@@ -304,6 +334,7 @@ export const constructTwitterThread = async (
     console.log('response', response);
 
     if (!response?.data) {
+      writeDataPoint(c, language, null, '404');
       return { status: null, thread: null, author: null, code: 404 };
     }
   }
@@ -316,19 +347,23 @@ export const constructTwitterThread = async (
     const result = response?.data?.tweetResult?.result as GraphQLTwitterStatus;
 
     if (typeof result === 'undefined') {
+      writeDataPoint(c, language, null, '404');
       return { status: null, thread: null, author: null, code: 404 };
     }
 
     const buildStatus = await buildAPITwitterStatus(c, result, language, null, legacyAPI);
 
     if ((buildStatus as FetchResults)?.status === 401) {
+      writeDataPoint(c, language, null, '401');
       return { status: null, thread: null, author: null, code: 401 };
     } else if (buildStatus === null || (buildStatus as FetchResults)?.status === 404) {
+      writeDataPoint(c, language, null, '404');
       return { status: null, thread: null, author: null, code: 404 };
     }
 
     status = buildStatus as APITwitterStatus;
 
+    writeDataPoint(c, language, status.possibly_sensitive, '200');
     return { status: status, thread: null, author: status.author, code: 200 };
   }
 
@@ -339,6 +374,7 @@ export const constructTwitterThread = async (
 
   /* Don't bother processing thread on a null tweet */
   if (originalStatus === null) {
+    writeDataPoint(c, language, null, '404');
     return { status: null, thread: null, author: null, code: 404 };
   }
 
@@ -351,6 +387,7 @@ export const constructTwitterThread = async (
   )) as APITwitterStatus;
 
   if (status === null) {
+    writeDataPoint(c, language, null, '404');
     return { status: null, thread: null, author: null, code: 404 };
   }
 
@@ -358,6 +395,7 @@ export const constructTwitterThread = async (
 
   /* If we're not processing threads, let's be done here */
   if (!processThread) {
+    writeDataPoint(c, language, status.possibly_sensitive, '200');
     return { status: status, thread: null, author: author, code: 200 };
   }
 

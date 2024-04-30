@@ -3,6 +3,7 @@ import { statusRequest } from '../twitter/routes/status';
 import { profileRequest } from '../twitter/routes/profile';
 import { Strings } from '../../strings';
 import { Constants } from '../../constants';
+import { linkHitRequest } from './hit';
 
 export const api = new Hono();
 
@@ -16,6 +17,9 @@ api.use('*', async (c, next) => {
   }
   await next();
 });
+
+api.get('/2/hit', linkHitRequest);
+
 /* Current v1 API endpoints. Currently, these still go through the Twitter embed requests. API v2+ won't do this. */
 api.get('/status/:id', statusRequest);
 api.get('/status/:id/', statusRequest);

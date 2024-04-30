@@ -16,29 +16,29 @@
   "author": "dangered wolf",
   "license": "MIT",
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20231218.0",
-    "@microsoft/eslint-formatter-sarif": "^3.0.0",
-    "@sentry/esbuild-plugin": "^2.10.2",
-    "@sentry/integrations": "^7.93.0",
-    "@types/jest": "^29.5.11",
-    "@typescript-eslint/eslint-plugin": "^6.18.1",
-    "@typescript-eslint/parser": "^6.18.1",
-    "dotenv": "^16.3.1",
-    "eslint": "^8.56.0",
+    "@cloudflare/workers-types": "^4.20240423.0",
+    "@microsoft/eslint-formatter-sarif": "^3.1.0",
+    "@sentry/esbuild-plugin": "^2.16.1",
+    "@sentry/integrations": "^7.112.2",
+    "@types/jest": "^29.5.12",
+    "@typescript-eslint/eslint-plugin": "^7.7.1",
+    "@typescript-eslint/parser": "^7.7.1",
+    "dotenv": "^16.4.5",
+    "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-typescript": "^3.0.0",
     "eslint-plugin-optimize-regex": "^1.2.1",
-    "eslint-plugin-sonarjs": "^0.23.0",
+    "eslint-plugin-sonarjs": "^0.25.1",
     "jest": "^29.7.0",
-    "jest-environment-miniflare": "^2.14.1",
-    "prettier": "^3.2.2",
-    "ts-jest": "^29.1.1",
+    "jest-environment-miniflare": "^2.14.2",
+    "prettier": "^3.2.5",
+    "ts-jest": "^29.1.2",
     "ts-loader": "^9.5.1",
-    "typescript": "^5.3.3",
-    "wrangler": "^3.22.4"
+    "typescript": "^5.4.5",
+    "wrangler": "^3.51.2"
   },
   "dependencies": {
-    "@hono/sentry": "^1.0.0",
-    "hono": "^3.12.3"
+    "@hono/sentry": "^1.0.1",
+    "hono": "^3.12.12"
   }
 }

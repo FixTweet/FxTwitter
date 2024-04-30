@@ -1,4 +1,5 @@
 import { Constants } from '../constants';
+import { Experiment, experimentCheck } from '../experiments';
 import { handleQuote } from '../helpers/quote';
 import { Strings } from '../strings';
 
@@ -47,14 +48,28 @@ export const renderVideo = (
     instructions.authorText += `\n${handleQuote(status.quote)}`;
   }
 
+  let url = video.url;
+
+  if (
+    experimentCheck(Experiment.TRANSCODE_GIFS, !!Constants.GIF_TRANSCODE_DOMAIN) &&
+    !userAgent?.includes('Telegram') &&
+    video.type === 'gif'
+  ) {
+    url = video.url.replace(
+      Constants.TWITTER_VIDEO_BASE,
+      `https://${Constants.GIF_TRANSCODE_DOMAIN}`
+    );
+    console.log('We passed checks for transcoding GIFs, feeding embed url', url);
+  }
+
   /* Push the raw video-related headers */
   instructions.addHeaders = [
     `<meta property="twitter:player:height" content="${video.height * sizeMultiplier}"/>`,
     `<meta property="twitter:player:width" content="${video.width * sizeMultiplier}"/>`,
-    `<meta property="twitter:player:stream" content="${video.url}"/>`,
+    `<meta property="twitter:player:stream" content="${url}"/>`,
     `<meta property="twitter:player:stream:content_type" content="${video.format}"/>`,
-    `<meta property="og:video" content="${video.url}"/>`,
-    `<meta property="og:video:secure_url" content="${video.url}"/>`,
+    `<meta property="og:video" content="${url}"/>`,
+    `<meta property="og:video:secure_url" content="${url}"/>`,
     `<meta property="og:video:height" content="${video.height * sizeMultiplier}"/>`,
     `<meta property="og:video:width" content="${video.width * sizeMultiplier}"/>`,
     `<meta property="og:video:type" content="${video.format}"/>`,

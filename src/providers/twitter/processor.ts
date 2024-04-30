@@ -183,7 +183,7 @@ export const buildAPITwitterStatus = async (
 
   /* Populate status media */
   mediaList.forEach(media => {
-    const mediaObject = processMedia(media);
+    const mediaObject = processMedia(c, media);
     if (mediaObject) {
       apiStatus.media.all = apiStatus.media?.all ?? [];
       apiStatus.media?.all?.push(mediaObject);
@@ -241,6 +241,31 @@ export const buildAPITwitterStatus = async (
     }
     if (card.poll) {
       apiStatus.poll = card.poll;
+    }
+    /* TODO: Right now, we push them after native photos and videos but should we prepend them instead? */
+    if (card.media) {
+      if (card.media.videos) {
+        card.media.videos.forEach(video => {
+          const mediaObject = processMedia(c, video) as APIVideo;
+          if (mediaObject) {
+            apiStatus.media.all = apiStatus.media?.all ?? [];
+            apiStatus.media?.all?.push(mediaObject);
+            apiStatus.media.videos = apiStatus.media?.videos ?? [];
+            apiStatus.media.videos?.push(mediaObject);
+          }
+        });
+      }
+      if (card.media.photos) {
+        card.media.photos.forEach(photo => {
+          const mediaObject = processMedia(c, photo) as APIPhoto;
+          if (mediaObject) {
+            apiStatus.media.all = apiStatus.media?.all ?? [];
+            apiStatus.media?.all?.push(mediaObject);
+            apiStatus.media.photos = apiStatus.media?.photos ?? [];
+            apiStatus.media.photos?.push(mediaObject);
+          }
+        });
+      }
     }
   } else {
     /* Determine if the status contains a YouTube link (either youtube.com or youtu.be) so we can include it */
