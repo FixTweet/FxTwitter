@@ -201,7 +201,7 @@ const generateStatusFooter = (status: APIStatus, isQuote = false, author: APIUse
 };
 
 const generatePoll = (poll: APIPoll, language: string): string => {
-  // const formatNumber = Intl.NumberFormat(language ?? 'en')
+  const intlFormat = Intl.NumberFormat(language ?? 'en');
   let str = '';
 
   const barLength = 20;
@@ -209,10 +209,10 @@ const generatePoll = (poll: APIPoll, language: string): string => {
   poll.choices.forEach(choice => {
     const bar = '█'.repeat((choice.percentage / 100) * barLength);
     // eslint-disable-next-line no-irregular-whitespace
-    str += `${bar}<br>${choice.label}<br>${choice.count} votes, ${choice.percentage}%<br>`;
+    str += `${bar}<br>${choice.label}<br>${intlFormat.format(choice.count)} votes, ${intlFormat.format(choice.percentage)}%<br>`;
   });
   /* Finally, add the footer of the poll with # of votes and time left */
-  str += `<br>${formatNumber(poll.total_votes)} votes · ${poll.time_left_en}`;
+  str += `<br>${intlFormat.format(poll.total_votes)} votes · ${poll.time_left_en}`;
 
   return str;
 };
