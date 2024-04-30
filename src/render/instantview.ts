@@ -1,7 +1,7 @@
 /* eslint-disable no-irregular-whitespace */
 import { Constants } from '../constants';
 import { getSocialTextIV } from '../helpers/socialproof';
-import { sanitizeText } from '../helpers/utils';
+import { formatNumber, sanitizeText } from '../helpers/utils';
 import { Strings } from '../strings';
 
 enum AuthorActionType {
@@ -174,6 +174,23 @@ const generateStatusFooter = (status: APIStatus, isQuote = false, author: APIUse
   });
 };
 
+const generatePoll = (poll: APIPoll, language: string): string => {
+  // const formatNumber = Intl.NumberFormat(language ?? 'en')
+  let str = '';
+  
+  const barLength = 20;
+
+  poll.choices.forEach(choice => {
+    const bar = '█'.repeat((choice.percentage / 100) * barLength);
+    // eslint-disable-next-line no-irregular-whitespace
+    str += `${bar}<br>${choice.label}<br>${choice.count} votes, ${choice.percentage}%<br>`;
+  });
+  /* Finally, add the footer of the poll with # of votes and time left */
+  str += `<br>${formatNumber(poll.total_votes)} votes · ${poll.time_left_en}`;
+
+  return str;
+}
+
 const generateCommunityNote = (status: APITwitterStatus): string => {
   if (status.community_note) {
     console.log('community_note', status.community_note)
@@ -236,6 +253,8 @@ const generateStatus = (status: APIStatus, author: APIUser, isQuote = false, aut
   ${text}
   <!-- Embed Community Note -->
   ${generateCommunityNote(status as APITwitterStatus)}
+  <!-- Embed poll -->
+  ${status.poll ? generatePoll(status.poll, status.lang ?? 'en') : notApplicableComment}
   <!-- Embedded quote status -->
   ${!isQuote && status.quote ? generateStatus(status.quote, author, true, null) : notApplicableComment}
   `.format({
