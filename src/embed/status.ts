@@ -10,6 +10,7 @@ import { renderInstantView } from '../render/instantview';
 import { constructTwitterThread } from '../providers/twitter/conversation';
 import { Experiment, experimentCheck } from '../experiments';
 import i18next from 'i18next';
+import icu from "i18next-icu";
 import translationResources from '../../i18n/resources.json';
 
 export const returnError = (c: Context, error: string): Response => {
@@ -128,7 +129,7 @@ export const handleStatus = async (
 
   let overrideMedia: APIMedia | undefined;
 
-  await i18next.init({
+  await i18next.use(icu).init({
     lng: language ?? status.lang ?? 'en',
     debug: true,
     resources: translationResources,

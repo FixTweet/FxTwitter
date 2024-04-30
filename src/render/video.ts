@@ -2,7 +2,6 @@ import i18next from 'i18next';
 import { Constants } from '../constants';
 import { Experiment, experimentCheck } from '../experiments';
 import { handleQuote } from '../helpers/quote';
-import { Strings } from '../strings';
 
 export const renderVideo = (
   properties: RenderProperties,
