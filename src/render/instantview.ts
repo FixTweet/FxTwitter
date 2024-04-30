@@ -300,9 +300,8 @@ const generateStatus = (
   <!-- Embed poll -->
   ${status.poll ? generatePoll(status.poll, status.lang ?? 'en') : notApplicableComment}
   <!-- Embedded quote status -->
-  ${!isQuote && status.quote ? generateStatus(status.quote, author, language, true, null) : notApplicableComment}
-  <br>${!isQuote ? `<a href="${status.url}">${i18next.t('ivViewOriginal')}</a>` : notApplicableComment}
-  `.format({
+  ${!isQuote && status.quote ? generateStatus(status.quote, author, language, true, null) : notApplicableComment}`
+  .format({
     quoteHeader: isQuote
       ? '<h4>' +
         i18next.t('ivQuoteHeader').format({
