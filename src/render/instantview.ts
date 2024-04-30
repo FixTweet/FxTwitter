@@ -286,7 +286,6 @@ const generateStatus = (
   ${status.poll ? generatePoll(status.poll, status.lang ?? 'en') : notApplicableComment}
   <!-- Embedded quote status -->
   ${!isQuote && status.quote ? generateStatus(status.quote, author, true, null) : notApplicableComment}
-  ${!isQuote ? generateStatusFooter(status, true, author) : ''}
   <br>${!isQuote ? `<a href="${status.url}">${i18next.t('ivViewOriginalStatus')}</a>` : notApplicableComment}
   `.format({
     quoteHeader: isQuote
