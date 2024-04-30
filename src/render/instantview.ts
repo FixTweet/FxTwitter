@@ -10,7 +10,7 @@ enum AuthorActionType {
   FollowUp = 'FollowUp'
 }
 
-const populateUserLinks = (status: APIStatus, text: string): string => {
+const populateUserLinks = (text: string): string => {
   /* TODO: Maybe we can add username splices to our API so only genuinely valid users are linked? */
   text.match(/@(\w{1,15})/g)?.forEach(match => {
     const username = match.replace('@', '');
@@ -22,7 +22,7 @@ const populateUserLinks = (status: APIStatus, text: string): string => {
   return text;
 };
 
-const generateStatusMedia = (status: APIStatus, author: APIUser): string => {
+const generateStatusMedia = (status: APIStatus): string => {
   let media = '';
   if (status.media?.all?.length) {
     status.media.all.forEach(mediaItem => {
@@ -95,7 +95,7 @@ function getTranslatedText(status: APITwitterStatus, isQuote = false): string | 
   let text = paragraphify(sanitizeText(status.translation?.text), isQuote);
   text = htmlifyLinks(text);
   text = htmlifyHashtags(text);
-  text = populateUserLinks(status, text);
+  text = populateUserLinks(text);
 
   const formatText = `📑 {translation}`.format({
     translation: i18next.t('translatedFrom').format({
@@ -124,16 +124,28 @@ const generateInlineAuthorHeader = (
   author: APIUser,
   authorActionType: AuthorActionType | null
 ): string => {
-  return `<h4><i><a href="${status.url}">{AuthorAction}</a> from <b>${author.name}</b> (<a href="${author.url}">@${author.screen_name}</a>):</i></h4>`.format(
-    {
-      AuthorAction:
-        authorActionType === AuthorActionType.Reply
-          ? 'Reply'
-          : authorActionType === AuthorActionType.Original
-            ? 'Original'
-            : 'Follow-up'
-    }
-  );
+  if (authorActionType === AuthorActionType.Original) {
+    return `<h4><i>${i18next.t('ivAuthorActionOriginal', {
+      statusUrl: status.url,
+      authorName: author.name,
+      authorUrl: author.url,
+      authorScreenName: author.screen_name
+    })}</i></h4>`;
+  } else if (authorActionType === AuthorActionType.FollowUp) {
+    return `<h4><i>${i18next.t('ivAuthorActionFollowUp', {
+      statusUrl: status.url,
+      authorName: author.name,
+      authorUrl: author.url,
+      authorScreenName: author.screen_name
+    })}</i></h4>`;
+  }
+  // Reply / unknown 
+  return `<h4><i>${i18next.t('ivAuthorActionReply', {
+    statusUrl: status.url,
+    authorName: author.name,
+    authorUrl: author.url,
+    authorScreenName: author.screen_name
+  })}</i></h4>`;
 };
 
 const wrapForeignLinks = (url: string) => {
@@ -158,7 +170,7 @@ const generateStatusFooter = (status: APIStatus, isQuote = false, author: APIUse
   let description = author.description;
   description = htmlifyLinks(description);
   description = htmlifyHashtags(description);
-  description = populateUserLinks(status, description);
+  description = populateUserLinks(description);
 
   return `
     <p>{socialText}</p>
@@ -168,7 +180,7 @@ const generateStatusFooter = (status: APIStatus, isQuote = false, author: APIUse
     `.format({
     socialText: getSocialTextIV(status as APITwitterStatus) || '',
     viewOriginal: !isQuote
-      ? `<a href="${status.url}">${i18next.t('ivViewOriginalStatus')}</a>`
+      ? `<a href="${status.url}">${i18next.t('ivViewOriginal')}</a>`
       : notApplicableComment,
     aboutSection: isQuote
       ? ''
@@ -179,13 +191,11 @@ const generateStatusFooter = (status: APIStatus, isQuote = false, author: APIUse
         <p><b>${description}</b></p>
         <p>{location} {website} {joined}</p>
         <p>
-          {following} <b>${i18next.t('ivProfileFollowing')}</b> 
-          {followers} <b>${i18next.t('ivProfileFollowers')}</b> 
-          {statuses} <b>${i18next.t('ivProfileStatuses')}</b>
+          {following} <b>${i18next.t('ivProfileFollowing', { numFollowing: author.following })}</b> 
+          {followers} <b>${i18next.t('ivProfileFollowers', { numFollowers: author.followers })}</b> 
+          {statuses} <b>${i18next.t('ivProfileStatuses', { numStatuses: author.statuses })}</b>
         </p>`.format({
-          pfp: `<img src="${author.avatar_url?.replace('_200x200', '_400x400')}" alt="${
-            author.name
-          }'s profile picture" />`,
+          pfp: `<img src="${author.avatar_url?.replace('_200x200', '_400x400')}" alt="${i18next.t('ivProfilePictureAlt', { author: author.name })}" />`,
           location: author.location ? `📌 ${author.location}` : '',
           website: author.website
             ? `🔗 <a rel="nofollow" href="${wrapForeignLinks(author.website.url)}">${author.website.display_url}</a>`
@@ -207,10 +217,10 @@ const generatePoll = (poll: APIPoll, language: string): string => {
   poll.choices.forEach(choice => {
     const bar = '█'.repeat((choice.percentage / 100) * barLength);
     // eslint-disable-next-line no-irregular-whitespace
-    str += `${bar}<br>${choice.label}<br>${intlFormat.format(choice.count)} votes, ${intlFormat.format(choice.percentage)}%<br>`;
+    str += `${bar}<br>${choice.label}<br>${i18next.t('ivPollChoice', { voteCount: intlFormat.format(choice.count), percentage: intlFormat.format(choice.percentage)})}<br>`;
   });
   /* Finally, add the footer of the poll with # of votes and time left */
-  str += `<br>${intlFormat.format(poll.total_votes)} votes · ${poll.time_left_en}`;
+  str += `<br>${i18next.t('pollVotes', { voteCount: intlFormat.format(poll.total_votes), timeLeft: poll.time_left_en})}`;
 
   return str;
 };
@@ -245,7 +255,7 @@ const generateCommunityNote = (status: APITwitterStatus): string => {
     // Add the remaining text after the last link
     result = `<table>
       <thead>
-        <th><b>Readers added context they thought people might want to know</b></th>
+        <th><b>${i18next.t('ivCommunityNoteHeader')}</b></th>
       </thead>
       <tbody>
         <th>${result.replace(/\n/g, '\n<br>')}</th>
@@ -273,7 +283,7 @@ const generateStatus = (
   return `<!-- Telegram Instant View -->
   {quoteHeader}
   <!-- Embed media -->
-  ${generateStatusMedia(status, author)} 
+  ${generateStatusMedia(status)} 
   <!-- Translated text (if applicable) -->
   ${translatedText ? translatedText : notApplicableComment}
   <!-- Inline author (if applicable) -->
@@ -286,7 +296,7 @@ const generateStatus = (
   ${status.poll ? generatePoll(status.poll, status.lang ?? 'en') : notApplicableComment}
   <!-- Embedded quote status -->
   ${!isQuote && status.quote ? generateStatus(status.quote, author, true, null) : notApplicableComment}
-  <br>${!isQuote ? `<a href="${status.url}">${i18next.t('ivViewOriginalStatus')}</a>` : notApplicableComment}
+  <br>${!isQuote ? `<a href="${status.url}">${i18next.t('ivViewOriginal')}</a>` : notApplicableComment}
   `.format({
     quoteHeader: isQuote
       ? '<h4>' +
@@ -339,7 +349,7 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
       flags?.archive
         ? i18next.t('ivInternetArchiveText').format({ brandingName: Constants.BRANDING_NAME })
         : i18next.t('ivFallbackText')
-    } <a href="${status.url}">${i18next.t('ivViewOriginalStatus')}</a>
+    } <a href="${status.url}">${i18next.t('ivViewOriginal')}</a>
     </section>
     <article>
     <sub><a href="${status.url}">${i18next.t('ivViewOriginal')}</a></sub>
@@ -385,7 +395,7 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
       })
       .join('')}
     ${generateStatusFooter(status, false, thread?.author ?? status.author)}
-    <br>${`<a href="${status.url}">View full thread</a>`}
+    <br>${`<a href="${status.url}">${i18next.t('ivViewOriginal')}</a>`}
   </article>`;
 
   return instructions;

@@ -5,6 +5,9 @@
       "quotedFrom": "Quoting {name} (@{screen_name})",
       "replyingTo": "Replying to @{screen_name}",
       "threadPartHeader": "A part of @${status.author.screen_name}'s thread",
+      "ivAuthorActionReply": "<a href=\"{statusUrl}\">Reply</a> from <b>{authorName}</b> (<a href=\"{authorUrl}\">@{authorScreenName}</a>):",
+      "ivAuthorActionOriginal": "<a href=\"{statusUrl}\">Original</a> from <b>{authorName}</b> (<a href=\"{authorUrl}\">@{authorScreenName}</a>):",
+      "ivAuthorActionFollowUp": "<a href=\"{statusUrl}\">Follow-up</a> from <b>{authorName}</b> (<a href=\"{authorUrl}\">@{authorScreenName}</a>):",
       
       "photoCount": "Photo {number} / {total}",
       "videoCount": "Video {number} / {total}",
@@ -15,19 +18,21 @@
 
       "ivOriginalText": "Original text",
       "ivViewOriginal": "View full thread",
-      "ivViewOriginalStatus": "View full thread",
       "ivAboutAuthor": "About author",
-      "ivProfileFollowing": "Following",
-      "ivProfileFollowers": "{numFollowers, plural, one {# Follower} other {# Followers}}",
-      "ivProfileStatuses": "{numPosts, plural, one {# Post} other {# Posts}}",
+      "ivProfileFollowing": "{numFollowing, plural, one {Following} other {Following}}",
+      "ivProfileFollowers": "{numFollowers, plural, one {Follower} other {Followers}}",
+      "ivProfileStatuses": "{numPosts, plural, one {Post} other {Posts}}",
+      "ivProfilePictureAlt": "{author}'s profile picture",
 
       "ivFallbackText": "If you can see this, your browser is doing something weird with your user agent.",
       "ivInternetArchiveText": "{brandingName} archive",
 
       "pollFinalResults": "Final results",
       "pollVotes": "{voteCount, plural, one {# vote} other {# votes}} · {timeLeft}",
+      "ivPollChoice": "{voteCount, plural, one {# vote} other {# votes}}, {percentage}%",
 
       "ivQuoteHeader": "<a href=\"{url}\">Quoting</a> {authorName} (<a href=\"{authorURL}\">@{authorHandle}</a>)",
+      "ivCommunityNoteHeader": "Readers added context they thought people might want to know",
 
       "language_af": "Afrikaans",
       "language_ar": "Arabic",
