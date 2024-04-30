@@ -56,11 +56,16 @@ const generateStatusMedia = (status: APIStatus): string => {
 //   return `${hh}:${min} - ${yyyy}/${mm}/${dd}`;
 // }
 
-const formatDate = (date: Date): string => {
-  const yyyy = date.getFullYear();
-  const mm = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-  const dd = String(date.getDate()).padStart(2, '0');
-  return `${yyyy}/${mm}/${dd}`;
+const formatDate = (date: Date, language: string): string => {
+  if (language.startsWith('en')) {
+    language = 'en-CA'; // Use ISO dates for English to avoid problems with mm/dd vs. dd/mm
+  }
+  const formatter = new Intl.DateTimeFormat(language, {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  });
+  return formatter.format(date);
 };
 
 const htmlifyLinks = (input: string): string => {
@@ -108,15 +113,14 @@ function getTranslatedText(status: APITwitterStatus, isQuote = false): string | 
 
 const notApplicableComment = '<!-- N/A -->';
 
-// 1100 -> 1.1K, 1100000 -> 1.1M
-const truncateSocialCount = (count: number): string => {
-  if (count >= 1000000) {
-    return `${(count / 1000000).toFixed(1)}M`;
-  } else if (count >= 1000) {
-    return `${(count / 1000).toFixed(1)}K`;
-  } else {
-    return String(count);
-  }
+const truncateSocialCount = (count: number, locale = 'en-US') => {
+  const formatter = new Intl.NumberFormat(locale, {
+    notation: "compact",
+    compactDisplay: "short",
+    maximumFractionDigits: 1
+  });
+
+  return formatter.format(count);
 };
 
 const generateInlineAuthorHeader = (
@@ -166,7 +170,7 @@ const wrapForeignLinks = (url: string) => {
     : url;
 };
 
-const generateStatusFooter = (status: APIStatus, isQuote = false, author: APIUser): string => {
+const generateStatusFooter = (status: APIStatus, isQuote = false, author: APIUser, language: string): string => {
   let description = author.description;
   description = htmlifyLinks(description);
   description = htmlifyHashtags(description);
@@ -200,10 +204,10 @@ const generateStatusFooter = (status: APIStatus, isQuote = false, author: APIUse
           website: author.website
             ? `🔗 <a rel="nofollow" href="${wrapForeignLinks(author.website.url)}">${author.website.display_url}</a>`
             : '',
-          joined: author.joined ? `📆 ${formatDate(new Date(author.joined))}` : '',
-          following: truncateSocialCount(author.following),
-          followers: truncateSocialCount(author.followers),
-          statuses: truncateSocialCount(author.statuses)
+          joined: author.joined ? `📆 ${formatDate(new Date(author.joined), language)}` : '',
+          following: truncateSocialCount(author.following, language),
+          followers: truncateSocialCount(author.followers, language),
+          statuses: truncateSocialCount(author.statuses, language)
         })
   });
 };
@@ -270,6 +274,7 @@ const generateCommunityNote = (status: APITwitterStatus): string => {
 const generateStatus = (
   status: APIStatus,
   author: APIUser,
+  language: string,
   isQuote = false,
   authorActionType: AuthorActionType | null
 ): string => {
@@ -295,7 +300,7 @@ const generateStatus = (
   <!-- Embed poll -->
   ${status.poll ? generatePoll(status.poll, status.lang ?? 'en') : notApplicableComment}
   <!-- Embedded quote status -->
-  ${!isQuote && status.quote ? generateStatus(status.quote, author, true, null) : notApplicableComment}
+  ${!isQuote && status.quote ? generateStatus(status.quote, author, language, true, null) : notApplicableComment}
   <br>${!isQuote ? `<a href="${status.url}">${i18next.t('ivViewOriginal')}</a>` : notApplicableComment}
   `.format({
     quoteHeader: isQuote
@@ -387,10 +392,10 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
 
         previousThreadPieceAuthor = status.author?.id;
 
-        return generateStatus(status, status.author ?? thread?.author, false, authorAction);
+        return generateStatus(status, status.author ?? thread?.author, properties?.targetLanguage ?? 'en', false, authorAction,);
       })
       .join('')}
-    ${generateStatusFooter(status, false, thread?.author ?? status.author)}
+    ${generateStatusFooter(status, false, thread?.author ?? status.author, properties?.targetLanguage ?? 'en')}
     <br>${`<a href="${status.url}">${i18next.t('ivViewOriginal')}</a>`}
   </article>`;
 
