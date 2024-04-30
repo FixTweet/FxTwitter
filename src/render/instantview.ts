@@ -1,7 +1,7 @@
 /* eslint-disable no-irregular-whitespace */
 import { Constants } from '../constants';
 import { getSocialTextIV } from '../helpers/socialproof';
-import { formatNumber, sanitizeText } from '../helpers/utils';
+import { sanitizeText } from '../helpers/utils';
 import { Strings } from '../strings';
 
 enum AuthorActionType {
