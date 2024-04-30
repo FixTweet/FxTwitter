@@ -4,7 +4,7 @@
       "translatedFrom": "Translated from {language}",
       "quotedFrom": "Quoting {name} (@{screen_name})",
       "replyingTo": "Replying to @{screen_name}",
-      "threadPartHeader": "A part of @${status.author.screen_name}'s thread",
+      "threadPartHeader": "A part of @${screen_name}'s thread",
       
       "ivAuthorActionReply": "<a href=\"{statusUrl}\">Reply</a> from <b>{authorName}</b> (<a href=\"{authorUrl}\">@{authorScreenName}</a>):",
       "ivAuthorActionOriginal": "<a href=\"{statusUrl}\">Original</a> from <b>{authorName}</b> (<a href=\"{authorUrl}\">@{authorScreenName}</a>):",
@@ -33,6 +33,8 @@
       "pollVotes": "{voteCount, plural,\none {# vote}\nother {# votes}\n} · {timeLeft}",
       "ivPollChoice": "{voteCount, plural,\none {# vote}\nother {# votes}\n}, {percentage}%",
       "ivCommunityNoteHeader": "Readers added context they thought people might want to know",
+
+      "gifIndicator": "GIF - {brandingName}",
 
       "language_af": "Afrikaans",
       "language_ar": "Arabic",
