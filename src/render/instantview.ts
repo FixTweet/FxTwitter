@@ -4,6 +4,12 @@ import { getSocialTextIV } from '../helpers/socialproof';
 import { sanitizeText } from '../helpers/utils';
 import { Strings } from '../strings';
 
+enum AuthorActionType {
+  Reply = 'Reply',
+  Original = 'Original',
+  FollowUp = 'FollowUp'
+}
+
 const populateUserLinks = (status: APIStatus, text: string): string => {
   /* TODO: Maybe we can add username splices to our API so only genuinely valid users are linked? */
   text.match(/@(\w{1,15})/g)?.forEach(match => {
@@ -117,8 +123,10 @@ const truncateSocialCount = (count: number): string => {
   }
 };
 
-const generateInlineAuthorHeader = (status: APIStatus, author: APIUser): string => {
-  return `<i><a href="${status.url}">Reply</a> from <b>${author.name}</b> (<a href="${author.url}">@${author.screen_name}</a>):</i>`;
+const generateInlineAuthorHeader = (status: APIStatus, author: APIUser, authorActionType: AuthorActionType | null): string => {
+  return `<h4><i><a href="${status.url}">{AuthorAction}</a> from <b>${author.name}</b> (<a href="${author.url}">@${author.screen_name}</a>):</i></h4>`.format({
+    AuthorAction: authorActionType === AuthorActionType.Reply ? 'Reply' : authorActionType === AuthorActionType.Original ? 'Original' : 'Follow-up'
+  });
 }
 
 
@@ -136,7 +144,7 @@ const generateStatusFooter = (status: APIStatus, isQuote = false, author: APIUse
     `.format({
     socialText: getSocialTextIV(status as APITwitterStatus) || '',
     viewOriginal: !isQuote
-      ? `<a href="${status.url}">View original post</a>`
+      ? `<a href="${status.url}">View full thread</a>`
       : notApplicableComment,
     aboutSection: isQuote
       ? ''
@@ -166,7 +174,48 @@ const generateStatusFooter = (status: APIStatus, isQuote = false, author: APIUse
   });
 };
 
-const generateStatus = (status: APIStatus, author: APIUser, isQuote = false, differentAuthor = false): string => {
+const generateCommunityNote = (status: APITwitterStatus): string => {
+  if (status.community_note) {
+    const note = status.community_note;
+    const entities = note.entities;
+    entities.sort((a, b) => a.fromIndex - b.fromIndex); // sort entities by fromIndex
+
+    let lastToIndex = 0;
+    let result = '';
+
+    entities.forEach(entity => {
+      if (entity?.ref?.type !== 'TimelineUrl') {
+        return
+      }
+      const fromIndex = entity.fromIndex;
+      const toIndex = entity.toIndex;
+      const url = entity.ref.url;
+
+      // Add the text before the link
+      result += note.text.substring(lastToIndex, fromIndex);
+
+      // Add the link
+      result += `<a href="${url}">${note.text.substring(fromIndex, toIndex)}</a> `;
+
+      lastToIndex = toIndex;
+    });
+
+    // Add the remaining text after the last link
+    result = `<table>
+      <thead>
+        <th><b>Readers added context they thought people might want to know</b></th>
+      </thead>
+      <tbody>
+        <th>${result}</th>
+      </tbody>
+    </table>`;
+
+    return result;
+  }
+  return '';
+}
+
+const generateStatus = (status: APIStatus, author: APIUser, isQuote = false, authorActionType: AuthorActionType | null): string => {
   let text = paragraphify(sanitizeText(status.text), isQuote);
   text = htmlifyLinks(text);
   text = htmlifyHashtags(text);
@@ -181,11 +230,13 @@ const generateStatus = (status: APIStatus, author: APIUser, isQuote = false, dif
   <!-- Translated text (if applicable) -->
   ${translatedText ? translatedText : notApplicableComment}
   <!-- Inline author (if applicable) -->
-  ${differentAuthor ? generateInlineAuthorHeader(status, author) : ''}
+  ${authorActionType ? generateInlineAuthorHeader(status, author, authorActionType) : ''}
   <!-- Embed Status text -->
   ${text}
+  <!-- Embed Community Note -->
+  ${generateCommunityNote(status as APITwitterStatus)}
   <!-- Embedded quote status -->
-  ${!isQuote && status.quote ? generateStatus(status.quote, author, true) : notApplicableComment}
+  ${!isQuote && status.quote ? generateStatus(status.quote, author, true, null) : notApplicableComment}
   `.format({
     quoteHeader: isQuote
       ? `<h4><a href="${status.url}">Quoting</a> ${author.name} (<a href="${Constants.TWITTER_ROOT}/${author.screen_name}">@${author.screen_name}</a>)</h4>`
@@ -199,6 +250,7 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
   const instructions: ResponseInstructions = { addHeaders: [] };
 
   let previousThreadPieceAuthor: string | null = null;
+  let originalAuthor: string | null = null;
 
   if (!status) {
     throw new Error('Status is undefined');
@@ -228,20 +280,42 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
       flags?.archive
         ? `${Constants.BRANDING_NAME} archive`
         : 'If you can see this, your browser is doing something weird with your user agent.'
-    } <a href="${status.url}">View original post</a>
+    } <a href="${status.url}">View full thread</a>
     </section>
     <article>
-    <sub><a href="${status.url}">View original</a></sub>
+    <sub><a href="${status.url}">View full thread</a></sub>
     <h1>${status.author.name} (@${status.author.screen_name})</h1>
 
     ${thread?.thread?.map((status) => {
+      console.log('previousThreadPieceAuthor', previousThreadPieceAuthor)
+      if (originalAuthor === null) {
+        originalAuthor = status.author?.id;
+      }
       const differentAuthor = thread?.author?.id !== status.author?.id || (previousThreadPieceAuthor !== null && previousThreadPieceAuthor !== status.author?.id);
+      const isOriginal = thread?.author?.id !== status.author?.id && previousThreadPieceAuthor === null;
+      const isFollowup = thread?.author?.id === status.author?.id  && previousThreadPieceAuthor !== null && previousThreadPieceAuthor !== thread?.author?.id && originalAuthor === status.author?.id;
+      console.log('differentAuthor', differentAuthor)
+      console.log('isOriginal', isOriginal)
+      console.log('isFollowup', isFollowup)
+
+      let authorAction = null;
+
+      if (differentAuthor) {
+        if (isFollowup) {
+          authorAction = AuthorActionType.FollowUp;
+        } else if (isOriginal) {
+          authorAction = AuthorActionType.Original;
+        } else if (previousThreadPieceAuthor !== status.author?.id) {
+          authorAction = AuthorActionType.Reply;
+        }
+      }
+
       previousThreadPieceAuthor = status.author?.id;
 
-      return generateStatus(status, status.author ?? thread?.author, false, differentAuthor)
+      return generateStatus(status, status.author ?? thread?.author, false, authorAction)
     }).join('')}
     ${generateStatusFooter(status, false, thread?.author ?? status.author)}
-    <br>${`<a href="${status.url}">View original post</a>`}
+    <br>${`<a href="${status.url}">View full thread</a>`}
   </article>`;
 
   return instructions;

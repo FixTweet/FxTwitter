@@ -148,11 +148,17 @@ interface APIStatus {
   embed_card: 'tweet' | 'summary' | 'summary_large_image' | 'player';
 }
 
+interface APITwitterCommunityNote {
+  text: string;
+  entities: BirdwatchEntity[];
+}
+
 interface APITwitterStatus extends APIStatus {
   views?: number | null;
   translation?: APITranslate;
 
   is_note_tweet: boolean;
+  community_note: APITwitterCommunityNote | null;
 }
 
 interface APIUser {

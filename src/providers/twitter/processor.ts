@@ -127,6 +127,14 @@ export const buildAPITwitterStatus = async (
     apiStatus.is_note_tweet = false;
   }
 
+  if (status.birdwatch_pivot?.subtitle?.text) {
+    /* We can't automatically replace links because API doesn't give full URLs, only t.co versions :( */
+    apiStatus.community_note = {
+      text: unescapeText(status.birdwatch_pivot?.subtitle?.text ?? ''),
+      entities: status.birdwatch_pivot.subtitle?.entities ?? []
+    };
+  }
+
   if (status.legacy.lang !== 'unk') {
     apiStatus.lang = status.legacy.lang;
   } else {
