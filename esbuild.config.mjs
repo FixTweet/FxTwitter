@@ -81,7 +81,7 @@ if (process.env.SENTRY_DSN) {
       // https://sentry.io/orgredirect/organizations/:orgslug/settings/auth-tokens/
       authToken: process.env.SENTRY_AUTH_TOKEN
     })
-  )
+  );
 }
 
 await esbuild.build({

@@ -36,7 +36,11 @@ export const handleStatus = async (
 
   let fetchWithThreads = false;
 
-  if (c.req.header('user-agent')?.includes('Telegram') && !flags?.direct && flags.instantViewUnrollThreads) {
+  if (
+    c.req.header('user-agent')?.includes('Telegram') &&
+    !flags?.direct &&
+    flags.instantViewUnrollThreads
+  ) {
     fetchWithThreads = true;
   }
 

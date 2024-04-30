@@ -59,24 +59,24 @@ export const buildAPITwitterStatus = async (
     linkFixer(status.legacy.entities?.urls, status.legacy.full_text || '')
   );
   // if (threadAuthor && threadAuthor.id !== apiUser.id) {
-    apiStatus.author = {
-      id: apiUser.id,
-      name: apiUser.name,
-      screen_name: apiUser.screen_name,
-      avatar_url: apiUser.avatar_url?.replace?.('_normal', '_200x200') ?? null,
-      banner_url: apiUser.banner_url,
-      description: apiUser.description,
-      location: apiUser.location,
-      url: apiUser.url,
-      followers: apiUser.followers,
-      following: apiUser.following,
-      joined: apiUser.joined,
-      statuses: apiUser.statuses,
-      likes: apiUser.likes,
-      protected: apiUser.protected,
-      birthday: apiUser.birthday,
-      website: apiUser.website
-    };
+  apiStatus.author = {
+    id: apiUser.id,
+    name: apiUser.name,
+    screen_name: apiUser.screen_name,
+    avatar_url: apiUser.avatar_url?.replace?.('_normal', '_200x200') ?? null,
+    banner_url: apiUser.banner_url,
+    description: apiUser.description,
+    location: apiUser.location,
+    url: apiUser.url,
+    followers: apiUser.followers,
+    following: apiUser.following,
+    joined: apiUser.joined,
+    statuses: apiUser.statuses,
+    likes: apiUser.likes,
+    protected: apiUser.protected,
+    birthday: apiUser.birthday,
+    website: apiUser.website
+  };
   // }
   apiStatus.replies = status.legacy.reply_count;
   if (legacyAPI) {
@@ -95,7 +95,7 @@ export const buildAPITwitterStatus = async (
   } else {
     apiStatus.reposts = status.legacy.retweet_count;
     // if ((threadAuthor && threadAuthor.id !== apiUser.id)) {
-      apiStatus.author.global_screen_name = apiUser.global_screen_name;
+    apiStatus.author.global_screen_name = apiUser.global_screen_name;
     // }
   }
   apiStatus.likes = status.legacy.favorite_count;

@@ -90,17 +90,16 @@ export const fetchTweetDetail = async (
     useElongator,
     (_conversation: unknown) => {
       const conversation = _conversation as TweetDetailResult;
-      const response = processResponse(conversation?.data?.threaded_conversation_with_injections_v2?.instructions);
-      const tweet = findStatusInBucket(
-        status,
-        response
+      const response = processResponse(
+        conversation?.data?.threaded_conversation_with_injections_v2?.instructions
       );
+      const tweet = findStatusInBucket(status, response);
       if (tweet && isGraphQLTwitterStatus(tweet)) {
         return true;
       }
       console.log('invalid graphql tweet', tweet);
       console.log('finding status', status);
-      console.log('from response', JSON.stringify(response))
+      console.log('from response', JSON.stringify(response));
 
       return Array.isArray(conversation?.errors);
     },
@@ -268,13 +267,15 @@ const findNextStatus = (id: string, bucket: GraphQLProcessBucket): number => {
 };
 
 const findPreviousStatus = (id: string, bucket: GraphQLProcessBucket): number => {
-  const status = bucket.allStatuses.find(status => (status.rest_id ?? status.legacy?.id_str) === id);
+  const status = bucket.allStatuses.find(
+    status => (status.rest_id ?? status.legacy?.id_str) === id
+  );
   if (!status) {
     console.log('uhhh, we could not even find that tweet, dunno how that happened');
     return -1;
   }
   if ((status.rest_id ?? status.legacy?.id_str) === status.legacy?.in_reply_to_status_id_str) {
-    console.log('Tweet does not have a parent')
+    console.log('Tweet does not have a parent');
     return 0;
   }
   return bucket.allStatuses.findIndex(
@@ -317,7 +318,7 @@ export const constructTwitterThread = async (
   let response: TweetDetailResult | TweetResultsByRestIdResult | null = null;
   let status: APITwitterStatus;
 
-  console.log('env', c.env)
+  console.log('env', c.env);
   /* We can use TweetDetail on elongator accounts to increase per-account rate limit.
      We also use TweetDetail to process threads (WIP)
      
@@ -543,11 +544,19 @@ export const constructTwitterThread = async (
     author: author,
     code: 200
   };
-  
-  await Promise.all(threadStatuses.map(async status => {
-    const builtStatus = await buildAPITwitterStatus(c, status, undefined, author, false) as APITwitterStatus;
-    socialThread.thread?.push(builtStatus);
-  }));
+
+  await Promise.all(
+    threadStatuses.map(async status => {
+      const builtStatus = (await buildAPITwitterStatus(
+        c,
+        status,
+        undefined,
+        author,
+        false
+      )) as APITwitterStatus;
+      socialThread.thread?.push(builtStatus);
+    })
+  );
 
   // Sort socialThread.thread by id converted to bigint
   socialThread.thread?.sort((a, b) => {

@@ -352,14 +352,14 @@ type GraphQLTwitterStatusLegacy = {
 };
 
 type BirdwatchEntity = {
-  fromIndex: number, // 119
-  toIndex: number, // 154
+  fromIndex: number; // 119
+  toIndex: number; // 154
   ref: {
-    type: "TimelineUrl",
-    url: string, // https://t.co/jxvVatCVCz
-    urlType: "ExternalUrl"
-  }
-}
+    type: 'TimelineUrl';
+    url: string; // https://t.co/jxvVatCVCz
+    urlType: 'ExternalUrl';
+  };
+};
 
 type GraphQLTwitterStatus = {
   // Workaround
@@ -369,15 +369,15 @@ type GraphQLTwitterStatus = {
   rest_id: string; // "1674824189176590336",
   has_birdwatch_notes: boolean;
   birdwatch_pivot: {
-    destinationUrl: string, // https://twitter.com/i/birdwatch/n/1784594925926973714
+    destinationUrl: string; // https://twitter.com/i/birdwatch/n/1784594925926973714
     note: {
-      rest_id: string // 1784594925926973714
-    },
+      rest_id: string; // 1784594925926973714
+    };
     subtitle: {
-      text: string, // "This screenshot is from Sonic 1\n\ninfo.sonicretro.org/Sonic_the_Hedg…"
-      entities: BirdwatchEntity[]
-    },
-  }
+      text: string; // "This screenshot is from Sonic 1\n\ninfo.sonicretro.org/Sonic_the_Hedg…"
+      entities: BirdwatchEntity[];
+    };
+  };
   core: {
     user_results: {
       result: GraphQLUser;

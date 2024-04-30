@@ -123,11 +123,22 @@ const truncateSocialCount = (count: number): string => {
   }
 };
 
-const generateInlineAuthorHeader = (status: APIStatus, author: APIUser, authorActionType: AuthorActionType | null): string => {
-  return `<h4><i><a href="${status.url}">{AuthorAction}</a> from <b>${author.name}</b> (<a href="${author.url}">@${author.screen_name}</a>):</i></h4>`.format({
-    AuthorAction: authorActionType === AuthorActionType.Reply ? 'Reply' : authorActionType === AuthorActionType.Original ? 'Original' : 'Follow-up'
-  });
-}
+const generateInlineAuthorHeader = (
+  status: APIStatus,
+  author: APIUser,
+  authorActionType: AuthorActionType | null
+): string => {
+  return `<h4><i><a href="${status.url}">{AuthorAction}</a> from <b>${author.name}</b> (<a href="${author.url}">@${author.screen_name}</a>):</i></h4>`.format(
+    {
+      AuthorAction:
+        authorActionType === AuthorActionType.Reply
+          ? 'Reply'
+          : authorActionType === AuthorActionType.Original
+            ? 'Original'
+            : 'Follow-up'
+    }
+  );
+};
 
 const wrapForeignLinks = (url: string) => {
   let unwrap = false;
@@ -160,9 +171,7 @@ const generateStatusFooter = (status: APIStatus, isQuote = false, author: APIUse
     {aboutSection}
     `.format({
     socialText: getSocialTextIV(status as APITwitterStatus) || '',
-    viewOriginal: !isQuote
-      ? `<a href="${status.url}">View full thread</a>`
-      : notApplicableComment,
+    viewOriginal: !isQuote ? `<a href="${status.url}">View full thread</a>` : notApplicableComment,
     aboutSection: isQuote
       ? ''
       : `<h2>About author</h2>
@@ -194,7 +203,7 @@ const generateStatusFooter = (status: APIStatus, isQuote = false, author: APIUse
 const generatePoll = (poll: APIPoll, language: string): string => {
   // const formatNumber = Intl.NumberFormat(language ?? 'en')
   let str = '';
-  
+
   const barLength = 20;
 
   poll.choices.forEach(choice => {
@@ -206,11 +215,11 @@ const generatePoll = (poll: APIPoll, language: string): string => {
   str += `<br>${formatNumber(poll.total_votes)} votes · ${poll.time_left_en}`;
 
   return str;
-}
+};
 
 const generateCommunityNote = (status: APITwitterStatus): string => {
   if (status.community_note) {
-    console.log('community_note', status.community_note)
+    console.log('community_note', status.community_note);
     const note = status.community_note;
     const entities = note.entities;
     entities.sort((a, b) => a.fromIndex - b.fromIndex); // sort entities by fromIndex
@@ -220,7 +229,7 @@ const generateCommunityNote = (status: APITwitterStatus): string => {
 
     entities.forEach(entity => {
       if (entity?.ref?.type !== 'TimelineUrl') {
-        return
+        return;
       }
       const fromIndex = entity.fromIndex;
       const toIndex = entity.toIndex;
@@ -248,9 +257,14 @@ const generateCommunityNote = (status: APITwitterStatus): string => {
     return result;
   }
   return '';
-}
+};
 
-const generateStatus = (status: APIStatus, author: APIUser, isQuote = false, authorActionType: AuthorActionType | null): string => {
+const generateStatus = (
+  status: APIStatus,
+  author: APIUser,
+  isQuote = false,
+  authorActionType: AuthorActionType | null
+): string => {
   let text = paragraphify(sanitizeText(status.text), isQuote);
   text = htmlifyLinks(text);
   text = htmlifyHashtags(text);
@@ -323,34 +337,43 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
     <sub><a href="${status.url}">View full thread</a></sub>
     <h1>${status.author.name} (@${status.author.screen_name})</h1>
 
-    ${thread?.thread?.map((status) => {
-      console.log('previousThreadPieceAuthor', previousThreadPieceAuthor)
-      if (originalAuthor === null) {
-        originalAuthor = status.author?.id;
-      }
-      const differentAuthor = thread?.author?.id !== status.author?.id || (previousThreadPieceAuthor !== null && previousThreadPieceAuthor !== status.author?.id);
-      const isOriginal = thread?.author?.id !== status.author?.id && previousThreadPieceAuthor === null;
-      const isFollowup = thread?.author?.id === status.author?.id  && previousThreadPieceAuthor !== null && previousThreadPieceAuthor !== thread?.author?.id && originalAuthor === status.author?.id;
-      console.log('differentAuthor', differentAuthor)
-      console.log('isOriginal', isOriginal)
-      console.log('isFollowup', isFollowup)
-
-      let authorAction = null;
-
-      if (differentAuthor) {
-        if (isFollowup) {
-          authorAction = AuthorActionType.FollowUp;
-        } else if (isOriginal) {
-          authorAction = AuthorActionType.Original;
-        } else if (previousThreadPieceAuthor !== status.author?.id) {
-          authorAction = AuthorActionType.Reply;
+    ${thread?.thread
+      ?.map(status => {
+        console.log('previousThreadPieceAuthor', previousThreadPieceAuthor);
+        if (originalAuthor === null) {
+          originalAuthor = status.author?.id;
         }
-      }
+        const differentAuthor =
+          thread?.author?.id !== status.author?.id ||
+          (previousThreadPieceAuthor !== null && previousThreadPieceAuthor !== status.author?.id);
+        const isOriginal =
+          thread?.author?.id !== status.author?.id && previousThreadPieceAuthor === null;
+        const isFollowup =
+          thread?.author?.id === status.author?.id &&
+          previousThreadPieceAuthor !== null &&
+          previousThreadPieceAuthor !== thread?.author?.id &&
+          originalAuthor === status.author?.id;
+        console.log('differentAuthor', differentAuthor);
+        console.log('isOriginal', isOriginal);
+        console.log('isFollowup', isFollowup);
 
-      previousThreadPieceAuthor = status.author?.id;
+        let authorAction = null;
 
-      return generateStatus(status, status.author ?? thread?.author, false, authorAction)
-    }).join('')}
+        if (differentAuthor) {
+          if (isFollowup) {
+            authorAction = AuthorActionType.FollowUp;
+          } else if (isOriginal) {
+            authorAction = AuthorActionType.Original;
+          } else if (previousThreadPieceAuthor !== status.author?.id) {
+            authorAction = AuthorActionType.Reply;
+          }
+        }
+
+        previousThreadPieceAuthor = status.author?.id;
+
+        return generateStatus(status, status.author ?? thread?.author, false, authorAction);
+      })
+      .join('')}
     ${generateStatusFooter(status, false, thread?.author ?? status.author)}
     <br>${`<a href="${status.url}">View full thread</a>`}
   </article>`;
