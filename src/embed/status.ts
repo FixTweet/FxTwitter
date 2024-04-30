@@ -108,6 +108,7 @@ export const handleStatus = async (
       status.is_note_tweet ||
       status.quote ||
       status.translation ||
+      status.community_note ||
       flags?.forceInstantView);
 
   /* Force enable IV for archivers */
