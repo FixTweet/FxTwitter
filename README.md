@@ -4,6 +4,7 @@
 
 ![][icons]
 
+[![Crowdin][crowdinbadge]][crowdin]
 [![esbuild][buildbadge]][build]
 [![Tests][testsbadge]][tests]
 [![Status][statusbadge]][status]
@@ -20,6 +21,8 @@
 [licensebadge]: https://img.shields.io/github/license/FixTweet/FxTwitter
 [status]: https://status.fxtwitter.com
 [statusbadge]: https://status.fxtwitter.com/api/badge/8/uptime/720?label=Uptime%2030d
+[crowdinbadge]: https://badges.crowdin.net/fxtwitter/localized.svg
+[crowdin]: https://crowdin.com/project/fxtwitter
 
 ## Written in TypeScript as a Cloudflare Worker to scale, packed with more features and [best-in-class user privacy 🔒](#built-with-privacy-in-mind).
 
