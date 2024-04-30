@@ -1,10 +1,10 @@
 export enum Experiment {
-  IV_FORCE_THREAD_UNROLL = 'IV_FORCE_THREAD_UNROLL',
   ELONGATOR_BY_DEFAULT = 'ELONGATOR_BY_DEFAULT',
   ELONGATOR_PROFILE_API = 'ELONGATOR_PROFILE_API',
   TWEET_DETAIL_API = 'TWEET_DETAIL_API',
   DISCORD_NATIVE_MULTI_IMAGE = 'DISCORD_NATIVE_MULTI_IMAGE',
-  TRANSCODE_GIFS = 'TRANSCODE_GIFS'
+  TRANSCODE_GIFS = 'TRANSCODE_GIFS',
+  IV_FORCE_THREAD_UNROLL = 'IV_FORCE_THREAD_UNROLL'
 }
 
 type ExperimentConfig = {
@@ -14,11 +14,6 @@ type ExperimentConfig = {
 };
 
 const Experiments: { [key in Experiment]: ExperimentConfig } = {
-  [Experiment.IV_FORCE_THREAD_UNROLL]: {
-    name: 'IV force thread unroll',
-    description: 'Force thread unroll for IVs',
-    percentage: 0.1
-  },
   [Experiment.ELONGATOR_BY_DEFAULT]: {
     name: 'Elongator by default',
     description: 'Enable Elongator by default (guest token lockout bypass)',
@@ -43,6 +38,11 @@ const Experiments: { [key in Experiment]: ExperimentConfig } = {
     name: 'Transcode GIFs',
     description: 'Transcode GIFs for Discord, etc.',
     percentage: 1
+  },
+  [Experiment.IV_FORCE_THREAD_UNROLL]: {
+    name: 'IV force thread unroll',
+    description: 'Force thread unroll for Telegram Instant View',
+    percentage: 0.25
   }
 };
 
