@@ -9,6 +9,7 @@ import { renderVideo } from '../render/video';
 import { renderInstantView } from '../render/instantview';
 import { constructTwitterThread } from '../providers/twitter/conversation';
 import { Experiment, experimentCheck } from '../experiments';
+import { StatusCode } from 'hono/utils/http-status';
 
 export const returnError = (c: Context, error: string): Response => {
   return c.html(
@@ -78,7 +79,7 @@ export const handleStatus = async (
 
   /* Catch this request if it's an API response */
   if (flags?.api) {
-    c.status(api.code);
+    c.status(api.code as StatusCode);
     // Add every header from Constants.API_RESPONSE_HEADERS
     for (const [header, value] of Object.entries(Constants.API_RESPONSE_HEADERS)) {
       c.header(header, value);

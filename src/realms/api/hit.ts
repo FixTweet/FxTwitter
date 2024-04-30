@@ -5,7 +5,7 @@ export const linkHitRequest = async (c: Context) => {
   const userAgent = c.req.header('User-Agent') || '';
 
   if (userAgent.includes('Telegram')) {
-    c.status(403);
+    return c.text('', 403);
   }
   // If param `url` exists, 302 redirect to it
   if (typeof c.req.query('url') === 'string') {
