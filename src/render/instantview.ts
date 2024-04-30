@@ -276,7 +276,7 @@ const generateStatus = (
   let text = paragraphify(sanitizeText(status.text), isQuote);
   text = htmlifyLinks(text);
   text = htmlifyHashtags(text);
-  text = populateUserLinks(status, text);
+  text = populateUserLinks(text);
 
   const translatedText = getTranslatedText(status as APITwitterStatus, isQuote);
 

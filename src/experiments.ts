@@ -42,7 +42,7 @@ const Experiments: { [key in Experiment]: ExperimentConfig } = {
   [Experiment.IV_FORCE_THREAD_UNROLL]: {
     name: 'IV force thread unroll',
     description: 'Force thread unroll for Telegram Instant View',
-    percentage: 0.25
+    percentage: 1
   }
 };
 
