@@ -302,6 +302,8 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
 
   let previousThreadPieceAuthor: string | null = null;
   let originalAuthor: string | null = null;
+  
+  const useThread = thread?.thread ?? [ thread?.status ]
 
   if (!status) {
     throw new Error('Status is undefined');
@@ -337,9 +339,11 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
     <sub><a href="${status.url}">View full thread</a></sub>
     <h1>${status.author.name} (@${status.author.screen_name})</h1>
 
-    ${thread?.thread
-      ?.map(status => {
+    ${useThread.map(status => {
         console.log('previousThreadPieceAuthor', previousThreadPieceAuthor);
+        if (!status) {
+          return '';
+        }
         if (originalAuthor === null) {
           originalAuthor = status.author?.id;
         }
