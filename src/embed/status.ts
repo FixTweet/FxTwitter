@@ -217,7 +217,7 @@ export const handleStatus = async (
       }
       ivbody = instructions.text || '';
     } catch (e) {
-      console.log('Error rendering Instant View', e);
+      console.log('Error rendering Instant View', e, (e as Error)?.stack);
       useIV = false;
     }
   }

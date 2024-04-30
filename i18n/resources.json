@@ -21,7 +21,7 @@
       "ivAboutAuthor": "About author",
       "ivProfileFollowing": "{numFollowing, plural, one {Following} other {Following}}",
       "ivProfileFollowers": "{numFollowers, plural, one {Follower} other {Followers}}",
-      "ivProfileStatuses": "{numPosts, plural, one {Post} other {Posts}}",
+      "ivProfileStatuses": "{numStatuses, plural, one {Post} other {Posts}}",
       "ivProfilePictureAlt": "{author}'s profile picture",
 
       "ivFallbackText": "If you can see this, your browser is doing something weird with your user agent.",
