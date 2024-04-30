@@ -133,6 +133,8 @@ export const buildAPITwitterStatus = async (
       text: unescapeText(status.birdwatch_pivot?.subtitle?.text ?? ''),
       entities: status.birdwatch_pivot.subtitle?.entities ?? []
     };
+  } else {
+    apiStatus.community_note = null;
   }
 
   if (status.legacy.lang !== 'unk') {
