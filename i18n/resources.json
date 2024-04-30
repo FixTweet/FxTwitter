@@ -18,14 +18,14 @@
       "ivViewOriginalStatus": "View full thread",
       "ivAboutAuthor": "About author",
       "ivProfileFollowing": "Following",
-      "ivProfileFollowers": "Followers",
-      "ivProfileStatuses": "Posts",
+      "ivProfileFollowers": "{numFollowers, plural, one {# Follower} other {# Followers}}",
+      "ivProfileStatuses": "{numPosts, plural, one {# Post} other {# Posts}}",
 
       "ivFallbackText": "If you can see this, your browser is doing something weird with your user agent.",
       "ivInternetArchiveText": "{brandingName} archive",
 
       "pollFinalResults": "Final results",
-      "pollVotes": "{voteCount} votes · {timeLeft}",
+      "pollVotes": "{voteCount, plural, one {# vote} other {# votes}} · {timeLeft}",
 
       "ivQuoteHeader": "<a href=\"{url}\">Quoting</a> {authorName} (<a href=\"{authorURL}\">@{authorHandle}</a>)",
 
