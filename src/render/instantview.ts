@@ -176,6 +176,7 @@ const generateStatusFooter = (status: APIStatus, isQuote = false, author: APIUse
 
 const generateCommunityNote = (status: APITwitterStatus): string => {
   if (status.community_note) {
+    console.log('community_note', status.community_note)
     const note = status.community_note;
     const entities = note.entities;
     entities.sort((a, b) => a.fromIndex - b.fromIndex); // sort entities by fromIndex
@@ -195,7 +196,7 @@ const generateCommunityNote = (status: APITwitterStatus): string => {
       result += note.text.substring(lastToIndex, fromIndex);
 
       // Add the link
-      result += `<a href="${url}">${note.text.substring(fromIndex, toIndex)}</a> `;
+      result += `<a href="${url}">${note.text.substring(fromIndex, toIndex)}</a>`;
 
       lastToIndex = toIndex;
     });
@@ -206,7 +207,7 @@ const generateCommunityNote = (status: APITwitterStatus): string => {
         <th><b>Readers added context they thought people might want to know</b></th>
       </thead>
       <tbody>
-        <th>${result}</th>
+        <th>${result.replace(/\n/g, '\n<br>')}</th>
       </tbody>
     </table>`;
 
