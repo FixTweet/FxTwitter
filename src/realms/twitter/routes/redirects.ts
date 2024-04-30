@@ -28,7 +28,8 @@ export const setRedirectRequest = async (c: Context) => {
     return c.html(
       Strings.MESSAGE_HTML.format({
         message: `Failed to set base redirect: Your request seems to be originating from another domain, please open this up in a new tab if you are trying to set your base redirect.`
-      }), 403
+      }),
+      403
     );
   }
 
@@ -47,7 +48,8 @@ export const setRedirectRequest = async (c: Context) => {
     return c.html(
       Strings.MESSAGE_HTML.format({
         message: `Your base redirect has been cleared. To set one, please pass along the <code>url</code> parameter.`
-      }), 200
+      }),
+      200
     );
   }
 
@@ -71,7 +73,8 @@ export const setRedirectRequest = async (c: Context) => {
       return c.html(
         Strings.MESSAGE_HTML.format({
           message: `Your URL does not appear to be well-formed. Example: ?url=https://nitter.net`
-        }), 200
+        }),
+        200
       );
     }
 
