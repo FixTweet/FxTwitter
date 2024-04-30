@@ -209,7 +209,8 @@ export const handleStatus = async (
         status: status,
         thread: thread,
         text: newText,
-        flags: flags
+        flags: flags,
+        targetLanguage: language ?? status.lang ?? 'en'
       });
       headers.push(...instructions.addHeaders);
       if (instructions.authorText) {

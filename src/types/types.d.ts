@@ -38,6 +38,7 @@ interface RenderProperties {
   userAgent?: string;
   text?: string;
   flags?: InputFlags;
+  targetLanguage?: string;
 }
 
 interface TweetAPIResponse {
