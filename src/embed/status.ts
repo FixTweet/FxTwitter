@@ -12,7 +12,7 @@ import { renderVideo } from '../render/video';
 import { renderInstantView } from '../render/instantview';
 import { constructTwitterThread } from '../providers/twitter/conversation';
 import { Experiment, experimentCheck } from '../experiments';
-import translationResources from '../../i18n/resources.json';
+import translationResources from '../../i18n/resources';
 
 export const returnError = (c: Context, error: string): Response => {
   return c.html(
