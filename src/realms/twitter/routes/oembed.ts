@@ -28,7 +28,6 @@ export const oembed = async (c: Context) => {
   };
 
   c.header('content-type', 'application/json');
-  c.status(200);
   /* Stringify and send it on its way! */
-  return c.text(JSON.stringify(data));
+  return c.text(JSON.stringify(data), 200);
 };

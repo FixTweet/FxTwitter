@@ -1,4 +1,7 @@
 import { Context } from 'hono';
+import { StatusCode } from 'hono/utils/http-status';
+import i18next from 'i18next';
+import icu from "i18next-icu";
 import { Constants } from '../constants';
 import { handleQuote } from '../helpers/quote';
 import { formatNumber, sanitizeText, truncateWithEllipsis } from '../helpers/utils';
@@ -9,8 +12,6 @@ import { renderVideo } from '../render/video';
 import { renderInstantView } from '../render/instantview';
 import { constructTwitterThread } from '../providers/twitter/conversation';
 import { Experiment, experimentCheck } from '../experiments';
-import i18next from 'i18next';
-import icu from 'i18next-icu';
 import translationResources from '../../i18n/resources.json';
 
 export const returnError = (c: Context, error: string): Response => {
@@ -81,7 +82,7 @@ export const handleStatus = async (
 
   /* Catch this request if it's an API response */
   if (flags?.api) {
-    c.status(api.code);
+    c.status(api.code as StatusCode);
     // Add every header from Constants.API_RESPONSE_HEADERS
     for (const [header, value] of Object.entries(Constants.API_RESPONSE_HEADERS)) {
       c.header(header, value);

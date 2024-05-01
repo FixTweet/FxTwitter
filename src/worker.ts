@@ -8,6 +8,7 @@ import { Constants } from './constants';
 import { api } from './realms/api/router';
 import { twitter } from './realms/twitter/router';
 import { cacheMiddleware } from './caches';
+import { StatusCode } from 'hono/utils/http-status';
 
 const noCache = 'max-age=0, no-cache, no-store, must-revalidate';
 const embeddingClientRegex =
@@ -89,10 +90,9 @@ app.onError((err, c) => {
   if (c.req.header('User-Agent')?.match(embeddingClientRegex)) {
     errorCode = 200;
   }
-  c.status(errorCode);
   c.header('cache-control', noCache);
 
-  return c.html(Strings.ERROR_HTML);
+  return c.html(Strings.ERROR_HTML, errorCode as StatusCode);
 });
 
 const customLogger = (message: string, ...rest: string[]) => {
@@ -138,12 +138,10 @@ app.all('/error', async c => {
   c.header('cache-control', noCache);
 
   if (c.req.header('User-Agent')?.match(embeddingClientRegex)) {
-    c.status(200);
-    return c.html(Strings.ERROR_HTML);
+    return c.html(Strings.ERROR_HTML, 200);
   }
-  c.status(400);
   /* We return it as a 200 so embedded applications can display the error */
-  return c.body('');
+  return c.body('', 400);
 });
 
 export default {

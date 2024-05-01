@@ -4,6 +4,7 @@ import { buildAPITwitterStatus } from './processor';
 import { Experiment, experimentCheck } from '../../experiments';
 import { isGraphQLTwitterStatus } from '../../helpers/graphql';
 import { Context } from 'hono';
+import { StatusCode } from 'hono/utils/http-status';
 
 const writeDataPoint = (
   c: Context,
@@ -579,10 +580,9 @@ export const threadAPIProvider = async (c: Context) => {
 
   const processedResponse = await constructTwitterThread(id, true, c, undefined);
 
-  c.status(processedResponse.code);
   // Add every header from Constants.API_RESPONSE_HEADERS
   for (const [header, value] of Object.entries(Constants.API_RESPONSE_HEADERS)) {
     c.header(header, value);
   }
-  return c.json(processedResponse);
+  return c.json(processedResponse, processedResponse.code as StatusCode);
 };

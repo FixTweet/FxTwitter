@@ -131,8 +131,7 @@ export const statusRequest = async (c: Context) => {
       return statusResponse;
     } else {
       /* Somehow handleStatus sent us nothing. This should *never* happen, but we have a case for it. */
-      c.status(500);
-      return c.text(Strings.ERROR_UNKNOWN);
+      return c.text(Strings.ERROR_UNKNOWN, 500);
     }
   } else {
     /* A human has clicked a fxtwitter.com/:screen_name/status/:id link!

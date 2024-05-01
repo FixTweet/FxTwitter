@@ -2,6 +2,7 @@ import { Context } from 'hono';
 import { Constants } from './constants';
 import { Strings } from './strings';
 import { userAPI } from './providers/twitter/profile';
+import { StatusCode } from 'hono/utils/http-status';
 
 export const returnError = (c: Context, error: string): Response => {
   return c.html(
@@ -29,7 +30,7 @@ export const handleProfile = async (
   /* Catch this request if it's an API response */
   // For now we just always return the API response while testing
   if (flags?.api) {
-    c.status(api.code);
+    c.status(api.code as StatusCode);
     // Add every header from Constants.API_RESPONSE_HEADERS
     for (const [header, value] of Object.entries(Constants.API_RESPONSE_HEADERS)) {
       c.header(header, value);
