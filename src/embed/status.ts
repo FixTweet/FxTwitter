@@ -1,4 +1,7 @@
 import { Context } from 'hono';
+import { StatusCode } from 'hono/utils/http-status';
+import i18next from 'i18next';
+import icu from "i18next-icu";
 import { Constants } from '../constants';
 import { handleQuote } from '../helpers/quote';
 import { formatNumber, sanitizeText, truncateWithEllipsis } from '../helpers/utils';
@@ -9,7 +12,7 @@ import { renderVideo } from '../render/video';
 import { renderInstantView } from '../render/instantview';
 import { constructTwitterThread } from '../providers/twitter/conversation';
 import { Experiment, experimentCheck } from '../experiments';
-import { StatusCode } from 'hono/utils/http-status';
+import translationResources from '../../i18n/resources.json';
 
 export const returnError = (c: Context, error: string): Response => {
   return c.html(
@@ -127,6 +130,13 @@ export const handleStatus = async (
 
   let overrideMedia: APIMedia | undefined;
 
+  await i18next.use(icu).init({
+    lng: language ?? status.lang ?? 'en',
+    debug: true,
+    resources: translationResources,
+    fallbackLng: 'en'
+  });
+
   // Check if mediaNumber exists, and if that media exists in status.media.all. If it does, we'll store overrideMedia variable
   if (mediaNumber && status.media && status.media.all && status.media.all[mediaNumber - 1]) {
     overrideMedia = status.media.all[mediaNumber - 1];
@@ -200,7 +210,8 @@ export const handleStatus = async (
         status: status,
         thread: thread,
         text: newText,
-        flags: flags
+        flags: flags,
+        targetLanguage: language ?? status.lang ?? 'en'
       });
       headers.push(...instructions.addHeaders);
       if (instructions.authorText) {
@@ -208,7 +219,7 @@ export const handleStatus = async (
       }
       ivbody = instructions.text || '';
     } catch (e) {
-      console.log('Error rendering Instant View', e);
+      console.log('Error rendering Instant View', e, (e as Error)?.stack);
       useIV = false;
     }
   }
@@ -219,15 +230,11 @@ export const handleStatus = async (
   if (status.translation) {
     const { translation } = status;
 
-    const formatText =
-      language === 'en'
-        ? Strings.TRANSLATE_TEXT.format({
-            language: translation.source_lang_en
-          })
-        : Strings.TRANSLATE_TEXT_INTL.format({
-            source: translation.source_lang.toUpperCase(),
-            destination: translation.target_lang.toUpperCase()
-          });
+    const formatText = `📑 {translation}`.format({
+      translation: i18next.t('translatedFrom').format({
+        language: i18next.t(`language_${translation.source_lang}`)
+      })
+    });
 
     newText = `${formatText}\n\n` + `${translation.text}\n\n`;
   }
@@ -381,7 +388,10 @@ export const handleStatus = async (
     });
 
     /* Finally, add the footer of the poll with # of votes and time left */
-    str += `\n${formatNumber(poll.total_votes)} votes · ${poll.time_left_en}`;
+    str += '\n'; /* TODO: Localize time left */
+    str += i18next
+      .t('pollVotes')
+      .format({ voteCount: formatNumber(poll.total_votes), timeLeft: poll.time_left_en });
 
     /* Check if the poll is ongoing and apply low TTL cache control.
        Yes, checking if this is a string is a hacky way to do this, but
@@ -455,13 +465,13 @@ export const handleStatus = async (
 
   /* Special reply handling if authorText is not overriden */
   if (status.replying_to && authorText === Strings.DEFAULT_AUTHOR_TEXT) {
-    authorText = `↪ Replying to @${status.replying_to.screen_name}`;
+    authorText = `↪ ${i18next.t('replyingTo').format({ screen_name: status.replying_to.screen_name })}`;
     /* We'll assume it's a thread if it's a reply to themselves */
   } else if (
     status.replying_to?.screen_name === status.author.screen_name &&
     authorText === Strings.DEFAULT_AUTHOR_TEXT
   ) {
-    authorText = `↪ A part of @${status.author.screen_name}'s thread`;
+    authorText = `↪ ${i18next.t('threadPartHeader').format({ screen_name: status.author.screen_name })}`;
   }
 
   if (!flags.gallery) {
@@ -479,7 +489,7 @@ export const handleStatus = async (
     const mediaType = overrideMedia ?? status.media.videos?.[0]?.type;
 
     if (mediaType === 'gif') {
-      provider = `GIF - ${Constants.BRANDING_NAME}`;
+      provider = i18next.t('gifIndicator', { brandingName: Constants.BRANDING_NAME });
     } else if (
       status.embed_card === 'player' &&
       providerEngagementText !== Strings.DEFAULT_AUTHOR_TEXT

@@ -150,8 +150,8 @@ export const buildAPITwitterStatus = async (
     apiStatus.replying_to_status = status.legacy?.in_reply_to_status_id_str || null;
   } else if (status.legacy.in_reply_to_screen_name) {
     apiStatus.replying_to = {
-      screen_name: status.legacy.in_reply_to_screen_name || null,
-      post: status.legacy.in_reply_to_status_id_str || null
+      screen_name: status.legacy.in_reply_to_screen_name,
+      post: status.legacy.in_reply_to_status_id_str
     };
   } else {
     apiStatus.replying_to = null;

@@ -1,8 +1,8 @@
 /* eslint-disable no-irregular-whitespace */
+import i18next from 'i18next';
 import { Constants } from '../constants';
 import { getSocialTextIV } from '../helpers/socialproof';
 import { sanitizeText } from '../helpers/utils';
-import { Strings } from '../strings';
 
 enum AuthorActionType {
   Reply = 'Reply',
@@ -10,7 +10,7 @@ enum AuthorActionType {
   FollowUp = 'FollowUp'
 }
 
-const populateUserLinks = (status: APIStatus, text: string): string => {
+const populateUserLinks = (text: string): string => {
   /* TODO: Maybe we can add username splices to our API so only genuinely valid users are linked? */
   text.match(/@(\w{1,15})/g)?.forEach(match => {
     const username = match.replace('@', '');
@@ -22,7 +22,7 @@ const populateUserLinks = (status: APIStatus, text: string): string => {
   return text;
 };
 
-const generateStatusMedia = (status: APIStatus, author: APIUser): string => {
+const generateStatusMedia = (status: APIStatus): string => {
   let media = '';
   if (status.media?.all?.length) {
     status.media.all.forEach(mediaItem => {
@@ -36,10 +36,10 @@ const generateStatusMedia = (status: APIStatus, author: APIUser): string => {
           });
           break;
         case 'video':
-          media += `<video src="${mediaItem.url}" alt="${author.name}'s video. Alt text not available."/>`;
+          media += `<video src="${mediaItem.url}" alt="${i18next.t('videoAltTextUnavailable').format({ author: status.author.name })}"/>`;
           break;
         case 'gif':
-          media += `<video src="${mediaItem.url}" alt="${author.name}'s gif. Alt text not available."/>`;
+          media += `<video src="${mediaItem.url}" alt="${i18next.t('gifAltTextUnavailable').format({ author: status.author.name })}"/>`;
           break;
       }
     });
@@ -56,11 +56,16 @@ const generateStatusMedia = (status: APIStatus, author: APIUser): string => {
 //   return `${hh}:${min} - ${yyyy}/${mm}/${dd}`;
 // }
 
-const formatDate = (date: Date): string => {
-  const yyyy = date.getFullYear();
-  const mm = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-  const dd = String(date.getDate()).padStart(2, '0');
-  return `${yyyy}/${mm}/${dd}`;
+const formatDate = (date: Date, language: string): string => {
+  if (language.startsWith('en')) {
+    language = 'en-CA'; // Use ISO dates for English to avoid problems with mm/dd vs. dd/mm
+  }
+  const formatter = new Intl.DateTimeFormat(language, {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  });
+  return formatter.format(date);
 };
 
 const htmlifyLinks = (input: string): string => {
@@ -95,32 +100,27 @@ function getTranslatedText(status: APITwitterStatus, isQuote = false): string | 
   let text = paragraphify(sanitizeText(status.translation?.text), isQuote);
   text = htmlifyLinks(text);
   text = htmlifyHashtags(text);
-  text = populateUserLinks(status, text);
+  text = populateUserLinks(text);
 
-  const formatText =
-    status.translation.target_lang === 'en'
-      ? Strings.TRANSLATE_TEXT.format({
-          language: status.translation.source_lang_en
-        })
-      : Strings.TRANSLATE_TEXT_INTL.format({
-          source: status.translation.source_lang.toUpperCase(),
-          destination: status.translation.target_lang.toUpperCase()
-        });
+  const formatText = `📑 {translation}`.format({
+    translation: i18next.t('translatedFrom').format({
+      language: i18next.t(`language_${status.translation.source_lang}`)
+    })
+  });
 
-  return `<h4>${formatText}</h4>${text}<h4>Original</h4>`;
+  return `<h4>${formatText}</h4>${text}<h4>${i18next.t('ivOriginalText')}</h4>`;
 }
 
 const notApplicableComment = '<!-- N/A -->';
 
-// 1100 -> 1.1K, 1100000 -> 1.1M
-const truncateSocialCount = (count: number): string => {
-  if (count >= 1000000) {
-    return `${(count / 1000000).toFixed(1)}M`;
-  } else if (count >= 1000) {
-    return `${(count / 1000).toFixed(1)}K`;
-  } else {
-    return String(count);
-  }
+const truncateSocialCount = (count: number, locale = 'en-US') => {
+  const formatter = new Intl.NumberFormat(locale, {
+    notation: 'compact',
+    compactDisplay: 'short',
+    maximumFractionDigits: 1
+  });
+
+  return formatter.format(count);
 };
 
 const generateInlineAuthorHeader = (
@@ -128,16 +128,28 @@ const generateInlineAuthorHeader = (
   author: APIUser,
   authorActionType: AuthorActionType | null
 ): string => {
-  return `<h4><i><a href="${status.url}">{AuthorAction}</a> from <b>${author.name}</b> (<a href="${author.url}">@${author.screen_name}</a>):</i></h4>`.format(
-    {
-      AuthorAction:
-        authorActionType === AuthorActionType.Reply
-          ? 'Reply'
-          : authorActionType === AuthorActionType.Original
-            ? 'Original'
-            : 'Follow-up'
-    }
-  );
+  if (authorActionType === AuthorActionType.Original) {
+    return `<h4><i>${i18next.t('ivAuthorActionOriginal', {
+      statusUrl: status.url,
+      authorName: author.name,
+      authorUrl: author.url,
+      authorScreenName: author.screen_name
+    })}</i></h4>`;
+  } else if (authorActionType === AuthorActionType.FollowUp) {
+    return `<h4><i>${i18next.t('ivAuthorActionFollowUp', {
+      statusUrl: status.url,
+      authorName: author.name,
+      authorUrl: author.url,
+      authorScreenName: author.screen_name
+    })}</i></h4>`;
+  }
+  // Reply / unknown
+  return `<h4><i>${i18next.t('ivAuthorActionReply', {
+    statusUrl: status.url,
+    authorName: author.name,
+    authorUrl: author.url,
+    authorScreenName: author.screen_name
+  })}</i></h4>`;
 };
 
 const wrapForeignLinks = (url: string) => {
@@ -158,11 +170,16 @@ const wrapForeignLinks = (url: string) => {
     : url;
 };
 
-const generateStatusFooter = (status: APIStatus, isQuote = false, author: APIUser): string => {
+const generateStatusFooter = (
+  status: APIStatus,
+  isQuote = false,
+  author: APIUser,
+  language: string
+): string => {
   let description = author.description;
   description = htmlifyLinks(description);
   description = htmlifyHashtags(description);
-  description = populateUserLinks(status, description);
+  description = populateUserLinks(description);
 
   return `
     <p>{socialText}</p>
@@ -171,31 +188,31 @@ const generateStatusFooter = (status: APIStatus, isQuote = false, author: APIUse
     {aboutSection}
     `.format({
     socialText: getSocialTextIV(status as APITwitterStatus) || '',
-    viewOriginal: !isQuote ? `<a href="${status.url}">View full thread</a>` : notApplicableComment,
+    viewOriginal: !isQuote
+      ? `<a href="${status.url}">${i18next.t('ivViewOriginal')}</a>`
+      : notApplicableComment,
     aboutSection: isQuote
       ? ''
-      : `<h2>About author</h2>
+      : `<h2>${i18next.t('ivAboutAuthor')}</h2>
         {pfp}
         <h2>${author.name}</h2>
         <p><a href="${author.url}">@${author.screen_name}</a></p>
         <p><b>${description}</b></p>
         <p>{location} {website} {joined}</p>
         <p>
-          {following} <b>Following</b> 
-          {followers} <b>Followers</b> 
-          {statuses} <b>Posts</b>
+          {following} <b>${i18next.t('ivProfileFollowing', { numFollowing: author.following })}</b> 
+          {followers} <b>${i18next.t('ivProfileFollowers', { numFollowers: author.followers })}</b> 
+          {statuses} <b>${i18next.t('ivProfileStatuses', { numStatuses: author.statuses })}</b>
         </p>`.format({
-          pfp: `<img src="${author.avatar_url?.replace('_200x200', '_400x400')}" alt="${
-            author.name
-          }'s profile picture" />`,
+          pfp: `<img src="${author.avatar_url?.replace('_200x200', '_400x400')}" alt="${i18next.t('ivProfilePictureAlt', { author: author.name })}" />`,
           location: author.location ? `📌 ${author.location}` : '',
           website: author.website
             ? `🔗 <a rel="nofollow" href="${wrapForeignLinks(author.website.url)}">${author.website.display_url}</a>`
             : '',
-          joined: author.joined ? `📆 ${formatDate(new Date(author.joined))}` : '',
-          following: truncateSocialCount(author.following),
-          followers: truncateSocialCount(author.followers),
-          statuses: truncateSocialCount(author.statuses)
+          joined: author.joined ? `📆 ${formatDate(new Date(author.joined), language)}` : '',
+          following: truncateSocialCount(author.following, language),
+          followers: truncateSocialCount(author.followers, language),
+          statuses: truncateSocialCount(author.statuses, language)
         })
   });
 };
@@ -209,10 +226,10 @@ const generatePoll = (poll: APIPoll, language: string): string => {
   poll.choices.forEach(choice => {
     const bar = '█'.repeat((choice.percentage / 100) * barLength);
     // eslint-disable-next-line no-irregular-whitespace
-    str += `${bar}<br>${choice.label}<br>${intlFormat.format(choice.count)} votes, ${intlFormat.format(choice.percentage)}%<br>`;
+    str += `${bar}<br>${choice.label}<br>${i18next.t('ivPollChoice', { voteCount: intlFormat.format(choice.count), percentage: intlFormat.format(choice.percentage) })}<br>`;
   });
   /* Finally, add the footer of the poll with # of votes and time left */
-  str += `<br>${intlFormat.format(poll.total_votes)} votes · ${poll.time_left_en}`;
+  str += `<br>${i18next.t('pollVotes', { voteCount: intlFormat.format(poll.total_votes), timeLeft: poll.time_left_en })}`;
 
   return str;
 };
@@ -247,7 +264,7 @@ const generateCommunityNote = (status: APITwitterStatus): string => {
     // Add the remaining text after the last link
     result = `<table>
       <thead>
-        <th><b>Readers added context they thought people might want to know</b></th>
+        <th><b>${i18next.t('ivCommunityNoteHeader')}</b></th>
       </thead>
       <tbody>
         <th>${result.replace(/\n/g, '\n<br>')}</th>
@@ -262,20 +279,21 @@ const generateCommunityNote = (status: APITwitterStatus): string => {
 const generateStatus = (
   status: APIStatus,
   author: APIUser,
+  language: string,
   isQuote = false,
   authorActionType: AuthorActionType | null
 ): string => {
   let text = paragraphify(sanitizeText(status.text), isQuote);
   text = htmlifyLinks(text);
   text = htmlifyHashtags(text);
-  text = populateUserLinks(status, text);
+  text = populateUserLinks(text);
 
   const translatedText = getTranslatedText(status as APITwitterStatus, isQuote);
 
   return `<!-- Telegram Instant View -->
   {quoteHeader}
   <!-- Embed media -->
-  ${generateStatusMedia(status, author)} 
+  ${generateStatusMedia(status)} 
   <!-- Translated text (if applicable) -->
   ${translatedText ? translatedText : notApplicableComment}
   <!-- Inline author (if applicable) -->
@@ -287,12 +305,20 @@ const generateStatus = (
   <!-- Embed poll -->
   ${status.poll ? generatePoll(status.poll, status.lang ?? 'en') : notApplicableComment}
   <!-- Embedded quote status -->
-  ${!isQuote && status.quote ? generateStatus(status.quote, author, true, null) : notApplicableComment}
-  `.format({
-    quoteHeader: isQuote
-      ? `<h4><a href="${status.url}">Quoting</a> ${status.author.name} (<a href="${Constants.TWITTER_ROOT}/${status.author.screen_name}">@${status.author.screen_name}</a>)</h4>`
-      : ''
-  });
+  ${!isQuote && status.quote ? generateStatus(status.quote, author, language, true, null) : notApplicableComment}`.format(
+    {
+      quoteHeader: isQuote
+        ? '<h4>' +
+          i18next.t('ivQuoteHeader').format({
+            url: status.url,
+            authorName: status.author.name,
+            authorHandle: status.author.screen_name,
+            authorURL: `${Constants.TWITTER_ROOT}/${status.author.screen_name}`
+          }) +
+          '</h4>'
+        : ''
+    }
+  );
 };
 
 export const renderInstantView = (properties: RenderProperties): ResponseInstructions => {
@@ -331,12 +357,12 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
     </section>
     <section class="section--first">${
       flags?.archive
-        ? `${Constants.BRANDING_NAME} archive`
-        : 'If you can see this, your browser is doing something weird with your user agent.'
-    } <a href="${status.url}">View full thread</a>
+        ? i18next.t('ivInternetArchiveText').format({ brandingName: Constants.BRANDING_NAME })
+        : i18next.t('ivFallbackText')
+    } <a href="${status.url}">${i18next.t('ivViewOriginal')}</a>
     </section>
     <article>
-    <sub><a href="${status.url}">View full thread</a></sub>
+    <sub><a href="${status.url}">${i18next.t('ivViewOriginal')}</a></sub>
     <h1>${status.author.name} (@${status.author.screen_name})</h1>
 
     ${useThread
@@ -376,11 +402,17 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
 
         previousThreadPieceAuthor = status.author?.id;
 
-        return generateStatus(status, status.author ?? thread?.author, false, authorAction);
+        return generateStatus(
+          status,
+          status.author ?? thread?.author,
+          properties?.targetLanguage ?? 'en',
+          false,
+          authorAction
+        );
       })
       .join('')}
-    ${generateStatusFooter(status, false, thread?.author ?? status.author)}
-    <br>${`<a href="${status.url}">View full thread</a>`}
+    ${generateStatusFooter(status, false, thread?.author ?? status.author, properties?.targetLanguage ?? 'en')}
+    <br>${`<a href="${status.url}">${i18next.t('ivViewOriginal')}</a>`}
   </article>`;
 
   return instructions;
