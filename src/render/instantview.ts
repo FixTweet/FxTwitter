@@ -290,7 +290,7 @@ const generateStatus = (
   ${!isQuote && status.quote ? generateStatus(status.quote, author, true, null) : notApplicableComment}
   `.format({
     quoteHeader: isQuote
-      ? `<h4><a href="${status.url}">Quoting</a> ${author.name} (<a href="${Constants.TWITTER_ROOT}/${author.screen_name}">@${author.screen_name}</a>)</h4>`
+      ? `<h4><a href="${status.url}">Quoting</a> ${status.author.name} (<a href="${Constants.TWITTER_ROOT}/${status.author.screen_name}">@${status.author.screen_name}</a>)</h4>`
       : ''
   });
 };
