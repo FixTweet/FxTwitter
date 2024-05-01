@@ -35,12 +35,12 @@
     "ts-jest": "^29.1.2",
     "ts-loader": "^9.5.1",
     "typescript": "^5.4.5",
-    "wrangler": "^3.52.0"
+    "wrangler": "^3.53.0"
   },
   "dependencies": {
     "@hono/sentry": "^1.0.1",
-    "hono": "^3.12.12",
     "i18next": "^23.8.2",
-    "i18next-icu": "^2.3.0"
+    "i18next-icu": "^2.3.0",
+    "hono": "^4.2.9"
   }
 }
