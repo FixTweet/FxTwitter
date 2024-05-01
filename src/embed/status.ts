@@ -10,7 +10,7 @@ import { renderInstantView } from '../render/instantview';
 import { constructTwitterThread } from '../providers/twitter/conversation';
 import { Experiment, experimentCheck } from '../experiments';
 import i18next from 'i18next';
-import icu from "i18next-icu";
+import icu from 'i18next-icu';
 import translationResources from '../../i18n/resources.json';
 
 export const returnError = (c: Context, error: string): Response => {
@@ -488,7 +488,7 @@ export const handleStatus = async (
     const mediaType = overrideMedia ?? status.media.videos?.[0]?.type;
 
     if (mediaType === 'gif') {
-      provider = i18next.t('gifIndicator', {brandingName: Constants.BRANDING_NAME});
+      provider = i18next.t('gifIndicator', { brandingName: Constants.BRANDING_NAME });
     } else if (
       status.embed_card === 'player' &&
       providerEngagementText !== Strings.DEFAULT_AUTHOR_TEXT

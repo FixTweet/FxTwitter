@@ -14,7 +14,9 @@ export const renderPhoto = (
 
     const all = status.media?.all as APIMedia[];
     const baseString =
-      all.length === status.media?.photos?.length ? i18next.t('photoCount') : i18next.t('mediaCount');
+      all.length === status.media?.photos?.length
+        ? i18next.t('photoCount')
+        : i18next.t('mediaCount');
 
     const photoCounter = baseString.format({
       number: String(all.indexOf(photo) + 1),

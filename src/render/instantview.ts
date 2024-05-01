@@ -115,8 +115,8 @@ const notApplicableComment = '<!-- N/A -->';
 
 const truncateSocialCount = (count: number, locale = 'en-US') => {
   const formatter = new Intl.NumberFormat(locale, {
-    notation: "compact",
-    compactDisplay: "short",
+    notation: 'compact',
+    compactDisplay: 'short',
     maximumFractionDigits: 1
   });
 
@@ -143,7 +143,7 @@ const generateInlineAuthorHeader = (
       authorScreenName: author.screen_name
     })}</i></h4>`;
   }
-  // Reply / unknown 
+  // Reply / unknown
   return `<h4><i>${i18next.t('ivAuthorActionReply', {
     statusUrl: status.url,
     authorName: author.name,
@@ -170,7 +170,12 @@ const wrapForeignLinks = (url: string) => {
     : url;
 };
 
-const generateStatusFooter = (status: APIStatus, isQuote = false, author: APIUser, language: string): string => {
+const generateStatusFooter = (
+  status: APIStatus,
+  isQuote = false,
+  author: APIUser,
+  language: string
+): string => {
   let description = author.description;
   description = htmlifyLinks(description);
   description = htmlifyHashtags(description);
@@ -221,10 +226,10 @@ const generatePoll = (poll: APIPoll, language: string): string => {
   poll.choices.forEach(choice => {
     const bar = '█'.repeat((choice.percentage / 100) * barLength);
     // eslint-disable-next-line no-irregular-whitespace
-    str += `${bar}<br>${choice.label}<br>${i18next.t('ivPollChoice', { voteCount: intlFormat.format(choice.count), percentage: intlFormat.format(choice.percentage)})}<br>`;
+    str += `${bar}<br>${choice.label}<br>${i18next.t('ivPollChoice', { voteCount: intlFormat.format(choice.count), percentage: intlFormat.format(choice.percentage) })}<br>`;
   });
   /* Finally, add the footer of the poll with # of votes and time left */
-  str += `<br>${i18next.t('pollVotes', { voteCount: intlFormat.format(poll.total_votes), timeLeft: poll.time_left_en})}`;
+  str += `<br>${i18next.t('pollVotes', { voteCount: intlFormat.format(poll.total_votes), timeLeft: poll.time_left_en })}`;
 
   return str;
 };
@@ -300,19 +305,20 @@ const generateStatus = (
   <!-- Embed poll -->
   ${status.poll ? generatePoll(status.poll, status.lang ?? 'en') : notApplicableComment}
   <!-- Embedded quote status -->
-  ${!isQuote && status.quote ? generateStatus(status.quote, author, language, true, null) : notApplicableComment}`
-  .format({
-    quoteHeader: isQuote
-      ? '<h4>' +
-        i18next.t('ivQuoteHeader').format({
-          url: status.url,
-          authorName: status.author.name,
-          authorHandle: status.author.screen_name,
-          authorURL: `${Constants.TWITTER_ROOT}/${status.author.screen_name}`
-        }) +
-        '</h4>'
-      : ''
-  });
+  ${!isQuote && status.quote ? generateStatus(status.quote, author, language, true, null) : notApplicableComment}`.format(
+    {
+      quoteHeader: isQuote
+        ? '<h4>' +
+          i18next.t('ivQuoteHeader').format({
+            url: status.url,
+            authorName: status.author.name,
+            authorHandle: status.author.screen_name,
+            authorURL: `${Constants.TWITTER_ROOT}/${status.author.screen_name}`
+          }) +
+          '</h4>'
+        : ''
+    }
+  );
 };
 
 export const renderInstantView = (properties: RenderProperties): ResponseInstructions => {
@@ -322,8 +328,8 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
 
   let previousThreadPieceAuthor: string | null = null;
   let originalAuthor: string | null = null;
-  
-  const useThread = thread?.thread ?? [ thread?.status ]
+
+  const useThread = thread?.thread ?? [thread?.status];
 
   if (!status) {
     throw new Error('Status is undefined');
@@ -359,7 +365,8 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
     <sub><a href="${status.url}">${i18next.t('ivViewOriginal')}</a></sub>
     <h1>${status.author.name} (@${status.author.screen_name})</h1>
 
-    ${useThread.map(status => {
+    ${useThread
+      .map(status => {
         console.log('previousThreadPieceAuthor', previousThreadPieceAuthor);
         if (!status) {
           return '';
@@ -395,7 +402,13 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
 
         previousThreadPieceAuthor = status.author?.id;
 
-        return generateStatus(status, status.author ?? thread?.author, properties?.targetLanguage ?? 'en', false, authorAction,);
+        return generateStatus(
+          status,
+          status.author ?? thread?.author,
+          properties?.targetLanguage ?? 'en',
+          false,
+          authorAction
+        );
       })
       .join('')}
     ${generateStatusFooter(status, false, thread?.author ?? status.author, properties?.targetLanguage ?? 'en')}
