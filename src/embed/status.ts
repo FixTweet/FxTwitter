@@ -274,7 +274,7 @@ export const handleStatus = async (
           break;
         case 'video':
           instructions = renderVideo(
-            { status: status, userAgent: userAgent, text: newText, isOverrideMedia: true },
+            { context: c, status: status, userAgent: userAgent, text: newText, isOverrideMedia: true },
             overrideMedia as APIVideo
           );
           headers.push(...instructions.addHeaders);
@@ -293,7 +293,7 @@ export const handleStatus = async (
       }
     } else if (media?.videos && !flags.nativeMultiImage) {
       const instructions = renderVideo(
-        { status: status, userAgent: userAgent, text: newText },
+        { context: c, status: status, userAgent: userAgent, text: newText },
         media.videos[0]
       );
       headers.push(...instructions.addHeaders);

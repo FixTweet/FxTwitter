@@ -19,6 +19,7 @@
     "EMBED_URL": "https://github.com/FixTweet/FxTwitter",
     "RELEASE_NAME": "fixtweet-test",
     "GIF_TRANSCODE_DOMAIN": "gif.fxtwitter.com",
+    "PRELOAD_HINTS_DOMAIN": "preload-hints.fxtwitter.com",
     "SENTRY_DSN": null
   },
   "testRegex": "/test/.*\\.test\\.ts$",

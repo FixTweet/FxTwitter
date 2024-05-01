@@ -30,6 +30,7 @@ interface ResponseInstructions {
 
 interface RenderProperties {
   status: APITwitterStatus;
+  context?: unknown; /* If we import the actual Hono Context, it fucks the project and means all types need imported. */
   thread?: SocialThread;
   siteText?: string;
   authorText?: string;

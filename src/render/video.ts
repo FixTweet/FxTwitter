@@ -1,4 +1,5 @@
 import i18next from 'i18next';
+import { Context } from 'hono';
 import { Constants } from '../constants';
 import { Experiment, experimentCheck } from '../experiments';
 import { handleQuote } from '../helpers/quote';
@@ -8,6 +9,7 @@ export const renderVideo = (
   video: APIVideo
 ): ResponseInstructions => {
   const { status, userAgent, text } = properties;
+  const context = properties.context as Context;
   const instructions: ResponseInstructions = { addHeaders: [] };
 
   const all = status.media?.all as APIMedia[];
@@ -62,6 +64,16 @@ export const renderVideo = (
       `https://${Constants.GIF_TRANSCODE_DOMAIN}`
     );
     console.log('We passed checks for transcoding GIFs, feeding embed url', url);
+  } else if (video.type !== 'gif' && !userAgent?.includes('Telegram')) {
+    /* Execute preload hint for the transcoder */
+    
+    const preloadHintsUrl = video.url.replace(
+      Constants.TWITTER_VIDEO_BASE,
+      `https://${Constants.PRELOAD_HINTS_DOMAIN}`
+    );
+  
+    context.executionCtx.waitUntil(fetch(preloadHintsUrl));
+      
   }
 
   /* Push the raw video-related headers */

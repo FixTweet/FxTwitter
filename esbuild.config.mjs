@@ -46,7 +46,8 @@ let envVariables = [
   'MOSAIC_DOMAIN_LIST',
   'API_HOST_LIST',
   'SENTRY_DSN',
-  'GIF_TRANSCODE_DOMAIN'
+  'GIF_TRANSCODE_DOMAIN',
+  'PRELOAD_HINTS_DOMAIN'
 ];
 
 // Create defines for all environment variables
