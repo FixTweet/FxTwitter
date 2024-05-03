@@ -416,7 +416,10 @@ type GraphQLTwitterStatus = {
           user_mentions: unknown[];
         };
         media: {
-          inline_media: unknown[];
+          inline_media: {
+            media_id: string;
+            index: number;
+          }[];
         };
         richtext: {
           richtext_tags: {
