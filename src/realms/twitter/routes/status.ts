@@ -57,11 +57,9 @@ export const statusRequest = async (c: Context) => {
     console.log('Forced instant view request');
     flags.forceInstantView = true;
   } else if (
-    experimentCheck(Experiment.IV_FORCE_THREAD_UNROLL, userAgent.includes('Telegram')) ||
-    Constants.INSTANT_VIEW_THREADS_DOMAINS.includes(url.hostname)
+    experimentCheck(Experiment.IV_FORCE_THREAD_UNROLL, userAgent.includes('Telegram'))
   ) {
     console.log('Forced unroll instant view');
-    flags.forceInstantView = true;
     flags.instantViewUnrollThreads = true;
   } else if (Constants.GALLERY_DOMAINS.includes(url.hostname)) {
     console.log('Gallery embed request');

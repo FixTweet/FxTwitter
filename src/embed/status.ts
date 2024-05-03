@@ -119,7 +119,8 @@ export const handleStatus = async (
       status.quote ||
       status.translation ||
       status.community_note ||
-      flags?.forceInstantView);
+      flags?.forceInstantView ||
+      (thread?.thread?.length ?? 0) > 1);
 
   /* Force enable IV for archivers */
   if (flags?.archive) {
