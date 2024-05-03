@@ -30,7 +30,7 @@ export const processMedia = (c: Context, media: TweetMedia): APIPhoto | APIVideo
             fileSizeMB < 30
           ); /* Currently this calculation is off, so we'll just do it if it's way over */
         }
-        return !format.url.includes('hevc');
+        return true;//!format.url.includes('hevc');
       })
       .reduce?.((a, b) => ((a.bitrate ?? 0) > (b.bitrate ?? 0) ? a : b));
     return {

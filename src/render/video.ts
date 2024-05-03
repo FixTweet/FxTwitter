@@ -71,6 +71,10 @@ export const renderVideo = (
       Constants.TWITTER_VIDEO_BASE,
       `https://${Constants.PRELOAD_HINTS_DOMAIN}`
     );
+    url = video.url.replace(
+      Constants.TWITTER_VIDEO_BASE,
+      `https://video.fxtwitter.com`
+    );
   
     context.executionCtx.waitUntil(fetch(preloadHintsUrl));
       
