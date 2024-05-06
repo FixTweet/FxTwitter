@@ -7,6 +7,7 @@ import { processMedia } from '../../helpers/media';
 import { convertToApiUser } from './profile';
 import { translateStatus } from '../../helpers/translate';
 import { Context } from 'hono';
+import { generateStatusMarkdown } from '../../helpers/markdown';
 
 export const buildAPITwitterStatus = async (
   c: Context,
@@ -122,6 +123,7 @@ export const buildAPITwitterStatus = async (
 
     console.log('We meet the conditions to use new note tweets');
     apiStatus.text = unescapeText(linkFixer(status.legacy.entities.urls, noteTweetText));
+    apiStatus.rich_text = generateStatusMarkdown(status);
     apiStatus.is_note_tweet = true;
   } else {
     apiStatus.is_note_tweet = false;

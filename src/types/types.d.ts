@@ -118,17 +118,24 @@ interface APIMosaicPhoto extends APIMedia {
 interface APIStatus {
   id: string;
   url: string;
-  text: string;
   created_at: string;
   created_timestamp: number;
+  source: string | null;
 
   likes: number;
   reposts: number;
   replies: number;
 
+  text: string;
+  rich_text: string;
+
+  lang: string | null;
+
   quote?: APIStatus;
   poll?: APIPoll;
   author: APIUser;
+
+  possibly_sensitive: boolean;
 
   media: {
     external?: APIExternalMedia;
@@ -138,15 +145,10 @@ interface APIStatus {
     mosaic?: APIMosaicPhoto;
   };
 
-  lang: string | null;
-  possibly_sensitive: boolean;
-
   replying_to: {
     screen_name: string;
     post: string;
   } | null;
-
-  source: string | null;
 
   embed_card: 'tweet' | 'summary' | 'summary_large_image' | 'player';
 }

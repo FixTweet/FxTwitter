@@ -64,6 +64,18 @@ type TcoExpansion = {
   url: string;
 };
 
+type Hashtag = {
+  indices: [number, number];
+  text: string;
+};
+
+type UserMention = {
+  id_str: string;
+  indices: [number, number];
+  name: string;
+  screen_name: string;
+};
+
 type TweetMedia = {
   additional_media_info: { monetizable: boolean };
   display_url: string;
@@ -341,10 +353,10 @@ type GraphQLTwitterStatusLegacy = {
       media_url_https: string; // "https://pbs.twimg.com/media/FAKESCREENSHOT.jpg" With videos appears to be the thumbnail
       type: string; // "photo" Seems to be photo even with videos
     }[];
-    user_mentions: unknown[];
+    user_mentions: UserMention[];
     urls: TcoExpansion[];
-    hashtags: unknown[];
-    symbols: unknown[];
+    hashtags: Hashtag[];
+    symbols: Hashtag[];
   };
   extended_entities: {
     media: TweetMedia[];
@@ -410,10 +422,10 @@ type GraphQLTwitterStatus = {
     note_tweet_results: {
       result: {
         entity_set: {
-          hashtags: unknown[];
-          symbols: unknown[];
+          hashtags: Hashtag[];
+          symbols: Hashtag[];
           urls: TcoExpansion[];
-          user_mentions: unknown[];
+          user_mentions: UserMention[];
         };
         media: {
           inline_media: {
@@ -425,7 +437,7 @@ type GraphQLTwitterStatus = {
           richtext_tags: {
             from_index: number;
             to_index: number;
-            richtext_types: string[];
+            richtext_types: ("Bold" | "Italic" | "Strikethrough")[];
           }[];
         };
         text: string;
