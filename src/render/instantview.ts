@@ -79,7 +79,7 @@ const htmlifyHashtags = (input: string): string => {
   const hashtagPattern = /#([a-zA-Z_]\w*)/g;
   return input.replace(hashtagPattern, (match, hashtag) => {
     const encodedHashtag = encodeURIComponent(hashtag);
-    return `  <a href="${Constants.TWITTER_ROOT}/hashtag/${encodedHashtag}?src=hashtag_click">${match}</a>  `;
+    return `<a href="${Constants.TWITTER_ROOT}/hashtag/${encodedHashtag}?src=hashtag_click">${match}</a>  `;
   });
 };
 
@@ -323,13 +323,26 @@ const generateCommunityNote = (status: APITwitterStatus): string => {
   return '';
 };
 
+/**
+ * Wraps foreign links for additional processing, such as adding tracking, referrers, or other attributes.
+ * 
+ * @param {string} url - The URL to process.
+ * @param {string} text - The display text of the link.
+ * @returns {string} - The processed link HTML.
+ */
+const wrapForeignLinksMarkdown = (url: string, text: string): string => {
+  // Example: Add a query parameter for tracking
+  return `<a href="${wrapForeignLinks(url)}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+};
+
+
 const htmlifyMarkdown = (text: string): string => {
   return text
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')  // Bold
     .replace(/__(.*?)__/g, '<em>$1</em>')              // Italic
     .replace(/~~(.*?)~~/g, '<del>$1</del>')            // Strikethrough
     .replace(/!\[(.*?)]\((.*?)\)/g, '<img alt="$1" src="$2">')  // Images
-    .replace(/\[(.*?)]\((.*?)\)/g, '<a href="$2">$1</a>');      // Links
+    .replace(/\[(.*?)]\((.*?)\)/g, (_, text, url) => wrapForeignLinksMarkdown(text, url));      // Link
 };
 
 
