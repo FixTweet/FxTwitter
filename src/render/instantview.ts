@@ -83,14 +83,61 @@ const htmlifyHashtags = (input: string): string => {
   });
 };
 
+/**
+ * Wraps text in HTML paragraph or blockquote tags, managing embedded image tags to not disrupt paragraph integrity.
+ * Opens and closes tags intelligently around images.
+ * 
+ * @param {string} text - The text to process.
+ * @param {boolean} isQuote - Whether to wrap in blockquote tags instead of paragraph tags.
+ * @returns {string} - Processed HTML with tags correctly wrapping text and excluding images.
+ */
 function paragraphify(text: string, isQuote = false): string {
   const tag = isQuote ? 'blockquote' : 'p';
-  return text
-    .split('\n')
-    .map(line => line.trim())
-    .filter(line => line.length > 0)
-    .map(line => `<${tag}>${line}</${tag}>`)
-    .join('\n');
+  const lines = text.split('\n');
+  let output = '';
+  let inTag = false;
+
+  lines.forEach((line, index) => {
+    const trimmedLine = line.trim();
+    if (!trimmedLine) return; // Skip empty lines
+
+    // Check for embedded images
+    const parts = trimmedLine.split(/(<img .*?>)/g).filter(part => part);
+
+    parts.forEach(part => {
+      if (part.startsWith('<img ') && part.endsWith('>')) {
+        // Close the current tag if open
+        if (inTag) {
+          output += `</${tag}>\n`;
+          inTag = false;
+        }
+        // Output image
+        output += `${part}\n`;
+      } else {
+        // Open a new tag if not already inside one
+        if (!inTag) {
+          output += `<${tag}>`;
+          inTag = true;
+        }
+        // Add the text part
+        output += part;
+      }
+    });
+
+    // If the last part of the line is text and the next line is not an image, close the tag
+    const nextLine = lines[index + 1] || '';
+    if (!nextLine.trim().startsWith('<img ') && inTag) {
+      output += `</${tag}>\n`;
+      inTag = false;
+    }
+  });
+
+  // Ensure to close any open tag at the end
+  if (inTag) {
+    output += `</${tag}>\n`;
+  }
+
+  return output;
 }
 
 function getTranslatedText(status: APITwitterStatus, isQuote = false): string | null {
@@ -276,6 +323,16 @@ const generateCommunityNote = (status: APITwitterStatus): string => {
   return '';
 };
 
+const htmlifyMarkdown = (text: string): string => {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')  // Bold
+    .replace(/__(.*?)__/g, '<em>$1</em>')              // Italic
+    .replace(/~~(.*?)~~/g, '<del>$1</del>')            // Strikethrough
+    .replace(/!\[(.*?)]\((.*?)\)/g, '<img alt="$1" src="$2">')  // Images
+    .replace(/\[(.*?)]\((.*?)\)/g, '<a href="$2">$1</a>');      // Links
+};
+
+
 const generateStatus = (
   status: APIStatus,
   author: APIUser,
@@ -283,17 +340,23 @@ const generateStatus = (
   isQuote = false,
   authorActionType: AuthorActionType | null
 ): string => {
-  let text = paragraphify(sanitizeText(status.text), isQuote);
-  text = htmlifyLinks(text);
-  text = htmlifyHashtags(text);
-  text = populateUserLinks(text);
+  let text = sanitizeText(status.rich_text ?? status.text);
+  text = htmlifyMarkdown(text);
+  text = paragraphify(text, isQuote);
+
+  /* TODO: Move these into markdown generation API for non-note tweets */
+  if (!status.rich_text) {
+    text = htmlifyLinks(text);
+    text = htmlifyHashtags(text);
+    text = populateUserLinks(text);
+  }
 
   const translatedText = getTranslatedText(status as APITwitterStatus, isQuote);
 
   return `<!-- Telegram Instant View -->
   {quoteHeader}
   <!-- Embed media -->
-  ${generateStatusMedia(status)} 
+  ${!status.rich_text ? generateStatusMedia(status) : ''} 
   <!-- Translated text (if applicable) -->
   ${translatedText ? translatedText : notApplicableComment}
   <!-- Inline author (if applicable) -->
