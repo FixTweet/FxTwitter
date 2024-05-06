@@ -326,11 +326,11 @@ const generateCommunityNote = (status: APITwitterStatus): string => {
 /**
  * Wraps foreign links for additional processing, such as adding tracking, referrers, or other attributes.
  * 
- * @param {string} url - The URL to process.
  * @param {string} text - The display text of the link.
+ * @param {string} url - The URL to process.
  * @returns {string} - The processed link HTML.
  */
-const wrapForeignLinksMarkdown = (url: string, text: string): string => {
+const wrapForeignLinksMarkdown = (text: string, url: string): string => {
   // Example: Add a query parameter for tracking
   return `<a href="${wrapForeignLinks(url)}" target="_blank" rel="noopener noreferrer">${text}</a>`;
 };
