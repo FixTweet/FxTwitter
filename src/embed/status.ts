@@ -391,8 +391,7 @@ export const handleStatus = async (
     /* Finally, add the footer of the poll with # of votes and time left */
     str += '\n'; /* TODO: Localize time left */
     str += i18next
-      .t('pollVotes')
-      .format({ voteCount: formatNumber(poll.total_votes), timeLeft: poll.time_left_en });
+      .t('pollVotes', { voteCount: formatNumber(poll.total_votes), timeLeft: poll.time_left_en })
 
     /* Check if the poll is ongoing and apply low TTL cache control.
        Yes, checking if this is a string is a hacky way to do this, but
