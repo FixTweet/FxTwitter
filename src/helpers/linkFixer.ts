@@ -5,7 +5,7 @@ export const linkFixer = (entities: TcoExpansion[] | undefined, text: string): s
   // });
   if (Array.isArray(entities) && entities.length) {
     entities.forEach((url: TcoExpansion) => {
-      let newURL = url.expanded_url;
+      let newURL = url.expanded_url ?? url.url ?? '';
 
       if (newURL.match(/^https:\/\/twitter\.com\/i\/web\/status\/\w+/g) !== null) {
         newURL = '';
