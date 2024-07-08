@@ -38,7 +38,7 @@
     "wrangler": "^3.63.1"
   },
   "dependencies": {
-    "@hono/sentry": "^1.1.0",
+    "@hono/sentry": "^1.2.0",
     "i18next": "^23.11.5",
     "i18next-icu": "^2.3.0",
     "hono": "^4.4.12"
