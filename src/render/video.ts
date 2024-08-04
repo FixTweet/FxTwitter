@@ -62,6 +62,11 @@ export const renderVideo = (
       `https://${Constants.GIF_TRANSCODE_DOMAIN}`
     );
     console.log('We passed checks for transcoding GIFs, feeding embed url', url);
+  } else if (
+    userAgent?.includes('Discord') &&
+    experimentCheck(Experiment.DISCORD_VIDEO_REDIRECT_WORKAROUND, !!Constants.API_HOST_LIST)
+  ) {
+    url = `https://${Constants.API_HOST_LIST[0]}/2/hit?url=${encodeURIComponent(url)}`;
   }
 
   /* Push the raw video-related headers */
