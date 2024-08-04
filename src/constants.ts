@@ -17,6 +17,7 @@ export const Constants = {
   GIF_TRANSCODE_DOMAIN: GIF_TRANSCODE_DOMAIN,
   API_DOCS_URL: `https://github.com/FixTweet/FxTwitter/wiki/API-Home`,
   TWITTER_ROOT: 'https://twitter.com',
+  X_ROOT: 'https://x.com',
   TWITTER_GLOBAL_NAME_ROOT: 'twitter.com',
   TWITTER_API_ROOT: 'https://api.twitter.com',
   TWITTER_VIDEO_BASE: 'https://video.twimg.com',

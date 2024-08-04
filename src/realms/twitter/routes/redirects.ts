@@ -14,7 +14,7 @@ export const genericTwitterRedirect = async (c: Context) => {
     c.header('cache-control', cacheControl);
   }
 
-  return c.redirect(`${baseUrl}${url.pathname}`, 302);
+  return c.redirect(`${baseUrl}${url.pathname}?mx=1`, 302);
 };
 
 export const setRedirectRequest = async (c: Context) => {
