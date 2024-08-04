@@ -134,6 +134,6 @@ export const statusRequest = async (c: Context) => {
        Obviously we just need to redirect to the status directly.*/
     console.log('Matched human UA', userAgent);
 
-    return c.redirect(`${baseUrl}/${handle || 'i'}/status/${id?.match(/\d{2,20}/)?.[0]}`, 302);
+    return c.redirect(`${baseUrl}/${handle || 'i'}/status/${id?.match(/\d{2,20}/)?.[0]}?mx=1`, 302);
   }
 };

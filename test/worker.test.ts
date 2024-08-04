@@ -55,7 +55,7 @@ test('Status redirect human', async () => {
     })
   );
   expect(result.status).toEqual(302);
-  expect(result.headers.get('location')).toEqual('https://twitter.com/jack/status/20');
+  expect(result.headers.get('location')).toEqual('https://twitter.com/jack/status/20?mx=1');
 });
 
 test('Status redirect human trailing slash', async () => {
@@ -66,7 +66,7 @@ test('Status redirect human trailing slash', async () => {
     })
   );
   expect(result.status).toEqual(302);
-  expect(result.headers.get('location')).toEqual('https://twitter.com/jack/status/20');
+  expect(result.headers.get('location')).toEqual('https://twitter.com/jack/status/20?mx=1');
 });
 
 test('Status redirect human custom base redirect', async () => {
@@ -80,7 +80,7 @@ test('Status redirect human custom base redirect', async () => {
     })
   );
   expect(result.status).toEqual(302);
-  expect(result.headers.get('location')).toEqual('https://nitter.net/jack/status/20');
+  expect(result.headers.get('location')).toEqual('https://nitter.net/jack/status/20?mx=1');
 });
 
 test('Twitter moment redirect', async () => {
@@ -94,7 +94,7 @@ test('Twitter moment redirect', async () => {
     )
   );
   expect(result.status).toEqual(302);
-  expect(result.headers.get('location')).toEqual(`${twitterBaseUrl}/i/events/1572638642127966214`);
+  expect(result.headers.get('location')).toEqual(`${twitterBaseUrl}/i/events/1572638642127966214?mx=1`);
 });
 
 test('Status response robot', async () => {
