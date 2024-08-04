@@ -31,7 +31,7 @@ export const getBaseRedirectUrl = (c: Context) => {
 const twitterStatusRequest = async (c: Context) => await statusRequest(c);
 const _profileRequest = async (c: Context) => await profileRequest(c);
 
-twitter.use(trimTrailingSlash())
+twitter.use(trimTrailingSlash());
 twitter.get('/:endpoint{status(es)?}/:id', twitterStatusRequest);
 twitter.get('/:endpoint{status(es)?}/:id/:language', twitterStatusRequest);
 twitter.get('/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:language', twitterStatusRequest);
@@ -60,10 +60,7 @@ twitter.get(
   '/:prefix{(dir|dl)}/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:mediaType{(photos?|videos?)}/:mediaNumber{[1-4]}/:language',
   twitterStatusRequest
 );
-twitter.get(
-  '/:handle/:endpoint{status(es)?}/:id/*',
-  twitterStatusRequest
-);
+twitter.get('/:handle/:endpoint{status(es)?}/:id/*', twitterStatusRequest);
 
 twitter.get('/version', versionRoute);
 twitter.get('/set_base_redirect', setRedirectRequest);

@@ -4,7 +4,7 @@ import { profileRequest } from '../twitter/routes/profile';
 import { Strings } from '../../strings';
 import { Constants } from '../../constants';
 import { linkHitRequest } from './hit';
-import { trimTrailingSlash } from 'hono/trailing-slash'
+import { trimTrailingSlash } from 'hono/trailing-slash';
 
 export const api = new Hono();
 
@@ -21,7 +21,7 @@ api.use('*', async (c, next) => {
   await next();
 });
 
-api.use(trimTrailingSlash())
+api.use(trimTrailingSlash());
 
 api.get('/2/hit', linkHitRequest);
 

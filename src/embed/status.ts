@@ -1,7 +1,7 @@
 import { Context } from 'hono';
 import { StatusCode } from 'hono/utils/http-status';
 import i18next from 'i18next';
-import icu from "i18next-icu";
+import icu from 'i18next-icu';
 import { Constants } from '../constants';
 import { handleQuote } from '../helpers/quote';
 import { formatNumber, sanitizeText, truncateWithEllipsis } from '../helpers/utils';
@@ -390,8 +390,10 @@ export const handleStatus = async (
 
     /* Finally, add the footer of the poll with # of votes and time left */
     str += '\n'; /* TODO: Localize time left */
-    str += i18next
-      .t('pollVotes', { voteCount: formatNumber(poll.total_votes), timeLeft: poll.time_left_en })
+    str += i18next.t('pollVotes', {
+      voteCount: formatNumber(poll.total_votes),
+      timeLeft: poll.time_left_en
+    });
 
     /* Check if the poll is ongoing and apply low TTL cache control.
        Yes, checking if this is a string is a hacky way to do this, but
