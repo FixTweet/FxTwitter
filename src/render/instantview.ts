@@ -69,7 +69,7 @@ const formatDate = (date: Date, language: string): string => {
 };
 
 const htmlifyLinks = (input: string): string => {
-  const urlPattern = /\bhttps?:\/\/[\w.-]+\.\w+[/\w.-]*\w/g;
+  const urlPattern = /\bhttps?:\/\/(\w+(-\w+)*\.)+[a-z]{2,}(:\d+)?(\/[-\w@:%_+.~#?&/=]*)?/gi;
   return input.replace(urlPattern, url => {
     return `<a href="${wrapForeignLinks(url)}">${url}</a>`;
   });
