@@ -14,7 +14,7 @@ export const Constants = {
   EMBED_URL: EMBED_URL,
   REDIRECT_URL: REDIRECT_URL,
   RELEASE_NAME: RELEASE_NAME,
-  GIF_TRANSCODE_DOMAIN: GIF_TRANSCODE_DOMAIN,
+  GIF_TRANSCODE_DOMAIN_LIST: GIF_TRANSCODE_DOMAIN_LIST.split(','),
   API_DOCS_URL: `https://github.com/FixTweet/FxTwitter/wiki/API-Home`,
   TWITTER_ROOT: 'https://twitter.com',
   TWITTER_GLOBAL_NAME_ROOT: 'twitter.com',
