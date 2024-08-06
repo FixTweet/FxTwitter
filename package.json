@@ -16,7 +16,7 @@
   "author": "dangered wolf",
   "license": "MIT",
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20240729.0",
+    "@cloudflare/workers-types": "^4.20240806.0",
     "@microsoft/eslint-formatter-sarif": "^3.1.0",
     "@sentry/esbuild-plugin": "^2.21.1",
     "@sentry/integrations": "^7.114.0",
