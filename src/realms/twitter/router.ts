@@ -24,12 +24,7 @@ export const getBaseRedirectUrl = (c: Context) => {
     return baseRedirect.endsWith('/') ? baseRedirect.slice(0, -1) : baseRedirect;
   }
 
-  // Workaround to redirect to correct root depending on request URL
-  if (c.req.url.includes('fixup')) {
-    return Constants.X_ROOT
-  } else {
-    return Constants.TWITTER_ROOT;
-  }
+  return Constants.TWITTER_ROOT;
 };
 
 /* Workaround for some dumb maybe-build time issue where statusRequest isn't ready or something because none of these trigger*/

@@ -119,7 +119,7 @@ export const statusRequest = async (c: Context) => {
       if (!isBotUA && !flags.api && !flags.direct) {
         const baseUrl = getBaseRedirectUrl(c);
 
-        return c.redirect(`${baseUrl}/${handle || 'i'}/status/${id}?mx=1`, 302);
+        return c.redirect(`${baseUrl}/${handle || 'i'}/status/${id}`, 302);
       }
 
       c.status(200);
