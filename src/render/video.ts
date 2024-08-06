@@ -3,6 +3,22 @@ import { Constants } from '../constants';
 import { Experiment, experimentCheck } from '../experiments';
 import { handleQuote } from '../helpers/quote';
 
+const getGIFTranscodeDomain = (twitterId: string): string | null => {
+  const gifTranscoderList = Constants.GIF_TRANSCODE_DOMAIN_LIST;
+
+  if (gifTranscoderList.length === 0) {
+    return null;
+  }
+
+  let hash = 0;
+  for (let i = 0; i < twitterId.length; i++) {
+    const char = twitterId.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+  }
+  return gifTranscoderList[Math.abs(hash) % gifTranscoderList.length];
+};
+
+
 export const renderVideo = (
   properties: RenderProperties,
   video: APIVideo
@@ -53,13 +69,13 @@ export const renderVideo = (
   let url = video.url;
 
   if (
-    experimentCheck(Experiment.TRANSCODE_GIFS, !!Constants.GIF_TRANSCODE_DOMAIN) &&
+    experimentCheck(Experiment.TRANSCODE_GIFS, !!Constants.GIF_TRANSCODE_DOMAIN_LIST) &&
     !userAgent?.includes('Telegram') &&
     video.type === 'gif'
   ) {
     url = video.url.replace(
       Constants.TWITTER_VIDEO_BASE,
-      `https://${Constants.GIF_TRANSCODE_DOMAIN}`
+      `https://${getGIFTranscodeDomain(status.id)}`
     );
     console.log('We passed checks for transcoding GIFs, feeding embed url', url);
   }
