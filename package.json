@@ -34,7 +34,7 @@
     "prettier": "^3.3.3",
     "ts-jest": "^29.2.5",
     "ts-loader": "^9.5.1",
-    "typescript": "^5.5.4",
+    "typescript": "^5.6.2",
     "wrangler": "^3.75.0"
   },
   "dependencies": {
