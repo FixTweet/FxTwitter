@@ -49,7 +49,7 @@ export const cacheMiddleware = (): MiddlewareHandler => async (c, next) => {
 
         if (cachedResponse) {
           console.log('Cache hit');
-          return new Response(cachedResponse.body, cachedResponse);
+          return new Response(cachedResponse.body, cachedResponse as ResponseInit);
         }
 
         console.log('Cache miss');
