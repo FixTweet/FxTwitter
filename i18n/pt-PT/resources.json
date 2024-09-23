@@ -1,4 +1,13 @@
 {
+  "photoCount": "Foto {number} / {total}",
+  "videoCount": "Vídeo {number} / {total}",
+  "mediaCount": "Mídia {number} / {total}",
+  "ivProfileFollowing": "{numFollowing, plural,\none {Seguindo}\nother {Seguindo}\n}",
+  "ivFallbackText": "Se pode ver isso, seu navegador fez algo estranho com o seu user agent.",
+  "pollVotes": "{voteCount, plural,\none {# voto}\nother {# votos}\n} · {timeLeft}",
+  "ivPollChoice": "{voteCount, plural,\none {# voto}\nother {# votos}\n}, {percentage}%",
+  "ivCommunityNoteHeader": "Leitores adicionaram contexto que acham que pessoas podem querer saber",
+  "gifIndicator": "GIF - {brandingName}",
   "language_af": "Afrikaans",
   "language_ar": "Árabe",
   "language_ca": "Catalão",
