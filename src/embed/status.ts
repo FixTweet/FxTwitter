@@ -133,7 +133,6 @@ export const handleStatus = async (
 
   await i18next.use(icu).init({
     lng: language ?? status.lang ?? 'en',
-    debug: true,
     resources: translationResources,
     fallbackLng: 'en'
   });
