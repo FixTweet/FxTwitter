@@ -81,10 +81,9 @@ export const renderVideo = (
   }
   
   if (
-    userAgent?.includes('Discord') &&
     experimentCheck(Experiment.DISCORD_VIDEO_REDIRECT_WORKAROUND, !!Constants.API_HOST_LIST)
   ) {
-    url = `https://${Constants.API_HOST_LIST[0]}/2/hit?url=${encodeURIComponent(url)}`;
+    url = `https://${Constants.API_HOST_LIST[0]}/2/go?url=${encodeURIComponent(url)}`;
   }
 
   /* Push the raw video-related headers */
