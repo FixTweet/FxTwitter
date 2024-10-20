@@ -209,6 +209,11 @@ export const handleStatus = async (
   let authorText = getSocialProof(status) || Strings.DEFAULT_AUTHOR_TEXT;
   const engagementText = authorText.replace(/ {4}/g, ' ');
   let siteName = status.provider === DataProvider.Twitter ? Constants.BRANDING_NAME : Constants.BRANDING_NAME_BSKY;
+
+  if (thread.thread && thread.thread.length > 1 && isTelegram && useIV) {
+    siteName = i18next.t('threadIndicator', { brandingName: siteName });
+  }
+
   let newText = status.text;
 
   /* Base headers included in all responses */
@@ -534,12 +539,12 @@ export const handleStatus = async (
     let provider = '';
     const mediaType = overrideMedia ?? status.media.videos?.[0]?.type;
 
-    if (mediaType === 'gif') {
-      let branding = Constants.BRANDING_NAME;
-      if (c.req.url.includes('bsky')) {
-        branding = Constants.BRANDING_NAME_BSKY;
-      }
+    let branding = Constants.BRANDING_NAME;
+    if (c.req.url.includes('bsky')) {
+      branding = Constants.BRANDING_NAME_BSKY;
+    }
 
+    if (mediaType === 'gif') {
       provider = i18next.t('gifIndicator', { brandingName: branding });
     } else if (
       status.embed_card === 'player' &&
