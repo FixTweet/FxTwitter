@@ -44,33 +44,34 @@ export const buildAPIBskyPost = async (
 
   apiStatus.media.photos = (status.embed?.images || []).map(image => {
     apiStatus.embed_card = 'summary_large_image';
+    console.log('image', image)
 
     return {
       type: 'photo',
-      width: image.aspectRatio.width,
-      height: image.aspectRatio.height,
+      width: image.aspectRatio?.width,
+      height: image.aspectRatio?.height,
       url: image.fullsize,
       altText: image.alt
     };
   });
-  if (status?.record?.embed?.video || status?.value?.embed?.video) {
+  if (status?.record?.embed?.video || status?.value?.embed?.video || status?.embed?.media?.$type === 'app.bsky.embed.video#view') {
     apiStatus.embed_card = 'player';
-    const video = status.record?.embed?.video ?? status.value?.embed?.video;
+    const video = status.record?.embed?.video ?? status.value?.embed?.video ?? status?.record?.embed?.media;
     apiStatus.media.videos = [
       {
         type: 'video',
-        url: status.embed.playlist ?? `${Constants.BSKY_VIDEO_BASE}/watch/did:plc:${video?.ref.$link}/720p/video.m3u8`,
+        url: status.embed.playlist ?? status.embed.media?.playlist ?? `${Constants.BSKY_VIDEO_BASE}/watch/did:plc:${video?.ref?.$link}/720p/video.m3u8`,
         format: video?.mimeType ?? 'video/mp4',
-        thumbnail_url: status.embed.thumbnail ?? `${Constants.BSKY_VIDEO_BASE}/watch/did:plc:${video?.ref.$link}/thumbnail.jpg`,
+        thumbnail_url: status.embed.thumbnail ?? status.embed.media?.thumbnail ?? `${Constants.BSKY_VIDEO_BASE}/watch/did:plc:${video?.ref?.$link}/thumbnail.jpg`,
         variants: [],
-        width: status.embed.aspectRatio.width,
-        height: status.embed.aspectRatio.height,
+        width: status.embed.aspectRatio?.width ?? status.embed.media?.aspectRatio?.width,
+        height: status.embed.aspectRatio?.height ?? status.embed.media?.aspectRatio?.height,
         duration: 0
       }
     ];
   }
   if (status.embed?.record) {
-    // apiStatus.quote = await buildAPIBskyPost(c, status.embed?.record?.record, language);
+    apiStatus.quote = await buildAPIBskyPost(c, status.embed?.record?.record, language);
   }
   apiStatus.media.all = (apiStatus.media.photos as APIMedia[] || []).concat(apiStatus.media.videos ?? []);
 

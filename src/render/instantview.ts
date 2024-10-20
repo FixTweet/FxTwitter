@@ -192,10 +192,10 @@ const generateStatusFooter = (
     {aboutSection}
     `.format({
     socialText: getSocialTextIV(status as APITwitterStatus) || '',
-    viewOriginal: !isQuote
+    viewOriginal: !isQuote && status.provider !== DataProvider.Bsky
       ? `<a href="${status.url}">${i18next.t('ivViewOriginal')}</a>`
       : notApplicableComment,
-    aboutSection: isQuote
+    aboutSection: (isQuote || status.provider === DataProvider.Bsky)
       ? ''
       : `<h2>${i18next.t('ivAboutAuthor')}</h2>
         {pfp}

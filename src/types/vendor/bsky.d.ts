@@ -17,6 +17,7 @@ type BlueskyImage = {
 };
 
 type BlueskyVideo = {
+  $type: 'app.bsky.embed.video#view'
   ref: {
     "$link": string
   },
@@ -27,6 +28,7 @@ type BlueskyVideo = {
 type BlueskyEmbed = {
   images?: BlueskyImage[];
   video?: BlueskyVideo;
+  media?: BlueskyVideo;
   record?: {
     record: BlueskyPost;
   };
