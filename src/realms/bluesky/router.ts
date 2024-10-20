@@ -13,6 +13,8 @@ bsky.use(trimTrailingSlash());
 bsky.get('/owoembed', oembed);
 bsky.get('/:prefix/:handle/post/:id', bskyStatusRequest);
 bsky.get('/profile/:handle/post/:id', bskyStatusRequest);
+bsky.get('/:prefix/profile/:handle/post/:id/:language', bskyStatusRequest);
+bsky.get('/profile/:handle/post/:id/:language', bskyStatusRequest);
 bsky.get('/profile/*', genericBlueskyRedirect)
 bsky.get('/version', c => versionRoute(c, DataProvider.Bsky));
 
