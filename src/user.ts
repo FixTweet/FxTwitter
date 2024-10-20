@@ -52,10 +52,16 @@ export const handleProfile = async (
   const headers = [`<meta property="twitter:site" content="@${user.screen_name}"/>`];
 
   // TODO Add card creation logic here
-
   /* Finally, after all that work we return the response HTML! */
+
+  let branding = Constants.BRANDING_NAME;
+  if (c.req.url.includes('bsky')) {
+    branding = Constants.BRANDING_NAME_BSKY;
+  }
+
   return c.html(
     Strings.BASE_HTML.format({
+      brandingName: branding,
       lang: `lang="en"`,
       headers: headers.join('')
     })

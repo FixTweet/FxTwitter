@@ -27,6 +27,9 @@ type BlueskyVideo = {
 type BlueskyEmbed = {
   images?: BlueskyImage[];
   video?: BlueskyVideo;
+  record?: {
+    record: BlueskyPost;
+  };
   aspectRatio: {
     height: number;
     width: number;
@@ -56,6 +59,7 @@ type BlueskyPost = {
   labels: ATProtoLabel[];
   likeCount: number;
   record: BlueskyRecord;
+  value?: BlueskyRecord;
   repostCount: number;
   uri: string;
 };

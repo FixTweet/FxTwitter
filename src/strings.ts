@@ -192,7 +192,7 @@ This may be caused by API downtime or a new bug. Try again in a little while." p
   </html>`
     .replace(/( {2})/g, '')
     .replace(/>\s+</gm, '><'),
-  DEFAULT_AUTHOR_TEXT: 'Twitter',
+  DEFAULT_AUTHOR_TEXT: 'Embed',
 
   QUOTE_TEXT: `↘️ Quoting {name} (@{screen_name})`,
   TRANSLATE_TEXT: `📑 Translated from {language}`,

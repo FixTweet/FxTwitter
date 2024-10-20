@@ -17,11 +17,16 @@ import { constructBlueskyThread } from '../providers/bsky/conversation';
 import { DataProvider } from '../enum';
 
 export const returnError = (c: Context, error: string): Response => {
+  let branding = Constants.BRANDING_NAME;
+  if (c.req.url.includes('bsky')) {
+    branding = Constants.BRANDING_NAME_BSKY;
+  }
   return c.html(
     Strings.BASE_HTML.format({
+      brandingName: branding,
       lang: '',
       headers: [
-        `<meta property="og:title" content="${Constants.BRANDING_NAME}"/>`,
+        `<meta property="og:title" content="${branding}"/>`,
         `<meta property="og:description" content="${error}"/>`
       ].join('')
     })
@@ -224,8 +229,12 @@ export const handleStatus = async (
   }
 
   if (!flags.gallery) {
+    if (status.provider === DataProvider.Twitter) {
+      headers.push(`<meta property="theme-color" content="#00a8fc"/>`)
+    } else if (status.provider === DataProvider.Bsky) {
+      headers.push(`<meta property="theme-color" content="#0085ff"/>`)
+    }
     headers.push(
-      `<meta property="theme-color" content="#00a8fc"/>`,
       `<meta property="twitter:title" content="${status.author.name} (@${status.author.screen_name})"/>`
     );
   }
@@ -526,7 +535,12 @@ export const handleStatus = async (
     const mediaType = overrideMedia ?? status.media.videos?.[0]?.type;
 
     if (mediaType === 'gif') {
-      provider = i18next.t('gifIndicator', { brandingName: Constants.BRANDING_NAME });
+      let branding = Constants.BRANDING_NAME;
+      if (c.req.url.includes('bsky')) {
+        branding = Constants.BRANDING_NAME_BSKY;
+      }
+
+      provider = i18next.t('gifIndicator', { brandingName: branding });
     } else if (
       status.embed_card === 'player' &&
       providerEngagementText !== Strings.DEFAULT_AUTHOR_TEXT
@@ -539,7 +553,7 @@ export const handleStatus = async (
     headers.push(
       `<link rel="alternate" href="{base}/owoembed?text={text}&status={status}&author={author}{provider}" type="application/json+oembed" title="{name}">`.format(
         {
-          base: Constants.HOST_URL,
+          base: `https://${status.provider === DataProvider.Bsky ? Constants.STANDARD_BSKY_DOMAIN_LIST[0] : Constants.STANDARD_DOMAIN_LIST[0]}`,
           text: flags.gallery
             ? status.author.name
             : encodeURIComponent(truncateWithEllipsis(authorText, 255)),

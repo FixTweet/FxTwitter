@@ -73,6 +73,7 @@ export const renderVideo = (
   let url = video.url;
 
   if (
+    status.provider !== DataProvider.Bsky && 
     experimentCheck(Experiment.TRANSCODE_GIFS, !!Constants.GIF_TRANSCODE_DOMAIN_LIST) &&
     !userAgent?.includes('Telegram') &&
     video.type === 'gif'
@@ -84,7 +85,18 @@ export const renderVideo = (
     console.log('We passed checks for transcoding GIFs, feeding embed url', url);
   }
 
-  if (experimentCheck(Experiment.DISCORD_VIDEO_REDIRECT_WORKAROUND, !!Constants.API_HOST_LIST)) {
+  if (status.provider === DataProvider.Bsky) {
+    url = video.url.replace(
+      Constants.BSKY_VIDEO_BASE,
+      `https://video.fxbsky.app`
+    );
+    console.log('Embedding bsky video', url);
+  }
+
+  console.log('status', status)
+  console.log('provider', status.provider)
+
+  if (status.provider !== DataProvider.Bsky && experimentCheck(Experiment.DISCORD_VIDEO_REDIRECT_WORKAROUND, !!Constants.API_HOST_LIST)) {
     url = `https://${Constants.API_HOST_LIST[0]}/2/go?url=${encodeURIComponent(url)}`;
   }
 

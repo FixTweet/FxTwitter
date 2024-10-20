@@ -2,8 +2,9 @@ import { Context } from 'hono';
 import { sanitizeText } from '../../helpers/utils';
 import { Strings } from '../../strings';
 import { Constants } from '../../constants';
+import { DataProvider } from '../../enum';
 
-export const versionRoute = async (c: Context) => {
+export const versionRoute = async (c: Context, provider: DataProvider) => {
   c.header('cache-control', 'max-age=0, no-cache, no-store, must-revalidate');
   const req = c.req;
   return c.html(
@@ -18,7 +19,7 @@ export const versionRoute = async (c: Context) => {
       country: (req.raw.cf?.country as string) ?? 'Unknown Country',
       asn: `AS${req.raw.cf?.asn ?? '??'} (${req.raw.cf?.asOrganization ?? 'Unknown ASN'})`,
       ua: sanitizeText(req.header('user-agent') ?? 'Unknown User Agent'),
-      brandingName: Constants.BRANDING_NAME,
+      brandingName: provider === DataProvider.Bsky ? Constants.BRANDING_NAME_BSKY : Constants.BRANDING_NAME,
     })
   );
 };

@@ -8,6 +8,7 @@ import { profileRequest } from './routes/profile';
 import { statusRequest } from './routes/status';
 import { oembed } from './routes/oembed';
 import { trimTrailingSlash } from 'hono/trailing-slash';
+import { DataProvider } from '../../enum';
 
 export const twitter = new Hono();
 
@@ -62,7 +63,7 @@ twitter.get(
 );
 twitter.get('/:handle/:endpoint{status(es)?}/:id/*', twitterStatusRequest);
 
-twitter.get('/version', versionRoute);
+twitter.get('/version', c => versionRoute(c, DataProvider.Twitter));
 twitter.get('/set_base_redirect', setRedirectRequest);
 /* Yes, I actually made the endpoint /owoembed. Deal with it. */
 twitter.get('/owoembed', oembed);

@@ -58,7 +58,7 @@ export const constructBlueskyThread = async (
     };
   }
 
-  const consumedPost = await buildAPIBskyPost(c, thread, language);
+  const consumedPost = await buildAPIBskyPost(c, thread.thread.post, language);
   // console.log('consumedPost', consumedPost)
 
   return {
