@@ -14,7 +14,6 @@ export const linkHitRequest = async (c: Context) => {
   }
 };
 
-
 export const linkGoRequest = async (c: Context) => {
   // If param `url` exists, 302 redirect to it
   if (typeof c.req.query('url') === 'string') {

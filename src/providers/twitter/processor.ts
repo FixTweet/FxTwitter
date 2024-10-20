@@ -179,8 +179,6 @@ export const buildAPITwitterStatus = async (
     status.legacy.extended_entities?.media || status.legacy.entities?.media || []
   );
 
-  // console.log('status', JSON.stringify(status));
-
   /* Populate status media */
   mediaList.forEach(media => {
     const mediaObject = processMedia(c, media);

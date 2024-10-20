@@ -2,6 +2,7 @@ import i18next from 'i18next';
 import { Constants } from '../constants';
 import { Experiment, experimentCheck } from '../experiments';
 import { handleQuote } from '../helpers/quote';
+import { DataProvider } from '../enum';
 
 const getGIFTranscodeDomain = (twitterId: string): string | null => {
   const gifTranscoderList = Constants.GIF_TRANSCODE_DOMAIN_LIST;
@@ -17,7 +18,6 @@ const getGIFTranscodeDomain = (twitterId: string): string | null => {
   }
   return gifTranscoderList[Math.abs(hash) % gifTranscoderList.length];
 };
-
 
 export const renderVideo = (
   properties: RenderProperties,
@@ -57,12 +57,16 @@ export const renderVideo = (
       total: String(all.length)
     });
 
-    instructions.siteName = `${Constants.BRANDING_NAME} - ${videoCounter}`;
+    instructions.siteName = `${status.provider === DataProvider.Twitter ? Constants.BRANDING_NAME : Constants.BRANDING_NAME_BSKY} - ${videoCounter}`;
   }
 
-  instructions.authorText = status.translation?.text || text || '';
+  if (status.provider === 'twitter') {
+    instructions.authorText = (status as APITwitterStatus).translation?.text || text || '';
+  } else {
+    instructions.authorText = text || '';
+  }
 
-  if (instructions.authorText.length < 40 && status.quote) {
+  if ((instructions.authorText ?? '').length < 40 && status.quote) {
     instructions.authorText += `\n${handleQuote(status.quote)}`;
   }
 
@@ -79,10 +83,8 @@ export const renderVideo = (
     );
     console.log('We passed checks for transcoding GIFs, feeding embed url', url);
   }
-  
-  if (
-    experimentCheck(Experiment.DISCORD_VIDEO_REDIRECT_WORKAROUND, !!Constants.API_HOST_LIST)
-  ) {
+
+  if (experimentCheck(Experiment.DISCORD_VIDEO_REDIRECT_WORKAROUND, !!Constants.API_HOST_LIST)) {
     url = `https://${Constants.API_HOST_LIST[0]}/2/go?url=${encodeURIComponent(url)}`;
   }
 

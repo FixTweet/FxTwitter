@@ -9,6 +9,7 @@ import { api } from './realms/api/router';
 import { twitter } from './realms/twitter/router';
 import { cacheMiddleware } from './caches';
 import { StatusCode } from 'hono/utils/http-status';
+import { bsky } from './realms/bluesky/router';
 
 const noCache = 'max-age=0, no-cache, no-store, must-revalidate';
 const embeddingClientRegex =
@@ -41,9 +42,11 @@ export const app = new Hono<{
       realm = 'api';
       console.log('API realm');
     } else if (Constants.STANDARD_DOMAIN_LIST.includes(baseHostName)) {
-      console.log();
       realm = 'twitter';
       console.log('Twitter realm');
+    } else if (Constants.STANDARD_BSKY_DOMAIN_LIST.includes(baseHostName)) {
+      realm = 'bsky';
+      console.log('Bluesky realm');
     } else {
       console.log(`Domain not assigned to realm, falling back to Twitter: ${url.hostname}`);
     }
@@ -133,6 +136,7 @@ app.use('*', timing({ enabled: false }));
 
 app.route(`/api`, api);
 app.route(`/twitter`, twitter);
+app.route(`/bsky`, bsky);
 
 app.all('/error', async c => {
   c.header('cache-control', noCache);

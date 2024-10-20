@@ -1,7 +1,7 @@
 import { Context } from 'hono';
 import { Constants } from '../../../constants';
 import { getBaseRedirectUrl } from '../router';
-import { handleStatus } from '../../../embed/status';
+import { DataProvider, handleStatus } from '../../../embed/status';
 import { Strings } from '../../../strings';
 import { Experiment, experimentCheck } from '../../../experiments';
 
@@ -97,10 +97,12 @@ export const statusRequest = async (c: Context) => {
     const statusResponse = await handleStatus(
       c,
       id?.match(/\d{2,20}/)?.[0] || '0',
+      null,
       mediaNumber ? parseInt(mediaNumber) : undefined,
       userAgent,
       flags,
-      language
+      language,
+      DataProvider.Twitter
     );
     /* Do not cache if using a custom redirect */
     const cacheControl = baseUrl !== Constants.TWITTER_ROOT ? 'max-age=0' : undefined;

@@ -3,6 +3,7 @@ import i18next from 'i18next';
 import { Constants } from '../constants';
 import { getSocialTextIV } from '../helpers/socialproof';
 import { sanitizeText } from '../helpers/utils';
+import { DataProvider } from '../enum';
 
 enum AuthorActionType {
   Reply = 'Reply',
@@ -60,7 +61,8 @@ const formatDate = (date: Date, language: string): string => {
   if (language.startsWith('en')) {
     language = 'en-CA'; // Use ISO dates for English to avoid problems with mm/dd vs. dd/mm
   }
-  const formatter = new Intl.DateTimeFormat(language, {
+  console.log('language?', language)
+  const formatter = new Intl.DateTimeFormat(language ?? 'en-CA', {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit'
@@ -178,7 +180,9 @@ const generateStatusFooter = (
 ): string => {
   let description = author.description;
   description = htmlifyLinks(description);
-  description = htmlifyHashtags(description);
+  if (status.provider === 'twitter') {
+    description = htmlifyHashtags(description);
+  }
   description = populateUserLinks(description);
 
   return `
@@ -357,7 +361,7 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
     </section>
     <section class="section--first">${
       flags?.archive
-        ? i18next.t('ivInternetArchiveText').format({ brandingName: Constants.BRANDING_NAME })
+        ? i18next.t('ivInternetArchiveText').format({ brandingName: status.provider === DataProvider.Twitter ? Constants.BRANDING_NAME : Constants.BRANDING_NAME_BSKY })
         : i18next.t('ivFallbackText')
     } <a href="${status.url}">${i18next.t('ivViewOriginal')}</a>
     </section>

@@ -36,8 +36,8 @@ export const Strings = {
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="${BRANDING_NAME}" property="og:title"/>
-    <meta content="Owie, you crashed ${BRANDING_NAME} :(
+    <meta content="{brandingName}" property="og:title"/>
+    <meta content="Owie, you crashed {brandingName} :(
 
 This may be caused by API downtime or a new bug. Try again in a little while." property="og:description"/></head>
     <title>:(</title>
@@ -59,7 +59,7 @@ This may be caused by API downtime or a new bug. Try again in a little while." p
   </head>
   <body>
     <h1>Owie :(</h1>
-    <h2>You hit a snag that broke ${BRANDING_NAME}. It's not your fault though&mdash;This is usually caused by a Twitter outage or a new bug.</h2>
+    <h2>You hit a snag that broke {brandingName}. It's not your fault though&mdash;This is usually caused by a Twitter outage or a new bug.</h2>
     <p>${RELEASE_NAME}</p>
   </body>
 </html>`
@@ -70,7 +70,7 @@ This may be caused by API downtime or a new bug. Try again in a little while." p
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="${BRANDING_NAME}" property="og:title"/>
+    <meta content="{brandingName}" property="og:title"/>
     <meta content="A downstream timeout occurred while trying to generate the embed. Please try again in a little while." property="og:description"/></head>
     <title>:(</title>
     <style>
@@ -102,8 +102,8 @@ This may be caused by API downtime or a new bug. Try again in a little while." p
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta content="${BRANDING_NAME}" property="og:title"/>
-      <meta content="${BRANDING_NAME}" property="og:site_name"/>
+      <meta content="{brandingName}" property="og:title"/>
+      <meta content="{brandingName}" property="og:site_name"/>
       <meta content="https://cdn.discordapp.com/icons/958942151817977906/7a220767640cbedbf780767585eaa10d.png?size=96" property="og:image"/>
       <meta content="https://cdn.discordapp.com/icons/958942151817977906/7a220767640cbedbf780767585eaa10d.png?size=96" property="twitter:image"/>
       <meta content="#1E98F0" name="theme-color"/>
@@ -118,7 +118,7 @@ This may be caused by API downtime or a new bug. Try again in a little while." p
       Edge Connection:
       {rtt} 📶 {httpversion} 🔒 {tlsversion} ➡ ⛅ {colo}
       " property="og:description"/></head>
-      <title>${BRANDING_NAME}</title>
+      <title>{brandingName}</title>
       <style>
         body {
           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -145,7 +145,7 @@ This may be caused by API downtime or a new bug. Try again in a little while." p
       </style>
     </head>
     <body>
-      <h1>${BRANDING_NAME}</h1>
+      <h1>{brandingName}</h1>
       <h3>A better way to embed X / Twitter posts on Discord, Telegram, and more.</h2>
       <h2>Worker release: ${RELEASE_NAME}</h2>
       <br>
@@ -163,9 +163,9 @@ This may be caused by API downtime or a new bug. Try again in a little while." p
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta content="${BRANDING_NAME}" property="og:title"/>
-      <meta content="${BRANDING_NAME}" property="og:site_name"/>
-      <title>${BRANDING_NAME}</title>
+      <meta content="{brandingName}" property="og:title"/>
+      <meta content="{brandingName}" property="og:site_name"/>
+      <title>{brandingName}</title>
       <style>
         body {
           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -186,7 +186,7 @@ This may be caused by API downtime or a new bug. Try again in a little while." p
       </style>
     </head>
     <body>
-      <h1>${BRANDING_NAME}</h1>
+      <h1>{brandingName}</h1>
       <h2>{message}</h2>
     </body>
   </html>`

@@ -1,13 +1,19 @@
+import { DataProvider } from '../enum';
 import { formatNumber } from './utils';
 
 /* The embed "author" text we populate with replies, retweets, and likes unless it's a video */
-export const getSocialProof = (status: APITwitterStatus): string | null => {
+export const getSocialProof = (status: APIStatus): string | null => {
+  let views = 0;
+
+  if (status.provider === DataProvider.Twitter) {
+    views = (status as APITwitterStatus).views || 0;
+  }
   /* Build out reply, retweet, like counts */
   if (
     status.likes > 0 ||
     status.reposts > 0 ||
     status.replies > 0 ||
-    (status.views ? status.views > 0 : false)
+    (views ? views > 0 : false)
   ) {
     let authorText = '';
     if (status.replies > 0) {
@@ -19,8 +25,8 @@ export const getSocialProof = (status: APITwitterStatus): string | null => {
     if (status.likes > 0) {
       authorText += `❤️ ${formatNumber(status.likes)}   `;
     }
-    if (status.views && status.views > 0) {
-      authorText += `👁️ ${formatNumber(status.views)}   `;
+    if (views && views > 0) {
+      authorText += `👁️ ${formatNumber(views)}   `;
     }
     authorText = authorText.trim();
 

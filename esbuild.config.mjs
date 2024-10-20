@@ -33,7 +33,9 @@ const releaseName = `${workerName}-${gitBranch}-${gitCommit}-${new Date()
 
 let envVariables = [
   'BRANDING_NAME',
+  'BRANDING_NAME_BSKY',
   'STANDARD_DOMAIN_LIST',
+  'STANDARD_BSKY_DOMAIN_LIST',
   'DIRECT_MEDIA_DOMAINS',
   'TEXT_ONLY_DOMAINS',
   'INSTANT_VIEW_DOMAINS',

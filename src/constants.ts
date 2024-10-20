@@ -1,7 +1,9 @@
 export const Constants = {
   /* These constants are populated by variables in .env, then set by Webpack */
   BRANDING_NAME: BRANDING_NAME,
+  BRANDING_NAME_BSKY: BRANDING_NAME_BSKY,
   STANDARD_DOMAIN_LIST: STANDARD_DOMAIN_LIST.split(','),
+  STANDARD_BSKY_DOMAIN_LIST: STANDARD_BSKY_DOMAIN_LIST.split(','),
   DIRECT_MEDIA_DOMAINS: DIRECT_MEDIA_DOMAINS.split(','),
   TEXT_ONLY_DOMAINS: TEXT_ONLY_DOMAINS.split(','),
   INSTANT_VIEW_DOMAINS: INSTANT_VIEW_DOMAINS.split(','),
@@ -20,6 +22,9 @@ export const Constants = {
   TWITTER_GLOBAL_NAME_ROOT: 'twitter.com',
   TWITTER_API_ROOT: 'https://api.twitter.com',
   TWITTER_VIDEO_BASE: 'https://video.twimg.com',
+  BSKY_ROOT: 'https://bsky.app',
+  BSKY_VIDEO_BASE: 'https://video.bsky.app',
+  BSKY_API_ROOT: 'https://public.api.bsky.app',
   BOT_UA_REGEX:
     /bot|facebook|embed|got|firefox\/92|firefox\/38|curl|wget|go-http|yahoo|generator|whatsapp|revoltchat|preview|link|proxy|vkshare|images|analyzer|index|crawl|spider|python|cfnetwork|node|mastodon|http\.rb|ruby|bun\/|fiddler|iframely|steamchaturllookup/gi,
   /* 3 hours */
@@ -72,3 +77,4 @@ export const Constants = {
   DEFAULT_COLOR: '#10A3FF',
   FRIENDLY_USER_AGENT: `Mozilla/5.0 FixEmbedBot/1.0 (like Twitterbot; +https://fxtwitter.com/crawler)`
 };
+
