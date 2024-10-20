@@ -27,7 +27,7 @@ export const Strings = {
 ███      ███   ▐█▌▐█▌  ███  ▐██▌ ███ ▐██▌ ▐█▌      ▐█▌      ▐██▌
 ███      ███  ███  ███ ███   ▐█████████▌    ▐████    ▐████    ▐████
 ███
-███   A better way to embed Tweets on Discord, Telegram, and more.
+███   A better way to embed posts on Discord, Telegram, and more.
 ███   Worker build ${RELEASE_NAME}
 
 --><head>{headers}</head><body>{body}</body></html>`,
@@ -146,7 +146,7 @@ This may be caused by API downtime or a new bug. Try again in a little while." p
     </head>
     <body>
       <h1>{brandingName}</h1>
-      <h3>A better way to embed X / Twitter posts on Discord, Telegram, and more.</h2>
+      <h3>A better way to embed posts on Discord, Telegram, and more.</h2>
       <h2>Worker release: ${RELEASE_NAME}</h2>
       <br>
       <h3>Stats for nerds:</h3>
