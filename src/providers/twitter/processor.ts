@@ -7,6 +7,7 @@ import { processMedia } from '../../helpers/media';
 import { convertToApiUser } from './profile';
 import { translateStatus } from '../../helpers/translate';
 import { Context } from 'hono';
+import { DataProvider } from '../../enum';
 
 export const buildAPITwitterStatus = async (
   c: Context,
@@ -179,8 +180,6 @@ export const buildAPITwitterStatus = async (
     status.legacy.extended_entities?.media || status.legacy.entities?.media || []
   );
 
-  // console.log('status', JSON.stringify(status));
-
   /* Populate status media */
   mediaList.forEach(media => {
     const mediaObject = processMedia(c, media);
@@ -209,8 +208,8 @@ export const buildAPITwitterStatus = async (
   */
 
   /* Handle photos and mosaic if available */
-  if ((apiStatus?.media.photos?.length || 0) > 1 && !threadAuthor) {
-    const mosaic = await handleMosaic(apiStatus.media?.photos || [], id);
+  if ((apiStatus?.media.photos?.length || 0) > 1 && !threadAuthor && Constants.MOSAIC_DOMAIN_LIST.length > 0) {
+    const mosaic = await handleMosaic(apiStatus.media?.photos || [], id, DataProvider.Twitter);
     if (typeof apiStatus.media !== 'undefined' && mosaic !== null) {
       apiStatus.media.mosaic = mosaic;
     }
@@ -329,6 +328,8 @@ export const buildAPITwitterStatus = async (
       delete apiStatus.media;
     }
   }
+
+  apiStatus.provider = DataProvider.Twitter;
 
   return apiStatus;
 };

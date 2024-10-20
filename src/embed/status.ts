@@ -13,13 +13,20 @@ import { renderInstantView } from '../render/instantview';
 import { constructTwitterThread } from '../providers/twitter/conversation';
 import { Experiment, experimentCheck } from '../experiments';
 import translationResources from '../../i18n/resources';
+import { constructBlueskyThread } from '../providers/bsky/conversation';
+import { DataProvider } from '../enum';
 
 export const returnError = (c: Context, error: string): Response => {
+  let branding = Constants.BRANDING_NAME;
+  if (c.req.url.includes('bsky')) {
+    branding = Constants.BRANDING_NAME_BSKY;
+  }
   return c.html(
     Strings.BASE_HTML.format({
+      brandingName: branding,
       lang: '',
       headers: [
-        `<meta property="og:title" content="${Constants.BRANDING_NAME}"/>`,
+        `<meta property="og:title" content="${branding}"/>`,
         `<meta property="og:description" content="${error}"/>`
       ].join('')
     })
@@ -30,10 +37,12 @@ export const returnError = (c: Context, error: string): Response => {
 export const handleStatus = async (
   c: Context,
   statusId: string,
+  authorHandle: string | null,
   mediaNumber: number | undefined,
   userAgent: string,
   flags: InputFlags,
-  language: string
+  language: string | undefined,
+  provider: DataProvider
   // eslint-disable-next-line sonarjs/cognitive-complexity
 ): Promise<Response> => {
   console.log('Direct?', flags?.direct);
@@ -48,15 +57,28 @@ export const handleStatus = async (
     fetchWithThreads = true;
   }
 
-  const thread = await constructTwitterThread(
-    statusId,
-    fetchWithThreads,
-    c,
-    language,
-    flags?.api ?? false
-  );
+  let thread: SocialThread;
+  if (provider === DataProvider.Twitter) {
+    thread = await constructTwitterThread(
+      statusId,
+      fetchWithThreads,
+      c,
+      language,
+      flags?.api ?? false
+    );
+  } else if (provider === DataProvider.Bsky) {
+    thread = await constructBlueskyThread(
+      statusId,
+      authorHandle ?? '',
+      fetchWithThreads,
+      c,
+      language
+    );
+  } else {
+    return returnError(c, Strings.ERROR_API_FAIL);
+  }
 
-  const status = thread?.status as APITwitterStatus;
+  const status = thread?.status as APIStatus;
 
   const api = {
     code: thread.code,
@@ -108,19 +130,29 @@ export const handleStatus = async (
   const isTelegram = (userAgent || '').indexOf('Telegram') > -1;
   const isDiscord = (userAgent || '').indexOf('Discord') > -1;
   /* Should sensitive statuses be allowed Instant View? */
-  let useIV =
-    isTelegram /*&& !status.possibly_sensitive*/ &&
-    !flags?.direct &&
-    !flags?.gallery &&
-    !flags?.api &&
-    (status.media?.photos?.[0] || // Force instant view for photos for now https://bugs.telegram.org/c/33679
-      status.media?.mosaic ||
-      status.is_note_tweet ||
-      status.quote ||
-      status.translation ||
-      status.community_note ||
-      flags?.forceInstantView ||
-      (thread?.thread?.length ?? 0) > 1);
+  let useIV = false;
+
+  if (isTelegram && !flags?.direct && !flags?.gallery && !flags?.api) {
+    if (status.provider === 'twitter') {
+      const twitterStatus = status as APITwitterStatus;
+      useIV =
+        useIV ||
+        !!(
+          twitterStatus.is_note_tweet ||
+          twitterStatus.translation ||
+          twitterStatus.community_note
+        );
+    }
+    useIV =
+      useIV ||
+      !!(
+        status.media?.photos?.[0] || // Force instant view for photos for now https://bugs.telegram.org/c/33679
+        status.media?.mosaic ||
+        status.quote ||
+        flags?.forceInstantView ||
+        (thread?.thread?.length ?? 0) > 1
+      );
+  }
 
   /* Force enable IV for archivers */
   if (flags?.archive) {
@@ -176,29 +208,47 @@ export const handleStatus = async (
 
   let authorText = getSocialProof(status) || Strings.DEFAULT_AUTHOR_TEXT;
   const engagementText = authorText.replace(/ {4}/g, ' ');
-  let siteName = Constants.BRANDING_NAME;
+  let siteName = status.provider === DataProvider.Twitter ? Constants.BRANDING_NAME : Constants.BRANDING_NAME_BSKY;
+
+  if (thread.thread && thread.thread.length > 1 && isTelegram && useIV) {
+    siteName = i18next.t('threadIndicator', { brandingName: siteName });
+  }
+
   let newText = status.text;
 
   /* Base headers included in all responses */
-  const headers = [
-    `<link rel="canonical" href="${Constants.TWITTER_ROOT}/${status.author.screen_name}/status/${status.id}"/>`,
-    `<meta property="og:url" content="${Constants.TWITTER_ROOT}/${status.author.screen_name}/status/${status.id}"/>`,
-    `<meta property="twitter:site" content="@${status.author.screen_name}"/>`,
-    `<meta property="twitter:creator" content="@${status.author.screen_name}"/>`
-  ];
+  const headers = [];
+
+  if (status.provider === DataProvider.Twitter) {
+    headers.push(
+      `<link rel="canonical" href="${Constants.TWITTER_ROOT}/${status.author.screen_name}/status/${status.id}"/>`,
+      `<meta property="og:url" content="${Constants.TWITTER_ROOT}/${status.author.screen_name}/status/${status.id}"/>`,
+      `<meta property="twitter:site" content="@${status.author.screen_name}"/>`,
+      `<meta property="twitter:creator" content="@${status.author.screen_name}"/>`
+    )
+  } else if (status.provider === DataProvider.Bsky) {
+    headers.push(
+      `<link rel="canonical" href="${Constants.BSKY_ROOT}/profile/${status.author.screen_name}/post/${status.id}"/>`,
+      `<meta property="og:url" content="${Constants.BSKY_ROOT}/profile/${status.author.screen_name}/post/${status.id}"/>`,
+    )
+  }
 
   if (!flags.gallery) {
+    if (status.provider === DataProvider.Twitter) {
+      headers.push(`<meta property="theme-color" content="#00a8fc"/>`)
+    } else if (status.provider === DataProvider.Bsky) {
+      headers.push(`<meta property="theme-color" content="#0085ff"/>`)
+    }
     headers.push(
-      `<meta property="theme-color" content="#00a8fc"/>`,
       `<meta property="twitter:title" content="${status.author.name} (@${status.author.screen_name})"/>`
     );
   }
 
-  /* This little thing ensures if by some miracle a Fixstatus embed is loaded in a browser,
+  /* This little thing ensures if by some miracle a FixTweet embed is loaded in a browser,
      it will gracefully redirect to the destination instead of just seeing a blank screen.
 
      Telegram is dumb and it just gets stuck if this is included, so we never include it for Telegram UAs. */
-  if (!isTelegram) {
+  if (!isTelegram && provider === DataProvider.Twitter) {
     headers.push(
       `<meta http-equiv="refresh" content="0;url=${Constants.TWITTER_ROOT}/${status.author.screen_name}/status/${status.id}"/>`
     );
@@ -224,22 +274,21 @@ export const handleStatus = async (
     }
   }
 
-  console.log('translation', status.translation);
-
   /* This status has a translation attached to it, so we'll render it. */
-  if (status.translation) {
-    const { translation } = status;
+  if ((status as APITwitterStatus).translation) {
+    const { translation } = status as APITwitterStatus;
 
     const formatText = `📑 {translation}`.format({
       translation: i18next.t('translatedFrom').format({
-        language: i18next.t(`language_${translation.source_lang}`)
+        language: i18next.t(`language_${translation?.source_lang}`)
       })
     });
 
-    newText = `${formatText}\n\n` + `${translation.text}\n\n`;
+    newText = `${formatText}\n\n` + `${translation?.text}\n\n`;
   }
 
   console.log('overrideMedia', JSON.stringify(overrideMedia));
+  console.log('media', JSON.stringify(status.media));
 
   if (!flags?.textOnly) {
     const media =
@@ -339,6 +388,7 @@ export const handleStatus = async (
         headers.push(...instructions.addHeaders);
       }
     } else if (media?.photos) {
+      console.log('photos', media?.photos)
       const instructions = renderPhoto(
         {
           status: status,
@@ -489,8 +539,13 @@ export const handleStatus = async (
     let provider = '';
     const mediaType = overrideMedia ?? status.media.videos?.[0]?.type;
 
+    let branding = Constants.BRANDING_NAME;
+    if (c.req.url.includes('bsky')) {
+      branding = Constants.BRANDING_NAME_BSKY;
+    }
+
     if (mediaType === 'gif') {
-      provider = i18next.t('gifIndicator', { brandingName: Constants.BRANDING_NAME });
+      provider = i18next.t('gifIndicator', { brandingName: branding });
     } else if (
       status.embed_card === 'player' &&
       providerEngagementText !== Strings.DEFAULT_AUTHOR_TEXT
@@ -503,7 +558,7 @@ export const handleStatus = async (
     headers.push(
       `<link rel="alternate" href="{base}/owoembed?text={text}&status={status}&author={author}{provider}" type="application/json+oembed" title="{name}">`.format(
         {
-          base: Constants.HOST_URL,
+          base: `https://${status.provider === DataProvider.Bsky ? Constants.STANDARD_BSKY_DOMAIN_LIST[0] : Constants.STANDARD_DOMAIN_LIST[0]}`,
           text: flags.gallery
             ? status.author.name
             : encodeURIComponent(truncateWithEllipsis(authorText, 255)),
@@ -528,3 +583,5 @@ export const handleStatus = async (
     }).replace(/>(\s+)</gm, '><')
   );
 };
+export { DataProvider };
+

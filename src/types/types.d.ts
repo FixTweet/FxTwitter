@@ -29,7 +29,7 @@ interface ResponseInstructions {
 }
 
 interface RenderProperties {
-  status: APITwitterStatus;
+  status: APIStatus;
   thread?: SocialThread;
   siteText?: string;
   authorText?: string;
@@ -149,6 +149,7 @@ interface APIStatus {
   source: string | null;
 
   embed_card: 'tweet' | 'summary' | 'summary_large_image' | 'player';
+  provider: DataProvider;
 }
 
 interface APITwitterCommunityNote {
@@ -162,6 +163,11 @@ interface APITwitterStatus extends APIStatus {
 
   is_note_tweet: boolean;
   community_note: APITwitterCommunityNote | null;
+  provider: DataProvider.Twitter;
+}
+
+interface APIBlueskyStatus extends APIStatus {
+  provider: DataProvider.Bsky;
 }
 
 interface APIUser {

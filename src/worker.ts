@@ -9,6 +9,7 @@ import { api } from './realms/api/router';
 import { twitter } from './realms/twitter/router';
 import { cacheMiddleware } from './caches';
 import { StatusCode } from 'hono/utils/http-status';
+import { bsky } from './realms/bluesky/router';
 
 const noCache = 'max-age=0, no-cache, no-store, must-revalidate';
 const embeddingClientRegex =
@@ -41,9 +42,11 @@ export const app = new Hono<{
       realm = 'api';
       console.log('API realm');
     } else if (Constants.STANDARD_DOMAIN_LIST.includes(baseHostName)) {
-      console.log();
       realm = 'twitter';
       console.log('Twitter realm');
+    } else if (Constants.STANDARD_BSKY_DOMAIN_LIST.includes(baseHostName)) {
+      realm = 'bsky';
+      console.log('Bluesky realm');
     } else {
       console.log(`Domain not assigned to realm, falling back to Twitter: ${url.hostname}`);
     }
@@ -92,7 +95,12 @@ app.onError((err, c) => {
   }
   c.header('cache-control', noCache);
 
-  return c.html(Strings.ERROR_HTML, errorCode as StatusCode);
+  let branding = Constants.BRANDING_NAME;
+  if (c.req.url.includes('bsky')) {
+    branding = Constants.BRANDING_NAME_BSKY;
+  }
+
+  return c.html(Strings.ERROR_HTML.format({brandingName: branding}), errorCode as StatusCode);
 });
 
 const customLogger = (message: string, ...rest: string[]) => {
@@ -133,12 +141,17 @@ app.use('*', timing({ enabled: false }));
 
 app.route(`/api`, api);
 app.route(`/twitter`, twitter);
+app.route(`/bsky`, bsky);
 
 app.all('/error', async c => {
   c.header('cache-control', noCache);
 
   if (c.req.header('User-Agent')?.match(embeddingClientRegex)) {
-    return c.html(Strings.ERROR_HTML, 200);
+    let branding = Constants.BRANDING_NAME;
+    if (c.req.url.includes('bsky')) {
+      branding = Constants.BRANDING_NAME_BSKY;
+    }
+    return c.html(Strings.ERROR_HTML.format({brandingName: branding}), 200);
   }
   /* We return it as a 200 so embedded applications can display the error */
   return c.body('', 400);
@@ -162,8 +175,13 @@ export default {
         errorCode = 200;
       }
 
+      let branding = Constants.BRANDING_NAME;
+      if (request.url.includes('bsky')) {
+        branding = Constants.BRANDING_NAME_BSKY;
+      }
+
       return new Response(
-        e.name === 'AbortError' ? Strings.TIMEOUT_ERROR_HTML : Strings.ERROR_HTML,
+        e.name === 'AbortError' ? Strings.TIMEOUT_ERROR_HTML.format({brandingName: branding}) : Strings.ERROR_HTML.format({brandingName: branding}),
         {
           headers: {
             ...Constants.RESPONSE_HEADERS,

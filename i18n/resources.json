@@ -35,6 +35,7 @@
       "ivCommunityNoteHeader": "Readers added context they thought people might want to know",
 
       "gifIndicator": "GIF - {brandingName}",
+      "threadIndicator": "🧵 Thread • {brandingName}",
 
       "language_af": "Afrikaans",
       "language_ar": "Arabic",
