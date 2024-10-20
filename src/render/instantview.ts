@@ -101,8 +101,11 @@ function getTranslatedText(status: APITwitterStatus, isQuote = false): string | 
   }
   let text = paragraphify(sanitizeText(status.translation?.text), isQuote);
   text = htmlifyLinks(text);
-  text = htmlifyHashtags(text);
-  text = populateUserLinks(text);
+
+  if (status.provider === DataProvider.Twitter) {
+    text = htmlifyHashtags(text);
+    text = populateUserLinks(text);
+  }
 
   const formatText = `📑 {translation}`.format({
     translation: i18next.t('translatedFrom').format({
@@ -180,10 +183,10 @@ const generateStatusFooter = (
 ): string => {
   let description = author.description;
   description = htmlifyLinks(description);
-  if (status.provider === 'twitter') {
+  if (status.provider === DataProvider.Twitter) {
     description = htmlifyHashtags(description);
+    description = populateUserLinks(description);
   }
-  description = populateUserLinks(description);
 
   return `
     <p>{socialText}</p>

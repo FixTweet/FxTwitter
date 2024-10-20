@@ -86,6 +86,7 @@ export const constructBlueskyThread = async (
         parent = parent.parent;
       }
     }
+    bucket.push(thread.post);
     if (thread.replies) {
       const replies = followReplyChain(thread);
       bucket.push(...replies);
