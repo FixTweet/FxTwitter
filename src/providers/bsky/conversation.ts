@@ -26,8 +26,7 @@ const fetchThread = async (
 export const fetchBskyThread = async (
   post: string,
   author: string,
-  processThread = false,
-  c: Context
+  processThread = false
 ) => {
   console.log(`Fetching post ${post} by ${author}`)
   const thread = await fetchThread(post, author, processThread ? 20 : 1);
@@ -64,7 +63,7 @@ export const constructBlueskyThread = async (
   c: Context,
   language: string | undefined
 ): Promise<SocialThread> => {
-  const _thread = await fetchBskyThread(id, author, processThread, c);
+  const _thread = await fetchBskyThread(id, author, processThread);
 
   if (!_thread) {
     return {
