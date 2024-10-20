@@ -150,7 +150,7 @@ export const buildAPIBskyPost = async (
   apiStatus.replies = 0;
   apiStatus.reposts = status.repostCount;
   apiStatus.source = 'Bluesky Social';
-  apiStatus.url = `${Constants.BSKY_ROOT}/profile/${status.author.handle}/post/${status.cid}`;
+  apiStatus.url = `${Constants.BSKY_ROOT}/profile/${status.author.handle}/post/${status.uri.match(/\/post\/(\w*)/)?.[1]}`;
   apiStatus.provider = DataProvider.Bsky;
 
   return apiStatus;

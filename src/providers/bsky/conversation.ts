@@ -30,13 +30,31 @@ export const fetchBskyThread = async (
   c: Context
 ) => {
   console.log(`Fetching post ${post} by ${author}`)
-  const thread = await fetchThread(post, author, 10);
+  const thread = await fetchThread(post, author, processThread ? 20 : 1);
   if (!thread) {
     return null;
   }
 
   return thread;
 };
+
+const followReplyChain = (thread: BlueskyThread): BlueskyPost[] => {
+  for (const _post of thread.replies) {
+    const post = _post.post;
+    if (post.author.did !== thread.post.author.did) {
+      continue;
+    }
+    console.log('checking post', post);
+    console.log('reply', post.record?.reply.parent.cid);
+    if (post.record?.reply.parent.cid === thread.post.cid) {
+      console.log('found it');
+      const bucket = [post];
+      const replies = followReplyChain(_post);
+      return bucket.concat(replies);
+    }
+  }
+  return [];
+}
 
 
 export const constructBlueskyThread = async (
@@ -46,24 +64,48 @@ export const constructBlueskyThread = async (
   c: Context,
   language: string | undefined
 ): Promise<SocialThread> => {
-  const thread = await fetchBskyThread(id, author, processThread, c);
-  // console.log('thread??', thread)
+  const _thread = await fetchBskyThread(id, author, processThread, c);
 
-  if (!thread) {
+  if (!_thread) {
     return {
       status: null,
       thread: [],
       author: null,
       code: 404
-    };
+    }
+  }
+  const thread = _thread?.thread;
+  const bucket: BlueskyPost[] = [];
+
+  if (processThread) {
+    // loop through chain of parents
+    if (thread.parent) {
+      let parent = thread.parent;
+      while (parent) {
+        bucket.unshift(parent.post);
+        parent = parent.parent;
+      }
+    }
+    if (thread.replies) {
+      const replies = followReplyChain(thread);
+      bucket.push(...replies);
+    }
+  } else {
+    bucket.push(thread.post);
   }
 
-  const consumedPost = await buildAPIBskyPost(c, thread.thread.post, language);
+  const consumedPost = await buildAPIBskyPost(c, thread.post, language);
+
+  const consumedPosts = await Promise.all(
+    bucket.map(async post => {
+      return await buildAPIBskyPost(c, post, language);
+    })
+  );
   // console.log('consumedPost', consumedPost)
 
   return {
     status: consumedPost,
-    thread: [consumedPost],
+    thread: consumedPosts,
     author: consumedPost.author,
     code: 200
   };

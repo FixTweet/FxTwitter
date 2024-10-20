@@ -72,6 +72,17 @@ type BlueskyAuthor = {
   labels: ATProtoLabel[];
 };
 
+type BlueskyReply = {
+  parent: {
+    cid: string;
+    uri: string;
+  };
+  root: {
+    cid: string;
+    uri: string;
+  }
+}
+
 type BlueskyPost = {
   author: BlueskyAuthor;
   cid: string;
@@ -91,11 +102,13 @@ type BlueskyRecord = {
   embed: BlueskyEmbed;
   langs: string[];
   text: string;
+  reply: BlueskyReply;
 };
 
 type BlueskyThread = {
+  parent: BlueskyThread;
   post: BlueskyPost;
-  replies: BlueskyPost[];
+  replies: BlueskyThread[];
 };
 
 type BlueskyThreadResponse = {
