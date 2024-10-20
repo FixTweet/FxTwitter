@@ -42,27 +42,89 @@ export const buildAPIBskyPost = async (
 
   console.log('embed', status.embed);
 
-  apiStatus.media.photos = (status.embed?.images || []).map(image => {
-    apiStatus.embed_card = 'summary_large_image';
-    console.log('image', image)
+  const media = status.embed?.media ?? status.embeds?.[0]?.media;
 
-    return {
-      type: 'photo',
-      width: image.aspectRatio?.width,
-      height: image.aspectRatio?.height,
-      url: image.fullsize,
-      altText: image.alt
-    };
-  });
+  if (status.embeds?.[0].images) {
+    apiStatus.media.photos = status.embeds[0].images.map(image => {
+      return {
+        type: 'photo',
+        width: image.aspectRatio?.width,
+        height: image.aspectRatio?.height,
+        url: image.fullsize,
+        altText: image.alt
+      };
+    });
+  }
+  if (status.embeds?.[0].video) {
+    const video = status.embeds[0].video;
+    apiStatus.media.videos = [
+      {
+        type: 'video',
+        url: status.embeds[0].playlist ?? '',
+        format: video.mimeType ?? 'video/mp4',
+        thumbnail_url: status.embeds[0].thumbnail ?? '',
+        variants: [],
+        width: status.embeds[0].aspectRatio?.width,
+        height: status.embeds[0].aspectRatio?.height,
+        duration: 0
+      }
+    ];
+  }
+  
+  if (media?.external) {
+    // if (media?.external.uri.startsWith('https://media.tenor.com')) {
+    //   apiStatus.media.videos = [
+    //     {
+    //       type: 'gif',
+    //       url: media?.external?.uri,
+    //       duration: 0,
+    //       variants: [],
+    //       format: 'image/gif',
+    //       thumbnail_url: media?.thumbnail,
+    //       width: 0,
+    //       height: 0
+    //     }
+    //   ]
+    // } else {
+      apiStatus.media.photos = [
+        {
+          type: 'photo',
+          url: media?.external?.uri,
+          altText: media?.external?.description,
+          width: 0,
+          height: 0
+        }
+      ]
+    // }
+      
+      apiStatus.embed_card = 'summary_large_image';
+      console.log('external image', apiStatus.media.photos)
+  }
+
+  if (status.embed?.images?.length) {
+    apiStatus.media.photos = status.embed?.images.map(image => {
+      apiStatus.embed_card = 'summary_large_image';
+      console.log('image', image)
+  
+      return {
+        type: 'photo',
+        width: image.aspectRatio?.width,
+        height: image.aspectRatio?.height,
+        url: image.fullsize,
+        altText: image.alt
+      };
+    });
+  }
+  
   if (status?.record?.embed?.video || status?.value?.embed?.video || status?.embed?.media?.$type === 'app.bsky.embed.video#view') {
     apiStatus.embed_card = 'player';
     const video = status.record?.embed?.video ?? status.value?.embed?.video ?? status?.record?.embed?.media;
     apiStatus.media.videos = [
       {
         type: 'video',
-        url: status.embed.playlist ?? status.embed.media?.playlist ?? `${Constants.BSKY_VIDEO_BASE}/watch/did:plc:${video?.ref?.$link}/720p/video.m3u8`,
+        url: status.embed.playlist ?? status.embed.media?.playlist ?? '',
         format: video?.mimeType ?? 'video/mp4',
-        thumbnail_url: status.embed.thumbnail ?? status.embed.media?.thumbnail ?? `${Constants.BSKY_VIDEO_BASE}/watch/did:plc:${video?.ref?.$link}/thumbnail.jpg`,
+        thumbnail_url: status.embed.thumbnail ?? status.embed.media?.thumbnail ?? '',
         variants: [],
         width: status.embed.aspectRatio?.width ?? status.embed.media?.aspectRatio?.width,
         height: status.embed.aspectRatio?.height ?? status.embed.media?.aspectRatio?.height,
@@ -71,7 +133,8 @@ export const buildAPIBskyPost = async (
     ];
   }
   if (status.embed?.record) {
-    apiStatus.quote = await buildAPIBskyPost(c, status.embed?.record?.record, language);
+    const record = status.embed?.record?.record ?? status.embed?.record;
+    apiStatus.quote = await buildAPIBskyPost(c, record, language);
   }
   apiStatus.media.all = (apiStatus.media.photos as APIMedia[] || []).concat(apiStatus.media.videos ?? []);
 

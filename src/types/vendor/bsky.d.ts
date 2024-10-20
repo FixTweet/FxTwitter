@@ -16,6 +16,13 @@ type BlueskyImage = {
   thumb: string;
 };
 
+type BlueskyExternalEmbed = {
+  uri: string;
+  title: string;
+  description: string;
+  thumb: string;
+};
+
 type BlueskyVideo = {
   $type: 'app.bsky.embed.video#view'
   ref: {
@@ -25,10 +32,22 @@ type BlueskyVideo = {
   size: number
 }
 
+type BlueskyMedia = {
+  $type: string;
+  external: BlueskyExternalEmbed;
+  thumbnail: string;
+  mimeType?: string;
+  playlist: string;
+  aspectRatio: {
+    height: number;
+    width: number;
+  }
+}
+
 type BlueskyEmbed = {
   images?: BlueskyImage[];
   video?: BlueskyVideo;
-  media?: BlueskyVideo;
+  media?: BlueskyMedia;
   record?: {
     record: BlueskyPost;
   };
@@ -64,6 +83,7 @@ type BlueskyPost = {
   value?: BlueskyRecord;
   repostCount: number;
   uri: string;
+  embeds?: BlueskyEmbed[];
 };
 
 type BlueskyRecord = {
