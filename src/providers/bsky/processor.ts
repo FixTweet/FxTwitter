@@ -119,10 +119,11 @@ export const buildAPIBskyPost = async (
   if (status?.record?.embed?.video || status?.value?.embed?.video || status?.embed?.media?.$type === 'app.bsky.embed.video#view') {
     apiStatus.embed_card = 'player';
     const video = status.record?.embed?.video ?? status.value?.embed?.video ?? status?.record?.embed?.media;
+    const playlist =  status.embed.playlist ?? status.embed.media?.playlist ?? '';
     apiStatus.media.videos = [
       {
         type: 'video',
-        url: status.embed.playlist ?? status.embed.media?.playlist ?? '',
+        url: playlist.replace('/playlist.m3u8', '/720p/video.m3u8'),
         format: video?.mimeType ?? 'video/mp4',
         thumbnail_url: status.embed.thumbnail ?? status.embed.media?.thumbnail ?? '',
         variants: [],
