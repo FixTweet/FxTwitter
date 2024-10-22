@@ -11,13 +11,17 @@ enum AuthorActionType {
   FollowUp = 'FollowUp'
 }
 
-const populateUserLinks = (text: string): string => {
+const populateUserLinks = (text: string, status: APIStatus): string => {
   /* TODO: Maybe we can add username splices to our API so only genuinely valid users are linked? */
   text.match(/@(\w{1,15})/g)?.forEach(match => {
     const username = match.replace('@', '');
+    let url = `${Constants.TWITTER_ROOT}/${username}`;
+    if (status.provider === DataProvider.Bsky) {
+      url = `${Constants.BSKY_ROOT}/profile/${username}`;
+    }
     text = text.replace(
       match,
-      `<a href="${Constants.TWITTER_ROOT}/${username}" target="_blank" rel="noopener noreferrer">${match}</a>`
+      `<a href="${url}" target="_blank" rel="noopener noreferrer">${match}</a>`
     );
   });
   return text;
@@ -61,7 +65,7 @@ const formatDate = (date: Date, language: string): string => {
   if (language.startsWith('en')) {
     language = 'en-CA'; // Use ISO dates for English to avoid problems with mm/dd vs. dd/mm
   }
-  console.log('language?', language)
+  console.log('language?', language);
   const formatter = new Intl.DateTimeFormat(language ?? 'en-CA', {
     year: 'numeric',
     month: '2-digit',
@@ -77,11 +81,12 @@ const htmlifyLinks = (input: string): string => {
   });
 };
 
-const htmlifyHashtags = (input: string): string => {
+const htmlifyHashtags = (input: string, status: APIStatus): string => {
   const hashtagPattern = /#([a-zA-Z_]\w*)/g;
   return input.replace(hashtagPattern, (match, hashtag) => {
     const encodedHashtag = encodeURIComponent(hashtag);
-    return `  <a href="${Constants.TWITTER_ROOT}/hashtag/${encodedHashtag}?src=hashtag_click">${match}</a>  `;
+    const url = `${status.provider === DataProvider.Twitter ? Constants.TWITTER_ROOT : Constants.BSKY_ROOT}/hashtag/${encodedHashtag}`;
+    return `  <a href="${url}">${match}</a>  `;
   });
 };
 
@@ -101,10 +106,10 @@ function getTranslatedText(status: APITwitterStatus, isQuote = false): string | 
   }
   let text = paragraphify(sanitizeText(status.translation?.text), isQuote);
   text = htmlifyLinks(text);
-
+  text = htmlifyHashtags(text, status);
+  
   if (status.provider === DataProvider.Twitter) {
-    text = htmlifyHashtags(text);
-    text = populateUserLinks(text);
+    text = populateUserLinks(text, status);
   }
 
   const formatText = `📑 {translation}`.format({
@@ -184,8 +189,8 @@ const generateStatusFooter = (
   let description = author.description;
   description = htmlifyLinks(description);
   if (status.provider === DataProvider.Twitter) {
-    description = htmlifyHashtags(description);
-    description = populateUserLinks(description);
+    description = htmlifyHashtags(description, status);
+    description = populateUserLinks(description, status);
   }
 
   return `
@@ -195,12 +200,14 @@ const generateStatusFooter = (
     {aboutSection}
     `.format({
     socialText: getSocialTextIV(status as APITwitterStatus) || '',
-    viewOriginal: !isQuote && status.provider !== DataProvider.Bsky
-      ? `<a href="${status.url}">${i18next.t('ivViewOriginal')}</a>`
-      : notApplicableComment,
-    aboutSection: (isQuote || status.provider === DataProvider.Bsky)
-      ? ''
-      : `<h2>${i18next.t('ivAboutAuthor')}</h2>
+    viewOriginal:
+      !isQuote && status.provider !== DataProvider.Bsky
+        ? `<a href="${status.url}">${i18next.t('ivViewOriginal')}</a>`
+        : notApplicableComment,
+    aboutSection:
+      isQuote || status.provider === DataProvider.Bsky
+        ? ''
+        : `<h2>${i18next.t('ivAboutAuthor')}</h2>
         {pfp}
         <h2>${author.name}</h2>
         <p><a href="${author.url}">@${author.screen_name}</a></p>
@@ -211,16 +218,16 @@ const generateStatusFooter = (
           {followers} <b>${i18next.t('ivProfileFollowers', { numFollowers: author.followers })}</b> 
           {statuses} <b>${i18next.t('ivProfileStatuses', { numStatuses: author.statuses })}</b>
         </p>`.format({
-          pfp: `<img src="${author.avatar_url?.replace('_200x200', '_400x400')}" alt="${i18next.t('ivProfilePictureAlt', { author: author.name })}" />`,
-          location: author.location ? `📌 ${author.location}` : '',
-          website: author.website
-            ? `🔗 <a rel="nofollow" href="${wrapForeignLinks(author.website.url)}">${author.website.display_url}</a>`
-            : '',
-          joined: author.joined ? `📆 ${formatDate(new Date(author.joined), language)}` : '',
-          following: truncateSocialCount(author.following, language),
-          followers: truncateSocialCount(author.followers, language),
-          statuses: truncateSocialCount(author.statuses, language)
-        })
+            pfp: `<img src="${author.avatar_url?.replace('_200x200', '_400x400')}" alt="${i18next.t('ivProfilePictureAlt', { author: author.name })}" />`,
+            location: author.location ? `📌 ${author.location}` : '',
+            website: author.website
+              ? `🔗 <a rel="nofollow" href="${wrapForeignLinks(author.website.url)}">${author.website.display_url}</a>`
+              : '',
+            joined: author.joined ? `📆 ${formatDate(new Date(author.joined), language)}` : '',
+            following: truncateSocialCount(author.following, language),
+            followers: truncateSocialCount(author.followers, language),
+            statuses: truncateSocialCount(author.statuses, language)
+          })
   });
 };
 
@@ -292,8 +299,8 @@ const generateStatus = (
 ): string => {
   let text = paragraphify(sanitizeText(status.text), isQuote);
   text = htmlifyLinks(text);
-  text = htmlifyHashtags(text);
-  text = populateUserLinks(text);
+  text = htmlifyHashtags(text, status);
+  text = populateUserLinks(text, status);
 
   const translatedText = getTranslatedText(status as APITwitterStatus, isQuote);
 
@@ -364,7 +371,14 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
     </section>
     <section class="section--first">${
       flags?.archive
-        ? i18next.t('ivInternetArchiveText').format({ brandingName: status.provider === DataProvider.Twitter ? Constants.BRANDING_NAME : Constants.BRANDING_NAME_BSKY })
+        ? i18next
+            .t('ivInternetArchiveText')
+            .format({
+              brandingName:
+                status.provider === DataProvider.Twitter
+                  ? Constants.BRANDING_NAME
+                  : Constants.BRANDING_NAME_BSKY
+            })
         : i18next.t('ivFallbackText')
     } <a href="${status.url}">${i18next.t('ivViewOriginal')}</a>
     </section>
