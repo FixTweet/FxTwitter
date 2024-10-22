@@ -13,7 +13,7 @@ const fetchThread = async (
   if (!author || !post) {
     return null;
   }
-  console.log('requesting', url)
+  console.log('requesting', url);
   const res = await fetch(url);
   console.log('res', JSON.stringify(res));
   if (!res.ok) {
@@ -23,12 +23,8 @@ const fetchThread = async (
   return await res.json();
 };
 
-export const fetchBskyThread = async (
-  post: string,
-  author: string,
-  processThread = false
-) => {
-  console.log(`Fetching post ${post} by ${author}`)
+export const fetchBskyThread = async (post: string, author: string, processThread = false) => {
+  console.log(`Fetching post ${post} by ${author}`);
   const thread = await fetchThread(post, author, processThread ? 20 : 1);
   if (!thread) {
     return null;
@@ -53,8 +49,7 @@ const followReplyChain = (thread: BlueskyThread): BlueskyPost[] => {
     }
   }
   return [];
-}
-
+};
 
 export const constructBlueskyThread = async (
   id: string,
@@ -71,7 +66,7 @@ export const constructBlueskyThread = async (
       thread: [],
       author: null,
       code: 404
-    }
+    };
   }
   const thread = _thread?.thread;
   const bucket: BlueskyPost[] = [];

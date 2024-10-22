@@ -24,13 +24,13 @@ type BlueskyExternalEmbed = {
 };
 
 type BlueskyVideo = {
-  $type: 'app.bsky.embed.video#view'
+  $type: 'app.bsky.embed.video#view';
   ref: {
-    "$link": string
-  },
-  mimeType: "video/mp4",
-  size: number
-}
+    $link: string;
+  };
+  mimeType: 'video/mp4';
+  size: number;
+};
 
 type BlueskyMedia = {
   $type: string;
@@ -41,8 +41,8 @@ type BlueskyMedia = {
   aspectRatio: {
     height: number;
     width: number;
-  }
-}
+  };
+};
 
 type BlueskyEmbed = {
   images?: BlueskyImage[];
@@ -54,10 +54,10 @@ type BlueskyEmbed = {
   aspectRatio: {
     height: number;
     width: number;
-  }
-  playlist?: string
-  thumbnail?: string
-}
+  };
+  playlist?: string;
+  thumbnail?: string;
+};
 type BlueskyAuthor = {
   associated: {
     chat: {
@@ -80,8 +80,8 @@ type BlueskyReply = {
   root: {
     cid: string;
     uri: string;
-  }
-}
+  };
+};
 
 type BlueskyPost = {
   author: BlueskyAuthor;

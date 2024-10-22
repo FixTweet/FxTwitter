@@ -19,7 +19,8 @@ export const versionRoute = async (c: Context, provider: DataProvider) => {
       country: (req.raw.cf?.country as string) ?? 'Unknown Country',
       asn: `AS${req.raw.cf?.asn ?? '??'} (${req.raw.cf?.asOrganization ?? 'Unknown ASN'})`,
       ua: sanitizeText(req.header('user-agent') ?? 'Unknown User Agent'),
-      brandingName: provider === DataProvider.Bsky ? Constants.BRANDING_NAME_BSKY : Constants.BRANDING_NAME,
+      brandingName:
+        provider === DataProvider.Bsky ? Constants.BRANDING_NAME_BSKY : Constants.BRANDING_NAME
     })
   );
 };

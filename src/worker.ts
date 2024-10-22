@@ -100,7 +100,7 @@ app.onError((err, c) => {
     branding = Constants.BRANDING_NAME_BSKY;
   }
 
-  return c.html(Strings.ERROR_HTML.format({brandingName: branding}), errorCode as StatusCode);
+  return c.html(Strings.ERROR_HTML.format({ brandingName: branding }), errorCode as StatusCode);
 });
 
 const customLogger = (message: string, ...rest: string[]) => {
@@ -151,7 +151,7 @@ app.all('/error', async c => {
     if (c.req.url.includes('bsky')) {
       branding = Constants.BRANDING_NAME_BSKY;
     }
-    return c.html(Strings.ERROR_HTML.format({brandingName: branding}), 200);
+    return c.html(Strings.ERROR_HTML.format({ brandingName: branding }), 200);
   }
   /* We return it as a 200 so embedded applications can display the error */
   return c.body('', 400);
@@ -181,7 +181,9 @@ export default {
       }
 
       return new Response(
-        e.name === 'AbortError' ? Strings.TIMEOUT_ERROR_HTML.format({brandingName: branding}) : Strings.ERROR_HTML.format({brandingName: branding}),
+        e.name === 'AbortError'
+          ? Strings.TIMEOUT_ERROR_HTML.format({ brandingName: branding })
+          : Strings.ERROR_HTML.format({ brandingName: branding }),
         {
           headers: {
             ...Constants.RESPONSE_HEADERS,

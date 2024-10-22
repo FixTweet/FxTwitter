@@ -79,4 +79,3 @@ export const Constants = {
   DEFAULT_COLOR: '#10A3FF',
   FRIENDLY_USER_AGENT: `Mozilla/5.0 FixEmbedBot/1.0 (like Twitterbot; +https://fxtwitter.com/crawler)`
 };
-

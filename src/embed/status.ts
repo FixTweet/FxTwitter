@@ -208,7 +208,10 @@ export const handleStatus = async (
 
   let authorText = getSocialProof(status) || Strings.DEFAULT_AUTHOR_TEXT;
   const engagementText = authorText.replace(/ {4}/g, ' ');
-  let siteName = status.provider === DataProvider.Twitter ? Constants.BRANDING_NAME : Constants.BRANDING_NAME_BSKY;
+  let siteName =
+    status.provider === DataProvider.Twitter
+      ? Constants.BRANDING_NAME
+      : Constants.BRANDING_NAME_BSKY;
 
   if (thread.thread && thread.thread.length > 1 && isTelegram && useIV) {
     siteName = i18next.t('threadIndicator', { brandingName: siteName });
@@ -225,19 +228,19 @@ export const handleStatus = async (
       `<meta property="og:url" content="${Constants.TWITTER_ROOT}/${status.author.screen_name}/status/${status.id}"/>`,
       `<meta property="twitter:site" content="@${status.author.screen_name}"/>`,
       `<meta property="twitter:creator" content="@${status.author.screen_name}"/>`
-    )
+    );
   } else if (status.provider === DataProvider.Bsky) {
     headers.push(
       `<link rel="canonical" href="${Constants.BSKY_ROOT}/profile/${status.author.screen_name}/post/${status.id}"/>`,
-      `<meta property="og:url" content="${Constants.BSKY_ROOT}/profile/${status.author.screen_name}/post/${status.id}"/>`,
-    )
+      `<meta property="og:url" content="${Constants.BSKY_ROOT}/profile/${status.author.screen_name}/post/${status.id}"/>`
+    );
   }
 
   if (!flags.gallery) {
     if (status.provider === DataProvider.Twitter) {
-      headers.push(`<meta property="theme-color" content="#00a8fc"/>`)
+      headers.push(`<meta property="theme-color" content="#00a8fc"/>`);
     } else if (status.provider === DataProvider.Bsky) {
-      headers.push(`<meta property="theme-color" content="#0085ff"/>`)
+      headers.push(`<meta property="theme-color" content="#0085ff"/>`);
     }
     headers.push(
       `<meta property="twitter:title" content="${status.author.name} (@${status.author.screen_name})"/>`
@@ -388,7 +391,7 @@ export const handleStatus = async (
         headers.push(...instructions.addHeaders);
       }
     } else if (media?.photos) {
-      console.log('photos', media?.photos)
+      console.log('photos', media?.photos);
       const instructions = renderPhoto(
         {
           status: status,
@@ -584,4 +587,3 @@ export const handleStatus = async (
   );
 };
 export { DataProvider };
-

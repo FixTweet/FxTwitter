@@ -70,7 +70,7 @@ export const buildAPIBskyPost = async (
       }
     ];
   }
-  
+
   if (media?.external) {
     // if (media?.external.uri.startsWith('https://media.tenor.com')) {
     //   apiStatus.media.videos = [
@@ -86,26 +86,26 @@ export const buildAPIBskyPost = async (
     //     }
     //   ]
     // } else {
-      apiStatus.media.photos = [
-        {
-          type: 'photo',
-          url: media?.external?.uri,
-          altText: media?.external?.description,
-          width: 0,
-          height: 0
-        }
-      ]
+    apiStatus.media.photos = [
+      {
+        type: 'photo',
+        url: media?.external?.uri,
+        altText: media?.external?.description,
+        width: 0,
+        height: 0
+      }
+    ];
     // }
-      
-      apiStatus.embed_card = 'summary_large_image';
-      console.log('external image', apiStatus.media.photos)
+
+    apiStatus.embed_card = 'summary_large_image';
+    console.log('external image', apiStatus.media.photos);
   }
 
   if (status.embed?.images?.length) {
     apiStatus.media.photos = status.embed?.images.map(image => {
       apiStatus.embed_card = 'summary_large_image';
-      console.log('image', image)
-  
+      console.log('image', image);
+
       return {
         type: 'photo',
         width: image.aspectRatio?.width,
@@ -115,11 +115,19 @@ export const buildAPIBskyPost = async (
       };
     });
   }
-  
-  if (status?.record?.embed?.video || status?.value?.embed?.video || status?.embed?.media?.$type === 'app.bsky.embed.video#view') {
+
+  if (
+    status?.record?.embed?.video ||
+    status?.value?.embed?.video ||
+    status?.embed?.media?.$type === 'app.bsky.embed.video#view'
+  ) {
     apiStatus.embed_card = 'player';
-    const video = status.record?.embed?.video ?? status.value?.embed?.video ?? status?.record?.embed?.media;
-    const cid = status.record?.embed?.video?.ref?.$link ?? status.value?.embed?.video?.ref?.$link ?? status.embed?.video?.ref?.$link;
+    const video =
+      status.record?.embed?.video ?? status.value?.embed?.video ?? status?.record?.embed?.media;
+    const cid =
+      status.record?.embed?.video?.ref?.$link ??
+      status.value?.embed?.video?.ref?.$link ??
+      status.embed?.video?.ref?.$link;
     const videoUrl = `https://pds-cache.fxbsky.app/xrpc/com.atproto.sync.getBlob?did=${status.author.did}&cid=${cid}`;
     apiStatus.media.videos = [
       {
@@ -138,7 +146,9 @@ export const buildAPIBskyPost = async (
     const record = status.embed?.record?.record ?? status.embed?.record;
     apiStatus.quote = await buildAPIBskyPost(c, record, language);
   }
-  apiStatus.media.all = (apiStatus.media.photos as APIMedia[] || []).concat(apiStatus.media.videos ?? []);
+  apiStatus.media.all = ((apiStatus.media.photos as APIMedia[]) || []).concat(
+    apiStatus.media.videos ?? []
+  );
 
   /* Handle photos and mosaic if available */
   if ((apiStatus?.media.photos?.length || 0) > 1 && Constants.MOSAIC_BSKY_DOMAIN_LIST.length > 0) {

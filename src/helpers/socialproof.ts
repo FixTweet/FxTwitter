@@ -9,12 +9,7 @@ export const getSocialProof = (status: APIStatus): string | null => {
     views = (status as APITwitterStatus).views || 0;
   }
   /* Build out reply, retweet, like counts */
-  if (
-    status.likes > 0 ||
-    status.reposts > 0 ||
-    status.replies > 0 ||
-    (views ? views > 0 : false)
-  ) {
+  if (status.likes > 0 || status.reposts > 0 || status.replies > 0 || (views ? views > 0 : false)) {
     let authorText = '';
     if (status.replies > 0) {
       authorText += `💬 ${formatNumber(status.replies)}   `;

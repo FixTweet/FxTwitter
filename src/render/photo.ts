@@ -31,7 +31,10 @@ export const renderPhoto = (
     } else {
       instructions.authorText = `${authorText}${authorText ? '   ―   ' : ''}${photoCounter}`;
     }
-    const brandingName = status.provider === DataProvider.Twitter ? Constants.BRANDING_NAME : Constants.BRANDING_NAME_BSKY;
+    const brandingName =
+      status.provider === DataProvider.Twitter
+        ? Constants.BRANDING_NAME
+        : Constants.BRANDING_NAME_BSKY;
     if (engagementText && !isTelegram) {
       instructions.siteName = `${brandingName} - ${engagementText} - ${photoCounter}`;
     } else {

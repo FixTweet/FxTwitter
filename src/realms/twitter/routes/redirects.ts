@@ -45,7 +45,7 @@ export const setRedirectRequest = async (c: Context) => {
       'content-security-policy',
       `frame-ancestors ${Constants.STANDARD_DOMAIN_LIST.join(' ')};`
     );
-    
+
     return c.html(
       Strings.MESSAGE_HTML.format({
         brandingName: Constants.BRANDING_NAME,

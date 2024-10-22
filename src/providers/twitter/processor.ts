@@ -208,7 +208,11 @@ export const buildAPITwitterStatus = async (
   */
 
   /* Handle photos and mosaic if available */
-  if ((apiStatus?.media.photos?.length || 0) > 1 && !threadAuthor && Constants.MOSAIC_DOMAIN_LIST.length > 0) {
+  if (
+    (apiStatus?.media.photos?.length || 0) > 1 &&
+    !threadAuthor &&
+    Constants.MOSAIC_DOMAIN_LIST.length > 0
+  ) {
     const mosaic = await handleMosaic(apiStatus.media?.photos || [], id, DataProvider.Twitter);
     if (typeof apiStatus.media !== 'undefined' && mosaic !== null) {
       apiStatus.media.mosaic = mosaic;
