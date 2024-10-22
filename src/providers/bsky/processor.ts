@@ -119,11 +119,12 @@ export const buildAPIBskyPost = async (
   if (status?.record?.embed?.video || status?.value?.embed?.video || status?.embed?.media?.$type === 'app.bsky.embed.video#view') {
     apiStatus.embed_card = 'player';
     const video = status.record?.embed?.video ?? status.value?.embed?.video ?? status?.record?.embed?.media;
-    const playlist =  status.embed.playlist ?? status.embed.media?.playlist ?? '';
+    const cid = status.record?.embed?.video?.ref?.$link ?? status.value?.embed?.video?.ref?.$link ?? status.embed?.video?.ref?.$link;
+    const videoUrl = `https://pds-cache.fxbsky.app/xrpc/com.atproto.sync.getBlob?did=${status.author.did}&cid=${cid}`;
     apiStatus.media.videos = [
       {
         type: 'video',
-        url: playlist.replace('/playlist.m3u8', '/720p/video.m3u8'),
+        url: videoUrl,
         format: video?.mimeType ?? 'video/mp4',
         thumbnail_url: status.embed.thumbnail ?? status.embed.media?.thumbnail ?? '',
         variants: [],

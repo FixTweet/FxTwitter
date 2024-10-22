@@ -86,10 +86,6 @@ export const renderVideo = (
   }
 
   if (status.provider === DataProvider.Bsky) {
-    url = video.url.replace(
-      Constants.BSKY_VIDEO_BASE,
-      `https://video.fxbsky.app`
-    );
     console.log('Embedding bsky video', url);
   }
 
