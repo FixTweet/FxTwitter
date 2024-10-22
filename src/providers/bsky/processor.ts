@@ -44,7 +44,7 @@ export const buildAPIBskyPost = async (
 
   const media = status.embed?.media ?? status.embeds?.[0]?.media;
 
-  if (status.embeds?.[0].images) {
+  if (status.embeds?.[0]?.images) {
     apiStatus.media.photos = status.embeds[0].images.map(image => {
       return {
         type: 'photo',
@@ -55,7 +55,7 @@ export const buildAPIBskyPost = async (
       };
     });
   }
-  if (status.embeds?.[0].video) {
+  if (status.embeds?.[0]?.video) {
     const video = status.embeds[0].video;
     apiStatus.media.videos = [
       {
