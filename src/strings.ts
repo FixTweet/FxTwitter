@@ -248,9 +248,10 @@ Disallow:
 
 User-agent: *
 Allow: /$
-# Allow bots to access statuses
-Allow: /*/status
-Allow: /*/status/
+Disallow: /*/status
+Disallow: /*/status/
+Disallow: /profile
+Disallow: /profile/
 # Oembeds are not crawler friendly
 Disallow: /owoembed
 Disallow: /owoembed/
