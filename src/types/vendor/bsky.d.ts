@@ -108,7 +108,7 @@ type BlueskyRecord = {
 type BlueskyThread = {
   parent: BlueskyThread;
   post: BlueskyPost;
-  replies: BlueskyThread[];
+  replies?: BlueskyThread[];
 };
 
 type BlueskyThreadResponse = {

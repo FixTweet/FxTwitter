@@ -34,6 +34,9 @@ export const fetchBskyThread = async (post: string, author: string, processThrea
 };
 
 const followReplyChain = (thread: BlueskyThread): BlueskyPost[] => {
+  if (!thread.replies)
+    return [];
+  
   for (const _post of thread.replies) {
     const post = _post.post;
     if (post.author.did !== thread.post.author.did) {
