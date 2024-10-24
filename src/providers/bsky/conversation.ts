@@ -44,7 +44,7 @@ const followReplyChain = (thread: BlueskyThread): BlueskyPost[] => {
     if (post.record?.reply.parent.cid === thread.post.cid) {
       console.log('found it');
       const bucket = [post];
-      const replies = followReplyChain(_post);
+      const replies = _post.replies ? followReplyChain(_post) : [];
       return bucket.concat(replies);
     }
   }
