@@ -35,6 +35,7 @@ type BlueskyVideo = {
 type BlueskyMedia = {
   $type: string;
   external: BlueskyExternalEmbed;
+  images: BlueskyImage[];
   thumbnail: string;
   mimeType?: string;
   playlist: string;

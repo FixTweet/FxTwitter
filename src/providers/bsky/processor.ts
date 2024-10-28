@@ -44,8 +44,9 @@ export const buildAPIBskyPost = async (
 
   const media = status.embed?.media ?? status.embeds?.[0]?.media;
 
-  if (status.embeds?.[0]?.images) {
-    apiStatus.media.photos = status.embeds[0].images.map(image => {
+  if (status.embed?.media?.images || status.embeds?.[0]?.images) {
+    const images = status.embed?.media?.images ?? status.embeds?.[0]?.images as BlueskyImage[];
+    apiStatus.media.photos = images.map(image => {
       return {
         type: 'photo',
         width: image.aspectRatio?.width,
@@ -56,7 +57,7 @@ export const buildAPIBskyPost = async (
     });
   }
   if (status.embeds?.[0]?.video) {
-    const video = status.embeds[0].video;
+    const video = status.embed?.video ?? status.embeds[0].video;
     apiStatus.media.videos = [
       {
         type: 'video',
@@ -164,6 +165,8 @@ export const buildAPIBskyPost = async (
   apiStatus.source = 'Bluesky Social';
   apiStatus.url = `${Constants.BSKY_ROOT}/profile/${status.author.handle}/post/${status.uri.match(/\/post\/(\w*)/)?.[1]}`;
   apiStatus.provider = DataProvider.Bsky;
+
+  console.log('quote', apiStatus.quote);
 
   return apiStatus;
 };
