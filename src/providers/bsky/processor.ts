@@ -135,10 +135,10 @@ export const buildAPIBskyPost = async (
         type: 'video',
         url: videoUrl,
         format: video?.mimeType ?? 'video/mp4',
-        thumbnail_url: status.embed.thumbnail ?? status.embed.media?.thumbnail ?? '',
+        thumbnail_url: status.embed?.thumbnail ?? status.embed?.media?.thumbnail ?? '',
         variants: [],
-        width: status.embed.aspectRatio?.width ?? status.embed.media?.aspectRatio?.width,
-        height: status.embed.aspectRatio?.height ?? status.embed.media?.aspectRatio?.height,
+        width: status.embed?.aspectRatio?.width ?? status.embed?.media?.aspectRatio?.width,
+        height: status.embed?.aspectRatio?.height ?? status.embed?.media?.aspectRatio?.height,
         duration: 0
       }
     ];
@@ -163,7 +163,7 @@ export const buildAPIBskyPost = async (
   apiStatus.replies = 0;
   apiStatus.reposts = status.repostCount;
   apiStatus.source = 'Bluesky Social';
-  apiStatus.url = `${Constants.BSKY_ROOT}/profile/${status.author.handle}/post/${status.uri.match(/\/post\/(\w*)/)?.[1]}`;
+  apiStatus.url = `${Constants.BSKY_ROOT}/profile/${status.author.handle}/post/${status.uri.match(/(?<=post\/)(\w*)/g)?.[0]}`;
   apiStatus.provider = DataProvider.Bsky;
 
   console.log('quote', apiStatus.quote);
