@@ -113,7 +113,11 @@ export const handleStatus = async (
   }
 
   if (status === null) {
-    return returnError(c, Strings.ERROR_TWEET_NOT_FOUND);
+    if (provider === DataProvider.Bsky) {
+      return returnError(c, Strings.ERROR_BLUESKY_POST_NOT_FOUND);
+    } else {
+      return returnError(c, Strings.ERROR_TWEET_NOT_FOUND);
+    }
   }
 
   /* If there was any errors fetching the Tweet, we'll return it */
@@ -121,7 +125,11 @@ export const handleStatus = async (
     case 401:
       return returnError(c, Strings.ERROR_PRIVATE);
     case 404:
-      return returnError(c, Strings.ERROR_TWEET_NOT_FOUND);
+      if (provider === DataProvider.Bsky) {
+        return returnError(c, Strings.ERROR_BLUESKY_POST_NOT_FOUND);
+      } else {
+        return returnError(c, Strings.ERROR_TWEET_NOT_FOUND);
+      }
     case 500:
       console.log(api);
       return returnError(c, Strings.ERROR_API_FAIL);
