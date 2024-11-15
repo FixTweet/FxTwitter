@@ -49,7 +49,7 @@ export const cacheMiddleware = (): MiddlewareHandler => async (c, next) => {
 
         if (cachedResponse) {
           console.log('Cache hit');
-          return new Response(cachedResponse.body, cachedResponse);
+          return new Response(cachedResponse.body, cachedResponse as ResponseInit);
         }
 
         console.log('Cache miss');
@@ -90,12 +90,11 @@ export const cacheMiddleware = (): MiddlewareHandler => async (c, next) => {
     /* We properly state our OPTIONS when asked */
     case 'OPTIONS':
       c.header('allow', Constants.RESPONSE_HEADERS.allow);
+      c.body(null);
       c.status(204);
-      if (returnAsJson) return c.json('');
-      return c.html('');
+      return;
     default:
-      c.status(405);
       if (returnAsJson) return c.json('');
-      return c.html('');
+      return c.html('', 405);
   }
 };

@@ -4,6 +4,7 @@
 
 ![][icons]
 
+[![Crowdin][crowdinbadge]][crowdin]
 [![esbuild][buildbadge]][build]
 [![Tests][testsbadge]][tests]
 [![Status][statusbadge]][status]
@@ -20,6 +21,8 @@
 [licensebadge]: https://img.shields.io/github/license/FixTweet/FxTwitter
 [status]: https://status.fxtwitter.com
 [statusbadge]: https://status.fxtwitter.com/api/badge/8/uptime/720?label=Uptime%2030d
+[crowdinbadge]: https://badges.crowdin.net/fxtwitter/localized.svg
+[crowdin]: https://crowdin.com/project/fxtwitter
 
 ## Written in TypeScript as a Cloudflare Worker to scale, packed with more features and [best-in-class user privacy 🔒](#built-with-privacy-in-mind).
 
@@ -29,13 +32,13 @@
 
 ### For `twitter.com` links on Discord, send a link and type `s/e/p` to make `twittpr.com`.
 
-<img src="https://cdn.discordapp.com/attachments/165560751363325952/1006346785985417307/fixtweet.webp">
+<img src="https://raw.githubusercontent.com/FixTweet/FxTwitter/main/.github/readme/fixtweet.webp">
 
 ## Embed Videos
 
 We all have videos of memes and other things from Twitter we want to quickly share with friends. With normal Twitter links, embedding videos is often broken on Discord and impossible on Telegram. But using FxTwitter, we embed the raw mp4 file so it's compatible with just about anything supporting video embeds.
 
-![](https://cdn.discordapp.com/attachments/165560751363325952/1184627562811494461/video.png)
+![](https://raw.githubusercontent.com/FixTweet/FxTwitter/main/.github/readme/videos.png)
 
 On Discord, we'll also automatically embed videos linked from other platforms, such as YouTube, so they can play without having to open a browser.
 
@@ -43,13 +46,13 @@ On Discord, we'll also automatically embed videos linked from other platforms, s
 
 If you want to share the results of a Twitter poll, you can do so by just linking the post using FxTwitter.
 
-![](https://cdn.discordapp.com/attachments/165560751363325952/1006331192372629544/FixTweet.png)
+![](https://raw.githubusercontent.com/FixTweet/FxTwitter/main/.github/readme/poll.png)
 
 ## Embed Quotes & Media
 
 Quotes and their media can provide important context to a post. So we'll automatically add said context, and even media if there isn't already media embedded in the quote.
 
-![](https://cdn.discordapp.com/attachments/165560751363325952/1184630052797816863/quote.png)
+![](https://raw.githubusercontent.com/FixTweet/FxTwitter/main/.github/readme/quote.png)
 
 ## Translate Posts
 
@@ -57,19 +60,25 @@ You can translate a post into any other supported language, with the original an
 
 Just append a post with its 2-letter ISO language code. So for English, add `/en` at the end.
 
-![](https://cdn.discordapp.com/attachments/165560751363325952/1184625715522572298/translation.png)
+![](https://raw.githubusercontent.com/FixTweet/FxTwitter/main/.github/readme/translate.png)
 
 ## Gallery view
 
 Use `g.fxtwitter.com` or `g.fixupx.com` to generate minimal embeds with just the post's media and author information without other distractions. This can be particularly useful for read-only channels dedicated to sharing media.
 
-![](https://cdn.discordapp.com/attachments/165560751363325952/1182788212482117662/gallery.png)
+![](https://raw.githubusercontent.com/FixTweet/FxTwitter/main/.github/readme/gallery.png?a)
+
+## Text-only view
+
+Basically the opposite of gallery view, use `t.fxtwitter.com` / `t.fixupx.com` to exclude photos/videos and only display text.
+
+![](https://raw.githubusercontent.com/FixTweet/FxTwitter/main/.github/readme/textonly.png)
 
 ## Direct media links
 
 Want to link directly to a post's media without the embed? You can easily do that using FxTwitter.
 
-![Image demonstrating the feature](https://cdn.discordapp.com/attachments/165560751363325952/1006338772192989194/FixTweet.png)
+![Image demonstrating the feature](https://raw.githubusercontent.com/FixTweet/FxTwitter/main/.github/readme/directmedia.png)
 
 There are a few supported ways to do this:
 
@@ -87,12 +96,12 @@ In the future we plan to do even more with Instant View such as embedding entire
 
 Examples from above:
 
-- `https://d.fxtwitter.com/dangeredwolf/status/1548119328498728960`
-- `https://fxtwitter.com/dangeredwolf/status/1548117889437208581.jpg`
+- `https://d.fxtwitter.com/example/status/1548119328498728960`
+- `https://fxtwitter.com/example/status/1548117889437208581.jpg`
 
 Posts with multiple images are supported, so you can do something like this and it will pick the correct one:
 
-`https://d.fxtwitter.com/dangeredwolf/status/1547514042146865153/photo/3`
+`https://d.fxtwitter.com/example/status/1547514042146865153/photo/3`
 
 Otherwise, it will default to the first image.
 
@@ -100,7 +109,7 @@ Otherwise, it will default to the first image.
 
 The default Twitter embeds include t.co link shorteners, which make it difficult to know where the link is heading. We automatically replace t.co links with their original links to make things clearer.
 
-![](https://cdn.discordapp.com/attachments/165560751363325952/1006348698659344464/FixTweet.png)
+![](https://github.com/FixTweet/FxTwitter/blob/main/.github/readme/tco.png)
 
 ## Redirect to Nitter or other custom instances
 
@@ -124,26 +133,26 @@ On a different note, if the person who posted a FxTwitter link forgot to strip t
 
 In many ways, FxTwitter has richer embeds and does more. Here's a table comparing some of FxTwitter's features compared to Twitter default embeds as well as other embedding services
 
-|                                        |                     FxTwitter                      |         Twitter default          |              vxTwitter (BetterTwitFix)              |
-| -------------------------------------- | :------------------------------------------------: | :------------------------------: | :-------------------------------------------------: |
-| Embed Posts / Images                   |                 :heavy_check_mark:                 |        :heavy_check_mark:        |                 :heavy_check_mark:                  |
-| Embed profile pictures on text posts   |                 :heavy_check_mark:                 |               :x:                |                 :heavy_check_mark:                  |
-| Embed Twitter Videos                   |                 :heavy_check_mark:                 | :heavy_minus_sign: Discord Only¹ |                 :heavy_check_mark:                  |
-| Embed External Videos (YouTube, etc.)  |                :heavy_check_mark:⁴                 |               :x:                |                        :x:³                         |
-| Embed Poll results                     |                 :heavy_check_mark:                 |               :x:                |            [:heavy_check_mark:][polladd]            |
-| Embed Quotes                           |                 :heavy_check_mark:                 |               :x:                |        :ballot_box_with_check: Without Media        |
-| Embed Multiple Images                  |                 :heavy_check_mark:                 | :heavy_minus_sign: Discord Only² |                 :heavy_check_mark:                  |
-| Translate Posts                        |                 :heavy_check_mark:                 |               :x:                |                         :x:                         |
-| Replace t.co with original links       |                 :heavy_check_mark:                 |               :x:                |                 :heavy_check_mark:                  |
-| Redirect to media file (without embed) |                 :heavy_check_mark:                 |               :x:                | :ballot_box_with_check: Subdomain broken, no images |
-| Gallery view                           |                 :heavy_check_mark:                 |               :x:                |                         :x:                         |
-| Strip tracking info on redirect        |                 :heavy_check_mark:                 |               :x:                |                 :heavy_check_mark:                  |
-| Show retweet, like, reply, view counts | :heavy_minus_sign: Discord / Telegram Instant View | :heavy_minus_sign: Discord Only² |     :ballot_box_with_check: No replies / views      |
-| Discord sed replace (`s/`) friendly    |        :ballot_box_with_check: twittpr.com         |               N/A                |                         :x:                         |
-| Domain for X.com links                 |         :ballot_box_with_check: fixupx.com         |               N/A                |          :ballot_box_with_check: fixvx.com          |
-| Telegram Instant View                  |                 :heavy_check_mark:                 |               :x:                |                         :x:                         |
-| Status fetch API for Developers        |                 :heavy_check_mark:                 |               N/A                |                 :heavy_check_mark:                  |
-| Last commit                            |                   [![][flc]][fc]                   |               N/A                |                   [![][vlc]][vc]                    |
+|                                        |                     FxTwitter                      |  Twitter default   |              vxTwitter (BetterTwitFix)              |
+| -------------------------------------- | :------------------------------------------------: | :----------------: | :-------------------------------------------------: |
+| Embed Posts / Images                   |                 :heavy_check_mark:                 | :heavy_check_mark: |                 :heavy_check_mark:                  |
+| Embed profile pictures on text posts   |                 :heavy_check_mark:                 |        :x:         |                 :heavy_check_mark:                  |
+| Embed Twitter Videos                   |                 :heavy_check_mark:                 |        :x:         |                 :heavy_check_mark:                  |
+| Embed External Videos (YouTube, etc.)  |                :heavy_check_mark:⁴                 |        :x:         |                        :x:³                         |
+| Embed Poll results                     |                 :heavy_check_mark:                 |        :x:         |            [:heavy_check_mark:][polladd]            |
+| Embed Quotes                           |                 :heavy_check_mark:                 |        :x:         |        :ballot_box_with_check: Without Media        |
+| Embed Multiple Images                  |                 :heavy_check_mark:                 |        :x:         |                 :heavy_check_mark:                  |
+| Translate Posts                        |                 :heavy_check_mark:                 |        :x:         |                         :x:                         |
+| Replace t.co with original links       |                 :heavy_check_mark:                 |        :x:         |                 :heavy_check_mark:                  |
+| Redirect to media file (without embed) |                 :heavy_check_mark:                 |        :x:         | :ballot_box_with_check: Subdomain broken, no images |
+| Gallery view                           |                 :heavy_check_mark:                 |        :x:         |                         :x:                         |
+| Strip tracking info on redirect        |                 :heavy_check_mark:                 |        :x:         |                 :heavy_check_mark:                  |
+| Show retweet, like, reply, view counts | :heavy_minus_sign: Discord / Telegram Instant View |        :x:         |     :ballot_box_with_check: No replies / views      |
+| Discord sed replace (`s/`) friendly    |        :ballot_box_with_check: twittpr.com         |        N/A         |                         :x:                         |
+| Domain for X.com links                 |         :ballot_box_with_check: fixupx.com         |        N/A         |          :ballot_box_with_check: fixvx.com          |
+| Telegram Instant View                  |                 :heavy_check_mark:                 |        :x:         |                         :x:                         |
+| Status fetch API for Developers        |                 :heavy_check_mark:                 |        N/A         |                 :heavy_check_mark:                  |
+| Last commit                            |                   [![][flc]][fc]                   |        N/A         |                   [![][vlc]][vc]                    |
 
 [flc]: https://img.shields.io/github/last-commit/FixTweet/FxTwitter?label
 [vlc]: https://img.shields.io/github/last-commit/dylanpdx/BetterTwitFix?label

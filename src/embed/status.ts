@@ -1,4 +1,7 @@
 import { Context } from 'hono';
+import { StatusCode } from 'hono/utils/http-status';
+import i18next from 'i18next';
+import icu from 'i18next-icu';
 import { Constants } from '../constants';
 import { handleQuote } from '../helpers/quote';
 import { formatNumber, sanitizeText, truncateWithEllipsis } from '../helpers/utils';
@@ -9,13 +12,21 @@ import { renderVideo } from '../render/video';
 import { renderInstantView } from '../render/instantview';
 import { constructTwitterThread } from '../providers/twitter/conversation';
 import { Experiment, experimentCheck } from '../experiments';
+import translationResources from '../../i18n/resources';
+import { constructBlueskyThread } from '../providers/bsky/conversation';
+import { DataProvider } from '../enum';
 
 export const returnError = (c: Context, error: string): Response => {
+  let branding = Constants.BRANDING_NAME;
+  if (c.req.url.includes('bsky')) {
+    branding = Constants.BRANDING_NAME_BSKY;
+  }
   return c.html(
     Strings.BASE_HTML.format({
+      brandingName: branding,
       lang: '',
       headers: [
-        `<meta property="og:title" content="${Constants.BRANDING_NAME}"/>`,
+        `<meta property="og:title" content="${branding}"/>`,
         `<meta property="og:description" content="${error}"/>`
       ].join('')
     })
@@ -26,30 +37,48 @@ export const returnError = (c: Context, error: string): Response => {
 export const handleStatus = async (
   c: Context,
   statusId: string,
+  authorHandle: string | null,
   mediaNumber: number | undefined,
   userAgent: string,
   flags: InputFlags,
-  language: string
+  language: string | undefined,
+  provider: DataProvider
   // eslint-disable-next-line sonarjs/cognitive-complexity
 ): Promise<Response> => {
   console.log('Direct?', flags?.direct);
 
   let fetchWithThreads = false;
 
-  /* TODO: Enable actually pulling threads once we can actually do something with them */
-  if (c.req.header('user-agent')?.includes('Telegram') && !flags?.direct) {
-    fetchWithThreads = false;
+  if (
+    c.req.header('user-agent')?.includes('Telegram') &&
+    !flags?.direct &&
+    flags.instantViewUnrollThreads
+  ) {
+    fetchWithThreads = true;
   }
 
-  const thread = await constructTwitterThread(
-    statusId,
-    fetchWithThreads,
-    c,
-    language,
-    flags?.api ?? false
-  );
+  let thread: SocialThread;
+  if (provider === DataProvider.Twitter) {
+    thread = await constructTwitterThread(
+      statusId,
+      fetchWithThreads,
+      c,
+      language,
+      flags?.api ?? false
+    );
+  } else if (provider === DataProvider.Bsky) {
+    thread = await constructBlueskyThread(
+      statusId,
+      authorHandle ?? '',
+      fetchWithThreads,
+      c,
+      language
+    );
+  } else {
+    return returnError(c, Strings.ERROR_API_FAIL);
+  }
 
-  const status = thread?.status as APITwitterStatus;
+  const status = thread?.status as APIStatus;
 
   const api = {
     code: thread.code,
@@ -75,7 +104,7 @@ export const handleStatus = async (
 
   /* Catch this request if it's an API response */
   if (flags?.api) {
-    c.status(api.code);
+    c.status(api.code as StatusCode);
     // Add every header from Constants.API_RESPONSE_HEADERS
     for (const [header, value] of Object.entries(Constants.API_RESPONSE_HEADERS)) {
       c.header(header, value);
@@ -84,7 +113,11 @@ export const handleStatus = async (
   }
 
   if (status === null) {
-    return returnError(c, Strings.ERROR_TWEET_NOT_FOUND);
+    if (provider === DataProvider.Bsky) {
+      return returnError(c, Strings.ERROR_BLUESKY_POST_NOT_FOUND);
+    } else {
+      return returnError(c, Strings.ERROR_TWEET_NOT_FOUND);
+    }
   }
 
   /* If there was any errors fetching the Tweet, we'll return it */
@@ -92,7 +125,11 @@ export const handleStatus = async (
     case 401:
       return returnError(c, Strings.ERROR_PRIVATE);
     case 404:
-      return returnError(c, Strings.ERROR_TWEET_NOT_FOUND);
+      if (provider === DataProvider.Bsky) {
+        return returnError(c, Strings.ERROR_BLUESKY_POST_NOT_FOUND);
+      } else {
+        return returnError(c, Strings.ERROR_TWEET_NOT_FOUND);
+      }
     case 500:
       console.log(api);
       return returnError(c, Strings.ERROR_API_FAIL);
@@ -101,17 +138,29 @@ export const handleStatus = async (
   const isTelegram = (userAgent || '').indexOf('Telegram') > -1;
   const isDiscord = (userAgent || '').indexOf('Discord') > -1;
   /* Should sensitive statuses be allowed Instant View? */
-  let useIV =
-    isTelegram /*&& !status.possibly_sensitive*/ &&
-    !flags?.direct &&
-    !flags?.gallery &&
-    !flags?.api &&
-    (status.media?.photos?.[0] || // Force instant view for photos for now https://bugs.telegram.org/c/33679
-      status.media?.mosaic ||
-      status.is_note_tweet ||
-      status.quote ||
-      status.translation ||
-      flags?.forceInstantView);
+  let useIV = false;
+
+  if (isTelegram && !flags?.direct && !flags?.gallery && !flags?.api) {
+    if (status.provider === 'twitter') {
+      const twitterStatus = status as APITwitterStatus;
+      useIV =
+        useIV ||
+        !!(
+          twitterStatus.is_note_tweet ||
+          twitterStatus.translation ||
+          twitterStatus.community_note
+        );
+    }
+    useIV =
+      useIV ||
+      !!(
+        status.media?.photos?.[0] || // Force instant view for photos for now https://bugs.telegram.org/c/33679
+        status.media?.mosaic ||
+        status.quote ||
+        flags?.forceInstantView ||
+        (thread?.thread?.length ?? 0) > 1
+      );
+  }
 
   /* Force enable IV for archivers */
   if (flags?.archive) {
@@ -121,6 +170,12 @@ export const handleStatus = async (
   let ivbody = '';
 
   let overrideMedia: APIMedia | undefined;
+
+  await i18next.use(icu).init({
+    lng: language ?? status.lang ?? 'en',
+    resources: translationResources,
+    fallbackLng: 'en'
+  });
 
   // Check if mediaNumber exists, and if that media exists in status.media.all. If it does, we'll store overrideMedia variable
   if (mediaNumber && status.media && status.media.all && status.media.all[mediaNumber - 1]) {
@@ -161,29 +216,50 @@ export const handleStatus = async (
 
   let authorText = getSocialProof(status) || Strings.DEFAULT_AUTHOR_TEXT;
   const engagementText = authorText.replace(/ {4}/g, ' ');
-  let siteName = Constants.BRANDING_NAME;
+  let siteName =
+    status.provider === DataProvider.Twitter
+      ? Constants.BRANDING_NAME
+      : Constants.BRANDING_NAME_BSKY;
+
+  if (thread.thread && thread.thread.length > 1 && isTelegram && useIV) {
+    siteName = i18next.t('threadIndicator', { brandingName: siteName });
+  }
+
   let newText = status.text;
 
   /* Base headers included in all responses */
-  const headers = [
-    `<link rel="canonical" href="${Constants.TWITTER_ROOT}/${status.author.screen_name}/status/${status.id}"/>`,
-    `<meta property="og:url" content="${Constants.TWITTER_ROOT}/${status.author.screen_name}/status/${status.id}"/>`,
-    `<meta property="twitter:site" content="@${status.author.screen_name}"/>`,
-    `<meta property="twitter:creator" content="@${status.author.screen_name}"/>`
-  ];
+  const headers = [];
+
+  if (status.provider === DataProvider.Twitter) {
+    headers.push(
+      `<link rel="canonical" href="${Constants.TWITTER_ROOT}/${status.author.screen_name}/status/${status.id}"/>`,
+      `<meta property="og:url" content="${Constants.TWITTER_ROOT}/${status.author.screen_name}/status/${status.id}"/>`,
+      `<meta property="twitter:site" content="@${status.author.screen_name}"/>`,
+      `<meta property="twitter:creator" content="@${status.author.screen_name}"/>`
+    );
+  } else if (status.provider === DataProvider.Bsky) {
+    headers.push(
+      `<link rel="canonical" href="${Constants.BSKY_ROOT}/profile/${status.author.screen_name}/post/${status.id}"/>`,
+      `<meta property="og:url" content="${Constants.BSKY_ROOT}/profile/${status.author.screen_name}/post/${status.id}"/>`
+    );
+  }
 
   if (!flags.gallery) {
+    if (status.provider === DataProvider.Twitter) {
+      headers.push(`<meta property="theme-color" content="#00a8fc"/>`);
+    } else if (status.provider === DataProvider.Bsky) {
+      headers.push(`<meta property="theme-color" content="#0085ff"/>`);
+    }
     headers.push(
-      `<meta property="theme-color" content="#00a8fc"/>`,
       `<meta property="twitter:title" content="${status.author.name} (@${status.author.screen_name})"/>`
     );
   }
 
-  /* This little thing ensures if by some miracle a Fixstatus embed is loaded in a browser,
+  /* This little thing ensures if by some miracle a FixTweet embed is loaded in a browser,
      it will gracefully redirect to the destination instead of just seeing a blank screen.
 
      Telegram is dumb and it just gets stuck if this is included, so we never include it for Telegram UAs. */
-  if (!isTelegram) {
+  if (!isTelegram && provider === DataProvider.Twitter) {
     headers.push(
       `<meta http-equiv="refresh" content="0;url=${Constants.TWITTER_ROOT}/${status.author.screen_name}/status/${status.id}"/>`
     );
@@ -193,8 +269,10 @@ export const handleStatus = async (
     try {
       const instructions = renderInstantView({
         status: status,
+        thread: thread,
         text: newText,
-        flags: flags
+        flags: flags,
+        targetLanguage: language ?? status.lang ?? 'en'
       });
       headers.push(...instructions.addHeaders);
       if (instructions.authorText) {
@@ -202,31 +280,26 @@ export const handleStatus = async (
       }
       ivbody = instructions.text || '';
     } catch (e) {
-      console.log('Error rendering Instant View', e);
+      console.log('Error rendering Instant View', e, (e as Error)?.stack);
       useIV = false;
     }
   }
 
-  console.log('translation', status.translation);
-
   /* This status has a translation attached to it, so we'll render it. */
-  if (status.translation) {
-    const { translation } = status;
+  if ((status as APITwitterStatus).translation) {
+    const { translation } = status as APITwitterStatus;
 
-    const formatText =
-      language === 'en'
-        ? Strings.TRANSLATE_TEXT.format({
-            language: translation.source_lang_en
-          })
-        : Strings.TRANSLATE_TEXT_INTL.format({
-            source: translation.source_lang.toUpperCase(),
-            destination: translation.target_lang.toUpperCase()
-          });
+    const formatText = `📑 {translation}`.format({
+      translation: i18next.t('translatedFrom').format({
+        language: i18next.t(`language_${translation?.source_lang}`)
+      })
+    });
 
-    newText = `${formatText}\n\n` + `${translation.text}\n\n`;
+    newText = `${formatText}\n\n` + `${translation?.text}\n\n`;
   }
 
   console.log('overrideMedia', JSON.stringify(overrideMedia));
+  console.log('media', JSON.stringify(status.media));
 
   if (!flags?.textOnly) {
     const media =
@@ -278,7 +351,7 @@ export const handleStatus = async (
           /* This status has a video to render. */
           break;
       }
-    } else if (media?.videos) {
+    } else if (media?.videos && !flags.nativeMultiImage) {
       const instructions = renderVideo(
         { status: status, userAgent: userAgent, text: newText },
         media.videos[0]
@@ -291,10 +364,17 @@ export const handleStatus = async (
         siteName = instructions.siteName;
       }
     } else if (media?.mosaic) {
-      if (experimentCheck(Experiment.DISCORD_NATIVE_MULTI_IMAGE, isDiscord) && !flags.forceMosaic) {
+      if (
+        experimentCheck(Experiment.DISCORD_NATIVE_MULTI_IMAGE, isDiscord) &&
+        flags.nativeMultiImage
+      ) {
         const photos = status.media?.photos || [];
 
         photos.forEach(photo => {
+          /* Override the card type */
+          status.embed_card = 'summary_large_image';
+          console.log('set embed_card to summary_large_image');
+
           const instructions = renderPhoto(
             {
               status: status,
@@ -319,6 +399,7 @@ export const handleStatus = async (
         headers.push(...instructions.addHeaders);
       }
     } else if (media?.photos) {
+      console.log('photos', media?.photos);
       const instructions = renderPhoto(
         {
           status: status,
@@ -330,7 +411,7 @@ export const handleStatus = async (
       );
       headers.push(...instructions.addHeaders);
     }
-    if (status.media?.external && !status.media.videos?.length) {
+    if (status.media?.external && !status.media.videos?.length && !flags.nativeMultiImage) {
       const { external } = status.media;
       authorText = newText || '';
       headers.push(
@@ -368,7 +449,11 @@ export const handleStatus = async (
     });
 
     /* Finally, add the footer of the poll with # of votes and time left */
-    str += `\n${formatNumber(poll.total_votes)} votes · ${poll.time_left_en}`;
+    str += '\n'; /* TODO: Localize time left */
+    str += i18next.t('pollVotes', {
+      voteCount: formatNumber(poll.total_votes),
+      timeLeft: poll.time_left_en
+    });
 
     /* Check if the poll is ongoing and apply low TTL cache control.
        Yes, checking if this is a string is a hacky way to do this, but
@@ -442,13 +527,13 @@ export const handleStatus = async (
 
   /* Special reply handling if authorText is not overriden */
   if (status.replying_to && authorText === Strings.DEFAULT_AUTHOR_TEXT) {
-    authorText = `↪ Replying to @${status.replying_to.screen_name}`;
+    authorText = `↪ ${i18next.t('replyingTo').format({ screen_name: status.replying_to.screen_name })}`;
     /* We'll assume it's a thread if it's a reply to themselves */
   } else if (
     status.replying_to?.screen_name === status.author.screen_name &&
     authorText === Strings.DEFAULT_AUTHOR_TEXT
   ) {
-    authorText = `↪ A part of @${status.author.screen_name}'s thread`;
+    authorText = `↪ ${i18next.t('threadPartHeader').format({ screen_name: status.author.screen_name })}`;
   }
 
   if (!flags.gallery) {
@@ -462,20 +547,36 @@ export const handleStatus = async (
       providerEngagementText = Strings.DEFAULT_AUTHOR_TEXT;
     }
 
+    let provider = '';
+    const mediaType = overrideMedia ?? status.media.videos?.[0]?.type;
+
+    let branding = Constants.BRANDING_NAME;
+    if (c.req.url.includes('bsky')) {
+      branding = Constants.BRANDING_NAME_BSKY;
+    }
+
+    if (mediaType === 'gif') {
+      provider = i18next.t('gifIndicator', { brandingName: branding });
+    } else if (
+      status.embed_card === 'player' &&
+      providerEngagementText !== Strings.DEFAULT_AUTHOR_TEXT
+    ) {
+      provider = providerEngagementText;
+    }
+
+    // Now you can use the 'provider' variable
+
     headers.push(
       `<link rel="alternate" href="{base}/2/owoembed?text={text}&status={status}&author={author}{provider}" type="application/json+oembed" title="{name}">`.format(
         {
-          base: Constants.API_HOST_ROOT,
+          base: `https://${status.provider === DataProvider.Bsky ? Constants.STANDARD_BSKY_DOMAIN_LIST[0] : Constants.STANDARD_DOMAIN_LIST[0]}`,
           text: flags.gallery
             ? status.author.name
             : encodeURIComponent(truncateWithEllipsis(authorText, 255)),
           status: encodeURIComponent(statusId),
           author: encodeURIComponent(status.author.screen_name || ''),
           name: status.author.name || '',
-          provider:
-            status.embed_card === 'player' && providerEngagementText !== Strings.DEFAULT_AUTHOR_TEXT
-              ? `&provider=${encodeURIComponent(providerEngagementText)}`
-              : ''
+          provider: provider ? `&provider=${encodeURIComponent(provider)}` : ''
         }
       )
     );
@@ -493,3 +594,4 @@ export const handleStatus = async (
     }).replace(/>(\s+)</gm, '><')
   );
 };
+export { DataProvider };

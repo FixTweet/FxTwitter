@@ -7,12 +7,13 @@ import { processMedia } from '../../helpers/media';
 import { convertToApiUser } from './profile';
 import { translateStatus } from '../../helpers/translate';
 import { Context } from 'hono';
+import { DataProvider } from '../../enum';
 
 export const buildAPITwitterStatus = async (
   c: Context,
   status: GraphQLTwitterStatus,
   language: string | undefined,
-  threadPiece = false,
+  threadAuthor: null | APIUser,
   legacyAPI = false
   // eslint-disable-next-line sonarjs/cognitive-complexity
 ): Promise<APITwitterStatus | FetchResults | null> => {
@@ -58,26 +59,26 @@ export const buildAPITwitterStatus = async (
   apiStatus.text = unescapeText(
     linkFixer(status.legacy.entities?.urls, status.legacy.full_text || '')
   );
-  if (!threadPiece) {
-    apiStatus.author = {
-      id: apiUser.id,
-      name: apiUser.name,
-      screen_name: apiUser.screen_name,
-      avatar_url: apiUser.avatar_url?.replace?.('_normal', '_200x200') ?? null,
-      banner_url: apiUser.banner_url,
-      description: apiUser.description,
-      location: apiUser.location,
-      url: apiUser.url,
-      followers: apiUser.followers,
-      following: apiUser.following,
-      joined: apiUser.joined,
-      statuses: apiUser.statuses,
-      likes: apiUser.likes,
-      protected: apiUser.protected,
-      birthday: apiUser.birthday,
-      website: apiUser.website
-    };
-  }
+  // if (threadAuthor && threadAuthor.id !== apiUser.id) {
+  apiStatus.author = {
+    id: apiUser.id,
+    name: apiUser.name,
+    screen_name: apiUser.screen_name,
+    avatar_url: apiUser.avatar_url?.replace?.('_normal', '_200x200') ?? null,
+    banner_url: apiUser.banner_url,
+    description: apiUser.description,
+    location: apiUser.location,
+    url: apiUser.url,
+    followers: apiUser.followers,
+    following: apiUser.following,
+    joined: apiUser.joined,
+    statuses: apiUser.statuses,
+    likes: apiUser.likes,
+    protected: apiUser.protected,
+    birthday: apiUser.birthday,
+    website: apiUser.website
+  };
+  // }
   apiStatus.replies = status.legacy.reply_count;
   if (legacyAPI) {
     // @ts-expect-error Use retweets for legacy API
@@ -94,7 +95,9 @@ export const buildAPITwitterStatus = async (
     delete apiStatus.author.global_screen_name;
   } else {
     apiStatus.reposts = status.legacy.retweet_count;
+    // if ((threadAuthor && threadAuthor.id !== apiUser.id)) {
     apiStatus.author.global_screen_name = apiUser.global_screen_name;
+    // }
   }
   apiStatus.likes = status.legacy.favorite_count;
   apiStatus.embed_card = 'tweet';
@@ -125,6 +128,16 @@ export const buildAPITwitterStatus = async (
     apiStatus.is_note_tweet = false;
   }
 
+  if (status.birdwatch_pivot?.subtitle?.text) {
+    /* We can't automatically replace links because API doesn't give full URLs, only t.co versions :( */
+    apiStatus.community_note = {
+      text: unescapeText(status.birdwatch_pivot?.subtitle?.text ?? ''),
+      entities: status.birdwatch_pivot.subtitle?.entities ?? []
+    };
+  } else {
+    apiStatus.community_note = null;
+  }
+
   if (status.legacy.lang !== 'unk') {
     apiStatus.lang = status.legacy.lang;
   } else {
@@ -138,8 +151,8 @@ export const buildAPITwitterStatus = async (
     apiStatus.replying_to_status = status.legacy?.in_reply_to_status_id_str || null;
   } else if (status.legacy.in_reply_to_screen_name) {
     apiStatus.replying_to = {
-      screen_name: status.legacy.in_reply_to_screen_name || null,
-      post: status.legacy.in_reply_to_status_id_str || null
+      screen_name: status.legacy.in_reply_to_screen_name,
+      post: status.legacy.in_reply_to_status_id_str
     };
   } else {
     apiStatus.replying_to = null;
@@ -150,7 +163,7 @@ export const buildAPITwitterStatus = async (
   /* We found a quote, let's process that too */
   const quote = status.quoted_status_result;
   if (quote) {
-    const buildQuote = await buildAPITwitterStatus(c, quote, language, threadPiece, legacyAPI);
+    const buildQuote = await buildAPITwitterStatus(c, quote, language, threadAuthor, legacyAPI);
     if ((buildQuote as FetchResults).status) {
       apiStatus.quote = undefined;
     } else {
@@ -167,11 +180,9 @@ export const buildAPITwitterStatus = async (
     status.legacy.extended_entities?.media || status.legacy.entities?.media || []
   );
 
-  // console.log('status', JSON.stringify(status));
-
   /* Populate status media */
   mediaList.forEach(media => {
-    const mediaObject = processMedia(media);
+    const mediaObject = processMedia(c, media);
     if (mediaObject) {
       apiStatus.media.all = apiStatus.media?.all ?? [];
       apiStatus.media?.all?.push(mediaObject);
@@ -197,8 +208,12 @@ export const buildAPITwitterStatus = async (
   */
 
   /* Handle photos and mosaic if available */
-  if ((apiStatus?.media.photos?.length || 0) > 1 && !threadPiece) {
-    const mosaic = await handleMosaic(apiStatus.media?.photos || [], id);
+  if (
+    (apiStatus?.media.photos?.length || 0) > 1 &&
+    !threadAuthor &&
+    Constants.MOSAIC_DOMAIN_LIST.length > 0
+  ) {
+    const mosaic = await handleMosaic(apiStatus.media?.photos || [], id, DataProvider.Twitter);
     if (typeof apiStatus.media !== 'undefined' && mosaic !== null) {
       apiStatus.media.mosaic = mosaic;
     }
@@ -234,7 +249,7 @@ export const buildAPITwitterStatus = async (
     if (card.media) {
       if (card.media.videos) {
         card.media.videos.forEach(video => {
-          const mediaObject = processMedia(video) as APIVideo;
+          const mediaObject = processMedia(c, video) as APIVideo;
           if (mediaObject) {
             apiStatus.media.all = apiStatus.media?.all ?? [];
             apiStatus.media?.all?.push(mediaObject);
@@ -245,7 +260,7 @@ export const buildAPITwitterStatus = async (
       }
       if (card.media.photos) {
         card.media.photos.forEach(photo => {
-          const mediaObject = processMedia(photo) as APIPhoto;
+          const mediaObject = processMedia(c, photo) as APIPhoto;
           if (mediaObject) {
             apiStatus.media.all = apiStatus.media?.all ?? [];
             apiStatus.media?.all?.push(mediaObject);
@@ -254,8 +269,6 @@ export const buildAPITwitterStatus = async (
           }
         });
       }
-
-
     }
   } else {
     /* Determine if the status contains a YouTube link (either youtube.com or youtu.be) so we can include it */
@@ -319,6 +332,8 @@ export const buildAPITwitterStatus = async (
       delete apiStatus.media;
     }
   }
+
+  apiStatus.provider = DataProvider.Twitter;
 
   return apiStatus;
 };

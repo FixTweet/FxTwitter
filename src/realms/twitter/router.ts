@@ -7,6 +7,8 @@ import { genericTwitterRedirect, setRedirectRequest } from './routes/redirects';
 import { profileRequest } from './routes/profile';
 import { statusRequest } from './routes/status';
 import { oembed } from '../api/routes/oembed';
+import { trimTrailingSlash } from 'hono/trailing-slash';
+import { DataProvider } from '../../enum';
 
 export const twitter = new Hono();
 
@@ -29,23 +31,14 @@ export const getBaseRedirectUrl = (c: Context) => {
 /* Workaround for some dumb maybe-build time issue where statusRequest isn't ready or something because none of these trigger*/
 const twitterStatusRequest = async (c: Context) => await statusRequest(c);
 const _profileRequest = async (c: Context) => await profileRequest(c);
-/* How can hono not handle trailing slashes? This is so stupid,
 
-serious TODO: Figure out how to make this not stupid. */
+twitter.use(trimTrailingSlash());
 twitter.get('/:endpoint{status(es)?}/:id', twitterStatusRequest);
-twitter.get('/:endpoint{status(es)?}/:id/', twitterStatusRequest);
-twitter.get('/:endpoint{status(es)?}/:id/:language/', twitterStatusRequest);
 twitter.get('/:endpoint{status(es)?}/:id/:language', twitterStatusRequest);
 twitter.get('/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:language', twitterStatusRequest);
-twitter.get('/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:language/', twitterStatusRequest);
 twitter.get('/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id', twitterStatusRequest);
-twitter.get('/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/', twitterStatusRequest);
 twitter.get(
   '/:prefix{(dir|dl)}/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:language',
-  twitterStatusRequest
-);
-twitter.get(
-  '/:prefix{(dir|dl)}/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:language/',
   twitterStatusRequest
 );
 twitter.get(
@@ -53,15 +46,7 @@ twitter.get(
   twitterStatusRequest
 );
 twitter.get(
-  '/:prefix{(dir|dl)}/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/',
-  twitterStatusRequest
-);
-twitter.get(
   '/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:mediaType{(photos?|videos?)}/:mediaNumber{[1-4]}',
-  twitterStatusRequest
-);
-twitter.get(
-  '/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:mediaType{(photos?|videos?)}/:mediaNumber{[1-4]}/',
   twitterStatusRequest
 );
 twitter.get(
@@ -69,28 +54,16 @@ twitter.get(
   twitterStatusRequest
 );
 twitter.get(
-  '/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:mediaType{(photos?|videos?)}/:mediaNumber{[1-4]}/:language/',
-  twitterStatusRequest
-);
-twitter.get(
   '/:prefix{(dir|dl)}/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:mediaType{(photos?|videos?)}/:mediaNumber{[1-4]}',
-  twitterStatusRequest
-);
-twitter.get(
-  '/:prefix{(dir|dl)}/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:mediaType{(photos?|videos?)}/:mediaNumber{[1-4]}/',
   twitterStatusRequest
 );
 twitter.get(
   '/:prefix{(dir|dl)}/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:mediaType{(photos?|videos?)}/:mediaNumber{[1-4]}/:language',
   twitterStatusRequest
 );
-twitter.get(
-  '/:prefix{(dir|dl)}/:handle{[0-9a-zA-Z_]+}/:endpoint{status(es)?}/:id/:mediaType{(photos?|videos?)}/:mediaNumber{[1-4]}/:language/',
-  twitterStatusRequest
-);
+twitter.get('/:handle/:endpoint{status(es)?}/:id/*', twitterStatusRequest);
 
-twitter.get('/version/', versionRoute);
-twitter.get('/version', versionRoute);
+twitter.get('/version', c => versionRoute(c, DataProvider.Twitter));
 twitter.get('/set_base_redirect', setRedirectRequest);
 /* Yes, I actually made the endpoint /owoembed. Deal with it. */
 twitter.get('/owoembed', oembed);
@@ -98,12 +71,15 @@ twitter.get('/owoembed', oembed);
 twitter.get('/robots.txt', async c => c.text(Strings.ROBOTS_TXT));
 
 twitter.get('/i/events/:id', genericTwitterRedirect);
+twitter.get('/i/trending/:id', genericTwitterRedirect);
+twitter.get(
+  '/i/broadcasts/:id',
+  genericTwitterRedirect
+); /* https://github.com/FixTweet/FxTwitter/issues/730 */
 twitter.get('/hashtag/:hashtag', genericTwitterRedirect);
 
-twitter.get('/:handle/', _profileRequest);
 twitter.get('/:handle', _profileRequest);
 /* Redirect profile subpages in case someone links them for some reason (https://github.com/FixTweet/FxTwitter/issues/603) */
 twitter.get('/:handle/:subpage', genericTwitterRedirect);
-twitter.get('/:handle/:subpage/', genericTwitterRedirect);
 
 twitter.all('*', async c => c.redirect(Constants.REDIRECT_URL, 302));

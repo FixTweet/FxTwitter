@@ -8,9 +8,10 @@ type InputFlags = {
   textOnly?: boolean;
   isXDomain?: boolean;
   forceInstantView?: boolean;
+  instantViewUnrollThreads?: boolean;
   archive?: boolean;
   gallery?: boolean;
-  forceMosaic?: boolean;
+  nativeMultiImage?: boolean;
 };
 
 interface StatusResponse {
@@ -28,7 +29,8 @@ interface ResponseInstructions {
 }
 
 interface RenderProperties {
-  status: APITwitterStatus;
+  status: APIStatus;
+  thread?: SocialThread;
   siteText?: string;
   authorText?: string;
   engagementText?: string;
@@ -36,6 +38,7 @@ interface RenderProperties {
   userAgent?: string;
   text?: string;
   flags?: InputFlags;
+  targetLanguage?: string;
 }
 
 interface TweetAPIResponse {
@@ -139,13 +142,19 @@ interface APIStatus {
   possibly_sensitive: boolean;
 
   replying_to: {
-    screen_name: string | null;
-    post: string | null;
+    screen_name: string;
+    post: string;
   } | null;
 
   source: string | null;
 
   embed_card: 'tweet' | 'summary' | 'summary_large_image' | 'player';
+  provider: DataProvider;
+}
+
+interface APITwitterCommunityNote {
+  text: string;
+  entities: BirdwatchEntity[];
 }
 
 interface APITwitterStatus extends APIStatus {
@@ -153,6 +162,12 @@ interface APITwitterStatus extends APIStatus {
   translation?: APITranslate;
 
   is_note_tweet: boolean;
+  community_note: APITwitterCommunityNote | null;
+  provider: DataProvider.Twitter;
+}
+
+interface APIBlueskyStatus extends APIStatus {
+  provider: DataProvider.Bsky;
 }
 
 interface APIUser {

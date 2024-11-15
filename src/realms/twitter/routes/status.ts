@@ -1,8 +1,9 @@
 import { Context } from 'hono';
 import { Constants } from '../../../constants';
 import { getBaseRedirectUrl } from '../router';
-import { handleStatus } from '../../../embed/status';
+import { DataProvider, handleStatus } from '../../../embed/status';
 import { Strings } from '../../../strings';
+import { Experiment, experimentCheck } from '../../../experiments';
 
 /* Handler for status request */
 export const statusRequest = async (c: Context) => {
@@ -55,12 +56,15 @@ export const statusRequest = async (c: Context) => {
   } else if (Constants.INSTANT_VIEW_DOMAINS.includes(url.hostname)) {
     console.log('Forced instant view request');
     flags.forceInstantView = true;
+  } else if (experimentCheck(Experiment.IV_FORCE_THREAD_UNROLL, userAgent.includes('Telegram'))) {
+    console.log('Forced unroll instant view');
+    flags.instantViewUnrollThreads = true;
   } else if (Constants.GALLERY_DOMAINS.includes(url.hostname)) {
     console.log('Gallery embed request');
     flags.gallery = true;
-  } else if (Constants.FORCE_MOSAIC_DOMAINS.includes(url.hostname)) {
-    console.log('Force mosaic request');
-    flags.forceMosaic = true;
+  } else if (Constants.NATIVE_MULTI_IMAGE_DOMAINS.includes(url.hostname)) {
+    console.log('Force native multi-image');
+    flags.nativeMultiImage = true;
   } else if (prefix === 'dl' || prefix === 'dir') {
     console.log('Direct media request by path prefix');
     flags.direct = true;
@@ -93,10 +97,12 @@ export const statusRequest = async (c: Context) => {
     const statusResponse = await handleStatus(
       c,
       id?.match(/\d{2,20}/)?.[0] || '0',
+      null,
       mediaNumber ? parseInt(mediaNumber) : undefined,
       userAgent,
       flags,
-      language
+      language,
+      DataProvider.Twitter
     );
     /* Do not cache if using a custom redirect */
     const cacheControl = baseUrl !== Constants.TWITTER_ROOT ? 'max-age=0' : undefined;
@@ -123,8 +129,7 @@ export const statusRequest = async (c: Context) => {
       return statusResponse;
     } else {
       /* Somehow handleStatus sent us nothing. This should *never* happen, but we have a case for it. */
-      c.status(500);
-      return c.text(Strings.ERROR_UNKNOWN);
+      return c.text(Strings.ERROR_UNKNOWN, 500);
     }
   } else {
     /* A human has clicked a fxtwitter.com/:screen_name/status/:id link!

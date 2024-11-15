@@ -25,12 +25,11 @@ export const setRedirectRequest = async (c: Context) => {
   /* Check that origin either does not exist or is in our domain list */
   const origin = c.req.header('origin');
   if (origin && !Constants.STANDARD_DOMAIN_LIST.includes(new URL(origin).hostname)) {
-    c.status(403);
-
     return c.html(
       Strings.MESSAGE_HTML.format({
         message: `Failed to set base redirect: Your request seems to be originating from another domain, please open this up in a new tab if you are trying to set your base redirect.`
-      })
+      }),
+      403
     );
   }
 
@@ -46,11 +45,13 @@ export const setRedirectRequest = async (c: Context) => {
       'content-security-policy',
       `frame-ancestors ${Constants.STANDARD_DOMAIN_LIST.join(' ')};`
     );
-    c.status(200);
+
     return c.html(
       Strings.MESSAGE_HTML.format({
+        brandingName: Constants.BRANDING_NAME,
         message: `Your base redirect has been cleared. To set one, please pass along the <code>url</code> parameter.`
-      })
+      }),
+      200
     );
   }
 
@@ -71,11 +72,11 @@ export const setRedirectRequest = async (c: Context) => {
         'content-security-policy',
         `frame-ancestors ${Constants.STANDARD_DOMAIN_LIST.join(' ')};`
       );
-      c.status(200);
       return c.html(
         Strings.MESSAGE_HTML.format({
           message: `Your URL does not appear to be well-formed. Example: ?url=https://nitter.net`
-        })
+        }),
+        200
       );
     }
 

@@ -1,5 +1,7 @@
+import i18next from 'i18next';
 import { Constants } from '../constants';
 import { Strings } from '../strings';
+import { DataProvider } from '../enum';
 
 export const renderPhoto = (
   properties: RenderProperties,
@@ -13,7 +15,9 @@ export const renderPhoto = (
 
     const all = status.media?.all as APIMedia[];
     const baseString =
-      all.length === status.media?.photos?.length ? Strings.PHOTO_COUNT : Strings.MEDIA_COUNT;
+      all.length === status.media?.photos?.length
+        ? i18next.t('photoCount')
+        : i18next.t('mediaCount');
 
     const photoCounter = baseString.format({
       number: String(all.indexOf(photo) + 1),
@@ -27,11 +31,14 @@ export const renderPhoto = (
     } else {
       instructions.authorText = `${authorText}${authorText ? '   ―   ' : ''}${photoCounter}`;
     }
-
+    const brandingName =
+      status.provider === DataProvider.Twitter
+        ? Constants.BRANDING_NAME
+        : Constants.BRANDING_NAME_BSKY;
     if (engagementText && !isTelegram) {
-      instructions.siteName = `${Constants.BRANDING_NAME} - ${engagementText} - ${photoCounter}`;
+      instructions.siteName = `${brandingName} - ${engagementText} - ${photoCounter}`;
     } else {
-      instructions.siteName = `${Constants.BRANDING_NAME} - ${photoCounter}`;
+      instructions.siteName = `${brandingName} - ${photoCounter}`;
     }
   }
 
