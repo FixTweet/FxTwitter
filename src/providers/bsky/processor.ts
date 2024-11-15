@@ -45,7 +45,7 @@ export const buildAPIBskyPost = async (
   const media = status.embed?.media ?? status.embeds?.[0]?.media;
 
   if (status.embed?.media?.images || status.embeds?.[0]?.images) {
-    const images = status.embed?.media?.images ?? status.embeds?.[0]?.images as BlueskyImage[];
+    const images = status.embed?.media?.images ?? (status.embeds?.[0]?.images as BlueskyImage[]);
     apiStatus.media.photos = images.map(image => {
       return {
         type: 'photo',
