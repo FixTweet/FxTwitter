@@ -39,7 +39,7 @@ const followReplyChain = (thread: BlueskyThread): BlueskyPost[] => {
   
   for (const _post of thread.replies) {
     const post = _post.post;
-    if (post.author.did !== thread.post.author.did) {
+    if (!post || post.author.did !== thread.post.author.did) {
       continue;
     }
     console.log('checking post', post);
@@ -78,7 +78,7 @@ export const constructBlueskyThread = async (
     // loop through chain of parents
     if (thread.parent) {
       let parent = thread.parent;
-      while (parent) {
+      while (parent && parent?.post) {
         bucket.unshift(parent.post);
         parent = parent.parent;
       }
