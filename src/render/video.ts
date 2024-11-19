@@ -94,7 +94,8 @@ export const renderVideo = (
 
   if (
     status.provider !== DataProvider.Bsky &&
-    experimentCheck(Experiment.DISCORD_VIDEO_REDIRECT_WORKAROUND, !!Constants.API_HOST_LIST)
+    experimentCheck(Experiment.DISCORD_VIDEO_REDIRECT_WORKAROUND, !!Constants.API_HOST_LIST) &&
+    (userAgent?.includes('Discord') || userAgent?.includes('Telegram'))
   ) {
     url = `https://${Constants.API_HOST_LIST[0]}/2/go?url=${encodeURIComponent(url)}`;
   }
