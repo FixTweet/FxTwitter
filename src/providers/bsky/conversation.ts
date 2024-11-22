@@ -89,7 +89,7 @@ export const constructBlueskyThread = async (
       const totalReplies = [];
       let replies = followReplyChain(threadPiece);
 
-      while (replies.length > 8) {
+      while (replies.length) {
         // Load more replies
         const id = replies[replies.length - 1].uri.match(/(?<=post\/)(\w*)/g)?.[0] ?? '';
         console.log('Fetching next thread piece', id);
