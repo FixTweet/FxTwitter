@@ -13,7 +13,13 @@ enum AuthorActionType {
 
 const populateUserLinks = (text: string, status: APIStatus): string => {
   /* TODO: Maybe we can add username splices to our API so only genuinely valid users are linked? */
-  text.match(/@(\w{1,15})/g)?.forEach(match => {
+  let usernamePattern = /@(\w{1,15})/g;
+
+  if (status.provider === DataProvider.Bsky) {
+    usernamePattern = /@([\w.]+)/g;
+  }
+
+  text.match(usernamePattern)?.forEach(match => {
     const username = match.replace('@', '');
     let url = `${Constants.TWITTER_ROOT}/${username}`;
     if (status.provider === DataProvider.Bsky) {
