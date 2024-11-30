@@ -3,6 +3,8 @@ import { statusRequest } from '../twitter/routes/status';
 import { profileRequest } from '../twitter/routes/profile';
 import { Strings } from '../../strings';
 import { Constants } from '../../constants';
+import { profileAPIRequest, statusAPIRequest, threadAPIRequest } from './routes/twitter';
+import { oembed } from './routes/oembed';
 import { linkHitRequest, linkGoRequest } from './hit';
 import { trimTrailingSlash } from 'hono/trailing-slash';
 
@@ -33,6 +35,14 @@ api.get('/status/:id/:language/', statusRequest);
 api.get('/:handle/status/:id', statusRequest);
 api.get('/:handle/status/:id/:language', statusRequest);
 api.get('/robots.txt', async c => c.text(Strings.ROBOTS_TXT_API));
+
+api.get('/2/status/:id', statusAPIRequest);
+api.get('/2/status/:id/', statusAPIRequest);
+api.get('/2/thread/:id', threadAPIRequest);
+api.get('/2/thread/:id/', threadAPIRequest);
+api.get('/2/profile/:handle', profileAPIRequest);
+api.get('/2/profile/:handle/', profileAPIRequest);
+api.get('/2/owoembed', oembed);
 
 api.get('/:handle', profileRequest);
 

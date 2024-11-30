@@ -113,7 +113,7 @@ function getTranslatedText(status: APITwitterStatus, isQuote = false): string | 
   let text = paragraphify(sanitizeText(status.translation?.text), isQuote);
   text = htmlifyLinks(text);
   text = htmlifyHashtags(text, status);
-  
+
   if (status.provider === DataProvider.Twitter) {
     text = populateUserLinks(text, status);
   }
@@ -377,14 +377,12 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
     </section>
     <section class="section--first">${
       flags?.archive
-        ? i18next
-            .t('ivInternetArchiveText')
-            .format({
-              brandingName:
-                status.provider === DataProvider.Twitter
-                  ? Constants.BRANDING_NAME
-                  : Constants.BRANDING_NAME_BSKY
-            })
+        ? i18next.t('ivInternetArchiveText').format({
+            brandingName:
+              status.provider === DataProvider.Twitter
+                ? Constants.BRANDING_NAME
+                : Constants.BRANDING_NAME_BSKY
+          })
         : i18next.t('ivFallbackText')
     } <a href="${status.url}">${i18next.t('ivViewOriginal')}</a>
     </section>
