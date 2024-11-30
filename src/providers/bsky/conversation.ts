@@ -25,7 +25,7 @@ const fetchThread = async (
 
 export const fetchBskyThread = async (post: string, author: string, processThread = false) => {
   console.log(`Fetching post ${post} by ${author}`);
-  const thread = await fetchThread(post, author, processThread ? 20 : 1);
+  const thread = await fetchThread(post, author, processThread ? 10 : 1);
   if (!thread) {
     return null;
   }
@@ -34,9 +34,8 @@ export const fetchBskyThread = async (post: string, author: string, processThrea
 };
 
 const followReplyChain = (thread: BlueskyThread): BlueskyPost[] => {
-  if (!thread.replies)
-    return [];
-  
+  if (!thread.replies) return [];
+
   for (const _post of thread.replies) {
     const post = _post.post;
     if (!post || post.author.did !== thread.post.author.did) {
@@ -85,8 +84,28 @@ export const constructBlueskyThread = async (
     }
     bucket.push(thread.post);
     if (thread.replies) {
-      const replies = followReplyChain(thread);
-      bucket.push(...replies);
+      let threadPiece = thread;
+      const totalReplies = [];
+      let replies = followReplyChain(threadPiece);
+
+      while (replies.length) {
+        // Load more replies
+        const id = replies[replies.length - 1].uri.match(/(?<=post\/)(\w*)/g)?.[0] ?? '';
+        console.log('Fetching next thread piece', id);
+        const _threadPiece = await fetchBskyThread(id, author, true);
+        if (!_threadPiece) {
+          break;
+        }
+        threadPiece = _threadPiece.thread;
+        const moreReplies = followReplyChain(threadPiece);
+        if (!moreReplies.length) {
+          break;
+        }
+        replies = moreReplies;
+        totalReplies.push(...replies);
+      }
+
+      bucket.push(...totalReplies);
     }
   } else {
     bucket.push(thread.post);

@@ -6,7 +6,7 @@ import { Constants } from '../../constants';
 import { genericTwitterRedirect, setRedirectRequest } from './routes/redirects';
 import { profileRequest } from './routes/profile';
 import { statusRequest } from './routes/status';
-import { oembed } from './routes/oembed';
+import { oembed } from '../api/routes/oembed';
 import { trimTrailingSlash } from 'hono/trailing-slash';
 import { DataProvider } from '../../enum';
 
