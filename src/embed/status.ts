@@ -567,7 +567,7 @@ export const handleStatus = async (
     // Now you can use the 'provider' variable
 
     headers.push(
-      `<link rel="alternate" href="{base}/2/owoembed?text={text}&status={status}&author={author}{provider}" type="application/json+oembed" title="{name}">`.format(
+      `<link rel="alternate" href="{base}/owoembed?text={text}&status={status}&author={author}{provider}" type="application/json+oembed" title="{name}">`.format(
         {
           base: `https://${status.provider === DataProvider.Bsky ? Constants.STANDARD_BSKY_DOMAIN_LIST[0] : Constants.STANDARD_DOMAIN_LIST[0]}`,
           text: flags.gallery
