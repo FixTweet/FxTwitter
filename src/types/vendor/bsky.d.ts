@@ -43,6 +43,10 @@ type BlueskyMedia = {
     height: number;
     width: number;
   };
+  ref?: {
+    $link: string;
+  };
+  video?: BlueskyVideo;
 };
 
 type BlueskyEmbed = {

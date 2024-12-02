@@ -125,9 +125,14 @@ export const buildAPIBskyPost = async (
     apiStatus.embed_card = 'player';
     const video =
       status.record?.embed?.video ?? status.value?.embed?.video ?? status?.record?.embed?.media;
+      // TODO: figure out why this is so awful
     const cid =
       status.record?.embed?.video?.ref?.$link ??
+      status.record?.embed?.media?.ref?.$link ??
+      status.record?.embed?.media?.video?.ref?.$link ??
       status.value?.embed?.video?.ref?.$link ??
+      status.value?.embed?.media?.ref?.$link ??
+      status.value?.embed?.media?.video?.ref?.$link ??
       status.embed?.video?.ref?.$link;
     const videoUrl = `https://pds-cache.fxbsky.app/xrpc/com.atproto.sync.getBlob?did=${status.author.did}&cid=${cid}`;
     apiStatus.media.videos = [
