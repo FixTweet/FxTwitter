@@ -35,7 +35,7 @@
     "ts-jest": "^29.2.5",
     "ts-loader": "^9.5.1",
     "typescript": "^5.7.2",
-    "wrangler": "^3.91.0"
+    "wrangler": "^3.92.0"
   },
   "dependencies": {
     "@hono/sentry": "^1.2.0",
