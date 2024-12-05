@@ -8,6 +8,7 @@ import { Strings } from '../../../strings';
 export const bskyStatusRequest = async (c: Context) => {
   console.log('bluesky status request!!!');
   const { prefix, handle, id } = c.req.param();
+  const actualId = id.match(/\w+/g)?.[0] ?? '';
 
   const userAgent = c.req.header('User-Agent') || '';
   const url = new URL(c.req.url);
@@ -27,7 +28,7 @@ export const bskyStatusRequest = async (c: Context) => {
      the http-equiv="refresh" meta tag will ensure an actual human is sent to the destination. */
   const isBotUA = userAgent.match(Constants.BOT_UA_REGEX) !== null || flags?.archive;
 
-  if (url.pathname.match(/\/status(es)?\/\d{2,20}\.(mp4|png|jpe?g|gifv?)/g)) {
+  if (url.pathname.match(/\/post\/\w+\.(mp4|png|jpe?g|gifv?)/g)) {
     console.log('Direct media request by extension');
     flags.direct = true;
   } else if (Constants.DIRECT_MEDIA_DOMAINS.includes(url.hostname)) {
@@ -61,7 +62,7 @@ export const bskyStatusRequest = async (c: Context) => {
     }
     const statusResponse = await handleStatus(
       c,
-      id,
+      actualId,
       handle,
       undefined, //mediaNumber ? parseInt(mediaNumber) : undefined,
       userAgent,
@@ -77,7 +78,7 @@ export const bskyStatusRequest = async (c: Context) => {
         Since we obviously have no media to give the user, we'll just redirect to the status.
         Embeds will return as usual to bots as if direct media was never specified. */
       if (!isBotUA && !flags.api && !flags.direct) {
-        return c.redirect(`${Constants.BSKY_ROOT}/profile/${handle}/post/${id}`, 302);
+        return c.redirect(`${Constants.BSKY_ROOT}/profile/${handle}/post/${actualId}`, 302);
       }
 
       c.status(200);
@@ -92,6 +93,6 @@ export const bskyStatusRequest = async (c: Context) => {
       Obviously we just need to redirect to the status directly.*/
     console.log('Matched human UA', userAgent);
 
-    return c.redirect(`${Constants.BSKY_ROOT}/profile/${handle}/post/${id}`, 302);
+    return c.redirect(`${Constants.BSKY_ROOT}/profile/${handle}/post/${actualId}`, 302);
   }
 };

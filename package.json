@@ -1,5 +1,5 @@
 {
-  "name": "fixtweet",
+  "name": "fixtweet-canary",
   "version": "1.0.0",
   "description": "Embed Twitter videos, polls, and more on Discord and Telegram",
   "main": "dist/worker.js",
