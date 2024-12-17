@@ -45,6 +45,7 @@ export const buildAPIBskyPost = async (
   const media = status.embed?.media ?? status.embeds?.[0]?.media;
 
   if (status.embed?.media?.images || status.embeds?.[0]?.images) {
+    apiStatus.embed_card = 'summary_large_image';
     const images = status.embed?.media?.images ?? (status.embeds?.[0]?.images as BlueskyImage[]);
     apiStatus.media.photos = images.map(image => {
       return {
@@ -57,6 +58,7 @@ export const buildAPIBskyPost = async (
     });
   }
   if (status.embeds?.[0]?.video) {
+    apiStatus.embed_card = 'player';
     const video = status.embed?.video ?? status.embeds[0].video;
     apiStatus.media.videos = [
       {
@@ -158,6 +160,7 @@ export const buildAPIBskyPost = async (
 
   /* Handle photos and mosaic if available */
   if ((apiStatus?.media.photos?.length || 0) > 1 && Constants.MOSAIC_BSKY_DOMAIN_LIST.length > 0) {
+    apiStatus.embed_card = 'summary_large_image';
     const mosaic = await handleMosaic(apiStatus.media?.photos || [], ':3', DataProvider.Bsky);
     if (typeof apiStatus.media !== 'undefined' && mosaic !== null) {
       apiStatus.media.mosaic = mosaic;
