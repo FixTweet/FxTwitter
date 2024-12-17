@@ -93,7 +93,7 @@ export const renderVideo = (
   console.log('provider', status.provider);
 
   if (
-    status.provider !== DataProvider.Bsky &&
+    // status.provider !== DataProvider.Bsky &&
     experimentCheck(Experiment.DISCORD_VIDEO_REDIRECT_WORKAROUND, !!Constants.API_HOST_LIST) &&
     (userAgent?.includes('Discord') || userAgent?.includes('Telegram'))
   ) {

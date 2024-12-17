@@ -134,7 +134,7 @@ export const buildAPIBskyPost = async (
       status.value?.embed?.media?.ref?.$link ??
       status.value?.embed?.media?.video?.ref?.$link ??
       status.embed?.video?.ref?.$link;
-    const videoUrl = `https://pds-cache.fxbsky.app/xrpc/com.atproto.sync.getBlob?did=${status.author.did}&cid=${cid}`;
+    const videoUrl = `https://pds-cache.fxbsky.app/${status.author.did}/${cid}`;
     apiStatus.media.videos = [
       {
         type: 'video',
