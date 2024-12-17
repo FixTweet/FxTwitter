@@ -67,8 +67,8 @@ export const buildAPIBskyPost = async (
         format: video.mimeType ?? 'video/mp4',
         thumbnail_url: status.embeds[0].thumbnail ?? '',
         variants: [],
-        width: status.embeds[0].aspectRatio?.width,
-        height: status.embeds[0].aspectRatio?.height,
+        width: status.embeds[0].aspectRatio?.width ?? status.embed.aspectRatio?.width,
+        height: status.embeds[0].aspectRatio?.height ?? status.embed.aspectRatio?.height,
         duration: 0
       }
     ];
@@ -137,6 +137,7 @@ export const buildAPIBskyPost = async (
       status.value?.embed?.media?.video?.ref?.$link ??
       status.embed?.video?.ref?.$link;
     const videoUrl = `https://pds-cache.fxbsky.app/${status.author.did}/${cid}`;
+    const aspectRatio = status.embed?.aspectRatio ?? status.embed?.media?.aspectRatio ?? status.embed?.record?.value?.embed?.aspectRatio;
     apiStatus.media.videos = [
       {
         type: 'video',
@@ -144,8 +145,8 @@ export const buildAPIBskyPost = async (
         format: video?.mimeType ?? 'video/mp4',
         thumbnail_url: status.embed?.thumbnail ?? status.embed?.media?.thumbnail ?? '',
         variants: [],
-        width: status.embed?.aspectRatio?.width ?? status.embed?.media?.aspectRatio?.width,
-        height: status.embed?.aspectRatio?.height ?? status.embed?.media?.aspectRatio?.height,
+        width: aspectRatio?.width,
+        height: aspectRatio?.height,
         duration: 0
       }
     ];
@@ -153,6 +154,9 @@ export const buildAPIBskyPost = async (
   if (status.embed?.record) {
     const record = status.embed?.record?.record ?? status.embed?.record;
     apiStatus.quote = await buildAPIBskyPost(c, record, language);
+    if (apiStatus.quote.embed_card) {
+      apiStatus.embed_card = apiStatus.quote.embed_card;
+    }
   }
   apiStatus.media.all = ((apiStatus.media.photos as APIMedia[]) || []).concat(
     apiStatus.media.videos ?? []

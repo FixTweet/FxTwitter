@@ -54,6 +54,7 @@ type BlueskyEmbed = {
   video?: BlueskyVideo;
   media?: BlueskyMedia;
   record?: {
+    value: BlueskyPost;
     record: BlueskyPost;
   };
   aspectRatio: {
