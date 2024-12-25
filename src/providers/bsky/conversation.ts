@@ -41,7 +41,8 @@ const followReplyChain = (thread: BlueskyThread): BlueskyPost[] => {
     if (!post || post.author.did !== thread.post.author.did) {
       continue;
     }
-    console.log('checking post', post);
+    console.log('checking post', post.uri);
+    console.log('looking for replies to', thread.post.cid);
     console.log('reply', post.record?.reply.parent.cid);
     if (post.record?.reply.parent.cid === thread.post.cid) {
       console.log('found it');
@@ -85,8 +86,9 @@ export const constructBlueskyThread = async (
     bucket.push(thread.post);
     if (thread.replies) {
       let threadPiece = thread;
-      const totalReplies = [];
       let replies = followReplyChain(threadPiece);
+      const totalReplies = replies;
+      console.log('number of replies (pre-check)', replies.length);
 
       while (replies.length) {
         // Load more replies
@@ -98,11 +100,13 @@ export const constructBlueskyThread = async (
         }
         threadPiece = _threadPiece.thread;
         const moreReplies = followReplyChain(threadPiece);
+        console.log('number of replies (deep check)', moreReplies.length);
         if (!moreReplies.length) {
           break;
         }
         replies = moreReplies;
         totalReplies.push(...replies);
+        console.log('total replies so far', totalReplies.length);
       }
 
       bucket.push(...totalReplies);
