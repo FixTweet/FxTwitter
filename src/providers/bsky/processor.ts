@@ -12,7 +12,7 @@ export const buildAPIBskyPost = async (
 ): Promise<APIStatus> => {
   const apiStatus: APIStatus = {} as APIStatus;
   apiStatus.id = status.cid;
-  apiStatus.text = linkFixerBsky(status.record.facets ?? [], status.record?.text ?? status.value?.text);
+  apiStatus.text = linkFixerBsky(status.record?.facets ?? [], status.record?.text ?? status.value?.text);
   apiStatus.author = {
     id: status.author.handle,
     name: status.author.displayName,
