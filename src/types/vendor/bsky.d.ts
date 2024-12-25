@@ -109,7 +109,21 @@ type BlueskyRecord = {
   langs: string[];
   text: string;
   reply: BlueskyReply;
+  facets: BlueskyFacet[];
 };
+
+type BlueskyFacetFeature = {
+  $type: string;
+  uri?: string;
+};
+
+type BlueskyFacet = {
+  features: BlueskyFacetFeature[],
+  index: {
+    byteStart: number;
+    byteEnd: number;
+  }
+}
 
 type BlueskyThread = {
   parent: BlueskyThread;

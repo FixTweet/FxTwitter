@@ -2,6 +2,7 @@ import { Context } from 'hono';
 import { Constants } from '../../constants';
 import { DataProvider } from '../../enum';
 import { handleMosaic } from '../../helpers/mosaic';
+import { linkFixerBsky } from '../../helpers/linkFixer';
 
 export const buildAPIBskyPost = async (
   c: Context,
@@ -11,7 +12,7 @@ export const buildAPIBskyPost = async (
 ): Promise<APIStatus> => {
   const apiStatus: APIStatus = {} as APIStatus;
   apiStatus.id = status.cid;
-  apiStatus.text = status.record?.text ?? status.value?.text;
+  apiStatus.text = linkFixerBsky(status.record.facets ?? [], status.record?.text ?? status.value?.text);
   apiStatus.author = {
     id: status.author.handle,
     name: status.author.displayName,
