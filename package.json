@@ -33,7 +33,7 @@
     "jest-environment-miniflare": "^2.14.4",
     "prettier": "^3.4.2",
     "ts-jest": "^29.2.5",
-    "ts-loader": "^9.5.1",
+    "ts-loader": "^9.5.2",
     "typescript": "^5.7.3",
     "wrangler": "^3.101.0"
   },
