@@ -16,9 +16,9 @@
   "author": "dangered wolf",
   "license": "MIT",
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20241230.0",
+    "@cloudflare/workers-types": "^4.20250124.3",
     "@microsoft/eslint-formatter-sarif": "^3.1.0",
-    "@sentry/esbuild-plugin": "^2.22.7",
+    "@sentry/esbuild-plugin": "^2.23.0",
     "@sentry/integrations": "^7.114.0",
     "@types/jest": "^29.5.14",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
@@ -33,9 +33,9 @@
     "jest-environment-miniflare": "^2.14.4",
     "prettier": "^3.4.2",
     "ts-jest": "^29.2.5",
-    "ts-loader": "^9.5.1",
-    "typescript": "^5.7.2",
-    "wrangler": "^3.99.0"
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.7.3",
+    "wrangler": "^3.105.1"
   },
   "dependencies": {
     "@hono/sentry": "^1.2.0",

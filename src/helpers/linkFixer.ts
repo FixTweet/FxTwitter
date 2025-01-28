@@ -19,7 +19,7 @@ export const linkFixer = (entities: TcoExpansion[] | undefined, text: string): s
   /* Remove any link with unavailable original.
      This means that stuff like the t.co link to pic.twitter.com
      will get removed in image/video Tweets */
-  text = text.replace(/ ?https:\/\/t\.co\/\w{10}/g, '');
+  text = text.replace(/ ?https?:\/\/t\.co\/\w{10}/g, '');
 
   return text;
 };
