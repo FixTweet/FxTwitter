@@ -8,7 +8,7 @@ import { Constants } from './constants';
 import { api } from './realms/api/router';
 import { twitter } from './realms/twitter/router';
 import { cacheMiddleware } from './caches';
-import { StatusCode } from 'hono/utils/http-status';
+import { ContentfulStatusCode } from 'hono/utils/http-status';
 import { bsky } from './realms/bluesky/router';
 
 const noCache = 'max-age=0, no-cache, no-store, must-revalidate';
@@ -100,7 +100,7 @@ app.onError((err, c) => {
     branding = Constants.BRANDING_NAME_BSKY;
   }
 
-  return c.html(Strings.ERROR_HTML.format({ brandingName: branding }), errorCode as StatusCode);
+  return c.html(Strings.ERROR_HTML.format({ brandingName: branding }), errorCode as ContentfulStatusCode);
 });
 
 const customLogger = (message: string, ...rest: string[]) => {

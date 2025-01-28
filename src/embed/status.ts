@@ -1,5 +1,5 @@
 import { Context } from 'hono';
-import { StatusCode } from 'hono/utils/http-status';
+import { ContentfulStatusCode } from 'hono/utils/http-status';
 import i18next from 'i18next';
 import icu from 'i18next-icu';
 import { Constants } from '../constants';
@@ -104,7 +104,7 @@ export const handleStatus = async (
 
   /* Catch this request if it's an API response */
   if (flags?.api) {
-    c.status(api.code as StatusCode);
+    c.status(api.code as ContentfulStatusCode);
     // Add every header from Constants.API_RESPONSE_HEADERS
     for (const [header, value] of Object.entries(Constants.API_RESPONSE_HEADERS)) {
       c.header(header, value);
