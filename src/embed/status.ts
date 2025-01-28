@@ -58,7 +58,10 @@ export const handleStatus = async (
   }
 
   let thread: SocialThread;
-  if (provider === DataProvider.Twitter) {
+  const data = c.req.query('data');
+  if (data && flags.summarize) {
+    thread = JSON.parse(data);
+  } else if (provider === DataProvider.Twitter) {
     thread = await constructTwitterThread(
       statusId,
       fetchWithThreads,
@@ -148,7 +151,8 @@ export const handleStatus = async (
         !!(
           twitterStatus.is_note_tweet ||
           twitterStatus.translation ||
-          twitterStatus.community_note
+          twitterStatus.community_note ||
+          flags.summarize
         );
     }
     useIV =
@@ -267,7 +271,8 @@ export const handleStatus = async (
 
   if (useIV) {
     try {
-      const instructions = renderInstantView({
+      const instructions = await renderInstantView({
+        c: c,
         status: status,
         thread: thread,
         text: newText,

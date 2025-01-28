@@ -12,6 +12,7 @@ type InputFlags = {
   archive?: boolean;
   gallery?: boolean;
   nativeMultiImage?: boolean;
+  summarize?: boolean;
 };
 
 interface StatusResponse {
@@ -29,6 +30,7 @@ interface ResponseInstructions {
 }
 
 interface RenderProperties {
+  c?: Context;
   status: APIStatus;
   thread?: SocialThread;
   siteText?: string;

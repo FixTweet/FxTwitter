@@ -44,6 +44,10 @@ export const statusRequest = async (c: Context) => {
       
      Also note that all we're doing here is setting the direct flag. If someone
      links a video and ends it with .jpg, it will still redirect to a .mp4! */
+  if (url.pathname.endsWith('/summarize') && userAgent.includes('Telegram')) {
+    console.log('Post summarization requested');
+    flags.summarize = true
+  }
   if (url.pathname.match(/\/status(es)?\/\d{2,20}\.(mp4|png|jpe?g|gifv?)/g)) {
     console.log('Direct media request by extension');
     flags.direct = true;

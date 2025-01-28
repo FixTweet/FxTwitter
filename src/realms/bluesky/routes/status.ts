@@ -28,6 +28,10 @@ export const bskyStatusRequest = async (c: Context) => {
      the http-equiv="refresh" meta tag will ensure an actual human is sent to the destination. */
   const isBotUA = userAgent.match(Constants.BOT_UA_REGEX) !== null || flags?.archive;
 
+  if (url.pathname.endsWith('/summarize') && userAgent.includes('Telegram')) {
+    console.log('Post summarization requested');
+    flags.summarize = true
+  }
   if (url.pathname.match(/\/post\/\w+\.(mp4|png|jpe?g|gifv?)/g)) {
     console.log('Direct media request by extension');
     flags.direct = true;

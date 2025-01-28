@@ -100,7 +100,7 @@ export const fetchTweetDetail = async (
       }
       console.log('invalid graphql tweet', tweet);
       console.log('finding status', status);
-      console.log('from response', JSON.stringify(response));
+      // console.log('from response', JSON.stringify(response));
 
       return Array.isArray(conversation?.errors);
     },

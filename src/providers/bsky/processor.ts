@@ -102,13 +102,13 @@ export const buildAPIBskyPost = async (
     // }
 
     apiStatus.embed_card = 'summary_large_image';
-    console.log('external image', apiStatus.media.photos);
+    // console.log('external image', apiStatus.media.photos);
   }
 
   if (status.embed?.images?.length) {
     apiStatus.media.photos = status.embed?.images.map(image => {
       apiStatus.embed_card = 'summary_large_image';
-      console.log('image', image);
+      // console.log('image', image);
 
       return {
         type: 'photo',

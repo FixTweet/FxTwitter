@@ -4,6 +4,8 @@ import { Constants } from '../constants';
 import { getSocialTextIV } from '../helpers/socialproof';
 import { sanitizeText } from '../helpers/utils';
 import { DataProvider } from '../enum';
+import { summarizeThread } from '../helpers/summarize';
+import { Context } from 'hono/dist/types/context';
 
 enum AuthorActionType {
   Reply = 'Reply',
@@ -341,9 +343,34 @@ const generateStatus = (
   );
 };
 
-export const renderInstantView = (properties: RenderProperties): ResponseInstructions => {
+const generateSummary = async(c: Context, thread?: SocialThread) => {
+  if (!c.env.AI || !thread?.thread) {
+    return '';
+  }
+
+  const summary = await summarizeThread(c, thread);
+
+  if (summary) {
+    return `<table>
+      <thead>
+        <th><b>${i18next.t('threadSummary')}</b></th>
+      </thead>
+      <tbody>
+        <th>${summary}</th>
+      </tbody>
+    </table>`;
+  } else {
+    return `<table>
+      <thead>
+        <th><b>${i18next.t('summaryFailed')}</b></th>
+      </thead>
+    </table>`;
+   }
+}
+
+export const renderInstantView = async (properties: RenderProperties): Promise<ResponseInstructions> => {
   console.log('Generating Instant View...');
-  const { status, thread, flags } = properties;
+  const { status, thread, flags, c } = properties;
   const instructions: ResponseInstructions = { addHeaders: [] };
 
   let previousThreadPieceAuthor: string | null = null;
@@ -370,6 +397,8 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
       ? `<style>img,video{width:100%;max-width:500px}html{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif}</style>`
       : ``
   ];
+  // Link current relative url without query strings
+  const currentUrl = new URL(c.req.url.split('?')[0]).href;
 
   instructions.text = `
     <section class="section-backgroundImage">
@@ -387,7 +416,10 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
     } <a href="${status.url}">${i18next.t('ivViewOriginal')}</a>
     </section>
     <article>
-    <sub><a href="${status.url}">${i18next.t('ivViewOriginal')}</a></sub>
+    <sub><a href="${status.url}">${i18next.t('ivViewOriginal')}</a>
+    ${c.env.AI && !flags?.summarize ? ` • <a href="https://t.me/iv?url=${encodeURIComponent(currentUrl + '/summarize')}&rhash=17ae5d1ab26ba7">${i18next.t('ivSummarize')}</a>` : ''}
+    </sub>
+    ${flags?.summarize ? await generateSummary(c, thread) : ''}
     <h1>${status.author.name} (@${status.author.screen_name})</h1>
 
     ${useThread
