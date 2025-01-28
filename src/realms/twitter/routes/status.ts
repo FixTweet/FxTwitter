@@ -91,11 +91,12 @@ export const statusRequest = async (c: Context) => {
   }
 
   /* TODO: Figure out what we're doing with FixTweet / FixupX branding in future */
-  if (/fixup/g.test(url.href)) {
+  if (/twitt/g.test(url.href)) {
+    console.log(`We're using twitter domain`);
+    flags.isXDomain = false;
+  } else {
     console.log(`We're using x domain`);
     flags.isXDomain = true;
-  } else {
-    console.log(`We're using twitter domain`);
   }
 
   const baseUrl = getBaseRedirectUrl(c);
