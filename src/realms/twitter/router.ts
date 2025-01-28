@@ -9,6 +9,7 @@ import { statusRequest } from './routes/status';
 import { oembed } from '../api/routes/oembed';
 import { trimTrailingSlash } from 'hono/trailing-slash';
 import { DataProvider } from '../../enum';
+import { ContentfulStatusCode } from 'hono/utils/http-status';
 
 export const twitter = new Hono();
 
@@ -27,6 +28,24 @@ export const getBaseRedirectUrl = (c: Context) => {
 
   return Constants.TWITTER_ROOT;
 };
+
+export const faviconRoute = async (c: Context) => {
+  try {
+    const url = new URL(c.req.url);
+    let faviconUrl = 'https://abs.twimg.com/favicons/twitter.3.ico';
+    if (url.hostname.includes('twitt')) {
+      faviconUrl = 'https://abs.twimg.com/favicons/twitter.2.ico';
+    }
+    const response = await fetch(faviconUrl);
+    const body = await response.arrayBuffer();
+    return c.body(body, response.status as ContentfulStatusCode, {
+      'Content-Type': response.headers.get('Content-Type') || 'image/x-icon',
+      'Content-Length': response.headers.get('Content-Length') || body.byteLength.toString(),
+    },);
+  } catch (e) {
+    return c.redirect('https://abs.twimg.com/favicons/twitter.3.ico', 302);
+  }
+}
 
 /* Workaround for some dumb maybe-build time issue where statusRequest isn't ready or something because none of these trigger*/
 const twitterStatusRequest = async (c: Context) => await statusRequest(c);
@@ -69,6 +88,7 @@ twitter.get('/set_base_redirect', setRedirectRequest);
 twitter.get('/owoembed', oembed);
 
 twitter.get('/robots.txt', async c => c.text(Strings.ROBOTS_TXT));
+twitter.get('/favicon.ico', faviconRoute);
 
 twitter.get('/i/events/:id', genericTwitterRedirect);
 twitter.get('/i/trending/:id', genericTwitterRedirect);
