@@ -82,7 +82,7 @@ export const statusRequest = async (c: Context) => {
       flags.name = nameFromSearchParams;
     } else {
       // check if the status ends with :<name>, e.g. /i/status/1234567890.jpg:orig
-      const matched = url.pathname.match(/\/status(?:es)?\/\d{2,20}(?:\..*?)?:(.+?)$/);
+      const matched = url.pathname.match(/\/status(?:es)?\/.+:([^:]+?)$/);
       const nameFromUrl = matched && matched[1];
       if (nameFromUrl) {
         flags.name = nameFromUrl;
