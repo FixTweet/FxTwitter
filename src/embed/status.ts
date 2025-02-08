@@ -1,5 +1,5 @@
 import { Context } from 'hono';
-import { StatusCode } from 'hono/utils/http-status';
+import { ContentfulStatusCode } from 'hono/utils/http-status';
 import i18next from 'i18next';
 import icu from 'i18next-icu';
 import { Constants } from '../constants';
@@ -107,7 +107,7 @@ export const handleStatus = async (
 
   /* Catch this request if it's an API response */
   if (flags?.api) {
-    c.status(api.code as StatusCode);
+    c.status(api.code as ContentfulStatusCode);
     // Add every header from Constants.API_RESPONSE_HEADERS
     for (const [header, value] of Object.entries(Constants.API_RESPONSE_HEADERS)) {
       c.header(header, value);
@@ -206,6 +206,10 @@ export const handleStatus = async (
     }
 
     if (redirectUrl) {
+      // Only append name if it's an image
+      if (/\.(png|jpe?g|gif)(\?|$)/.test(redirectUrl) && flags.name) {
+        redirectUrl = `${redirectUrl}:${flags.name}`;
+      }
       return c.redirect(redirectUrl, 302);
     }
   }
