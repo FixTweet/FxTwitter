@@ -2,12 +2,6 @@
   "extends": ["config:base"],
   "rangeStrategy": "bump",
   "platformAutomerge": true,
-  "lockFileMaintenance": {
-    "enabled": true,
-    "automerge": true,
-    "automergeType": "pr",
-    "platformAutomerge": true
-  },
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch"],
