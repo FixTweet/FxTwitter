@@ -33,8 +33,6 @@ api.get('/status/:id', statusRequest);
 api.get('/status/:id/:language', statusRequest);
 api.get('/:handle/status/:id', statusRequest);
 api.get('/:handle/status/:id/:language', statusRequest);
-api.get('/i/web/status/:id', statusRequest);
-api.get('/i/web/status/:id/:language', statusRequest);
 api.get('/robots.txt', async c => c.text(Strings.ROBOTS_TXT_API));
 
 api.get('/2/status/:id', statusAPIRequest);
