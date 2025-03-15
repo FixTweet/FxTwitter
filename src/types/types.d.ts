@@ -222,6 +222,6 @@ interface OEmbed {
   provider_name?: string;
   provider_url?: string;
   title?: string | null;
-  type: 'link';
+  type: 'link' | 'rich';
   version: '1.0';
 }

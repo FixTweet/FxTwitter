@@ -23,7 +23,7 @@ export const oembed = async (c: Context) => {
     provider_name: searchParams.get('provider') ?? name,
     provider_url: searchParams.get('provider') ? statusUrl : url,
     title: Strings.DEFAULT_AUTHOR_TEXT,
-    type: 'link',
+    type: 'rich',
     version: '1.0'
   };
 

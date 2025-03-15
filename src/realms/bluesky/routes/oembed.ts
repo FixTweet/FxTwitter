@@ -19,11 +19,10 @@ export const oembed = async (c: Context) => {
     provider_name: searchParams.get('provider') ?? Constants.BRANDING_NAME_BSKY,
     provider_url: searchParams.get('provider') ? statusUrl : Constants.REDIRECT_URL_BSKY,
     title: Strings.DEFAULT_AUTHOR_TEXT,
-    type: 'link',
+    type: 'rich',
     version: '1.0'
   };
 
-  c.header('content-type', 'application/json');
   /* Stringify and send it on its way! */
-  return c.text(JSON.stringify(data), 200);
+  return c.json(data, 200);
 };

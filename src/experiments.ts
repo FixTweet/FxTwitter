@@ -5,7 +5,8 @@ export enum Experiment {
   DISCORD_NATIVE_MULTI_IMAGE = 'DISCORD_NATIVE_MULTI_IMAGE',
   TRANSCODE_GIFS = 'TRANSCODE_GIFS',
   IV_FORCE_THREAD_UNROLL = 'IV_FORCE_THREAD_UNROLL',
-  DISCORD_VIDEO_REDIRECT_WORKAROUND = 'DISCORD_VIDEO_REDIRECT_WORKAROUND'
+  DISCORD_VIDEO_REDIRECT_WORKAROUND = 'DISCORD_VIDEO_REDIRECT_WORKAROUND',
+  EMBED_V2 = 'EMBED_V2'
 }
 
 type ExperimentConfig = {
@@ -48,6 +49,11 @@ const Experiments: { [key in Experiment]: ExperimentConfig } = {
   [Experiment.DISCORD_VIDEO_REDIRECT_WORKAROUND]: {
     name: 'Video redirect workaround',
     description: 'Workaround for video playback issues on Discord',
+    percentage: 1
+  },
+  [Experiment.EMBED_V2]: {
+    name: 'Embed v2',
+    description: 'Use Embed v2',
     percentage: 1
   }
 };

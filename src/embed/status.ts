@@ -48,6 +48,7 @@ export const handleStatus = async (
   console.log('Direct?', flags?.direct);
 
   let fetchWithThreads = false;
+  const embedV2 = experimentCheck(Experiment.EMBED_V2, c.req.header('user-agent')?.includes('Discordbot'));
 
   if (
     c.req.header('user-agent')?.includes('Telegram') &&
@@ -247,6 +248,7 @@ export const handleStatus = async (
       `<meta property="og:url" content="${Constants.BSKY_ROOT}/profile/${status.author.screen_name}/post/${status.id}"/>`
     );
   }
+
 
   if (!flags.gallery) {
     if (status.provider === DataProvider.Twitter) {
@@ -508,15 +510,19 @@ export const handleStatus = async (
 
   const useCard = status.embed_card === 'tweet' ? status.quote?.embed_card : status.embed_card;
 
-  /* Push basic headers relating to author, Tweet text, and site name */
   headers.push(`<meta property="twitter:card" content="${useCard}"/>`);
 
+  /* Push basic headers relating to author, Tweet text, and site name */
   if (!flags.gallery) {
     headers.push(
       `<meta property="og:title" content="${status.author.name} (@${status.author.screen_name})"/>`,
       `<meta property="og:description" content="${text}"/>`,
-      `<meta property="og:site_name" content="${siteName}"/>`
     );
+    if (!embedV2) {
+      headers.push(`<meta property="og:site_name" content="${siteName}"/>`);
+    } else {
+      headers.push(`<meta property="og:site_name" content="FxTwitter"/>`);
+    }
   } else {
     if (isTelegram) {
       headers.push(
@@ -570,6 +576,10 @@ export const handleStatus = async (
 
     // Now you can use the 'provider' variable
 
+    if (embedV2) {
+      headers.push(`<link href='https://web-cdn.bsky.app/static/favicon-32x32.png' rel='icon' sizes='32x32' type='image/png'>`)
+    }
+
     headers.push(
       `<link rel="alternate" href="{base}/owoembed?text={text}&status={status}&author={author}{provider}" type="application/json+oembed" title="{name}">`.format(
         {
@@ -581,6 +591,18 @@ export const handleStatus = async (
           author: encodeURIComponent(status.author.screen_name || ''),
           name: status.author.name || '',
           provider: provider ? `&provider=${encodeURIComponent(provider)}` : ''
+        }
+      )
+    );
+  }
+
+  if (embedV2) {
+    headers.push(
+      `<link href='{base}/users/{author}/statuses/{status}' rel='alternate' type='application/activity+json'>`.format(
+        {
+          base: `https://${status.provider === DataProvider.Bsky ? Constants.STANDARD_BSKY_DOMAIN_LIST[0] : Constants.STANDARD_DOMAIN_LIST[0]}`,
+          author: encodeURIComponent(status.author.screen_name || ''),
+          status: encodeURIComponent(statusId)
         }
       )
     );

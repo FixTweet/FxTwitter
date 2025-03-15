@@ -10,6 +10,7 @@ import { oembed } from '../api/routes/oembed';
 import { trimTrailingSlash } from 'hono/trailing-slash';
 import { DataProvider } from '../../enum';
 import { ContentfulStatusCode } from 'hono/utils/http-status';
+import { activityRequest } from './routes/activity';
 
 export const twitter = new Hono();
 
@@ -52,6 +53,7 @@ const twitterStatusRequest = async (c: Context) => await statusRequest(c);
 const _profileRequest = async (c: Context) => await profileRequest(c);
 
 twitter.use(trimTrailingSlash());
+twitter.get('/api/v1/statuses/:id', activityRequest);
 twitter.get('/:endpoint{status(es)?}/:id', twitterStatusRequest);
 twitter.get('/:endpoint{status(es)?}/:id/:language', twitterStatusRequest);
 twitter.get('/i/web/:endpoint{status(es)?}/:id', twitterStatusRequest);
