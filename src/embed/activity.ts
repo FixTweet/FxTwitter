@@ -6,7 +6,39 @@ import { constructTwitterThread } from "../providers/twitter/conversation";
 import { constructBlueskyThread } from "../providers/bsky/conversation";
 import { Constants } from "../constants";
 import { getSocialProof } from "../helpers/socialproof";
+import i18next from "i18next";
+import { formatNumber } from "../helpers/utils";
 
+
+const generatePoll = (poll: APIPoll, language: string): string => {
+  let str = '';
+
+  const barLength = 32;
+
+  poll.choices.forEach(choice => {
+    const bar = '█'.repeat((choice.percentage / 100) * barLength);
+    // eslint-disable-next-line no-irregular-whitespace
+    str += `${bar}<br>${choice.label}&emsp;(${choice.percentage}%)<br>`;
+  });
+
+  /* Finally, add the footer of the poll with # of votes and time left */
+  str += '<br>'; /* TODO: Localize time left */
+  str += i18next.t('pollVotes', {
+    voteCount: formatNumber(poll.total_votes),
+    timeLeft: poll.time_left_en
+  });
+
+  return str;
+};
+
+const getStatusText = (status: APIStatus) => {
+  let text = status.text + '<br><br>';
+  if (status.poll) {
+    text += `${generatePoll(status.poll, status.lang ?? 'en')}<br><br>`;
+  }
+  text += `<b>${getSocialProof(status)?.replace(/ {3}/g, '&ensp;')}</b>`;
+  return text;
+}
 
 export const handleActivity = async (
   c: Context,
@@ -59,7 +91,7 @@ export const handleActivity = async (
     // in_reply_to_account_id: ,
     language: thread.status.lang,
     // TODO: Do formatting
-    content: thread.status.text + '<br><br>' + getSocialProof(thread.status),
+    content: getStatusText(thread.status),
     spoiler_text: '',
     visibility: 'public',
     application: {
