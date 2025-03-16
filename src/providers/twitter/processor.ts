@@ -47,6 +47,8 @@ export const buildAPITwitterStatus = async (
     }
   }
 
+  console.log('status', JSON.stringify(status));
+
   const graphQLUser = status.core.user_results.result;
   const apiUser = convertToApiUser(graphQLUser);
 

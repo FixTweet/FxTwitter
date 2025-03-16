@@ -2,16 +2,10 @@ import { Context } from 'hono';
 import { Constants } from './constants';
 import { Experiment, experimentCheck } from './experiments';
 import { generateUserAgent } from './helpers/useragent';
-import { withTimeout } from './helpers/utils';
+import { generateSnowflake, withTimeout } from './helpers/utils';
 
 const API_ATTEMPTS = 3;
 let wasElongatorDisabled = false;
-
-const generateSnowflake = () => {
-  const epoch = 1288834974657n; /* Twitter snowflake epoch */
-  const timestamp = BigInt(Date.now()) - epoch;
-  return String((timestamp << 22n) | BigInt(Math.floor(Math.random() * 696969)));
-};
 
 export const twitterFetch = async (
   c: Context,

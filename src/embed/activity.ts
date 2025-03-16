@@ -6,35 +6,54 @@ import { constructTwitterThread } from "../providers/twitter/conversation";
 import { constructBlueskyThread } from "../providers/bsky/conversation";
 import { Constants } from "../constants";
 import { getSocialProof } from "../helpers/socialproof";
-import i18next from "i18next";
+import i18next from 'i18next';
+import icu from 'i18next-icu';
 import { formatNumber } from "../helpers/utils";
+import { decodeSnowcode } from "../helpers/snowcode";
+import translationResources from '../../i18n/resources';
 
 
-const generatePoll = (poll: APIPoll, language: string): string => {
-  let str = '';
+const generatePoll = (poll: APIPoll): string => {
+  let str = '<blockquote>';
 
   const barLength = 32;
 
   poll.choices.forEach(choice => {
     const bar = '█'.repeat((choice.percentage / 100) * barLength);
     // eslint-disable-next-line no-irregular-whitespace
-    str += `${bar}<br>${choice.label}&emsp;(${choice.percentage}%)<br>`;
+    str += `${bar}<br><b>${choice.label}</b>&emsp;${choice.percentage}%<br>︀︀<br>`;
   });
 
   /* Finally, add the footer of the poll with # of votes and time left */
-  str += '<br>'; /* TODO: Localize time left */
+  str += ''; /* TODO: Localize time left */
   str += i18next.t('pollVotes', {
-    voteCount: formatNumber(poll.total_votes),
-    timeLeft: poll.time_left_en
+    voteCount: formatNumber(poll.total_votes ?? 0),
+    timeLeft: poll.time_left_en ?? ''
   });
 
-  return str;
+  return str + '</blockquote>';
 };
 
 const getStatusText = (status: APIStatus) => {
-  let text = status.text + '<br><br>';
+  let text = '';
+  const convertedStatusText = status.text.replace(/\n/g, '<br>︀︀');
+  if ((status as APITwitterStatus).translation) {
+    console.log('translation', JSON.stringify((status as APITwitterStatus).translation));
+    const { translation } = status as APITwitterStatus;
+
+    const formatText = `<b>📑 {translation}</b>`.format({
+      translation: i18next.t('translatedFrom').format({
+        language: i18next.t(`language_${translation?.source_lang}`)
+      })
+    });
+
+    text = `${formatText}<br><br>${translation?.text}<br><br>`;
+    text += `<blockquote><b>${i18next.t('ivOriginalText')}</b><br>${convertedStatusText}</blockquote>`;
+  } else {
+    text = convertedStatusText + '<br><br>';
+  }
   if (status.poll) {
-    text += `${generatePoll(status.poll, status.lang ?? 'en')}<br><br>`;
+    text += `${generatePoll(status.poll)}`;
   }
   text += `<b>${getSocialProof(status)?.replace(/ {3}/g, '&ensp;')}</b>`;
   return text;
@@ -42,15 +61,20 @@ const getStatusText = (status: APIStatus) => {
 
 export const handleActivity = async (
   c: Context,
-  statusId: string,
-  authorHandle: string | null,
-  mediaNumber: number | undefined,
-  userAgent: string,
-  flags: InputFlags,
-  language: string | undefined,
+  snowcode: string,
   provider: DataProvider
   // eslint-disable-next-line sonarjs/cognitive-complexity
 ): Promise<Response> => {
+  let language: string | null = null;
+  let authorHandle: string | null = null;
+  const decoded = decodeSnowcode(snowcode);
+  const statusId = decoded.i;
+  if (decoded.l) {
+    language = decoded.l;
+  }
+  if (decoded.h) {
+    authorHandle = decoded.h;
+  }
 
   let thread: SocialThread;
   if (provider === DataProvider.Twitter) {
@@ -58,8 +82,8 @@ export const handleActivity = async (
       statusId,
       false,
       c,
-      language,
-      flags?.api ?? false
+      language ?? undefined,
+      false
     );
   } else if (provider === DataProvider.Bsky) {
     thread = await constructBlueskyThread(
@@ -67,11 +91,17 @@ export const handleActivity = async (
       authorHandle ?? '',
       false,
       c,
-      language
+      language ?? undefined
     );
   } else {
     return returnError(c, Strings.ERROR_API_FAIL);
   }
+
+  await i18next.use(icu).init({
+    lng: language ?? thread.status?.lang ?? 'en',
+    resources: translationResources,
+    fallbackLng: 'en'
+  });
 
   if (!thread.status) {
     return returnError(c, Strings.ERROR_API_FAIL);
@@ -145,6 +175,7 @@ export const handleActivity = async (
             remote_url: null,
             preview_remote_url: null,
             text_url: null,
+            description: image.altText ?? null,
             meta: {
               original: {
                 width: image.width,

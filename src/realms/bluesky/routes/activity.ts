@@ -1,23 +1,17 @@
 import { Context } from 'hono';
 import { Constants } from '../../../constants';
-import { getBaseRedirectUrl } from '../router';
 import { DataProvider } from '../../../embed/status';
 import { Strings } from '../../../strings';
-import { Experiment, experimentCheck } from '../../../experiments';
 import { handleActivity } from '../../../embed/activity';
 
 /* Handler for activity request */
 export const activityRequest = async (c: Context) => {
-  const { prefix, handle, id, mediaNumber, language } = c.req.param();
+  const { prefix, snowcode } = c.req.param();
   const url = new URL(c.req.url);
   const flags: InputFlags = {};
 
-  // eslint-disable-next-line sonarjs/no-duplicate-string
-  const userAgent = c.req.header('User-Agent') || '';
-
-  /* Check if domain is a direct media domain (i.e. d.fxtwitter.com),
-     the status is prefixed with /dl/ or /dir/ (for TwitFix interop), or the
-     status ends in .mp4, .jpg, .jpeg, or .png
+  /* Check if domain is a direct media domain (i.e. d.fxbsky.app),
+     or the status ends in .mp4, .jpg, .jpeg, or .png
       
      Note that .png is not documented because images always redirect to a jpg,
      but it will help someone who does it mistakenly on something like Discord
@@ -44,50 +38,13 @@ export const activityRequest = async (c: Context) => {
     flags.direct = true;
   }
 
-  /* Support redirecting to specific quality of image, like:
-  
-     https://pbs.twimg.com/media/foobar.jpg:orig
-    
-     TODO: Should we support video file like :1280x720, though it's not the offical way */
-  if (flags.direct) {
-    // check if the name is in search params, e.g. /i/status/1234567890?name=orig
-    const nameFromSearchParams = url.searchParams.get('name');
-    if (nameFromSearchParams) {
-      flags.name = nameFromSearchParams;
-    } else {
-      // check if the status ends with :<name>, e.g. /i/status/1234567890.jpg:orig
-      const matched = url.pathname.match(/\/status(?:es)?\/.+:([^:]+?)$/);
-      const nameFromUrl = matched && matched[1];
-      if (nameFromUrl) {
-        flags.name = nameFromUrl;
-      }
-    }
-  }
-
-  /* TODO: Figure out what we're doing with FixTweet / FixupX branding in future */
-  if (/twitt/g.test(url.href)) {
-    console.log(`We're using twitter domain`);
-    flags.isXDomain = false;
-  } else {
-    console.log(`We're using x domain`);
-    flags.isXDomain = true;
-  }
-
-  const baseUrl = getBaseRedirectUrl(c);
-
   /* This throws the necessary data to handleStatus (in status.ts) */
   const statusResponse = await handleActivity(
     c,
-    id ?? '0',
-    DataProvider.Twitter
+    snowcode ?? '0',
+    DataProvider.Bsky
   );
-  /* Do not cache if using a custom redirect */
-  const cacheControl = baseUrl !== Constants.TWITTER_ROOT ? 'max-age=0' : undefined;
 
-  if (cacheControl) {
-    // eslint-disable-next-line sonarjs/no-duplicate-string
-    c.header('cache-control', cacheControl);
-  }
 
   if (statusResponse) {
     c.status(200);

@@ -1,7 +1,7 @@
 {
-  "name": "fixtweet-canary",
-  "version": "1.0.0",
-  "description": "Embed Twitter videos, polls, and more on Discord and Telegram",
+  "name": "fxembed",
+  "version": "2.0.0",
+  "description": "Embed X/Twitter and Bluesky videos, polls, and more on Discord and Telegram",
   "main": "dist/worker.js",
   "scripts": {
     "build": "node esbuild.config.mjs",

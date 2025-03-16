@@ -15,6 +15,7 @@ import { Experiment, experimentCheck } from '../experiments';
 import translationResources from '../../i18n/resources';
 import { constructBlueskyThread } from '../providers/bsky/conversation';
 import { DataProvider } from '../enum';
+import { encodeSnowcode } from '../helpers/snowcode';
 
 export const returnError = (c: Context, error: string): Response => {
   let branding = Constants.BRANDING_NAME;
@@ -48,7 +49,6 @@ export const handleStatus = async (
   console.log('Direct?', flags?.direct);
 
   let fetchWithThreads = false;
-  const embedV2 = experimentCheck(Experiment.EMBED_V2, c.req.header('user-agent')?.includes('Discordbot'));
 
   if (
     c.req.header('user-agent')?.includes('Telegram') &&
@@ -140,6 +140,11 @@ export const handleStatus = async (
   const isDiscord = (userAgent || '').indexOf('Discord') > -1;
   /* Should sensitive statuses be allowed Instant View? */
   let useIV = false;
+  let useActivity = false;
+
+  if (experimentCheck(Experiment.EMBED_V2, c.req.header('user-agent')?.includes('Discordbot')) && !flags.direct) {
+    useActivity = true;
+  }
 
   if (isTelegram && !flags?.direct && !flags?.gallery && !flags?.api) {
     if (status.provider === 'twitter') {
@@ -518,10 +523,11 @@ export const handleStatus = async (
       `<meta property="og:title" content="${status.author.name} (@${status.author.screen_name})"/>`,
       `<meta property="og:description" content="${text}"/>`,
     );
-    if (!embedV2) {
+    if (!useActivity) {
       headers.push(`<meta property="og:site_name" content="${siteName}"/>`);
     } else {
-      headers.push(`<meta property="og:site_name" content="FxTwitter"/>`);
+      const name = status.provider === DataProvider.Bsky ? 'FxBluesky' : flags.isXDomain ? 'FixupX' : 'FxTwitter';
+      headers.push(`<meta property="og:site_name" content="${name}"/>`);
     }
   } else {
     if (isTelegram) {
@@ -576,8 +582,9 @@ export const handleStatus = async (
 
     // Now you can use the 'provider' variable
 
-    if (embedV2) {
-      headers.push(`<link href='https://web-cdn.bsky.app/static/favicon-32x32.png' rel='icon' sizes='32x32' type='image/png'>`)
+    if (useActivity) {
+      const name = status.provider === DataProvider.Bsky ? 'fxbluesky' : flags.isXDomain ? 'fixupx' : 'fxtwitter';
+      headers.push(`<link href='https://raw.githubusercontent.com/FixTweet/FxTwitter/refs/heads/v2/.github/logos/${name}32.png?bdvs=asd&sdq=asdv&as&fgf' rel='icon' sizes='32x32' type='image/png'>`)
     }
 
     headers.push(
@@ -596,16 +603,29 @@ export const handleStatus = async (
     );
   }
 
-  if (embedV2) {
+  if (useActivity) {
+    const data: { i: string, l?: string, h?: string } = {
+      i: statusId
+    };
+
+    if (language !== status.lang) {
+      data.l = language;
+    }
+    if (status.provider === DataProvider.Bsky) {
+      data.h = status.author.id;
+    }
+    const snowflake = encodeSnowcode(data)
+    console.log('snowflake', snowflake);
     headers.push(
       `<link href='{base}/users/{author}/statuses/{status}' rel='alternate' type='application/activity+json'>`.format(
         {
           base: `https://${status.provider === DataProvider.Bsky ? Constants.STANDARD_BSKY_DOMAIN_LIST[0] : Constants.STANDARD_DOMAIN_LIST[0]}`,
           author: encodeURIComponent(status.author.screen_name || ''),
-          status: encodeURIComponent(statusId)
+          status: snowflake
         }
       )
     );
+
   }
 
   /* When dealing with a Tweet of unknown lang, fall back to en */

@@ -6,11 +6,13 @@ import { Constants } from '../../constants';
 import { versionRoute } from '../common/version';
 import { DataProvider } from '../../enum';
 import { genericBlueskyRedirect } from './routes/redirects';
+import { activityRequest } from './routes/activity';
 
 export const bsky = new Hono();
 
 bsky.use(trimTrailingSlash());
 bsky.get('/owoembed', oembed);
+bsky.get('/api/v1/statuses/:snowcode', activityRequest);
 bsky.get('/:prefix/:handle/post/:id', bskyStatusRequest);
 bsky.get('/profile/:handle/post/:id', bskyStatusRequest);
 bsky.get('/:prefix/profile/:handle/post/:id/:language', bskyStatusRequest);
