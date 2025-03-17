@@ -341,15 +341,32 @@ type GraphQLTwitterStatusLegacy = {
       media_url_https: string; // "https://pbs.twimg.com/media/FAKESCREENSHOT.jpg" With videos appears to be the thumbnail
       type: string; // "photo" Seems to be photo even with videos
     }[];
-    user_mentions: unknown[];
+    user_mentions: MentionEntity[];
     urls: TcoExpansion[];
-    hashtags: unknown[];
-    symbols: unknown[];
+    hashtags: TagEntity[];
+    symbols: TagEntity[];
   };
   extended_entities: {
     media: TweetMedia[];
   };
 };
+
+type TagEntity = {
+  indices: [number, number];
+  text: string;
+};
+
+type MentionEntity = {
+  indices: [number, number];
+  name: string;
+  screen_name: string;
+  id_str: string;
+};
+
+type InlineMedia = {
+  index: number;
+  media_id: string;
+}
 
 type BirdwatchEntity = {
   fromIndex: number; // 119
@@ -410,13 +427,13 @@ type GraphQLTwitterStatus = {
     note_tweet_results: {
       result: {
         entity_set: {
-          hashtags: unknown[];
-          symbols: unknown[];
+          hashtags: TagEntity[];
+          symbols: TagEntity[];
           urls: TcoExpansion[];
-          user_mentions: unknown[];
+          user_mentions: MentionEntity[];
         };
         media: {
-          inline_media: unknown[];
+          inline_media: InlineMedia[];
         };
         richtext: {
           richtext_tags: {
@@ -455,6 +472,7 @@ type GraphQLTwitterStatus = {
     };
   };
 };
+
 type TweetTombstone = {
   __typename: 'TweetTombstone';
   tombstone: {

@@ -48,14 +48,97 @@ const getStatusText = (status: APIStatus) => {
     });
 
     text = `${formatText}<br><br>${translation?.text}<br><br>`;
-    text += `<blockquote><b>${i18next.t('ivOriginalText')}</b><br>${convertedStatusText}</blockquote>`;
+    text += `<blockquote><b>${i18next.t('ivOriginalText')}</b><br>${formatStatus(convertedStatusText, status)}</blockquote>`;
   } else {
-    text = convertedStatusText + '<br><br>';
+    text = formatStatus(convertedStatusText, status) + '<br><br>';
   }
   if (status.poll) {
     text += `${generatePoll(status.poll)}`;
   }
   text += `<b>${getSocialProof(status)?.replace(/ {3}/g, '&ensp;')}</b>`;
+  return text;
+}
+
+const linkifyMentions = (text: string, status: APIStatus) => {
+  const baseUrl = status.provider === DataProvider.Bsky ? `${Constants.BSKY_ROOT}/profile` : `${Constants.TWITTER_ROOT}`;
+  const matches = text.match(/@([\w.]+)/g)
+
+  console.log('matches', matches);
+  
+  matches?.forEach(mention => {
+    text = text.replace(`${mention}`, `<a href="${baseUrl}/${mention.slice(1)}">${mention}</a>`);
+  });
+  console.log('text', text);
+  return text;
+}
+
+const linkifyHashtags = (text: string, status: APIStatus) => {
+  const baseUrl = status.provider === DataProvider.Bsky ? `${Constants.BSKY_ROOT}/hashtag` : `${Constants.TWITTER_ROOT}/hashtag`;
+  text.match(/#([\w.]+)/g)?.forEach(hashtag => {
+    text = text.replace(`${hashtag}`, `<a href="${baseUrl}/${hashtag}">#${hashtag}</a>`);
+  });
+  return text;
+}
+
+const statusLinkWrapper = (text: string) => {
+  text.match(/(?<!href=")https?:\/\/(?:www\.)?[-\w@:%.+~#=]{1,256}\.[a-zA-Z\d()]{1,6}\b([-\w()@:%+.~#?&/=]*)/g)?.forEach(url => {
+    text = text.replace(url, `<a href="${url}">${url}</a>`);
+  });
+  return text;
+}
+
+const formatStatus = (text: string, status: APIStatus) => {
+  if (status.raw_text) {
+    text = status.raw_text.text;
+
+    const baseHashtagUrl = status.provider === DataProvider.Bsky ? `${Constants.BSKY_ROOT}/hashtag` : `${Constants.TWITTER_ROOT}/hashtag`;
+    const baseSymbolUrl = `${Constants.TWITTER_ROOT}/search?q=%24`;
+    const baseMentionUrl = status.provider === DataProvider.Bsky ? `${Constants.BSKY_ROOT}/profile` : `${Constants.TWITTER_ROOT}`;
+    let offset = 0;
+    status.raw_text.facets.forEach(facet => {
+      let newFacet = '';
+      switch (facet.type) {
+        case 'bold':
+          text = text.slice(0, facet.indices[0] + offset) + `<b>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</b>` + text.slice(facet.indices[1] + offset);
+          // offset += 7;
+          break;
+        case 'italic':
+          text = text.slice(0, facet.indices[0] + offset) + `<i>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</i>` + text.slice(facet.indices[1] + offset);
+          // offset += 7;
+          break;
+        case 'underline':
+          text = text.slice(0, facet.indices[0] + offset) + `<u>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</u>` + text.slice(facet.indices[1] + offset);
+          // offset += 7;
+          break;
+        case 'strikethrough':
+          text = text.slice(0, facet.indices[0] + offset) + `<s>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</s>` + text.slice(facet.indices[1] + offset);
+          // offset += 7;
+          break;
+        case 'url':
+          newFacet = `<a href="${facet.replacement}">${facet.display}</a>`;
+          text = text.slice(0, facet.indices[0] + offset) + newFacet + text.slice(facet.indices[1] + offset);
+          // offset += newFacet.length - (facet.indices[1] - facet.indices[0]);
+          break;
+        case 'hashtag':
+          text = text.slice(0, facet.indices[0] + offset) + `<a href="${baseHashtagUrl}/${facet.original}">#${facet.original}</a>` + text.slice(facet.indices[1] + offset);
+          // offset += facet.indices[1] - facet.indices[0];
+          break;
+        case 'symbol':
+          text = text.slice(0, facet.indices[0] + offset) + `<a href="${baseSymbolUrl}/${facet.original}">$${facet.original}</a>` + text.slice(facet.indices[1] + offset);
+          // offset += facet.indices[1] - facet.indices[0];
+          break;
+        case 'mention':
+          text = text.slice(0, facet.indices[0] + offset) + `<a href="${baseMentionUrl}/${facet.original}">@${facet.original}</a>` + text.slice(facet.indices[1] + offset);
+          // offset += facet.indices[1] - facet.indices[0];
+          break;
+      }
+    });
+    text = text.replace(/\n/g, '<br>︀︀')
+  } else {
+    text = statusLinkWrapper(text);
+    text = linkifyMentions(text, status);
+    text = linkifyHashtags(text, status);
+  }
   return text;
 }
 

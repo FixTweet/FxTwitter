@@ -170,12 +170,11 @@ export const twitterFetch = async (
         return null;
       }
       try {
-        !useElongator &&
-          cache &&
-          c.executionCtx &&
+        if (!useElongator && cache && c.executionCtx) {
           c.executionCtx.waitUntil(
             cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true })
           );
+        }
       } catch (error) {
         console.error((error as Error).stack);
       }
@@ -206,11 +205,11 @@ export const twitterFetch = async (
     if (!useElongator && remainingRateLimit < 10) {
       console.log(`Purging token on this edge due to low rate limit remaining`);
       try {
-        c.executionCtx &&
-          cache &&
+        if (c.executionCtx && cache) {
           c.executionCtx.waitUntil(
             cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true })
           );
+        }
       } catch (error) {
         console.error((error as Error).stack);
       }

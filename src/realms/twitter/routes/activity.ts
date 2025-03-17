@@ -3,17 +3,13 @@ import { Constants } from '../../../constants';
 import { getBaseRedirectUrl } from '../router';
 import { DataProvider } from '../../../embed/status';
 import { Strings } from '../../../strings';
-import { Experiment, experimentCheck } from '../../../experiments';
 import { handleActivity } from '../../../embed/activity';
 
 /* Handler for activity request */
 export const activityRequest = async (c: Context) => {
-  const { prefix, handle, id, mediaNumber, language } = c.req.param();
+  const { prefix, id } = c.req.param();
   const url = new URL(c.req.url);
   const flags: InputFlags = {};
-
-  // eslint-disable-next-line sonarjs/no-duplicate-string
-  const userAgent = c.req.header('User-Agent') || '';
 
   /* Check if domain is a direct media domain (i.e. d.fxtwitter.com),
      the status is prefixed with /dl/ or /dir/ (for TwitFix interop), or the

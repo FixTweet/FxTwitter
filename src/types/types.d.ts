@@ -139,6 +139,11 @@ interface APIStatus {
     mosaic?: APIMosaicPhoto;
   };
 
+  raw_text: {
+    text: string;
+    facets: APIFacet[];
+  }
+
   lang: string | null;
   possibly_sensitive: boolean;
 
@@ -151,6 +156,15 @@ interface APIStatus {
 
   embed_card: 'tweet' | 'summary' | 'summary_large_image' | 'player';
   provider: DataProvider;
+}
+
+interface APIFacet {
+  type: string;
+  indices: [start: number, end: number];
+  original?: string;
+  replacement?: string;
+  display?: string;
+  id?: string;
 }
 
 interface APITwitterCommunityNote {
