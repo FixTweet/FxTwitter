@@ -419,6 +419,11 @@ export const buildAPITwitterStatus = async (
     }
   }
 
+  if (apiStatus.raw_text.facets) {
+    // Sort from lowest to highest index
+    apiStatus.raw_text.facets.sort((a, b) => a.indices[0] - b.indices[0]);  
+  }
+
   apiStatus.provider = DataProvider.Twitter;
 
   return apiStatus;
