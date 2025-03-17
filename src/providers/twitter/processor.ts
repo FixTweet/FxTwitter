@@ -260,6 +260,14 @@ export const buildAPITwitterStatus = async (
 
   /* Populate status media */
   mediaList.forEach(media => {
+    apiStatus.raw_text.facets.push({
+      type: 'media',
+      indices: media.indices,
+      id: media.id_str,
+      display: media.display_url,
+      original: media.url,
+      replacement: media.expanded_url,
+    });
     const mediaObject = processMedia(c, media);
     if (mediaObject) {
       apiStatus.media.all = apiStatus.media?.all ?? [];

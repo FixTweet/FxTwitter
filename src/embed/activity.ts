@@ -100,36 +100,43 @@ const formatStatus = (text: string, status: APIStatus) => {
       switch (facet.type) {
         case 'bold':
           text = text.slice(0, facet.indices[0] + offset) + `<b>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</b>` + text.slice(facet.indices[1] + offset);
-          // offset += 7;
+          offset += 14;
           break;
         case 'italic':
           text = text.slice(0, facet.indices[0] + offset) + `<i>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</i>` + text.slice(facet.indices[1] + offset);
-          // offset += 7;
+          offset += 14;
           break;
         case 'underline':
           text = text.slice(0, facet.indices[0] + offset) + `<u>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</u>` + text.slice(facet.indices[1] + offset);
-          // offset += 7;
+          offset += 14;
           break;
         case 'strikethrough':
           text = text.slice(0, facet.indices[0] + offset) + `<s>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</s>` + text.slice(facet.indices[1] + offset);
-          // offset += 7;
+          offset += 14;
           break;
         case 'url':
           newFacet = `<a href="${facet.replacement}">${facet.display}</a>`;
           text = text.slice(0, facet.indices[0] + offset) + newFacet + text.slice(facet.indices[1] + offset);
-          // offset += newFacet.length - (facet.indices[1] - facet.indices[0]);
+          offset += newFacet.length - (facet.indices[1] - facet.indices[0]);
           break;
         case 'hashtag':
-          text = text.slice(0, facet.indices[0] + offset) + `<a href="${baseHashtagUrl}/${facet.original}">#${facet.original}</a>` + text.slice(facet.indices[1] + offset);
-          // offset += facet.indices[1] - facet.indices[0];
+          newFacet = `<a href="${baseHashtagUrl}/${facet.original}">#${facet.original}</a>`;
+          text = text.slice(0, facet.indices[0] + offset) + newFacet + text.slice(facet.indices[1] + offset);
+          offset += newFacet.length - (facet.indices[1] - facet.indices[0]);
           break;
         case 'symbol':
-          text = text.slice(0, facet.indices[0] + offset) + `<a href="${baseSymbolUrl}/${facet.original}">$${facet.original}</a>` + text.slice(facet.indices[1] + offset);
-          // offset += facet.indices[1] - facet.indices[0];
+          newFacet = `<a href="${baseSymbolUrl}/${facet.original}">$${facet.original}</a>`;
+          text = text.slice(0, facet.indices[0] + offset) + newFacet + text.slice(facet.indices[1] + offset);
+          offset += newFacet.length - (facet.indices[1] - facet.indices[0]);
           break;
         case 'mention':
-          text = text.slice(0, facet.indices[0] + offset) + `<a href="${baseMentionUrl}/${facet.original}">@${facet.original}</a>` + text.slice(facet.indices[1] + offset);
-          // offset += facet.indices[1] - facet.indices[0];
+          newFacet = `<a href="${baseMentionUrl}/${facet.original}">@${facet.original}</a>`;
+          text = text.slice(0, facet.indices[0] + offset) + newFacet + text.slice(facet.indices[1] + offset);
+          offset += newFacet.length - (facet.indices[1] - facet.indices[0]);
+          break;
+        case 'media':
+          text = text.slice(0, facet.indices[0] + offset) + text.slice(facet.indices[1] + offset);
+          offset -= (facet.indices[1] - facet.indices[0]);
           break;
       }
     });
