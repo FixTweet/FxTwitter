@@ -139,6 +139,7 @@ const formatStatus = (text: string, status: APIStatus) => {
           offset -= (facet.indices[1] - facet.indices[0]);
           break;
       }
+      console.log('text next step', text);
     });
     text = text.replace(/\n/g, '<br>︀︀')
   } else {
