@@ -10,6 +10,7 @@ import { twitter } from './realms/twitter/router';
 import { cacheMiddleware } from './caches';
 import { ContentfulStatusCode } from 'hono/utils/http-status';
 import { bsky } from './realms/bluesky/router';
+import { getBranding } from './helpers/branding';
 
 const noCache = 'max-age=0, no-cache, no-store, must-revalidate';
 const embeddingClientRegex =
@@ -95,12 +96,9 @@ app.onError((err, c) => {
   }
   c.header('cache-control', noCache);
 
-  let branding = Constants.BRANDING_NAME;
-  if (c.req.url.includes('bsky')) {
-    branding = Constants.BRANDING_NAME_BSKY;
-  }
+  const branding = getBranding(c);
 
-  return c.html(Strings.ERROR_HTML.format({ brandingName: branding }), errorCode as ContentfulStatusCode);
+  return c.html(Strings.ERROR_HTML.format({ brandingName: branding.name }), errorCode as ContentfulStatusCode);
 });
 
 const customLogger = (message: string, ...rest: string[]) => {
@@ -147,11 +145,8 @@ app.all('/error', async c => {
   c.header('cache-control', noCache);
 
   if (c.req.header('User-Agent')?.match(embeddingClientRegex)) {
-    let branding = Constants.BRANDING_NAME;
-    if (c.req.url.includes('bsky')) {
-      branding = Constants.BRANDING_NAME_BSKY;
-    }
-    return c.html(Strings.ERROR_HTML.format({ brandingName: branding }), 200);
+    const branding = getBranding(c);
+    return c.html(Strings.ERROR_HTML.format({ brandingName: branding.name }), 200);
   }
   /* We return it as a 200 so embedded applications can display the error */
   return c.body('', 400);
@@ -174,16 +169,12 @@ export default {
       if (request.headers.get('user-agent')?.match(embeddingClientRegex)) {
         errorCode = 200;
       }
-
-      let branding = Constants.BRANDING_NAME;
-      if (request.url.includes('bsky')) {
-        branding = Constants.BRANDING_NAME_BSKY;
-      }
+      const branding = getBranding(request);
 
       return new Response(
         e.name === 'AbortError'
-          ? Strings.TIMEOUT_ERROR_HTML.format({ brandingName: branding })
-          : Strings.ERROR_HTML.format({ brandingName: branding }),
+          ? Strings.TIMEOUT_ERROR_HTML.format({ brandingName: branding.name })
+          : Strings.ERROR_HTML.format({ brandingName: branding.name }),
         {
           headers: {
             ...Constants.RESPONSE_HEADERS,

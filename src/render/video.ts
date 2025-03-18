@@ -3,6 +3,8 @@ import { Constants } from '../constants';
 import { Experiment, experimentCheck } from '../experiments';
 import { handleQuote } from '../helpers/quote';
 import { DataProvider } from '../enum';
+import { APIMedia, APITwitterStatus, APIVideo, RenderProperties, ResponseInstructions } from '../types/types';
+import { getBranding } from '../helpers/branding';
 
 const getGIFTranscodeDomain = (twitterId: string): string | null => {
   const gifTranscoderList = Constants.GIF_TRANSCODE_DOMAIN_LIST;
@@ -57,7 +59,7 @@ export const renderVideo = (
       total: String(all.length)
     });
 
-    instructions.siteName = `${status.provider === DataProvider.Twitter ? Constants.BRANDING_NAME : Constants.BRANDING_NAME_BSKY} - ${videoCounter}`;
+    instructions.siteName = `${getBranding(properties.context).name} - ${videoCounter}`;
   }
 
   if (status.provider === 'twitter') {
@@ -89,7 +91,7 @@ export const renderVideo = (
     console.log('Embedding bsky video', url);
   }
 
-  console.log('status', status);
+  // console.log('status', status);
   console.log('provider', status.provider);
 
   if (

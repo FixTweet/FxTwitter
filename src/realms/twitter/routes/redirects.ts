@@ -3,6 +3,7 @@ import { Strings } from '../../../strings';
 import { sanitizeText } from '../../../helpers/utils';
 import { getBaseRedirectUrl } from '../router';
 import { Constants } from '../../../constants';
+import { getBranding } from '../../../helpers/branding';
 
 export const genericTwitterRedirect = async (c: Context) => {
   const url = new URL(c.req.url);
@@ -48,7 +49,7 @@ export const setRedirectRequest = async (c: Context) => {
 
     return c.html(
       Strings.MESSAGE_HTML.format({
-        brandingName: Constants.BRANDING_NAME,
+        brandingName: getBranding(c).name,
         message: `Your base redirect has been cleared. To set one, please pass along the <code>url</code> parameter.`
       }),
       200

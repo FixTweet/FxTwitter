@@ -4,6 +4,8 @@ import { Constants } from '../constants';
 import { getSocialTextIV } from '../helpers/socialproof';
 import { sanitizeText } from '../helpers/utils';
 import { DataProvider } from '../enum';
+import { getBranding } from '../helpers/branding';
+import { APIPhoto, APIPoll, APIStatus, APITwitterStatus, APIUser, RenderProperties, ResponseInstructions } from '../types/types';
 
 enum AuthorActionType {
   Reply = 'Reply',
@@ -378,10 +380,7 @@ export const renderInstantView = (properties: RenderProperties): ResponseInstruc
     <section class="section--first">${
       flags?.archive
         ? i18next.t('ivInternetArchiveText').format({
-            brandingName:
-              status.provider === DataProvider.Twitter
-                ? Constants.BRANDING_NAME
-                : Constants.BRANDING_NAME_BSKY
+            brandingName: getBranding(properties.context).name
           })
         : i18next.t('ivFallbackText')
     } <a href="${status.url}">${i18next.t('ivViewOriginal')}</a>

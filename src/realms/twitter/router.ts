@@ -11,6 +11,7 @@ import { trimTrailingSlash } from 'hono/trailing-slash';
 import { DataProvider } from '../../enum';
 import { ContentfulStatusCode } from 'hono/utils/http-status';
 import { activityRequest } from './routes/activity';
+import { getBranding } from '../../helpers/branding';
 
 export const twitter = new Hono();
 
@@ -31,20 +32,16 @@ export const getBaseRedirectUrl = (c: Context) => {
 };
 
 export const faviconRoute = async (c: Context) => {
+  const branding = getBranding(c);
   try {
-    const url = new URL(c.req.url);
-    let faviconUrl = 'https://abs.twimg.com/favicons/twitter.3.ico';
-    if (url.hostname.includes('twitt')) {
-      faviconUrl = 'https://abs.twimg.com/favicons/twitter.2.ico';
-    }
-    const response = await fetch(faviconUrl);
+    const response = await fetch(branding.favicon);
     const body = await response.arrayBuffer();
     return c.body(body, response.status as ContentfulStatusCode, {
       'Content-Type': response.headers.get('Content-Type') || 'image/x-icon',
       'Content-Length': response.headers.get('Content-Length') || body.byteLength.toString(),
     },);
   } catch (e) {
-    return c.redirect('https://abs.twimg.com/favicons/twitter.3.ico', 302);
+    return c.redirect(branding.favicon, 302);
   }
 }
 
@@ -86,7 +83,7 @@ twitter.get(
 );
 twitter.get('/:handle/:endpoint{status(es)?}/:id/*', twitterStatusRequest);
 
-twitter.get('/version', c => versionRoute(c, DataProvider.Twitter));
+twitter.get('/version', c => versionRoute(c));
 twitter.get('/set_base_redirect', setRedirectRequest);
 /* Yes, I actually made the endpoint /owoembed. Deal with it. */
 twitter.get('/owoembed', oembed);

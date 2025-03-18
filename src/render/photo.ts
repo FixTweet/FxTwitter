@@ -1,7 +1,7 @@
 import i18next from 'i18next';
-import { Constants } from '../constants';
 import { Strings } from '../strings';
-import { DataProvider } from '../enum';
+import { getBranding } from '../helpers/branding';
+import { RenderProperties, APIPhoto, APIMosaicPhoto, ResponseInstructions, APIMedia } from '../types/types';
 
 export const renderPhoto = (
   properties: RenderProperties,
@@ -31,10 +31,7 @@ export const renderPhoto = (
     } else {
       instructions.authorText = `${authorText}${authorText ? '   ―   ' : ''}${photoCounter}`;
     }
-    const brandingName =
-      status.provider === DataProvider.Twitter
-        ? Constants.BRANDING_NAME
-        : Constants.BRANDING_NAME_BSKY;
+    const brandingName = getBranding(properties.context).name;
     if (engagementText && !isTelegram) {
       instructions.siteName = `${brandingName} - ${engagementText} - ${photoCounter}`;
     } else {

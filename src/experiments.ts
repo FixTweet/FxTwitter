@@ -6,7 +6,7 @@ export enum Experiment {
   TRANSCODE_GIFS = 'TRANSCODE_GIFS',
   IV_FORCE_THREAD_UNROLL = 'IV_FORCE_THREAD_UNROLL',
   DISCORD_VIDEO_REDIRECT_WORKAROUND = 'DISCORD_VIDEO_REDIRECT_WORKAROUND',
-  EMBED_V2 = 'EMBED_V2'
+  ACTIVITY_EMBED = 'ACTIVITY_EMBED'
 }
 
 type ExperimentConfig = {
@@ -51,9 +51,9 @@ const Experiments: { [key in Experiment]: ExperimentConfig } = {
     description: 'Workaround for video playback issues on Discord',
     percentage: 1
   },
-  [Experiment.EMBED_V2]: {
-    name: 'Embed v2',
-    description: 'Use Embed v2',
+  [Experiment.ACTIVITY_EMBED]: {
+    name: 'Discord activity embed',
+    description: 'Use alternate activity embed for Discord',
     percentage: 1
   }
 };

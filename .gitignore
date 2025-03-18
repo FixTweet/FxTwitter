@@ -4,3 +4,4 @@ wrangler.toml
 .env
 .DS_Store
 .wrangler
+branding.json

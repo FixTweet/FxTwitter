@@ -1,0 +1,32 @@
+{
+  "zones": [
+    {
+      "name": "FxTwitter",
+      "default": true,
+      "domains": [
+        "fxtwitter.com",
+        "twittpr.com"
+      ],
+      "provider": "twitter",
+      "favicon": "https://abs.twimg.com/favicons/twitter.2.ico",
+      "redirect": "https://github.com/FixTweet/FxTwitter"
+    },
+    {
+      "name": "FixupX",
+      "domains": [
+        "fixupx.com"
+      ],
+      "provider": "twitter",
+      "favicon": "https://abs.twimg.com/favicons/twitter.3.ico",
+      "redirect": "https://github.com/FixTweet/FxTwitter"
+    },
+    {
+      "name": "FxBluesky",
+      "domains": [
+        "fxbsky.app"
+      ],
+      "provider": "bluesky",
+      "redirect": "https://bsky.app/profile/fxbsky.app"
+    }
+  ]
+}

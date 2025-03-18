@@ -3,14 +3,17 @@ import { Constants } from './constants';
 import { Strings } from './strings';
 import { userAPI } from './providers/twitter/profile';
 import { ContentfulStatusCode } from 'hono/utils/http-status';
+import { getBranding } from './helpers/branding';
 
 export const returnError = (c: Context, error: string): Response => {
+  const branding = getBranding(c);
   return c.html(
     Strings.BASE_HTML.format({
       lang: '',
       headers: [
-        `<meta property="og:title" content="${Constants.BRANDING_NAME}"/>`,
-        `<meta property="og:description" content="${error}"/>`
+        `<meta property="og:title" content="${branding.name}"/>`,
+        `<meta property="og:description" content="${error}"/>`,
+        `<meta property="theme-color" content="${branding.color}"/>`
       ].join('')
     })
   ) as Response;
@@ -54,14 +57,12 @@ export const handleProfile = async (
   // TODO Add card creation logic here
   /* Finally, after all that work we return the response HTML! */
 
-  let branding = Constants.BRANDING_NAME;
-  if (c.req.url.includes('bsky')) {
-    branding = Constants.BRANDING_NAME_BSKY;
-  }
+  
+  const branding = getBranding(c);
 
   return c.html(
     Strings.BASE_HTML.format({
-      brandingName: branding,
+      brandingName: branding.name,
       lang: `lang="en"`,
       headers: headers.join('')
     })

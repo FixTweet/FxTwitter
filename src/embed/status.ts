@@ -16,18 +16,17 @@ import translationResources from '../../i18n/resources';
 import { constructBlueskyThread } from '../providers/bsky/conversation';
 import { DataProvider } from '../enum';
 import { encodeSnowcode } from '../helpers/snowcode';
+import { getBranding } from '../helpers/branding';
+import { APIMedia, APIPhoto, APIStatus, APITwitterStatus, APIVideo, InputFlags, ResponseInstructions, SocialThread } from '../types/types';
 
 export const returnError = (c: Context, error: string): Response => {
-  let branding = Constants.BRANDING_NAME;
-  if (c.req.url.includes('bsky')) {
-    branding = Constants.BRANDING_NAME_BSKY;
-  }
+  const branding = getBranding(c);
   return c.html(
     Strings.BASE_HTML.format({
-      brandingName: branding,
+      brandingName: branding.name,
       lang: '',
       headers: [
-        `<meta property="og:title" content="${branding}"/>`,
+        `<meta property="og:title" content="${branding.name}"/>`,
         `<meta property="og:description" content="${error}"/>`
       ].join('')
     })
@@ -142,7 +141,7 @@ export const handleStatus = async (
   let useIV = false;
   let useActivity = false;
 
-  if (experimentCheck(Experiment.EMBED_V2, c.req.header('user-agent')?.includes('Discordbot')) && !flags.direct) {
+  if (experimentCheck(Experiment.ACTIVITY_EMBED, c.req.header('user-agent')?.includes('Discordbot')) && !flags.direct) {
     useActivity = true;
   }
 
@@ -226,10 +225,7 @@ export const handleStatus = async (
 
   let authorText = getSocialProof(status) || Strings.DEFAULT_AUTHOR_TEXT;
   const engagementText = authorText.replace(/ {4}/g, ' ');
-  let siteName =
-    status.provider === DataProvider.Twitter
-      ? Constants.BRANDING_NAME
-      : Constants.BRANDING_NAME_BSKY;
+  let siteName = getBranding(c).name;
 
   if (thread.thread && thread.thread.length > 1 && isTelegram && useIV) {
     siteName = i18next.t('threadIndicator', { brandingName: siteName });
@@ -256,11 +252,7 @@ export const handleStatus = async (
 
 
   if (!flags.gallery) {
-    if (status.provider === DataProvider.Twitter) {
-      headers.push(`<meta property="theme-color" content="#00a8fc"/>`);
-    } else if (status.provider === DataProvider.Bsky) {
-      headers.push(`<meta property="theme-color" content="#0085ff"/>`);
-    }
+    headers.push(`<meta property="theme-color" content="${getBranding(c).color}"/>`);
     headers.push(
       `<meta property="twitter:title" content="${status.author.name} (@${status.author.screen_name})"/>`
     );
@@ -270,15 +262,22 @@ export const handleStatus = async (
      it will gracefully redirect to the destination instead of just seeing a blank screen.
 
      Telegram is dumb and it just gets stuck if this is included, so we never include it for Telegram UAs. */
-  if (!isTelegram && provider === DataProvider.Twitter) {
-    headers.push(
-      `<meta http-equiv="refresh" content="0;url=${Constants.TWITTER_ROOT}/${status.author.screen_name}/status/${status.id}"/>`
-    );
+  if (!isTelegram) {
+    if (provider === DataProvider.Twitter) {
+      headers.push(
+        `<meta http-equiv="refresh" content="0;url=${Constants.TWITTER_ROOT}/${status.author.screen_name}/status/${status.id}"/>`
+      );
+    } else if (provider === DataProvider.Bsky) {
+      headers.push(
+        `<meta http-equiv="refresh" content="0;url=${Constants.BSKY_ROOT}/profile/${status.author.screen_name}/post/${status.id}"/>`
+      );
+    }
   }
 
   if (useIV) {
     try {
       const instructions = renderInstantView({
+        context: c,
         status: status,
         thread: thread,
         text: newText,
@@ -323,6 +322,7 @@ export const handleStatus = async (
           /* This status has a photo to render. */
           instructions = renderPhoto(
             {
+              context: c,
               status: status,
               authorText: authorText,
               engagementText: engagementText,
@@ -345,7 +345,7 @@ export const handleStatus = async (
           break;
         case 'video':
           instructions = renderVideo(
-            { status: status, userAgent: userAgent, text: newText, isOverrideMedia: true },
+            { context: c, status: status, userAgent: userAgent, text: newText, isOverrideMedia: true },
             overrideMedia as APIVideo
           );
           headers.push(...instructions.addHeaders);
@@ -364,7 +364,7 @@ export const handleStatus = async (
       }
     } else if (media?.videos && !flags.nativeMultiImage) {
       const instructions = renderVideo(
-        { status: status, userAgent: userAgent, text: newText },
+        { context: c, status: status, userAgent: userAgent, text: newText },
         media.videos[0]
       );
       headers.push(...instructions.addHeaders);
@@ -388,6 +388,7 @@ export const handleStatus = async (
 
           const instructions = renderPhoto(
             {
+              context: c,
               status: status,
               authorText: authorText,
               engagementText: engagementText,
@@ -400,6 +401,7 @@ export const handleStatus = async (
       } else {
         const instructions = renderPhoto(
           {
+            context: c,
             status: status,
             authorText: authorText,
             engagementText: engagementText,
@@ -413,6 +415,7 @@ export const handleStatus = async (
       console.log('photos', media?.photos);
       const instructions = renderPhoto(
         {
+          context: c,
           status: status,
           authorText: authorText,
           engagementText: engagementText,
@@ -526,8 +529,7 @@ export const handleStatus = async (
     if (!useActivity) {
       headers.push(`<meta property="og:site_name" content="${siteName}"/>`);
     } else {
-      const name = status.provider === DataProvider.Bsky ? 'FxBluesky' : flags.isXDomain ? 'FixupX' : 'FxTwitter';
-      headers.push(`<meta property="og:site_name" content="${name}"/>`);
+      headers.push(`<meta property="og:site_name" content="${getBranding(c).name}"/>`);
     }
   } else {
     if (isTelegram) {
@@ -565,14 +567,10 @@ export const handleStatus = async (
 
     let provider = '';
     const mediaType = overrideMedia ?? status.media.videos?.[0]?.type;
-
-    let branding = Constants.BRANDING_NAME;
-    if (c.req.url.includes('bsky')) {
-      branding = Constants.BRANDING_NAME_BSKY;
-    }
+    const branding = getBranding(c);
 
     if (mediaType === 'gif') {
-      provider = i18next.t('gifIndicator', { brandingName: branding });
+      provider = i18next.t('gifIndicator', { brandingName: branding.name });
     } else if (
       status.embed_card === 'player' &&
       providerEngagementText !== Strings.DEFAULT_AUTHOR_TEXT
@@ -584,7 +582,7 @@ export const handleStatus = async (
 
     if (useActivity) {
       const name = status.provider === DataProvider.Bsky ? 'fxbluesky' : flags.isXDomain ? 'fixupx' : 'fxtwitter';
-      headers.push(`<link href='https://raw.githubusercontent.com/FixTweet/FxTwitter/refs/heads/v2/.github/logos/${name}32.png?bdvs=asd&sdq=asdv&as&fgf' rel='icon' sizes='32x32' type='image/png'>`)
+      headers.push(`<link href='https://wuff.gay/embedtest/${name}32.png?wqswsdqsdsdsdws=qdswsqdwssd' rel='icon' sizes='32x32' type='image/png'>`)
     }
 
     headers.push(

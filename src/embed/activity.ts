@@ -11,6 +11,7 @@ import icu from 'i18next-icu';
 import { formatNumber } from "../helpers/utils";
 import { decodeSnowcode } from "../helpers/snowcode";
 import translationResources from '../../i18n/resources';
+import { Experiment, experimentCheck } from "../experiments";
 
 
 const generatePoll = (poll: APIPoll): string => {
@@ -51,6 +52,15 @@ const getStatusText = (status: APIStatus) => {
     text += `<blockquote><b>${i18next.t('ivOriginalText')}</b><br>${formatStatus(convertedStatusText, status)}</blockquote>`;
   } else {
     text = formatStatus(convertedStatusText, status) + '<br><br>';
+  }
+  if (status.quote) {
+    console.log('quote!!', status.quote);
+    text += `<blockquote><b>${i18next.t('ivQuoteHeader').format({
+      authorName: status.quote.author.name,
+      authorURL: status.quote.author.url,
+      authorHandle: status.quote.author.screen_name,
+      url: status.quote.url
+    })}</b><br>︀<br>${formatStatus(status.quote.text.replace(/\n/g, '<br>︀︀'), status.quote)}</blockquote>`;
   }
   if (status.poll) {
     text += `${generatePoll(status.poll)}`;
@@ -207,7 +217,7 @@ export const handleActivity = async (
   }
 
   const root = `${provider === DataProvider.Twitter ? Constants.TWITTER_ROOT : Constants.BSKY_ROOT}`;
-
+  const userAgent = c.req.header('User-Agent');
   // Map FxEmbed API to Mastodon API v1
   const response = {
     id: statusId,
@@ -261,8 +271,15 @@ export const handleActivity = async (
     poll: null
   };
 
-  if ((thread.status.media?.all?.length ?? 0) > 0) {
-    response['media_attachments'] = thread.status.media.all?.map((media) => {
+  console.log('regular media', thread.status.media?.all);
+  console.log('quote media', thread.status.quote?.media?.all);
+
+  const media = (thread.status.media?.all?.length ?? 0)> 0 ? thread.status.media?.all : thread.status.quote?.media?.all ?? [];
+
+  console.log('media', media);
+
+  if (media.length > 0) {
+    response['media_attachments'] = media.map((media) => {
       switch (media.type) {
         case 'photo':
           const image = media as APIPhoto;
@@ -294,6 +311,13 @@ export const handleActivity = async (
           }
           if (video.width < 400 || video.height < 400) {
             sizeMultiplier = 2;
+          }
+          if (
+            // status.provider !== DataProvider.Bsky &&
+            experimentCheck(Experiment.DISCORD_VIDEO_REDIRECT_WORKAROUND, !!Constants.API_HOST_LIST) &&
+            (userAgent?.includes('Discord') || userAgent?.includes('Telegram'))
+          ) {
+            video.url = `https://${Constants.API_HOST_LIST[0]}/2/go?url=${encodeURIComponent(video.url)}`;
           }
           return {
             id: '114163769487684704',

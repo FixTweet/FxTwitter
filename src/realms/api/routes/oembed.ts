@@ -1,7 +1,8 @@
 import { Context } from 'hono';
-import motd from '../../../../motd.json';
 import { Constants } from '../../../constants';
 import { Strings } from '../../../strings';
+import { OEmbed } from '../../../types/types';
+import { getBranding } from '../../../helpers/branding';
 
 export const oembed = async (c: Context) => {
   console.log('oembed hit!');
@@ -12,16 +13,14 @@ export const oembed = async (c: Context) => {
   const author = searchParams.get('author') ?? 'jack';
   const status = searchParams.get('status') ?? '20';
 
-  const random = Math.floor(Math.random() * Object.keys(motd).length);
-  const [name, url] = Object.entries(motd)[random];
-
   const statusUrl = `${Constants.TWITTER_ROOT}/${encodeURIComponent(author)}/status/${status}`;
+  const branding = getBranding(c);
 
   const data: OEmbed = {
     author_name: text,
     author_url: statusUrl,
-    provider_name: searchParams.get('provider') ?? name,
-    provider_url: searchParams.get('provider') ? statusUrl : url,
+    provider_name: searchParams.get('provider') ?? branding.name,
+    provider_url: searchParams.get('provider') ? statusUrl : branding.redirect,
     title: Strings.DEFAULT_AUTHOR_TEXT,
     type: 'rich',
     version: '1.0'
