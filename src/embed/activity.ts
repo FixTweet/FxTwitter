@@ -61,12 +61,12 @@ const getStatusText = (status: APIStatus) => {
 
 const linkifyMentions = (text: string, status: APIStatus) => {
   const baseUrl = status.provider === DataProvider.Bsky ? `${Constants.BSKY_ROOT}/profile` : `${Constants.TWITTER_ROOT}`;
-  const matches = text.match(/@([\w.]+)/g)
+  const matches = text.match(/@([\w.]+)(?=\W|$)/g)
 
   console.log('matches', matches);
-  
-  matches?.forEach(mention => {
-    text = text.replace(`${mention}`, `<a href="${baseUrl}/${mention.slice(1)}">${mention}</a>`);
+  // deduplicate mentions
+  [...new Set(matches ?? [])]?.forEach(mention => {
+    text = text.replace(new RegExp(`${mention}(?=\\W|$)`, 'g'), `<a href="${baseUrl}/${mention.slice(1)}">${mention}</a>`);
   });
   console.log('text', text);
   return text;
@@ -74,9 +74,13 @@ const linkifyMentions = (text: string, status: APIStatus) => {
 
 const linkifyHashtags = (text: string, status: APIStatus) => {
   const baseUrl = status.provider === DataProvider.Bsky ? `${Constants.BSKY_ROOT}/hashtag` : `${Constants.TWITTER_ROOT}/hashtag`;
-  text.match(/#([\w.]+)/g)?.forEach(hashtag => {
-    text = text.replace(`${hashtag}`, `<a href="${baseUrl}/${hashtag}">#${hashtag}</a>`);
+  const matches = text.match(/#([\w.]+)(?=\W|$)/g)
+  console.log('matches', matches);
+  // deduplicate hashtags
+  [...new Set(matches ?? [])]?.forEach(hashtag => {
+    text = text.replace(new RegExp(`${hashtag}(?=\\W|$)`, 'g'), `<a href="${baseUrl}/${hashtag.slice(1)}">${hashtag}</a>`);
   });
+  console.log('text', text);
   return text;
 }
 
@@ -88,7 +92,9 @@ const statusLinkWrapper = (text: string) => {
 }
 
 const formatStatus = (text: string, status: APIStatus) => {
-  if (status.raw_text) {
+  const enableFacets = false;
+  
+  if (status.raw_text && enableFacets) {
     text = status.raw_text.text;
 
     const baseHashtagUrl = status.provider === DataProvider.Bsky ? `${Constants.BSKY_ROOT}/hashtag` : `${Constants.TWITTER_ROOT}/hashtag`;
@@ -99,21 +105,22 @@ const formatStatus = (text: string, status: APIStatus) => {
       let newFacet = '';
       switch (facet.type) {
         case 'bold':
-          text = text.slice(0, facet.indices[0] + offset) + `<b>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</b>` + text.slice(facet.indices[1] + offset);
-          offset += 14;
+          newFacet = `<b>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</b>`;
+          text = text.slice(0, facet.indices[0] + offset) + newFacet + text.slice(facet.indices[1] + offset);
+          offset += newFacet.length - (facet.indices[1] - facet.indices[0]);
           break;
-        case 'italic':
-          text = text.slice(0, facet.indices[0] + offset) + `<i>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</i>` + text.slice(facet.indices[1] + offset);
-          offset += 14;
-          break;
-        case 'underline':
-          text = text.slice(0, facet.indices[0] + offset) + `<u>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</u>` + text.slice(facet.indices[1] + offset);
-          offset += 14;
-          break;
-        case 'strikethrough':
-          text = text.slice(0, facet.indices[0] + offset) + `<s>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</s>` + text.slice(facet.indices[1] + offset);
-          offset += 14;
-          break;
+        // case 'italic':
+        //   text = text.slice(0, facet.indices[0] + offset) + `<i>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</i>` + text.slice(facet.indices[1] + offset);
+        //   offset += 14;
+        //   break;
+        // case 'underline':
+        //   text = text.slice(0, facet.indices[0] + offset) + `<u>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</u>` + text.slice(facet.indices[1] + offset);
+        //   offset += 14;
+        //   break;
+        // case 'strikethrough':
+        //   text = text.slice(0, facet.indices[0] + offset) + `<s>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</s>` + text.slice(facet.indices[1] + offset);
+        //   offset += 14;
+        //   break;
         case 'url':
           newFacet = `<a href="${facet.replacement}">${facet.display}</a>`;
           text = text.slice(0, facet.indices[0] + offset) + newFacet + text.slice(facet.indices[1] + offset);
@@ -124,16 +131,16 @@ const formatStatus = (text: string, status: APIStatus) => {
           text = text.slice(0, facet.indices[0] + offset) + newFacet + text.slice(facet.indices[1] + offset);
           offset += newFacet.length - (facet.indices[1] - facet.indices[0]);
           break;
-        case 'symbol':
-          newFacet = `<a href="${baseSymbolUrl}/${facet.original}">$${facet.original}</a>`;
-          text = text.slice(0, facet.indices[0] + offset) + newFacet + text.slice(facet.indices[1] + offset);
-          offset += newFacet.length - (facet.indices[1] - facet.indices[0]);
-          break;
-        case 'mention':
-          newFacet = `<a href="${baseMentionUrl}/${facet.original}">@${facet.original}</a>`;
-          text = text.slice(0, facet.indices[0] + offset) + newFacet + text.slice(facet.indices[1] + offset);
-          offset += newFacet.length - (facet.indices[1] - facet.indices[0]);
-          break;
+        // case 'symbol':
+        //   newFacet = `<a href="${baseSymbolUrl}/${facet.original}">$${facet.original}</a>`;
+        //   text = text.slice(0, facet.indices[0] + offset) + newFacet + text.slice(facet.indices[1] + offset);
+        //   offset += newFacet.length - (facet.indices[1] - facet.indices[0]);
+        //   break;
+        // case 'mention':
+        //   newFacet = `<a href="${baseMentionUrl}/${facet.original}">@${facet.original}</a>`;
+        //   text = text.slice(0, facet.indices[0] + offset) + newFacet + text.slice(facet.indices[1] + offset);
+        //   offset += newFacet.length - (facet.indices[1] - facet.indices[0]);
+        //   break;
         case 'media':
           text = text.slice(0, facet.indices[0] + offset) + text.slice(facet.indices[1] + offset);
           offset -= (facet.indices[1] - facet.indices[0]);
