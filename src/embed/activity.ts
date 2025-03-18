@@ -85,15 +85,16 @@ const linkifyHashtags = (text: string, status: APIStatus) => {
 }
 
 const statusLinkWrapper = (text: string) => {
-  text.match(/(?<!href=")https?:\/\/(?:www\.)?[-\w@:%.+~#=]{1,256}\.[a-zA-Z\d()]{1,6}\b([-\w()@:%+.~#?&/=]*)/g)?.forEach(url => {
-    text = text.replace(url, `<a href="${url}">${url}</a>`);
+  const matches = text.match(/(?<!href=")https?:\/\/(?:www\.)?[-\w@:%.+~#=]{1,256}\.[a-zA-Z\d()]{1,6}\b([-\w()@:%+.~#?&/=]*)(?=\W|$)/g);
+  [...new Set(matches ?? [])]?.forEach(url => {
+    text = text.replace(new RegExp(`${url}(?=\\W|$)`, 'g'), `<a href="${url}">${url}</a>`);
   });
   return text;
 }
 
 const formatStatus = (text: string, status: APIStatus) => {
   const enableFacets = false;
-  
+
   if (status.raw_text && enableFacets) {
     text = status.raw_text.text;
 
@@ -286,6 +287,14 @@ export const handleActivity = async (
         case 'video':
         case 'gif':
           const video = media as APIVideo;
+          let sizeMultiplier = 2;
+
+          if (video.width > 1920 || video.height > 1920) {
+            sizeMultiplier = 0.5;
+          }
+          if (video.width < 400 || video.height < 400) {
+            sizeMultiplier = 2;
+          }
           return {
             id: '114163769487684704',
             type: 'video',
@@ -296,9 +305,9 @@ export const handleActivity = async (
             text_url: null,
             meta: {
               original: {
-                width: video.width,
-                height: video.height,
-                size: `${video.width}x${video.height}`,
+                width: video.width * sizeMultiplier,
+                height: video.height * sizeMultiplier,
+                size: `${video.width * sizeMultiplier}x${video.height * sizeMultiplier}`,
                 aspect: video.width / video.height
               }
             }
