@@ -15,6 +15,11 @@ export const genericTwitterRedirect = async (c: Context) => {
     c.header('cache-control', cacheControl);
   }
 
+  if (baseUrl.startsWith('twitter://')) {
+    // can't resolve this url to valid deeplink
+    return c.redirect(`${Constants.TWITTER_ROOT}/${url.pathname}`, 302);
+  }
+
   return c.redirect(`${baseUrl}${url.pathname}`, 302);
 };
 

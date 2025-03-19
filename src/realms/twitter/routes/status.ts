@@ -4,6 +4,7 @@ import { getBaseRedirectUrl } from '../router';
 import { DataProvider, handleStatus } from '../../../embed/status';
 import { Strings } from '../../../strings';
 import { Experiment, experimentCheck } from '../../../experiments';
+import { InputFlags } from '../../../types/types';
 
 /* Handler for status request */
 export const statusRequest = async (c: Context) => {
@@ -142,7 +143,28 @@ export const statusRequest = async (c: Context) => {
       if (!isBotUA && !flags.api && !flags.direct) {
         const baseUrl = getBaseRedirectUrl(c);
 
-        return c.redirect(`${baseUrl}/${handle || 'i'}/status/${id}`, 302);
+        if (experimentCheck(Experiment.USE_TRAFFIC_CONTROL, baseUrl === Constants.TWITTER_ROOT)) {
+          const app = await fetch(`https://app.fxembed.com/${handle}/status/${id}`);
+          const appBody = await app.text();
+          if (appBody.includes('<!doctype html>')) {
+            return c.html(appBody, 200);
+          } else if (baseUrl.startsWith('twitter://')) {
+            console.log('twitter:// redirect');
+            return c.redirect(`${baseUrl}/status?id=${id}`, 302);
+          } else {
+            console.log('normal redirect');
+            return c.redirect(`${baseUrl}/${handle || 'i'}/status/${id}`, 302);
+          }
+        } else {
+          if (baseUrl.startsWith('twitter://')) {
+            console.log('twitter:// redirect');
+            return c.redirect(`${baseUrl}/status?id=${id}`, 302);
+          } else {
+            console.log('normal redirect');
+            return c.redirect(`${baseUrl}/${handle || 'i'}/status/${id}`, 302);
+          }
+        }33
+
       }
 
       c.status(200);
@@ -157,6 +179,31 @@ export const statusRequest = async (c: Context) => {
        Obviously we just need to redirect to the status directly.*/
     console.log('Matched human UA', userAgent);
 
-    return c.redirect(`${baseUrl}/${handle || 'i'}/status/${id?.match(/\d{2,20}/)?.[0]}`, 302);
+    if (experimentCheck(Experiment.USE_TRAFFIC_CONTROL, baseUrl === Constants.TWITTER_ROOT)) {
+      const app = await fetch(`https://app.fxembed.com/${handle}/status/${id}`);
+      const appBody = await app.text();
+      console.log('appBody', appBody);
+      if (appBody.includes('<!doctype html>')) {
+        console.log('found it');
+        return c.html(appBody, 200);
+      } else {
+        console.log('huh weird');
+        if (baseUrl.startsWith('twitter://')) {
+          console.log('twitter:// redirect');
+          return c.redirect(`${baseUrl}/status?id=${id}`, 302);
+        } else {
+          console.log('normal redirect');
+          return c.redirect(`${baseUrl}/${handle || 'i'}/status/${id}`, 302);
+        }
+      }
+    } else {
+      if (baseUrl.startsWith('twitter://')) {
+        console.log('twitter:// redirect');
+        return c.redirect(`${baseUrl}/status?id=${id}`, 302);
+      } else {
+        console.log('normal redirect');
+        return c.redirect(`${baseUrl}/${handle || 'i'}/status/${id?.match(/\d{2,20}/)?.[0]}`, 302);
+      }
+    }
   }
 };
