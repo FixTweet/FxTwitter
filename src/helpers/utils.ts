@@ -72,3 +72,7 @@ export const generateSnowflake = () => {
   const timestamp = BigInt(Date.now()) - epoch;
   return String((timestamp << 22n) | BigInt(Math.floor(Math.random() * 696969)));
 };
+
+export const escapeRegex = (text: string) => {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}

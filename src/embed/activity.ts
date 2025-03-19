@@ -8,7 +8,7 @@ import { Constants } from "../constants";
 import { getSocialProof } from "../helpers/socialproof";
 import i18next from 'i18next';
 import icu from 'i18next-icu';
-import { formatNumber } from "../helpers/utils";
+import { escapeRegex, formatNumber } from "../helpers/utils";
 import { decodeSnowcode } from "../helpers/snowcode";
 import translationResources from '../../i18n/resources';
 import { Experiment, experimentCheck } from "../experiments";
@@ -65,7 +65,10 @@ const getStatusText = (status: APIStatus) => {
   if (status.poll) {
     text += `${generatePoll(status.poll)}`;
   }
-  text += `<b>${getSocialProof(status)?.replace(/ {3}/g, '&ensp;')}</b>`;
+  const socialProof = getSocialProof(status);
+  if (socialProof) {
+    text += `<b>${socialProof.replace(/ {3}/g, '&ensp;')}</b>`;
+  }
   return text;
 }
 
@@ -97,7 +100,7 @@ const linkifyHashtags = (text: string, status: APIStatus) => {
 const statusLinkWrapper = (text: string) => {
   const matches = text.match(/(?<!href=")https?:\/\/(?:www\.)?[-\w@:%.+~#=]{1,256}\.[a-zA-Z\d()]{1,6}\b([-\w()@:%+.~#?&/=]*)(?=\W|$)/g);
   [...new Set(matches ?? [])]?.forEach(url => {
-    text = text.replace(new RegExp(`${url}(?=\\W|$)`, 'g'), `<a href="${url}">${url}</a>`);
+    text = text.replace(new RegExp(`${escapeRegex(url)}(?=\\W|$)`, 'g'), `<a href="${url}">${url}</a>`);
   });
   return text;
 }
