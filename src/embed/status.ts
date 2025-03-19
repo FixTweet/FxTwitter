@@ -604,7 +604,7 @@ export const handleStatus = async (
   }
 
   if (useActivity) {
-    const data: { i: string, l?: string, h?: string } = {
+    const data: { i: string, l?: string, h?: string, t?: number } = {
       i: statusId
     };
 
@@ -613,6 +613,9 @@ export const handleStatus = async (
     }
     if (status.provider === DataProvider.Bsky) {
       data.h = status.author.id;
+    }
+    if (flags.textOnly) {
+      data.t = 1;
     }
     const snowflake = encodeSnowcode(data)
     console.log('snowflake', snowflake);

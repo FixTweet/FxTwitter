@@ -12,6 +12,7 @@ import { escapeRegex, formatNumber } from "../helpers/utils";
 import { decodeSnowcode } from "../helpers/snowcode";
 import translationResources from '../../i18n/resources';
 import { Experiment, experimentCheck } from "../experiments";
+import { APIPoll, SocialThread } from "../types/types";
 
 
 const generatePoll = (poll: APIPoll): string => {
@@ -22,13 +23,13 @@ const generatePoll = (poll: APIPoll): string => {
   poll.choices.forEach(choice => {
     const bar = '█'.repeat((choice.percentage / 100) * barLength);
     // eslint-disable-next-line no-irregular-whitespace
-    str += `${bar}<br><b>${choice.label}</b>&emsp;${choice.percentage}%<br>︀︀<br>`;
+    str += `${bar}<br><b>${choice.label}</b>&emsp;${choice.percentage}%<br>︀︀︀<br>︀`;
   });
 
   /* Finally, add the footer of the poll with # of votes and time left */
   str += ''; /* TODO: Localize time left */
   str += i18next.t('pollVotes', {
-    voteCount: formatNumber(poll.total_votes ?? 0),
+    voteCount: poll.total_votes,
     timeLeft: poll.time_left_en ?? ''
   });
 
@@ -179,6 +180,7 @@ export const handleActivity = async (
 ): Promise<Response> => {
   let language: string | null = null;
   let authorHandle: string | null = null;
+  let textOnly = false;
   const decoded = decodeSnowcode(snowcode);
   const statusId = decoded.i;
   if (decoded.l) {
@@ -186,6 +188,9 @@ export const handleActivity = async (
   }
   if (decoded.h) {
     authorHandle = decoded.h;
+  }
+  if (decoded.t) {
+    textOnly = true;
   }
 
   let thread: SocialThread;
@@ -281,7 +286,7 @@ export const handleActivity = async (
 
   console.log('media', media);
 
-  if (media.length > 0) {
+  if (!textOnly && media && media.length > 0) {
     response['media_attachments'] = media.map((media) => {
       switch (media.type) {
         case 'photo':
