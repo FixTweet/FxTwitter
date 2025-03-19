@@ -60,7 +60,7 @@ const Experiments: { [key in Experiment]: ExperimentConfig } = {
   [Experiment.USE_TRAFFIC_CONTROL]: {
     name: 'Enable Traffic Control',
     description: 'Use the Traffic Control web app to direct human traffic to app or web',
-    percentage: 1
+    percentage: 0
   }
 };
 

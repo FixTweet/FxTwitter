@@ -225,7 +225,8 @@ export const handleStatus = async (
 
   let authorText = getSocialProof(status) || Strings.DEFAULT_AUTHOR_TEXT;
   const engagementText = authorText.replace(/ {4}/g, ' ');
-  let siteName = getBranding(c).name;
+  const originalSiteName = getBranding(c).name;
+  let siteName = originalSiteName;
 
   if (thread.thread && thread.thread.length > 1 && isTelegram && useIV) {
     siteName = i18next.t('threadIndicator', { brandingName: siteName });
@@ -529,7 +530,7 @@ export const handleStatus = async (
     if (!useActivity) {
       headers.push(`<meta property="og:site_name" content="${siteName}"/>`);
     } else {
-      headers.push(`<meta property="og:site_name" content="${getBranding(c).name}"/>`);
+      headers.push(`<meta property="og:site_name" content="${originalSiteName}"/>`);
     }
   } else {
     if (isTelegram) {
@@ -588,7 +589,8 @@ export const handleStatus = async (
     headers.push(
       `<link rel="alternate" href="{base}/owoembed?text={text}&status={status}&author={author}{provider}" type="application/json+oembed" title="{name}">`.format(
         {
-          base: `https://${status.provider === DataProvider.Bsky ? Constants.STANDARD_BSKY_DOMAIN_LIST[0] : Constants.STANDARD_DOMAIN_LIST[0]}`,
+          //TODO: Remove canary when launching activity embed
+          base: `https://canary.${getBranding(c).domains[0]}`,
           text: flags.gallery
             ? status.author.name
             : encodeURIComponent(truncateWithEllipsis(authorText, 255)),
