@@ -119,7 +119,7 @@ At this time, the cookie is only set on the domain you set it on, so if you set 
 
 ## Built with privacy in mind
 
-FxEmbed doesn't save logs of what posts you're sending, nor do we have a public record of what posts are being embedded by FxTwitter.
+FxEmbed doesn't save logs of what posts you're sending, nor do we have a public record of what posts are being embedded.
 
 In fact, because our core embedding and API service uses Cloudflare Workers, FxEmbed can only run when you send it a request. Its memory doesn't stick around, and it doesn't have a file system or database to read from at all. That is how we keep our privacy promise by building it into the architecture. We use Cloudflare Analytics Engine to aggregate basic, anonymous statistics, which do not include information that could identify individual users or posts. My goal is always to provide a good public service, and FxEmbed doesn't have any ads or tracking to make money off of, nor do we sell data.
 
