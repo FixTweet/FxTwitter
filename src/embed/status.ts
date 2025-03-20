@@ -622,8 +622,7 @@ export const handleStatus = async (
     headers.push(
       `<link rel="alternate" href="{base}/owoembed?text={text}&status={status}&author={author}{provider}" type="application/json+oembed" title="{name}">`.format(
         {
-          //TODO: Remove canary when launching activity embed
-          base: `https://canary.${getBranding(c).domains[0]}`,
+          base: `https://${getBranding(c).domains[0]}`,
           text: flags.gallery
             ? status.author.name
             : encodeURIComponent(truncateWithEllipsis(authorText, 255)),
