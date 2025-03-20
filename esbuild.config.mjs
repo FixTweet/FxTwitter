@@ -84,6 +84,11 @@ if (process.env.SENTRY_DSN) {
   );
 }
 
+// if branding.json doesn't exist, copy branding.default.json to branding.json, we need this for CI tests
+if (!fs.existsSync('branding.json')) {
+  fs.copyFileSync('branding.default.json', 'branding.json');
+}
+
 await esbuild.build({
   entryPoints: ['src/worker.ts'],
   sourcemap: 'external',
