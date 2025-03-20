@@ -109,7 +109,7 @@ View entire threads without leaving Telegram or opening a browser! You can unrol
 
 Default X/Twitter embeds include t.co link shorteners, which make it difficult to know where the link is heading. We automatically replace t.co links with their original links to make things clearer.
 
-![](https://github.com/FxEmbed/FxEmbed/blob/main/.github/readme/tco.png)
+<img width="395px" src="https://github.com/FxEmbed/FxEmbed/blob/main/.github/readme/tco.png">
 
 ## Redirect to Nitter or other custom instances (X/Twitter)
 
