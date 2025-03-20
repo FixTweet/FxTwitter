@@ -6,14 +6,14 @@
       "domains": ["fxtwitter.com", "twittpr.com"],
       "provider": "twitter",
       "favicon": "https://abs.twimg.com/favicons/twitter.2.ico",
-      "redirect": "https://github.com/FixTweet/FxTwitter"
+      "redirect": "https://github.com/FxEmbed/FxEmbed"
     },
     {
       "name": "FixupX",
       "domains": ["fixupx.com"],
       "provider": "twitter",
       "favicon": "https://abs.twimg.com/favicons/twitter.3.ico",
-      "redirect": "https://github.com/FixTweet/FxTwitter"
+      "redirect": "https://github.com/FxEmbed/FxEmbed"
     },
     {
       "name": "FxBluesky",
