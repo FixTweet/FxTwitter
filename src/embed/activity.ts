@@ -132,11 +132,11 @@ const formatStatus = (text: string, status: APIStatus) => {
       status.provider === DataProvider.Bsky
         ? `${Constants.BSKY_ROOT}/hashtag`
         : `${Constants.TWITTER_ROOT}/hashtag`;
-    const baseSymbolUrl = `${Constants.TWITTER_ROOT}/search?q=%24`;
-    const baseMentionUrl =
-      status.provider === DataProvider.Bsky
-        ? `${Constants.BSKY_ROOT}/profile`
-        : `${Constants.TWITTER_ROOT}`;
+    // const baseSymbolUrl = `${Constants.TWITTER_ROOT}/search?q=%24`;
+    // const baseMentionUrl =
+    //   status.provider === DataProvider.Bsky
+    //     ? `${Constants.BSKY_ROOT}/profile`
+    //     : `${Constants.TWITTER_ROOT}`;
     let offset = 0;
     status.raw_text.facets.forEach(facet => {
       let newFacet = '';
