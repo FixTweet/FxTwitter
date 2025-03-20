@@ -1,4 +1,4 @@
-# FxEmbed <img src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/logos/fxembed.svg" height="28">
+# FxEmbed <img src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/logos/fxembed.svg" height="32">
 
 ## Home of FxTwitter, FixupX, and FxBluesky
 
@@ -38,7 +38,7 @@
 
 Videos and GIFs just work, so whether you are sharing memes or cat videos, go crazy!
 
-![](https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/videos.png)
+<img width="477px" src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/videos.png">
 
 On Discord, we can also automatically embed videos linked from some other platforms, like YouTube, so they can play without having to open a browser.
 
@@ -46,13 +46,13 @@ On Discord, we can also automatically embed videos linked from some other platfo
 
 If you want to share the results of a poll, you can do so by just linking the post using FxTwitter or FixupX. This works even if the poll is still ongoing!
 
-![](https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/poll.png)
+<img width="440px" src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/poll.png">
 
 ## Embed Quotes & Media
 
 Quotes and their media can provide important context to a post, so they're automatically displayed. We'll even surface their media if there isn't already media embedded in the quote.
 
-![](https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/quote.png)
+<img width="478px" src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/quote.png">
 
 ## Translate Posts (X/Twitter)
 
@@ -62,13 +62,13 @@ Just append a post with its 2-letter ISO language code. So for English, add `/en
 
 Bluesky support is planned in the future, but this currently depends on X/Twitter's Google Translate endpoint.
 
-![](https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/translate.png)
+<img src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/translate.png">
 
 ## Direct media links
 
 Want to link directly to a post's media _without_ the embed? You can easily do that!
 
-![Image demonstrating the feature](https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/directmedia.png)
+<img width="490px" src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/directmedia.png">
 
 There are a few supported ways to do this:
 
@@ -91,13 +91,13 @@ Otherwise, it will default to the first image.
 
 Use `g.fxtwitter.com` or `g.fixupx.com` to generate minimal embeds with just the post's media and author information without other distractions. This can be particularly useful for read-only channels dedicated to sharing media.
 
-![](https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/gallery.png)
+<img src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/gallery.png">
 
 ## Text-only view
 
 Basically the opposite of gallery view, use `t.fxtwitter.com` / `t.fixupx.com` to exclude photos/videos and only display text.
 
-![](https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/textonly.png)
+<img src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/textonly.png">
 
 ## Telegram Instant View
 
