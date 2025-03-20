@@ -8,7 +8,7 @@ import { Constants } from '../constants';
 import { getSocialProof } from '../helpers/socialproof';
 import i18next from 'i18next';
 import icu from 'i18next-icu';
-import { escapeRegex, formatNumber } from '../helpers/utils';
+import { escapeRegex } from '../helpers/utils';
 import { decodeSnowcode } from '../helpers/snowcode';
 import translationResources from '../../i18n/resources';
 import { Experiment, experimentCheck } from '../experiments';
