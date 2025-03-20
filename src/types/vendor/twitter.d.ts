@@ -366,7 +366,7 @@ type MentionEntity = {
 type InlineMedia = {
   index: number;
   media_id: string;
-}
+};
 
 type BirdwatchEntity = {
   fromIndex: number; // 119

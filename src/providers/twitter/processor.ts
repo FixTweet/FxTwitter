@@ -161,7 +161,6 @@ export const buildAPITwitterStatus = async (
           });
         }
       });
-
     });
   }
   if (status.note_tweet?.note_tweet_results?.result?.media?.inline_media) {
@@ -266,7 +265,7 @@ export const buildAPITwitterStatus = async (
       id: media.id_str,
       display: media.display_url,
       original: media.url,
-      replacement: media.expanded_url,
+      replacement: media.expanded_url
     });
     const mediaObject = processMedia(c, media);
     if (mediaObject) {
@@ -421,7 +420,7 @@ export const buildAPITwitterStatus = async (
 
   if (apiStatus.raw_text.facets) {
     // Sort from lowest to highest index
-    apiStatus.raw_text.facets.sort((a, b) => a.indices[0] - b.indices[0]);  
+    apiStatus.raw_text.facets.sort((a, b) => a.indices[0] - b.indices[0]);
   }
 
   apiStatus.provider = DataProvider.Twitter;

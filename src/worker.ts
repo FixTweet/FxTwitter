@@ -98,7 +98,10 @@ app.onError((err, c) => {
 
   const branding = getBranding(c);
 
-  return c.html(Strings.ERROR_HTML.format({ brandingName: branding.name }), errorCode as ContentfulStatusCode);
+  return c.html(
+    Strings.ERROR_HTML.format({ brandingName: branding.name }),
+    errorCode as ContentfulStatusCode
+  );
 });
 
 const customLogger = (message: string, ...rest: string[]) => {

@@ -1,19 +1,18 @@
 /* eslint-disable no-case-declarations */
-import { Context } from "hono/dist/types/context";
-import { Strings } from "../strings";
-import { DataProvider, returnError } from "./status";
-import { constructTwitterThread } from "../providers/twitter/conversation";
-import { constructBlueskyThread } from "../providers/bsky/conversation";
-import { Constants } from "../constants";
-import { getSocialProof } from "../helpers/socialproof";
+import { Context } from 'hono/dist/types/context';
+import { Strings } from '../strings';
+import { DataProvider, returnError } from './status';
+import { constructTwitterThread } from '../providers/twitter/conversation';
+import { constructBlueskyThread } from '../providers/bsky/conversation';
+import { Constants } from '../constants';
+import { getSocialProof } from '../helpers/socialproof';
 import i18next from 'i18next';
 import icu from 'i18next-icu';
-import { escapeRegex, formatNumber } from "../helpers/utils";
-import { decodeSnowcode } from "../helpers/snowcode";
+import { escapeRegex, formatNumber } from '../helpers/utils';
+import { decodeSnowcode } from '../helpers/snowcode';
 import translationResources from '../../i18n/resources';
-import { Experiment, experimentCheck } from "../experiments";
-import { APIPoll, SocialThread } from "../types/types";
-
+import { Experiment, experimentCheck } from '../experiments';
+import { APIPoll, SocialThread } from '../types/types';
 
 const generatePoll = (poll: APIPoll): string => {
   let str = '<blockquote>';
@@ -71,40 +70,57 @@ const getStatusText = (status: APIStatus) => {
     text += `<b>${socialProof.replace(/ {3}/g, '&ensp;')}</b>`;
   }
   return text;
-}
+};
 
 const linkifyMentions = (text: string, status: APIStatus) => {
-  const baseUrl = status.provider === DataProvider.Bsky ? `${Constants.BSKY_ROOT}/profile` : `${Constants.TWITTER_ROOT}`;
-  const matches = text.match(/@([\w.]+)(?=\W|$)/g)
+  const baseUrl =
+    status.provider === DataProvider.Bsky
+      ? `${Constants.BSKY_ROOT}/profile`
+      : `${Constants.TWITTER_ROOT}`;
+  const matches = text.match(/@([\w.]+)(?=\W|$)/g);
 
   console.log('matches', matches);
   // deduplicate mentions
   [...new Set(matches ?? [])]?.forEach(mention => {
-    text = text.replace(new RegExp(`${mention}(?=\\W|$)`, 'g'), `<a href="${baseUrl}/${mention.slice(1)}">${mention}</a>`);
+    text = text.replace(
+      new RegExp(`${mention}(?=\\W|$)`, 'g'),
+      `<a href="${baseUrl}/${mention.slice(1)}">${mention}</a>`
+    );
   });
   console.log('text', text);
   return text;
-}
+};
 
 const linkifyHashtags = (text: string, status: APIStatus) => {
-  const baseUrl = status.provider === DataProvider.Bsky ? `${Constants.BSKY_ROOT}/hashtag` : `${Constants.TWITTER_ROOT}/hashtag`;
-  const matches = text.match(/#([\w.]+)(?=\W|$)/g)
+  const baseUrl =
+    status.provider === DataProvider.Bsky
+      ? `${Constants.BSKY_ROOT}/hashtag`
+      : `${Constants.TWITTER_ROOT}/hashtag`;
+  const matches = text.match(/#([\w.]+)(?=\W|$)/g);
   console.log('matches', matches);
   // deduplicate hashtags
   [...new Set(matches ?? [])]?.forEach(hashtag => {
-    text = text.replace(new RegExp(`${hashtag}(?=\\W|$)`, 'g'), `<a href="${baseUrl}/${hashtag.slice(1)}">${hashtag}</a>`);
+    text = text.replace(
+      new RegExp(`${hashtag}(?=\\W|$)`, 'g'),
+      `<a href="${baseUrl}/${hashtag.slice(1)}">${hashtag}</a>`
+    );
   });
   console.log('text', text);
   return text;
-}
+};
 
 const statusLinkWrapper = (text: string) => {
-  const matches = text.match(/(?<!href=")https?:\/\/(?:www\.)?[-\w@:%.+~#=]{1,256}\.[a-zA-Z\d()]{1,6}\b([-\w()@:%+.~#?&/=]*)(?=\W|$)/g);
+  const matches = text.match(
+    /(?<!href=")https?:\/\/(?:www\.)?[-\w@:%.+~#=]{1,256}\.[a-zA-Z\d()]{1,6}\b([-\w()@:%+.~#?&/=]*)(?=\W|$)/g
+  );
   [...new Set(matches ?? [])]?.forEach(url => {
-    text = text.replace(new RegExp(`${escapeRegex(url)}(?=\\W|$)`, 'g'), `<a href="${url}">${url}</a>`);
+    text = text.replace(
+      new RegExp(`${escapeRegex(url)}(?=\\W|$)`, 'g'),
+      `<a href="${url}">${url}</a>`
+    );
   });
   return text;
-}
+};
 
 const formatStatus = (text: string, status: APIStatus) => {
   const enableFacets = false;
@@ -112,16 +128,25 @@ const formatStatus = (text: string, status: APIStatus) => {
   if (status.raw_text && enableFacets) {
     text = status.raw_text.text;
 
-    const baseHashtagUrl = status.provider === DataProvider.Bsky ? `${Constants.BSKY_ROOT}/hashtag` : `${Constants.TWITTER_ROOT}/hashtag`;
+    const baseHashtagUrl =
+      status.provider === DataProvider.Bsky
+        ? `${Constants.BSKY_ROOT}/hashtag`
+        : `${Constants.TWITTER_ROOT}/hashtag`;
     const baseSymbolUrl = `${Constants.TWITTER_ROOT}/search?q=%24`;
-    const baseMentionUrl = status.provider === DataProvider.Bsky ? `${Constants.BSKY_ROOT}/profile` : `${Constants.TWITTER_ROOT}`;
+    const baseMentionUrl =
+      status.provider === DataProvider.Bsky
+        ? `${Constants.BSKY_ROOT}/profile`
+        : `${Constants.TWITTER_ROOT}`;
     let offset = 0;
     status.raw_text.facets.forEach(facet => {
       let newFacet = '';
       switch (facet.type) {
         case 'bold':
           newFacet = `<b>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</b>`;
-          text = text.slice(0, facet.indices[0] + offset) + newFacet + text.slice(facet.indices[1] + offset);
+          text =
+            text.slice(0, facet.indices[0] + offset) +
+            newFacet +
+            text.slice(facet.indices[1] + offset);
           offset += newFacet.length - (facet.indices[1] - facet.indices[0]);
           break;
         // case 'italic':
@@ -138,12 +163,18 @@ const formatStatus = (text: string, status: APIStatus) => {
         //   break;
         case 'url':
           newFacet = `<a href="${facet.replacement}">${facet.display}</a>`;
-          text = text.slice(0, facet.indices[0] + offset) + newFacet + text.slice(facet.indices[1] + offset);
+          text =
+            text.slice(0, facet.indices[0] + offset) +
+            newFacet +
+            text.slice(facet.indices[1] + offset);
           offset += newFacet.length - (facet.indices[1] - facet.indices[0]);
           break;
         case 'hashtag':
           newFacet = `<a href="${baseHashtagUrl}/${facet.original}">#${facet.original}</a>`;
-          text = text.slice(0, facet.indices[0] + offset) + newFacet + text.slice(facet.indices[1] + offset);
+          text =
+            text.slice(0, facet.indices[0] + offset) +
+            newFacet +
+            text.slice(facet.indices[1] + offset);
           offset += newFacet.length - (facet.indices[1] - facet.indices[0]);
           break;
         // case 'symbol':
@@ -158,19 +189,19 @@ const formatStatus = (text: string, status: APIStatus) => {
         //   break;
         case 'media':
           text = text.slice(0, facet.indices[0] + offset) + text.slice(facet.indices[1] + offset);
-          offset -= (facet.indices[1] - facet.indices[0]);
+          offset -= facet.indices[1] - facet.indices[0];
           break;
       }
       console.log('text next step', text);
     });
-    text = text.trim().replace(/\n/g, '<br>︀︀')
+    text = text.trim().replace(/\n/g, '<br>︀︀');
   } else {
     text = statusLinkWrapper(text);
     text = linkifyMentions(text, status);
     text = linkifyHashtags(text, status);
   }
   return text;
-}
+};
 
 export const handleActivity = async (
   c: Context,
@@ -195,13 +226,7 @@ export const handleActivity = async (
 
   let thread: SocialThread;
   if (provider === DataProvider.Twitter) {
-    thread = await constructTwitterThread(
-      statusId,
-      false,
-      c,
-      language ?? undefined,
-      false
-    );
+    thread = await constructTwitterThread(statusId, false, c, language ?? undefined, false);
   } else if (provider === DataProvider.Bsky) {
     thread = await constructBlueskyThread(
       statusId,
@@ -243,7 +268,7 @@ export const handleActivity = async (
     visibility: 'public',
     application: {
       name: thread.status.source,
-      website: null,
+      website: null
     },
     media_attachments: [],
     account: {
@@ -282,13 +307,16 @@ export const handleActivity = async (
   console.log('regular media', thread.status.media?.all);
   console.log('quote media', thread.status.quote?.media?.all);
 
-  const media = (thread.status.media?.all?.length ?? 0)> 0 ? thread.status.media?.all : thread.status.quote?.media?.all ?? [];
+  const media =
+    (thread.status.media?.all?.length ?? 0) > 0
+      ? thread.status.media?.all
+      : (thread.status.quote?.media?.all ?? []);
 
   console.log('media', media);
 
   if (!textOnly) {
     if (media && media.length > 0) {
-      response['media_attachments'] = media.map((media) => {
+      response['media_attachments'] = media.map(media => {
         switch (media.type) {
           case 'photo':
             const image = media as APIPhoto;
@@ -323,7 +351,10 @@ export const handleActivity = async (
             }
             if (
               // status.provider !== DataProvider.Bsky &&
-              experimentCheck(Experiment.DISCORD_VIDEO_REDIRECT_WORKAROUND, !!Constants.API_HOST_LIST) &&
+              experimentCheck(
+                Experiment.DISCORD_VIDEO_REDIRECT_WORKAROUND,
+                !!Constants.API_HOST_LIST
+              ) &&
               (userAgent?.includes('Discord') || userAgent?.includes('Telegram'))
             ) {
               video.url = `https://${Constants.API_HOST_LIST[0]}/2/go?url=${encodeURIComponent(video.url)}`;
@@ -349,7 +380,8 @@ export const handleActivity = async (
       });
     } else if (thread.status.media?.external) {
       const external = thread.status.media.external;
-      response['media_attachments'] = [{
+      response['media_attachments'] = [
+        {
           id: '114163769487684704',
           type: 'video',
           url: external.url,
@@ -371,4 +403,4 @@ export const handleActivity = async (
   }
 
   return c.json(response);
-}
+};

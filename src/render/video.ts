@@ -3,7 +3,13 @@ import { Constants } from '../constants';
 import { Experiment, experimentCheck } from '../experiments';
 import { handleQuote } from '../helpers/quote';
 import { DataProvider } from '../enum';
-import { APIMedia, APITwitterStatus, APIVideo, RenderProperties, ResponseInstructions } from '../types/types';
+import {
+  APIMedia,
+  APITwitterStatus,
+  APIVideo,
+  RenderProperties,
+  ResponseInstructions
+} from '../types/types';
 import { getBranding } from '../helpers/branding';
 
 const getGIFTranscodeDomain = (twitterId: string): string | null => {

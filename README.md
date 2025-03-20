@@ -66,7 +66,7 @@ Bluesky support is planned in the future, but this currently depends on X/Twitte
 
 ## Direct media links
 
-Want to link directly to a post's media *without* the embed? You can easily do that!
+Want to link directly to a post's media _without_ the embed? You can easily do that!
 
 ![Image demonstrating the feature](https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/directmedia.png)
 
@@ -123,7 +123,7 @@ FxEmbed doesn't save logs of what posts you're sending, nor do we have a public 
 
 In fact, because our core embedding and API service uses Cloudflare Workers, FxEmbed can only run when you send it a request. Its memory doesn't stick around, and it doesn't have a file system or database to read from at all. That is how we keep our privacy promise by building it into the architecture. We use Cloudflare Analytics Engine to aggregate basic, anonymous statistics, which do not include information that could identify individual users or posts. My goal is always to provide a good public service, and FxEmbed doesn't have any ads or tracking to make money off of, nor do we sell data.
 
- Temporary real-time logging in the terminal (specifically `wrangler tail`) may be used only by the developer while the Worker is being serviced or debugged (to make sure things work as they should), however these logs are only shown in the terminal and are never saved or used for any other purpose. URLs that cause runtime errors in the script (aka Exceptions, usually exceedingly rare unless there was a faulty update pushed) may be logged for a developer to diagnose the issue that is preventing your embed from working.
+Temporary real-time logging in the terminal (specifically `wrangler tail`) may be used only by the developer while the Worker is being serviced or debugged (to make sure things work as they should), however these logs are only shown in the terminal and are never saved or used for any other purpose. URLs that cause runtime errors in the script (aka Exceptions, usually exceedingly rare unless there was a faulty update pushed) may be logged for a developer to diagnose the issue that is preventing your embed from working.
 
 On a different note, if the person who posted a FxTwitter or FixupX link forgot to strip tracking parameters (like `?s` and `&t`), we strip it upon redirecting to the post as they are only used for telemetry and advertising.
 
@@ -133,26 +133,26 @@ On a different note, if the person who posted a FxTwitter or FixupX link forgot 
 
 Let's compare using FxTwitter / FixupX since it's the most feature-complete. Here's a table comparing some of FxTwitter's features compared to Twitter default embeds as well as other embedding services
 
-|                                        |                 FxTwitter / FixupX                  |      Default       |                  vxTwitter (fixvx)                  |
-| -------------------------------------- | :-------------------------------------------------: | :----------------: | :-------------------------------------------------: |
-| Embed Posts / Image                    |                 :heavy_check_mark:                  | :heavy_check_mark: |                 :heavy_check_mark:                  |
-| Embed profile pictures on posts        |                 :heavy_check_mark:                  |        :x:         |        :ballot_box_with_check: If no media          |
-| Embed Videos                           |                 :heavy_check_mark:                  |        :x:         |                 :heavy_check_mark:                  |
-| Embed External Videos (YouTube, etc.)  |                :heavy_check_mark:¹                  |        :x:         |                         :x:                         |
-| Embed Poll results                     |                 :heavy_check_mark:                  |        :x:         |                 :heavy_check_mark:                  |
-| Embed Quotes                           |                 :heavy_check_mark:                  |        :x:         |        :ballot_box_with_check: Without Media        |
-| Embed Multiple Images                  |                 :heavy_check_mark:                  |        :x:         |                 :heavy_check_mark:                  |
-| Translate Posts                        |                 :heavy_check_mark:                  |        :x:         |                         :x:                         |
-| Replace t.co with original links       |                 :heavy_check_mark:                  |        :x:         |                 :heavy_check_mark:                  |
-| Redirect to media file (without embed) |                 :heavy_check_mark:                  |        :x:         | :ballot_box_with_check: Subdomain broken, no images |
-| Gallery view                           |                 :heavy_check_mark:                  |        :x:         |                         :x:                         |
-| Strip tracking info on redirect        |                 :heavy_check_mark:                  |        :x:         |                 :heavy_check_mark:                  |
-| Show date / time of post               | :heavy_minus_sign: Discord / Telegram Instant View  |        :x:         |                         :x:                         |
-| Show retweet, like, reply, view counts | :heavy_minus_sign: Discord / Telegram Instant View  |        :x:         |     :ballot_box_with_check: No replies / views      |
-| Discord sed replace (`s/`) friendly    | :ballot_box_with_check: twittpr.com with twitter.com|        N/A         |                         :x:                         |
-| Telegram Instant View                  |                 :heavy_check_mark:                  |        :x:         |                         :x:                         |
-| Status fetch API for Developers        |                 :heavy_check_mark:                  |        N/A         |                 :heavy_check_mark:                  |
-| Last commit                            |                   [![][flc]][fc]                    |        N/A         |                   [![][vlc]][vc]                    |
+|                                        |                  FxTwitter / FixupX                  |      Default       |                  vxTwitter (fixvx)                  |
+| -------------------------------------- | :--------------------------------------------------: | :----------------: | :-------------------------------------------------: |
+| Embed Posts / Image                    |                  :heavy_check_mark:                  | :heavy_check_mark: |                 :heavy_check_mark:                  |
+| Embed profile pictures on posts        |                  :heavy_check_mark:                  |        :x:         |         :ballot_box_with_check: If no media         |
+| Embed Videos                           |                  :heavy_check_mark:                  |        :x:         |                 :heavy_check_mark:                  |
+| Embed External Videos (YouTube, etc.)  |                 :heavy_check_mark:¹                  |        :x:         |                         :x:                         |
+| Embed Poll results                     |                  :heavy_check_mark:                  |        :x:         |                 :heavy_check_mark:                  |
+| Embed Quotes                           |                  :heavy_check_mark:                  |        :x:         |        :ballot_box_with_check: Without Media        |
+| Embed Multiple Images                  |                  :heavy_check_mark:                  |        :x:         |                 :heavy_check_mark:                  |
+| Translate Posts                        |                  :heavy_check_mark:                  |        :x:         |                         :x:                         |
+| Replace t.co with original links       |                  :heavy_check_mark:                  |        :x:         |                 :heavy_check_mark:                  |
+| Redirect to media file (without embed) |                  :heavy_check_mark:                  |        :x:         | :ballot_box_with_check: Subdomain broken, no images |
+| Gallery view                           |                  :heavy_check_mark:                  |        :x:         |                         :x:                         |
+| Strip tracking info on redirect        |                  :heavy_check_mark:                  |        :x:         |                 :heavy_check_mark:                  |
+| Show date / time of post               |  :heavy_minus_sign: Discord / Telegram Instant View  |        :x:         |                         :x:                         |
+| Show retweet, like, reply, view counts |  :heavy_minus_sign: Discord / Telegram Instant View  |        :x:         |     :ballot_box_with_check: No replies / views      |
+| Discord sed replace (`s/`) friendly    | :ballot_box_with_check: twittpr.com with twitter.com |        N/A         |                         :x:                         |
+| Telegram Instant View                  |                  :heavy_check_mark:                  |        :x:         |                         :x:                         |
+| Status fetch API for Developers        |                  :heavy_check_mark:                  |        N/A         |                 :heavy_check_mark:                  |
+| Last commit                            |                    [![][flc]][fc]                    |        N/A         |                   [![][vlc]][vc]                    |
 
 [flc]: https://img.shields.io/github/last-commit/FxEmbed/FxEmbed?label
 [vlc]: https://img.shields.io/github/last-commit/dylanpdx/BetterTwitFix?label
@@ -200,6 +200,7 @@ No problem! You can pick any specific photo from a post using Twitter/X's own UR
 ### Is FxEmbed associated with [some other website that starts with fx]?
 
 We only operate on these domains:
+
 - `fxtwitter.com` / `twittpr.com`
 - `fixupx.com` (also `xfixup.com`)
 - `fxbsky.app`

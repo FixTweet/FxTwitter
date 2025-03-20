@@ -12,7 +12,10 @@ export const buildAPIBskyPost = async (
 ): Promise<APIStatus> => {
   const apiStatus: APIStatus = {} as APIStatus;
   apiStatus.id = status.cid;
-  apiStatus.text = linkFixerBsky(status.record?.facets ?? [], status.record?.text ?? status.value?.text);
+  apiStatus.text = linkFixerBsky(
+    status.record?.facets ?? [],
+    status.record?.text ?? status.value?.text
+  );
   apiStatus.author = {
     id: status.author.handle,
     name: status.author.displayName,
@@ -128,7 +131,7 @@ export const buildAPIBskyPost = async (
     apiStatus.embed_card = 'player';
     const video =
       status.record?.embed?.video ?? status.value?.embed?.video ?? status?.record?.embed?.media;
-      // TODO: figure out why this is so awful
+    // TODO: figure out why this is so awful
     const cid =
       status.record?.embed?.video?.ref?.$link ??
       status.record?.embed?.media?.ref?.$link ??
@@ -138,7 +141,10 @@ export const buildAPIBskyPost = async (
       status.value?.embed?.media?.video?.ref?.$link ??
       status.embed?.video?.ref?.$link;
     const videoUrl = `https://pds-cache.fxbsky.app/${status.author.did}/${cid}`;
-    const aspectRatio = status.embed?.aspectRatio ?? status.embed?.media?.aspectRatio ?? status.embed?.record?.value?.embed?.aspectRatio;
+    const aspectRatio =
+      status.embed?.aspectRatio ??
+      status.embed?.media?.aspectRatio ??
+      status.embed?.record?.value?.embed?.aspectRatio;
     apiStatus.media.videos = [
       {
         type: 'video',

@@ -57,7 +57,6 @@ export const handleProfile = async (
   // TODO Add card creation logic here
   /* Finally, after all that work we return the response HTML! */
 
-  
   const branding = getBranding(c);
 
   return c.html(

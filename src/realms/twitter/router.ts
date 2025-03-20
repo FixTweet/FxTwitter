@@ -38,12 +38,12 @@ export const faviconRoute = async (c: Context) => {
     const body = await response.arrayBuffer();
     return c.body(body, response.status as ContentfulStatusCode, {
       'Content-Type': response.headers.get('Content-Type') || 'image/x-icon',
-      'Content-Length': response.headers.get('Content-Length') || body.byteLength.toString(),
-    },);
+      'Content-Length': response.headers.get('Content-Length') || body.byteLength.toString()
+    });
   } catch (e) {
     return c.redirect(branding.favicon, 302);
   }
-}
+};
 
 /* Workaround for some dumb maybe-build time issue where statusRequest isn't ready or something because none of these trigger*/
 const twitterStatusRequest = async (c: Context) => await statusRequest(c);

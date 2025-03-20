@@ -17,7 +17,16 @@ import { constructBlueskyThread } from '../providers/bsky/conversation';
 import { DataProvider } from '../enum';
 import { encodeSnowcode } from '../helpers/snowcode';
 import { getBranding } from '../helpers/branding';
-import { APIMedia, APIPhoto, APIStatus, APITwitterStatus, APIVideo, InputFlags, ResponseInstructions, SocialThread } from '../types/types';
+import {
+  APIMedia,
+  APIPhoto,
+  APIStatus,
+  APITwitterStatus,
+  APIVideo,
+  InputFlags,
+  ResponseInstructions,
+  SocialThread
+} from '../types/types';
 
 export const returnError = (c: Context, error: string): Response => {
   const branding = getBranding(c);
@@ -141,7 +150,15 @@ export const handleStatus = async (
   let useIV = false;
   let useActivity = false;
 
-  if (experimentCheck(Experiment.ACTIVITY_EMBED, c.req.header('user-agent')?.includes('Discordbot')) && !flags.direct && !flags.gallery && !flags.api) {
+  if (
+    experimentCheck(
+      Experiment.ACTIVITY_EMBED,
+      c.req.header('user-agent')?.includes('Discordbot')
+    ) &&
+    !flags.direct &&
+    !flags.gallery &&
+    !flags.api
+  ) {
     useActivity = true;
   }
 
@@ -255,7 +272,6 @@ export const handleStatus = async (
     );
   }
 
-
   if (!flags.gallery) {
     headers.push(`<meta property="theme-color" content="${getBranding(c).color}"/>`);
     headers.push(
@@ -350,7 +366,13 @@ export const handleStatus = async (
           break;
         case 'video':
           instructions = renderVideo(
-            { context: c, status: status, userAgent: userAgent, text: newText, isOverrideMedia: true },
+            {
+              context: c,
+              status: status,
+              userAgent: userAgent,
+              text: newText,
+              isOverrideMedia: true
+            },
             overrideMedia as APIVideo
           );
           headers.push(...instructions.addHeaders);
@@ -529,7 +551,7 @@ export const handleStatus = async (
   if (!flags.gallery) {
     headers.push(
       `<meta property="og:title" content="${status.author.name} (@${status.author.screen_name})"/>`,
-      `<meta property="og:description" content="${text}"/>`,
+      `<meta property="og:description" content="${text}"/>`
     );
     if (!useActivity) {
       headers.push(`<meta property="og:site_name" content="${siteName}"/>`);
@@ -586,8 +608,15 @@ export const handleStatus = async (
     // Now you can use the 'provider' variable
 
     if (useActivity) {
-      const name = status.provider === DataProvider.Bsky ? 'fxbluesky' : flags.isXDomain ? 'fixupx' : 'fxtwitter';
-      headers.push(`<link href='https://wuff.gay/embedtest/${name}32.png?wqswsdqsdsdsdws=qdswsqdwssd' rel='icon' sizes='32x32' type='image/png'>`)
+      const name =
+        status.provider === DataProvider.Bsky
+          ? 'fxbluesky'
+          : flags.isXDomain
+            ? 'fixupx'
+            : 'fxtwitter';
+      headers.push(
+        `<link href='https://wuff.gay/embedtest/${name}32.png?wqswsdqsdsdsdws=qdswsqdwssd' rel='icon' sizes='32x32' type='image/png'>`
+      );
     }
 
     headers.push(
@@ -608,7 +637,7 @@ export const handleStatus = async (
   }
 
   if (useActivity) {
-    const data: { i: string, l?: string, h?: string, t?: number } = {
+    const data: { i: string; l?: string; h?: string; t?: number } = {
       i: statusId
     };
 
@@ -621,7 +650,7 @@ export const handleStatus = async (
     if (flags.textOnly) {
       data.t = 1;
     }
-    const snowflake = encodeSnowcode(data)
+    const snowflake = encodeSnowcode(data);
     console.log('snowflake', snowflake);
     headers.push(
       `<link href='{base}/users/{author}/statuses/{status}' rel='alternate' type='application/activity+json'>`.format(
@@ -632,7 +661,6 @@ export const handleStatus = async (
         }
       )
     );
-
   }
 
   /* When dealing with a Tweet of unknown lang, fall back to en */

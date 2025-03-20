@@ -1,7 +1,7 @@
 /* This file contains types relevant to FixTweet and the FixTweet API
    For Twitter API types, see twitterTypes.d.ts */
 
-import { Context } from "hono/dist/types/context";
+import { Context } from 'hono/dist/types/context';
 
 type InputFlags = {
   standard?: boolean;
@@ -145,7 +145,7 @@ interface APIStatus {
   raw_text: {
     text: string;
     facets: APIFacet[];
-  }
+  };
 
   lang: string | null;
   possibly_sensitive: boolean;

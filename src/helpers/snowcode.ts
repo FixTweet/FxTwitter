@@ -14,7 +14,7 @@ export const encodeSnowcode = (json: object) => {
     result += code;
   }
   return result;
-}
+};
 
 export const decodeSnowcode = (numStr: string) => {
   const str = numStr.match(/\d+/)?.join('') ?? '';
@@ -34,4 +34,4 @@ export const decodeSnowcode = (numStr: string) => {
   const resultStr = `{${result}}`;
   console.log('str', resultStr);
   return JSON.parse(resultStr);
-}
+};

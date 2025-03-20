@@ -5,7 +5,15 @@ import { getSocialTextIV } from '../helpers/socialproof';
 import { sanitizeText } from '../helpers/utils';
 import { DataProvider } from '../enum';
 import { getBranding } from '../helpers/branding';
-import { APIPhoto, APIPoll, APIStatus, APITwitterStatus, APIUser, RenderProperties, ResponseInstructions } from '../types/types';
+import {
+  APIPhoto,
+  APIPoll,
+  APIStatus,
+  APITwitterStatus,
+  APIUser,
+  RenderProperties,
+  ResponseInstructions
+} from '../types/types';
 
 enum AuthorActionType {
   Reply = 'Reply',

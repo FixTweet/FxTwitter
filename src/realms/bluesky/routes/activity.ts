@@ -39,12 +39,7 @@ export const activityRequest = async (c: Context) => {
   }
 
   /* This throws the necessary data to handleStatus (in status.ts) */
-  const statusResponse = await handleActivity(
-    c,
-    snowcode ?? '0',
-    DataProvider.Bsky
-  );
-
+  const statusResponse = await handleActivity(c, snowcode ?? '0', DataProvider.Bsky);
 
   if (statusResponse) {
     c.status(200);

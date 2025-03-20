@@ -1,7 +1,13 @@
 import i18next from 'i18next';
 import { Strings } from '../strings';
 import { getBranding } from '../helpers/branding';
-import { RenderProperties, APIPhoto, APIMosaicPhoto, ResponseInstructions, APIMedia } from '../types/types';
+import {
+  RenderProperties,
+  APIPhoto,
+  APIMosaicPhoto,
+  ResponseInstructions,
+  APIMedia
+} from '../types/types';
 
 export const renderPhoto = (
   properties: RenderProperties,

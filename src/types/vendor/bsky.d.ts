@@ -118,12 +118,12 @@ type BlueskyFacetFeature = {
 };
 
 type BlueskyFacet = {
-  features: BlueskyFacetFeature[],
+  features: BlueskyFacetFeature[];
   index: {
     byteStart: number;
     byteEnd: number;
-  }
-}
+  };
+};
 
 type BlueskyThread = {
   parent: BlueskyThread;
