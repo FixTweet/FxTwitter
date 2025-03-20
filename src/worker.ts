@@ -1,8 +1,3 @@
-import './types/types';
-import './types/env';
-import './types/vendor/twitter';
-import './types/vendor/bsky';
-
 import { Env, Hono } from 'hono';
 import { timing } from 'hono/timing';
 import { logger } from 'hono/logger';
