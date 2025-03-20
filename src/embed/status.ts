@@ -615,7 +615,7 @@ export const handleStatus = async (
             ? 'fixupx'
             : 'fxtwitter';
       headers.push(
-        `<link href='https://wuff.gay/embedtest/${name}32.png?wqswsdqsdsdsdws=qdswsqdwssd' rel='icon' sizes='32x32' type='image/png'>`
+        `<link href='https://raw.githubusercontent.com/FxEmbed/FxEmbed/refs/heads/main/.github/logos/${name}32.png' rel='icon' sizes='32x32' type='image/png'>`
       );
     }
 
