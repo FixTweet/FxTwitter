@@ -319,6 +319,14 @@ export const constructTwitterThread = async (
 
   let response: TweetDetailResult | TweetResultsByRestIdResult | null = null;
   let status: APITwitterStatus;
+  let url: URL;
+
+  try {
+    url = new URL(c.req.url);
+  } catch (e) {
+    console.log('Error parsing URL', e);
+    url = new URL('https://api.fxtwitter.com/');
+  }
 
   console.log('env', c.env);
   /* We can use TweetDetail on elongator accounts to increase per-account rate limit.
@@ -329,7 +337,7 @@ export const constructTwitterThread = async (
   if (
     typeof c.env?.TwitterProxy !== 'undefined' &&
     !language &&
-    (experimentCheck(Experiment.TWEET_DETAIL_API) || processThread)
+    (experimentCheck(Experiment.TWEET_DETAIL_API) || processThread || url.hostname.includes('api'))
   ) {
     console.log('Using TweetDetail for request...');
     response = (await fetchTweetDetail(c, id)) as TweetDetailResult;
