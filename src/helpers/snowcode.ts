@@ -18,7 +18,6 @@ export const encodeSnowcode = (json: object) => {
 
 export const decodeSnowcode = (numStr: string) => {
   const str = numStr.match(/\d+/)?.join('') ?? '';
-  console.log('original str', str);
   if (str.length % 2 !== 0) {
     throw new Error('Invalid encoded string length.');
   }
@@ -32,6 +31,5 @@ export const decodeSnowcode = (numStr: string) => {
     result += allowedChars[index];
   }
   const resultStr = `{${result}}`;
-  console.log('str', resultStr);
   return JSON.parse(resultStr);
 };
