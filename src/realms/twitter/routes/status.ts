@@ -164,7 +164,6 @@ export const statusRequest = async (c: Context) => {
             return c.redirect(`${baseUrl}/${handle || 'i'}/status/${id}`, 302);
           }
         }
-        33;
       }
 
       c.status(200);
