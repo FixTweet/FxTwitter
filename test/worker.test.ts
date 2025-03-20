@@ -1,3 +1,4 @@
+import { APITwitterStatus, APIUser, TweetAPIResponse, UserAPIResponse } from '../src/types/types';
 import { app } from '../src/worker';
 
 const botHeaders = { 'User-Agent': 'Discordbot/2.0' };
