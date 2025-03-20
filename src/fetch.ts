@@ -2,16 +2,10 @@ import { Context } from 'hono';
 import { Constants } from './constants';
 import { Experiment, experimentCheck } from './experiments';
 import { generateUserAgent } from './helpers/useragent';
-import { withTimeout } from './helpers/utils';
+import { generateSnowflake, withTimeout } from './helpers/utils';
 
 const API_ATTEMPTS = 3;
 let wasElongatorDisabled = false;
-
-const generateSnowflake = () => {
-  const epoch = 1288834974657n; /* Twitter snowflake epoch */
-  const timestamp = BigInt(Date.now()) - epoch;
-  return String((timestamp << 22n) | BigInt(Math.floor(Math.random() * 696969)));
-};
 
 export const twitterFetch = async (
   c: Context,
@@ -176,12 +170,11 @@ export const twitterFetch = async (
         return null;
       }
       try {
-        !useElongator &&
-          cache &&
-          c.executionCtx &&
+        if (!useElongator && cache && c.executionCtx) {
           c.executionCtx.waitUntil(
             cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true })
           );
+        }
       } catch (error) {
         console.error((error as Error).stack);
       }
@@ -212,11 +205,11 @@ export const twitterFetch = async (
     if (!useElongator && remainingRateLimit < 10) {
       console.log(`Purging token on this edge due to low rate limit remaining`);
       try {
-        c.executionCtx &&
-          cache &&
+        if (c.executionCtx && cache) {
           c.executionCtx.waitUntil(
             cache.delete(guestTokenRequestCacheDummy.clone(), { ignoreMethod: true })
           );
+        }
       } catch (error) {
         console.error((error as Error).stack);
       }

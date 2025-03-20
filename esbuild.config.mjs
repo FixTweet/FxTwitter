@@ -33,7 +33,6 @@ const releaseName = `${workerName}-${gitBranch}-${gitCommit}-${new Date()
 
 let envVariables = [
   'BRANDING_NAME',
-  'BRANDING_NAME_BSKY',
   'STANDARD_DOMAIN_LIST',
   'STANDARD_BSKY_DOMAIN_LIST',
   'DIRECT_MEDIA_DOMAINS',
@@ -43,9 +42,6 @@ let envVariables = [
   'GALLERY_DOMAINS',
   'NATIVE_MULTI_IMAGE_DOMAINS',
   'HOST_URL',
-  'REDIRECT_URL',
-  'REDIRECT_URL_BSKY',
-  'EMBED_URL',
   'MOSAIC_DOMAIN_LIST',
   'MOSAIC_BSKY_DOMAIN_LIST',
   'API_HOST_LIST',
@@ -86,6 +82,11 @@ if (process.env.SENTRY_DSN) {
       authToken: process.env.SENTRY_AUTH_TOKEN
     })
   );
+}
+
+// if branding.json doesn't exist, copy branding.example.json to branding.json, we need this for CI tests
+if (!fs.existsSync('branding.json')) {
+  fs.copyFileSync('branding.example.json', 'branding.json');
 }
 
 await esbuild.build({

@@ -59,7 +59,7 @@ This may be caused by API downtime or a new bug. Try again in a little while." p
   </head>
   <body>
     <h1>Owie :(</h1>
-    <h2>You hit a snag that broke {brandingName}. It's not your fault though&mdash;This is usually caused by a Twitter outage or a new bug.</h2>
+    <h2>You hit a snag that broke {brandingName}. It's not your fault though&mdash;This is usually caused by an upstream outage or a new bug.</h2>
     <p>${RELEASE_NAME}</p>
   </body>
 </html>`
@@ -103,10 +103,9 @@ This may be caused by API downtime or a new bug. Try again in a little while." p
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta content="{brandingName}" property="og:title"/>
-      <meta content="{brandingName}" property="og:site_name"/>
       <meta content="https://cdn.discordapp.com/icons/958942151817977906/7a220767640cbedbf780767585eaa10d.png?size=96" property="og:image"/>
       <meta content="https://cdn.discordapp.com/icons/958942151817977906/7a220767640cbedbf780767585eaa10d.png?size=96" property="twitter:image"/>
-      <meta content="#1E98F0" name="theme-color"/>
+      <meta content="#6363ff" name="theme-color"/>
       <meta content="Worker release: ${RELEASE_NAME}
       
       Stats for nerds: 

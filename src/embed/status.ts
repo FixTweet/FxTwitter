@@ -15,18 +15,27 @@ import { Experiment, experimentCheck } from '../experiments';
 import translationResources from '../../i18n/resources';
 import { constructBlueskyThread } from '../providers/bsky/conversation';
 import { DataProvider } from '../enum';
+import { encodeSnowcode } from '../helpers/snowcode';
+import { getBranding } from '../helpers/branding';
+import {
+  APIMedia,
+  APIPhoto,
+  APIStatus,
+  APITwitterStatus,
+  APIVideo,
+  InputFlags,
+  ResponseInstructions,
+  SocialThread
+} from '../types/types';
 
 export const returnError = (c: Context, error: string): Response => {
-  let branding = Constants.BRANDING_NAME;
-  if (c.req.url.includes('bsky')) {
-    branding = Constants.BRANDING_NAME_BSKY;
-  }
+  const branding = getBranding(c);
   return c.html(
     Strings.BASE_HTML.format({
-      brandingName: branding,
+      brandingName: branding.name,
       lang: '',
       headers: [
-        `<meta property="og:title" content="${branding}"/>`,
+        `<meta property="og:title" content="${branding.name}"/>`,
         `<meta property="og:description" content="${error}"/>`
       ].join('')
     })
@@ -139,6 +148,23 @@ export const handleStatus = async (
   const isDiscord = (userAgent || '').indexOf('Discord') > -1;
   /* Should sensitive statuses be allowed Instant View? */
   let useIV = false;
+  let useActivity = false;
+
+  if (
+    experimentCheck(
+      Experiment.ACTIVITY_EMBED,
+      c.req.header('user-agent')?.includes('Discordbot')
+    ) &&
+    !flags.direct &&
+    !flags.gallery &&
+    !flags.api
+  ) {
+    useActivity = true;
+  }
+
+  if ((status.media?.all?.length ?? 0) <= 0 && status.media?.external?.url) {
+    useActivity = false;
+  }
 
   if (isTelegram && !flags?.direct && !flags?.gallery && !flags?.api) {
     if (status.provider === 'twitter') {
@@ -220,10 +246,8 @@ export const handleStatus = async (
 
   let authorText = getSocialProof(status) || Strings.DEFAULT_AUTHOR_TEXT;
   const engagementText = authorText.replace(/ {4}/g, ' ');
-  let siteName =
-    status.provider === DataProvider.Twitter
-      ? Constants.BRANDING_NAME
-      : Constants.BRANDING_NAME_BSKY;
+  const originalSiteName = getBranding(c).name;
+  let siteName = originalSiteName;
 
   if (thread.thread && thread.thread.length > 1 && isTelegram && useIV) {
     siteName = i18next.t('threadIndicator', { brandingName: siteName });
@@ -249,11 +273,7 @@ export const handleStatus = async (
   }
 
   if (!flags.gallery) {
-    if (status.provider === DataProvider.Twitter) {
-      headers.push(`<meta property="theme-color" content="#00a8fc"/>`);
-    } else if (status.provider === DataProvider.Bsky) {
-      headers.push(`<meta property="theme-color" content="#0085ff"/>`);
-    }
+    headers.push(`<meta property="theme-color" content="${getBranding(c).color}"/>`);
     headers.push(
       `<meta property="twitter:title" content="${status.author.name} (@${status.author.screen_name})"/>`
     );
@@ -263,15 +283,22 @@ export const handleStatus = async (
      it will gracefully redirect to the destination instead of just seeing a blank screen.
 
      Telegram is dumb and it just gets stuck if this is included, so we never include it for Telegram UAs. */
-  if (!isTelegram && provider === DataProvider.Twitter) {
-    headers.push(
-      `<meta http-equiv="refresh" content="0;url=${Constants.TWITTER_ROOT}/${status.author.screen_name}/status/${status.id}"/>`
-    );
+  if (!isTelegram) {
+    if (provider === DataProvider.Twitter) {
+      headers.push(
+        `<meta http-equiv="refresh" content="0;url=${Constants.TWITTER_ROOT}/${status.author.screen_name}/status/${status.id}"/>`
+      );
+    } else if (provider === DataProvider.Bsky) {
+      headers.push(
+        `<meta http-equiv="refresh" content="0;url=${Constants.BSKY_ROOT}/profile/${status.author.screen_name}/post/${status.id}"/>`
+      );
+    }
   }
 
   if (useIV) {
     try {
       const instructions = renderInstantView({
+        context: c,
         status: status,
         thread: thread,
         text: newText,
@@ -316,6 +343,7 @@ export const handleStatus = async (
           /* This status has a photo to render. */
           instructions = renderPhoto(
             {
+              context: c,
               status: status,
               authorText: authorText,
               engagementText: engagementText,
@@ -338,7 +366,13 @@ export const handleStatus = async (
           break;
         case 'video':
           instructions = renderVideo(
-            { status: status, userAgent: userAgent, text: newText, isOverrideMedia: true },
+            {
+              context: c,
+              status: status,
+              userAgent: userAgent,
+              text: newText,
+              isOverrideMedia: true
+            },
             overrideMedia as APIVideo
           );
           headers.push(...instructions.addHeaders);
@@ -357,7 +391,7 @@ export const handleStatus = async (
       }
     } else if (media?.videos && !flags.nativeMultiImage) {
       const instructions = renderVideo(
-        { status: status, userAgent: userAgent, text: newText },
+        { context: c, status: status, userAgent: userAgent, text: newText },
         media.videos[0]
       );
       headers.push(...instructions.addHeaders);
@@ -381,6 +415,7 @@ export const handleStatus = async (
 
           const instructions = renderPhoto(
             {
+              context: c,
               status: status,
               authorText: authorText,
               engagementText: engagementText,
@@ -393,6 +428,7 @@ export const handleStatus = async (
       } else {
         const instructions = renderPhoto(
           {
+            context: c,
             status: status,
             authorText: authorText,
             engagementText: engagementText,
@@ -406,6 +442,7 @@ export const handleStatus = async (
       console.log('photos', media?.photos);
       const instructions = renderPhoto(
         {
+          context: c,
           status: status,
           authorText: authorText,
           engagementText: engagementText,
@@ -508,15 +545,19 @@ export const handleStatus = async (
 
   const useCard = status.embed_card === 'tweet' ? status.quote?.embed_card : status.embed_card;
 
-  /* Push basic headers relating to author, Tweet text, and site name */
   headers.push(`<meta property="twitter:card" content="${useCard}"/>`);
 
+  /* Push basic headers relating to author, Tweet text, and site name */
   if (!flags.gallery) {
     headers.push(
       `<meta property="og:title" content="${status.author.name} (@${status.author.screen_name})"/>`,
-      `<meta property="og:description" content="${text}"/>`,
-      `<meta property="og:site_name" content="${siteName}"/>`
+      `<meta property="og:description" content="${text}"/>`
     );
+    if (!useActivity) {
+      headers.push(`<meta property="og:site_name" content="${siteName}"/>`);
+    } else {
+      headers.push(`<meta property="og:site_name" content="${originalSiteName}"/>`);
+    }
   } else {
     if (isTelegram) {
       headers.push(
@@ -553,14 +594,10 @@ export const handleStatus = async (
 
     let provider = '';
     const mediaType = overrideMedia ?? status.media.videos?.[0]?.type;
-
-    let branding = Constants.BRANDING_NAME;
-    if (c.req.url.includes('bsky')) {
-      branding = Constants.BRANDING_NAME_BSKY;
-    }
+    const branding = getBranding(c);
 
     if (mediaType === 'gif') {
-      provider = i18next.t('gifIndicator', { brandingName: branding });
+      provider = i18next.t('gifIndicator', { brandingName: branding.name });
     } else if (
       status.embed_card === 'player' &&
       providerEngagementText !== Strings.DEFAULT_AUTHOR_TEXT
@@ -570,10 +607,23 @@ export const handleStatus = async (
 
     // Now you can use the 'provider' variable
 
+    if (useActivity) {
+      const name =
+        status.provider === DataProvider.Bsky
+          ? 'fxbluesky'
+          : flags.isXDomain
+            ? 'fixupx'
+            : 'fxtwitter';
+      headers.push(
+        `<link href='https://wuff.gay/embedtest/${name}32.png?wqswsdqsdsdsdws=qdswsqdwssd' rel='icon' sizes='32x32' type='image/png'>`
+      );
+    }
+
     headers.push(
       `<link rel="alternate" href="{base}/owoembed?text={text}&status={status}&author={author}{provider}" type="application/json+oembed" title="{name}">`.format(
         {
-          base: `https://${status.provider === DataProvider.Bsky ? Constants.STANDARD_BSKY_DOMAIN_LIST[0] : Constants.STANDARD_DOMAIN_LIST[0]}`,
+          //TODO: Remove canary when launching activity embed
+          base: `https://canary.${getBranding(c).domains[0]}`,
           text: flags.gallery
             ? status.author.name
             : encodeURIComponent(truncateWithEllipsis(authorText, 255)),
@@ -581,6 +631,33 @@ export const handleStatus = async (
           author: encodeURIComponent(status.author.screen_name || ''),
           name: status.author.name || '',
           provider: provider ? `&provider=${encodeURIComponent(provider)}` : ''
+        }
+      )
+    );
+  }
+
+  if (useActivity) {
+    const data: { i: string; l?: string; h?: string; t?: number } = {
+      i: statusId
+    };
+
+    if (language !== status.lang) {
+      data.l = language;
+    }
+    if (status.provider === DataProvider.Bsky) {
+      data.h = status.author.id;
+    }
+    if (flags.textOnly) {
+      data.t = 1;
+    }
+    const snowflake = encodeSnowcode(data);
+    console.log('snowflake', snowflake);
+    headers.push(
+      `<link href='{base}/users/{author}/statuses/{status}' rel='alternate' type='application/activity+json'>`.format(
+        {
+          base: `https://${status.provider === DataProvider.Bsky ? Constants.STANDARD_BSKY_DOMAIN_LIST[0] : Constants.STANDARD_DOMAIN_LIST[0]}`,
+          author: encodeURIComponent(status.author.screen_name || ''),
+          status: snowflake
         }
       )
     );

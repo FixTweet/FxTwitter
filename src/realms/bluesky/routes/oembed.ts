@@ -1,6 +1,8 @@
 import { Context } from 'hono';
 import { Constants } from '../../../constants';
 import { Strings } from '../../../strings';
+import { getBranding } from '../../../helpers/branding';
+import { OEmbed } from '../../../types/types';
 
 export const oembed = async (c: Context) => {
   console.log('oembed hit!');
@@ -12,18 +14,18 @@ export const oembed = async (c: Context) => {
   const status = searchParams.get('status') ?? '';
 
   const statusUrl = `${Constants.BSKY_ROOT}/profile/${encodeURIComponent(author)}/post/${status}`;
+  const branding = getBranding(c);
 
   const data: OEmbed = {
     author_name: text,
     author_url: statusUrl,
-    provider_name: searchParams.get('provider') ?? Constants.BRANDING_NAME_BSKY,
-    provider_url: searchParams.get('provider') ? statusUrl : Constants.REDIRECT_URL_BSKY,
+    provider_name: branding.name,
+    provider_url: searchParams.get('provider') ? statusUrl : branding.redirect,
     title: Strings.DEFAULT_AUTHOR_TEXT,
-    type: 'link',
+    type: 'rich',
     version: '1.0'
   };
 
-  c.header('content-type', 'application/json');
   /* Stringify and send it on its way! */
-  return c.text(JSON.stringify(data), 200);
+  return c.json(data, 200);
 };

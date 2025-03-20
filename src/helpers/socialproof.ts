@@ -1,4 +1,5 @@
 import { DataProvider } from '../enum';
+import { APIStatus, APITwitterStatus } from '../types/types';
 import { formatNumber } from './utils';
 
 /* The embed "author" text we populate with replies, retweets, and likes unless it's a video */

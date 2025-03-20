@@ -8,6 +8,7 @@ import { convertToApiUser } from './profile';
 import { translateStatus } from '../../helpers/translate';
 import { Context } from 'hono';
 import { DataProvider } from '../../enum';
+import { APIUser, APITwitterStatus, FetchResults, APIVideo, APIPhoto } from '../../types/types';
 
 export const buildAPITwitterStatus = async (
   c: Context,
@@ -47,6 +48,8 @@ export const buildAPITwitterStatus = async (
     }
   }
 
+  // console.log('status', JSON.stringify(status));
+
   const graphQLUser = status.core.user_results.result;
   const apiUser = convertToApiUser(graphQLUser);
 
@@ -59,6 +62,10 @@ export const buildAPITwitterStatus = async (
   apiStatus.text = unescapeText(
     linkFixer(status.legacy.entities?.urls, status.legacy.full_text || '')
   );
+  apiStatus.raw_text = {
+    text: status.legacy.full_text,
+    facets: []
+  };
   // if (threadAuthor && threadAuthor.id !== apiUser.id) {
   apiStatus.author = {
     id: apiUser.id,
@@ -115,6 +122,7 @@ export const buildAPITwitterStatus = async (
   const noteTweetText = status.note_tweet?.note_tweet_results?.result?.text;
 
   if (noteTweetText) {
+    apiStatus.raw_text.text = noteTweetText;
     status.legacy.entities.urls = status.note_tweet?.note_tweet_results?.result?.entity_set.urls;
     status.legacy.entities.hashtags =
       status.note_tweet?.note_tweet_results?.result?.entity_set.hashtags;
@@ -126,6 +134,76 @@ export const buildAPITwitterStatus = async (
     apiStatus.is_note_tweet = true;
   } else {
     apiStatus.is_note_tweet = false;
+  }
+
+  if (status.note_tweet?.note_tweet_results?.result?.richtext?.richtext_tags) {
+    status.note_tweet.note_tweet_results.result.richtext.richtext_tags.forEach(richtext => {
+      richtext.richtext_types.forEach(type => {
+        let facetType: string = '';
+        switch (type) {
+          case 'Bold':
+            facetType = 'bold';
+            break;
+          case 'Italic':
+            facetType = 'italic';
+            break;
+          case 'Underline':
+            facetType = 'underline';
+            break;
+          case 'Strikethrough':
+            facetType = 'strikethrough';
+            break;
+        }
+
+        if (facetType) {
+          apiStatus.raw_text.facets.push({
+            type: facetType,
+            indices: [richtext.from_index, richtext.to_index]
+          });
+        }
+      });
+    });
+  }
+  if (status.note_tweet?.note_tweet_results?.result?.media?.inline_media) {
+    status.note_tweet.note_tweet_results.result.media.inline_media.forEach(inlineMedia => {
+      apiStatus.raw_text.facets.push({
+        type: 'inline_media',
+        indices: [inlineMedia.index, inlineMedia.index + inlineMedia.media_id.length]
+      });
+    });
+  }
+  if (status.legacy.entities) {
+    status.legacy.entities.hashtags.forEach(hashtag => {
+      apiStatus.raw_text.facets.push({
+        type: 'hashtag',
+        indices: hashtag.indices,
+        original: hashtag.text
+      });
+    });
+    status.legacy.entities.symbols.forEach(symbol => {
+      apiStatus.raw_text.facets.push({
+        type: 'symbol',
+        indices: symbol.indices,
+        original: symbol.text
+      });
+    });
+    status.legacy.entities.urls.forEach(url => {
+      apiStatus.raw_text.facets.push({
+        type: 'url',
+        indices: url.indices,
+        original: url.url,
+        replacement: url.expanded_url,
+        display: url.display_url
+      });
+    });
+    status.legacy.entities.user_mentions.forEach(mention => {
+      apiStatus.raw_text.facets.push({
+        type: 'mention',
+        indices: mention.indices,
+        original: mention.screen_name,
+        id: mention.id_str
+      });
+    });
   }
 
   if (status.birdwatch_pivot?.subtitle?.text) {
@@ -182,6 +260,14 @@ export const buildAPITwitterStatus = async (
 
   /* Populate status media */
   mediaList.forEach(media => {
+    apiStatus.raw_text.facets.push({
+      type: 'media',
+      indices: media.indices,
+      id: media.id_str,
+      display: media.display_url,
+      original: media.url,
+      replacement: media.expanded_url
+    });
     const mediaObject = processMedia(c, media);
     if (mediaObject) {
       apiStatus.media.all = apiStatus.media?.all ?? [];
@@ -234,7 +320,7 @@ export const buildAPITwitterStatus = async (
     if (card.external_media) {
       apiStatus.embed_card = 'player';
       apiStatus.media.external = card.external_media;
-      if (apiStatus.media.external.url.match('https://www.youtube.com/embed/')) {
+      if (apiStatus.media.external?.url.match('https://www.youtube.com/embed/')) {
         /* Add YouTube thumbnail URL */
         apiStatus.media.external.thumbnail_url = `https://img.youtube.com/vi/${apiStatus.media.external.url.replace(
           'https://www.youtube.com/embed/',
@@ -331,6 +417,11 @@ export const buildAPITwitterStatus = async (
       // @ts-expect-error media is not required in legacy API if empty
       delete apiStatus.media;
     }
+  }
+
+  if (apiStatus.raw_text.facets) {
+    // Sort from lowest to highest index
+    apiStatus.raw_text.facets.sort((a, b) => a.indices[0] - b.indices[0]);
   }
 
   apiStatus.provider = DataProvider.Twitter;

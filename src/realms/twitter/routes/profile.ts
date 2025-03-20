@@ -2,6 +2,9 @@ import { Context } from 'hono';
 import { Constants } from '../../../constants';
 import { handleProfile } from '../../../user';
 import { getBaseRedirectUrl } from '../router';
+import { Experiment, experimentCheck } from '../../../experiments';
+import { getBranding } from '../../../helpers/branding';
+import { InputFlags } from '../../../types/types';
 
 /* Handler for User Profiles */
 export const profileRequest = async (c: Context) => {
@@ -25,7 +28,7 @@ export const profileRequest = async (c: Context) => {
 
   /* If not a valid screen name, we redirect to project GitHub */
   if (handle.match(/\w{1,15}/gi)?.[0] !== handle) {
-    return c.redirect(Constants.REDIRECT_URL, 302);
+    return c.redirect(getBranding(c).redirect, 302);
   }
   const username = handle.match(/\w{1,15}/gi)?.[0] as string;
   /* Check if request is to api.fxtwitter.com */
@@ -51,10 +54,25 @@ export const profileRequest = async (c: Context) => {
     }
 
     const profileResponse = await handleProfile(c, username, flags);
+
+    let newUrl = `${baseUrl}/${handle}`;
+    if (baseUrl.startsWith('twitter://')) {
+      newUrl = `${baseUrl}/user?screen_name=${handle}`;
+    }
     /* Check for custom redirect */
 
     if (!isBotUA && !flags.api) {
-      return c.redirect(`${baseUrl}/${handle}`, 302);
+      if (experimentCheck(Experiment.USE_TRAFFIC_CONTROL, baseUrl === Constants.TWITTER_ROOT)) {
+        const app = await fetch(`https://app.fxembed.com/${handle}`);
+        const appBody = await app.text();
+        if (appBody.includes('<!doctype html>')) {
+          return c.html(appBody, 200);
+        } else {
+          return c.redirect(newUrl, 302);
+        }
+      } else {
+        return c.redirect(newUrl, 302);
+      }
     }
 
     /* Return the response containing embed information */
@@ -63,7 +81,16 @@ export const profileRequest = async (c: Context) => {
     /* A human has clicked a fxtwitter.com/:screen_name link!
         Obviously we just need to redirect to the user directly.*/
     console.log('Matched human UA', userAgent);
-
-    return c.redirect(`${baseUrl}/${handle}`, 302);
+    if (experimentCheck(Experiment.USE_TRAFFIC_CONTROL, baseUrl === Constants.TWITTER_ROOT)) {
+      const app = await fetch(`https://app.fxembed.com/${handle}`);
+      const appBody = await app.text();
+      if (appBody.includes('<!doctype html>')) {
+        return c.html(appBody, 200);
+      } else {
+        return c.redirect(url, 302);
+      }
+    } else {
+      return c.redirect(url, 302);
+    }
   }
 };

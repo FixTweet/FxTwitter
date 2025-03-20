@@ -42,6 +42,7 @@ export const cacheMiddleware = (): MiddlewareHandler => async (c, next) => {
     case 'GET':
       if (
         !Constants.API_HOST_LIST.includes(cacheUrl.hostname) &&
+        !cacheUrl.pathname.startsWith('/api/v1/statuses') &&
         !request.header('Cookie')?.includes('base_redirect')
       ) {
         /* cache may be undefined in tests */

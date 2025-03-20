@@ -66,3 +66,13 @@ export const formatNumber = (num: number) => {
     return num.toString();
   }
 };
+
+export const generateSnowflake = () => {
+  const epoch = 1288834974657n; /* Twitter snowflake epoch */
+  const timestamp = BigInt(Date.now()) - epoch;
+  return String((timestamp << 22n) | BigInt(Math.floor(Math.random() * 696969)));
+};
+
+export const escapeRegex = (text: string) => {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};

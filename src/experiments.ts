@@ -5,7 +5,9 @@ export enum Experiment {
   DISCORD_NATIVE_MULTI_IMAGE = 'DISCORD_NATIVE_MULTI_IMAGE',
   TRANSCODE_GIFS = 'TRANSCODE_GIFS',
   IV_FORCE_THREAD_UNROLL = 'IV_FORCE_THREAD_UNROLL',
-  DISCORD_VIDEO_REDIRECT_WORKAROUND = 'DISCORD_VIDEO_REDIRECT_WORKAROUND'
+  DISCORD_VIDEO_REDIRECT_WORKAROUND = 'DISCORD_VIDEO_REDIRECT_WORKAROUND',
+  ACTIVITY_EMBED = 'ACTIVITY_EMBED',
+  USE_TRAFFIC_CONTROL = 'USE_TRAFFIC_CONTROL'
 }
 
 type ExperimentConfig = {
@@ -49,6 +51,16 @@ const Experiments: { [key in Experiment]: ExperimentConfig } = {
     name: 'Video redirect workaround',
     description: 'Workaround for video playback issues on Discord',
     percentage: 1
+  },
+  [Experiment.ACTIVITY_EMBED]: {
+    name: 'Discord activity embed',
+    description: 'Use alternate activity embed for Discord',
+    percentage: 1
+  },
+  [Experiment.USE_TRAFFIC_CONTROL]: {
+    name: 'Enable Traffic Control',
+    description: 'Use the Traffic Control web app to direct human traffic to app or web',
+    percentage: 0
   }
 };
 

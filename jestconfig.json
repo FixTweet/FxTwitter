@@ -18,9 +18,6 @@
     "MOSAIC_BSKY_DOMAIN_LIST": "mosaic.fxbsky.app",
     "API_HOST_LIST": "api.fxtwitter.com",
     "HOST_URL": "https://fxtwitter.com",
-    "REDIRECT_URL": "https://github.com/FixTweet/FxTwitter",
-    "REDIRECT_URL_BSKY": "https://bsky.app/profile/fxbsky.app",
-    "EMBED_URL": "https://github.com/FixTweet/FxTwitter",
     "RELEASE_NAME": "fixtweet-test",
     "GIF_TRANSCODE_DOMAIN_LIST": "gif.fxtwitter.com",
     "SENTRY_DSN": null

@@ -1,7 +1,6 @@
 export const Constants = {
   /* These constants are populated by variables in .env, then set by Webpack */
   BRANDING_NAME: BRANDING_NAME,
-  BRANDING_NAME_BSKY: BRANDING_NAME_BSKY,
   STANDARD_DOMAIN_LIST: STANDARD_DOMAIN_LIST.split(','),
   STANDARD_BSKY_DOMAIN_LIST: STANDARD_BSKY_DOMAIN_LIST.split(','),
   DIRECT_MEDIA_DOMAINS: DIRECT_MEDIA_DOMAINS.split(','),
@@ -15,15 +14,12 @@ export const Constants = {
   API_HOST_LIST: API_HOST_LIST.split(','),
   API_HOST_ROOT: `https://${API_HOST_LIST.split(',')[0]}`,
   HOST_URL: HOST_URL,
-  EMBED_URL: EMBED_URL,
-  REDIRECT_URL: REDIRECT_URL,
-  REDIRECT_URL_BSKY: REDIRECT_URL_BSKY,
   RELEASE_NAME: RELEASE_NAME,
   GIF_TRANSCODE_DOMAIN_LIST: GIF_TRANSCODE_DOMAIN_LIST.split(','),
   API_DOCS_URL: `https://github.com/FixTweet/FxTwitter/wiki/API-Home`,
-  TWITTER_ROOT: 'https://twitter.com',
-  TWITTER_GLOBAL_NAME_ROOT: 'twitter.com',
-  TWITTER_API_ROOT: 'https://api.twitter.com',
+  TWITTER_ROOT: 'https://x.com',
+  TWITTER_GLOBAL_NAME_ROOT: 'x.com',
+  TWITTER_API_ROOT: 'https://api.x.com',
   TWITTER_VIDEO_BASE: 'https://video.twimg.com',
   BSKY_ROOT: 'https://bsky.app',
   BSKY_VIDEO_BASE: 'https://video.bsky.app',
@@ -78,5 +74,5 @@ export const Constants = {
   },
   POLL_TWEET_CACHE: 'max-age=60',
   DEFAULT_COLOR: '#10A3FF',
-  FRIENDLY_USER_AGENT: `Mozilla/5.0 FixEmbedBot/1.0 (like Twitterbot; +https://fxtwitter.com/crawler)`
+  FRIENDLY_USER_AGENT: `Mozilla/5.0 FxEmbedBot/2.0 (like Twitterbot; +https://fxembed.com/crawler)`
 };
