@@ -141,7 +141,7 @@ export const handleStatus = async (
   let useIV = false;
   let useActivity = false;
 
-  if (experimentCheck(Experiment.ACTIVITY_EMBED, c.req.header('user-agent')?.includes('Discordbot')) && !flags.direct) {
+  if (experimentCheck(Experiment.ACTIVITY_EMBED, c.req.header('user-agent')?.includes('Discordbot')) && !flags.direct && !flags.gallery && !flags.api) {
     useActivity = true;
   }
 
