@@ -194,7 +194,6 @@ declare interface APIUser {
   id: string;
   name: string;
   screen_name: string;
-  global_screen_name?: string;
   avatar_url: string;
   banner_url: string;
   // verified: 'legacy' | 'blue'| 'business' | 'government';
