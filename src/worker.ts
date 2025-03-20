@@ -1,7 +1,7 @@
-/// <reference path="./types/types.d.ts" />
-/// <reference path="./types/env.d.ts" />
-/// <reference path="./types/vendor/twitter.d.ts" />
-/// <reference path="./types/vendor/bsky.d.ts" /> 
+import './types/types';
+import './types/env';
+import './types/vendor/twitter';
+import './types/vendor/bsky';
 
 import { Env, Hono } from 'hono';
 import { timing } from 'hono/timing';
