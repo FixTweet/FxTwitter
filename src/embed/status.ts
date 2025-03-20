@@ -145,6 +145,10 @@ export const handleStatus = async (
     useActivity = true;
   }
 
+  if ((status.media?.all?.length ?? 0) <= 0 && status.media?.external?.url) {
+    useActivity = false;
+  }
+
   if (isTelegram && !flags?.direct && !flags?.gallery && !flags?.api) {
     if (status.provider === 'twitter') {
       const twitterStatus = status as APITwitterStatus;

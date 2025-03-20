@@ -38,7 +38,7 @@ const generatePoll = (poll: APIPoll): string => {
 
 const getStatusText = (status: APIStatus) => {
   let text = '';
-  const convertedStatusText = status.text.replace(/\n/g, '<br>︀︀');
+  const convertedStatusText = status.text.trim().replace(/\n/g, '<br>︀︀');
   if ((status as APITwitterStatus).translation) {
     console.log('translation', JSON.stringify((status as APITwitterStatus).translation));
     const { translation } = status as APITwitterStatus;
@@ -61,7 +61,7 @@ const getStatusText = (status: APIStatus) => {
       authorURL: status.quote.author.url,
       authorHandle: status.quote.author.screen_name,
       url: status.quote.url
-    })}</b><br>︀<br>${formatStatus(status.quote.text.replace(/\n/g, '<br>︀︀'), status.quote)}</blockquote>`;
+    })}</b><br>︀<br>${formatStatus(status.quote.text.trim().replace(/\n/g, '<br>︀︀'), status.quote)}</blockquote>`;
   }
   if (status.poll) {
     text += `${generatePoll(status.poll)}`;
@@ -163,7 +163,7 @@ const formatStatus = (text: string, status: APIStatus) => {
       }
       console.log('text next step', text);
     });
-    text = text.replace(/\n/g, '<br>︀︀')
+    text = text.trim().replace(/\n/g, '<br>︀︀')
   } else {
     text = statusLinkWrapper(text);
     text = linkifyMentions(text, status);
@@ -286,66 +286,88 @@ export const handleActivity = async (
 
   console.log('media', media);
 
-  if (!textOnly && media && media.length > 0) {
-    response['media_attachments'] = media.map((media) => {
-      switch (media.type) {
-        case 'photo':
-          const image = media as APIPhoto;
-          return {
-            id: '114163769487684704',
-            type: 'image',
-            url: image.url,
-            preview_url: image.url,
-            remote_url: null,
-            preview_remote_url: null,
-            text_url: null,
-            description: image.altText ?? null,
-            meta: {
-              original: {
-                width: image.width,
-                height: image.height,
-                size: `${image.width}x${image.height}`,
-                aspect: image.width / image.height
+  if (!textOnly) {
+    if (media && media.length > 0) {
+      response['media_attachments'] = media.map((media) => {
+        switch (media.type) {
+          case 'photo':
+            const image = media as APIPhoto;
+            return {
+              id: '114163769487684704',
+              type: 'image',
+              url: image.url,
+              preview_url: image.url,
+              remote_url: null,
+              preview_remote_url: null,
+              text_url: null,
+              description: image.altText ?? null,
+              meta: {
+                original: {
+                  width: image.width,
+                  height: image.height,
+                  size: `${image.width}x${image.height}`,
+                  aspect: image.width / image.height
+                }
               }
-            }
-          };
-        case 'video':
-        case 'gif':
-          const video = media as APIVideo;
-          let sizeMultiplier = 2;
+            };
+          case 'video':
+          case 'gif':
+            const video = media as APIVideo;
+            let sizeMultiplier = 2;
 
-          if (video.width > 1920 || video.height > 1920) {
-            sizeMultiplier = 0.5;
-          }
-          if (video.width < 400 || video.height < 400) {
-            sizeMultiplier = 2;
-          }
-          if (
-            // status.provider !== DataProvider.Bsky &&
-            experimentCheck(Experiment.DISCORD_VIDEO_REDIRECT_WORKAROUND, !!Constants.API_HOST_LIST) &&
-            (userAgent?.includes('Discord') || userAgent?.includes('Telegram'))
-          ) {
-            video.url = `https://${Constants.API_HOST_LIST[0]}/2/go?url=${encodeURIComponent(video.url)}`;
-          }
-          return {
-            id: '114163769487684704',
-            type: 'video',
-            url: video.url,
-            preview_url: video.thumbnail_url,
-            remote_url: null,
-            preview_remote_url: null,
-            text_url: null,
-            meta: {
-              original: {
-                width: video.width * sizeMultiplier,
-                height: video.height * sizeMultiplier,
-                size: `${video.width * sizeMultiplier}x${video.height * sizeMultiplier}`,
-                aspect: video.width / video.height
-              }
+            if (video.width > 1920 || video.height > 1920) {
+              sizeMultiplier = 0.5;
             }
-          };
-      }
-    });
+            if (video.width < 400 || video.height < 400) {
+              sizeMultiplier = 2;
+            }
+            if (
+              // status.provider !== DataProvider.Bsky &&
+              experimentCheck(Experiment.DISCORD_VIDEO_REDIRECT_WORKAROUND, !!Constants.API_HOST_LIST) &&
+              (userAgent?.includes('Discord') || userAgent?.includes('Telegram'))
+            ) {
+              video.url = `https://${Constants.API_HOST_LIST[0]}/2/go?url=${encodeURIComponent(video.url)}`;
+            }
+            return {
+              id: '114163769487684704',
+              type: 'video',
+              url: video.url,
+              preview_url: video.thumbnail_url,
+              remote_url: null,
+              preview_remote_url: null,
+              text_url: null,
+              meta: {
+                original: {
+                  width: video.width * sizeMultiplier,
+                  height: video.height * sizeMultiplier,
+                  size: `${video.width * sizeMultiplier}x${video.height * sizeMultiplier}`,
+                  aspect: video.width / video.height
+                }
+              }
+            };
+        }
+      });
+    } else if (thread.status.media?.external) {
+      const external = thread.status.media.external;
+      response['media_attachments'] = [{
+          id: '114163769487684704',
+          type: 'video',
+          url: external.url,
+          preview_url: external.thumbnail_url,
+          remote_url: null,
+          preview_remote_url: null,
+          text_url: null,
+          meta: {
+            original: {
+              width: external.width,
+              height: external.height,
+              size: `${external.width}x${external.height}`,
+              aspect: 1
+            }
+          }
+        }
+      ];
+    }
   }
 
   return c.json(response);
