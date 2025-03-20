@@ -1,4 +1,4 @@
-# FxEmbed <img src="https://raw.githubusercontent.com/FixTweet/FxTwitter/main/.github/logos/fxembed.svg" height="28">
+# FxEmbed <img src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/logos/fxembed.svg" height="28">
 
 ## Home of FxTwitter, FixupX, and FxBluesky
 
@@ -15,12 +15,12 @@
 <!-- Links & Badges -->
 
 [icons]: https://skillicons.dev/icons?i=typescript,workers
-[build]: https://github.com/FixTweet/FxTwitter/actions/workflows/build.yml
-[buildbadge]: https://github.com/FixTweet/FxTwitter/actions/workflows/build.yml/badge.svg
-[tests]: https://github.com/FixTweet/FxTwitter/actions/workflows/tests.yml
-[testsbadge]: https://github.com/FixTweet/FxTwitter/actions/workflows/tests.yml/badge.svg
-[license]: https://github.com/FixTweet/FxTwitter/blob/main/LICENSE.md
-[licensebadge]: https://img.shields.io/github/license/FixTweet/FxTwitter
+[build]: https://github.com/FxEmbed/FxEmbed/actions/workflows/build.yml
+[buildbadge]: https://github.com/FxEmbed/FxEmbed/actions/workflows/build.yml/badge.svg
+[tests]: https://github.com/FxEmbed/FxEmbed/actions/workflows/tests.yml
+[testsbadge]: https://github.com/FxEmbed/FxEmbed/actions/workflows/tests.yml/badge.svg
+[license]: https://github.com/FxEmbed/FxEmbed/blob/main/LICENSE.md
+[licensebadge]: https://img.shields.io/github/license/FxEmbed/FxEmbed
 [status]: https://status.fxtwitter.com
 [statusbadge]: https://status.fxtwitter.com/api/badge/8/uptime/720?label=Uptime%2030d
 [crowdinbadge]: https://badges.crowdin.net/fxtwitter/localized.svg
@@ -38,7 +38,7 @@
 
 Videos and GIFs just work, so whether you are sharing memes or cat videos, go crazy!
 
-![](https://raw.githubusercontent.com/FixTweet/FxTwitter/main/.github/readme/videos.png)
+![](https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/videos.png)
 
 On Discord, we can also automatically embed videos linked from some other platforms, like YouTube, so they can play without having to open a browser.
 
@@ -46,13 +46,13 @@ On Discord, we can also automatically embed videos linked from some other platfo
 
 If you want to share the results of a poll, you can do so by just linking the post using FxTwitter or FixupX. This works even if the poll is still ongoing!
 
-![](https://raw.githubusercontent.com/FixTweet/FxTwitter/main/.github/readme/poll.png)
+![](https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/poll.png)
 
 ## Embed Quotes & Media
 
 Quotes and their media can provide important context to a post, so they're automatically displayed. We'll even surface their media if there isn't already media embedded in the quote.
 
-![](https://raw.githubusercontent.com/FixTweet/FxTwitter/main/.github/readme/quote.png)
+![](https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/quote.png)
 
 ## Translate Posts (X/Twitter)
 
@@ -62,13 +62,13 @@ Just append a post with its 2-letter ISO language code. So for English, add `/en
 
 Bluesky support is planned in the future, but this currently depends on X/Twitter's Google Translate endpoint.
 
-![](https://raw.githubusercontent.com/FixTweet/FxTwitter/main/.github/readme/translate.png)
+![](https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/translate.png)
 
 ## Direct media links
 
 Want to link directly to a post's media *without* the embed? You can easily do that!
 
-![Image demonstrating the feature](https://raw.githubusercontent.com/FixTweet/FxTwitter/main/.github/readme/directmedia.png)
+![Image demonstrating the feature](https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/directmedia.png)
 
 There are a few supported ways to do this:
 
@@ -91,25 +91,25 @@ Otherwise, it will default to the first image.
 
 Use `g.fxtwitter.com` or `g.fixupx.com` to generate minimal embeds with just the post's media and author information without other distractions. This can be particularly useful for read-only channels dedicated to sharing media.
 
-![](https://raw.githubusercontent.com/FixTweet/FxTwitter/main/.github/readme/gallery.png)
+![](https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/gallery.png)
 
 ## Text-only view
 
 Basically the opposite of gallery view, use `t.fxtwitter.com` / `t.fixupx.com` to exclude photos/videos and only display text.
 
-![](https://raw.githubusercontent.com/FixTweet/FxTwitter/main/.github/readme/textonly.png)
+![](https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/textonly.png)
 
 ## Telegram Instant View
 
 View entire threads without leaving Telegram or opening a browser! You can unroll threads by just linking any part of the original thread. It will also keep track of any posts being replied to, up until the start of a conversation.
 
-![](https://github.com/FixTweet/FxTwitter/blob/main/.github/readme/iv.png)
+![](https://github.com/FxEmbed/FxEmbed/blob/main/.github/readme/iv.png)
 
 ## Replace link shorteners with original link (X/Twitter)
 
 Default X/Twitter embeds include t.co link shorteners, which make it difficult to know where the link is heading. We automatically replace t.co links with their original links to make things clearer.
 
-![](https://github.com/FixTweet/FxTwitter/blob/main/.github/readme/tco.png)
+![](https://github.com/FxEmbed/FxEmbed/blob/main/.github/readme/tco.png)
 
 ## Redirect to Nitter or other custom instances (X/Twitter)
 
@@ -154,9 +154,9 @@ Let's compare using FxTwitter / FixupX since it's the most feature-complete. Her
 | Status fetch API for Developers        |                 :heavy_check_mark:                  |        N/A         |                 :heavy_check_mark:                  |
 | Last commit                            |                   [![][flc]][fc]                    |        N/A         |                   [![][vlc]][vc]                    |
 
-[flc]: https://img.shields.io/github/last-commit/FixTweet/FxTwitter?label
+[flc]: https://img.shields.io/github/last-commit/FxEmbed/FxEmbed?label
 [vlc]: https://img.shields.io/github/last-commit/dylanpdx/BetterTwitFix?label
-[fc]: https://github.com/FixTweet/FxTwitter/commits
+[fc]: https://github.com/FxEmbed/FxEmbed/commits
 [vc]: https://github.com/dylanpdx/BetterTwitFix/commits
 
 ¹ External media requiring web containers, such as YouTube, won't embed in Telegram because Telegram doesn't support it. Plain media will work in Telegram, and it works either way inside Discord.
@@ -210,17 +210,17 @@ We only operate on these domains:
 
 ## Star History
 
-<a href="https://star-history.com/#FixTweet/FxTwitter&Timeline">
+<a href="https://star-history.com/#FxEmbed/FxEmbed&Timeline">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=FixTweet/FxTwitter&type=Timeline&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=FixTweet/FxTwitter&type=Timeline" />
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=FixTweet/FxTwitter&type=Timeline" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=FxEmbed/FxEmbed&type=Timeline&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=FxEmbed/FxEmbed&type=Timeline" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=FxEmbed/FxEmbed&type=Timeline" />
   </picture>
 </a>
 
 ## Bugs or issues?
 
-Feel free to [open an issue](https://github.com/FixTweet/FxTwitter/issues)
+Feel free to [open an issue](https://github.com/FxEmbed/FxEmbed/issues)
 
 ## Additional Credits
 
