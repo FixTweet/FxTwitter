@@ -7,7 +7,7 @@ const humanHeaders = {
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36'
 };
 const githubUrl = 'https://github.com/FixTweet/FxTwitter';
-const twitterBaseUrl = 'https://twitter.com';
+const twitterBaseUrl = 'https://x.com';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore - Performance not included in miniflare environment
@@ -56,7 +56,7 @@ test('Status redirect human', async () => {
     })
   );
   expect(result.status).toEqual(302);
-  expect(result.headers.get('location')).toEqual('https://twitter.com/jack/status/20');
+  expect(result.headers.get('location')).toEqual('https://x.com/jack/status/20');
 });
 
 test('Status redirect human trailing slash', async () => {
@@ -67,7 +67,7 @@ test('Status redirect human trailing slash', async () => {
     })
   );
   expect(result.status).toEqual(302);
-  expect(result.headers.get('location')).toEqual('https://twitter.com/jack/status/20');
+  expect(result.headers.get('location')).toEqual('https://x.com/jack/status/20');
 });
 
 test('Status redirect human custom base redirect', async () => {
