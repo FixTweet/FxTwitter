@@ -103,7 +103,7 @@ Basically the opposite of gallery view, use `t.fxtwitter.com` / `t.fixupx.com` t
 
 View entire threads without leaving Telegram or opening a browser! You can unroll threads by just linking any part of the original thread. It will also keep track of any posts being replied to, up until the start of a conversation.
 
-![](https://github.com/FxEmbed/FxEmbed/blob/main/.github/readme/iv.png)
+<img width="515px" src="https://github.com/FxEmbed/FxEmbed/blob/main/.github/readme/iv.png">
 
 ## Replace link shorteners with original link (X/Twitter)
 
