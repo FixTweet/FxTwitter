@@ -1,4 +1,4 @@
-import { Context } from 'hono/dist/types/context';
+import { Context } from 'hono';
 import branding from '../../branding.json';
 
 type Branding = {

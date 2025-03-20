@@ -4,6 +4,7 @@ import { Strings } from './strings';
 import { userAPI } from './providers/twitter/profile';
 import { ContentfulStatusCode } from 'hono/utils/http-status';
 import { getBranding } from './helpers/branding';
+import { APIUser, InputFlags } from './types/types';
 
 export const returnError = (c: Context, error: string): Response => {
   const branding = getBranding(c);

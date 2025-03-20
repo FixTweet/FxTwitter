@@ -1,3 +1,8 @@
+/// <reference path="./types/types.d.ts" />
+/// <reference path="./types/env.d.ts" />
+/// <reference path="./types/vendor/twitter.d.ts" />
+/// <reference path="./types/vendor/bsky.d.ts" /> 
+
 import { Env, Hono } from 'hono';
 import { timing } from 'hono/timing';
 import { logger } from 'hono/logger';

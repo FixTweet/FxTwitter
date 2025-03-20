@@ -1,6 +1,7 @@
 import { Context } from 'hono';
 import { buildAPIBskyPost } from './processor';
 import { Constants } from '../../constants';
+import { SocialThread } from '../../types/types';
 
 const fetchThread = async (
   post: string,

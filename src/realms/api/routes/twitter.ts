@@ -1,8 +1,8 @@
-import { Context } from 'hono/dist/types/context';
 import { constructTwitterThread } from '../../../providers/twitter/conversation';
 import { Constants } from '../../../constants';
 import { userAPI } from '../../../providers/twitter/profile';
 import { ContentfulStatusCode } from 'hono/utils/http-status';
+import { Context } from 'hono';
 
 export const statusAPIRequest = async (c: Context) => {
   const id = c.req.param('id') as string;

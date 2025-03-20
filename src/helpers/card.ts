@@ -1,3 +1,4 @@
+import { APIPoll, APIExternalMedia } from '../types/types';
 import { calculateTimeLeftString } from './pollTime';
 
 /* Renders card for polls and non-Twitter video embeds (i.e. YouTube) */

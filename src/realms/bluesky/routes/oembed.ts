@@ -2,6 +2,7 @@ import { Context } from 'hono';
 import { Constants } from '../../../constants';
 import { Strings } from '../../../strings';
 import { getBranding } from '../../../helpers/branding';
+import { OEmbed } from '../../../types/types';
 
 export const oembed = async (c: Context) => {
   console.log('oembed hit!');

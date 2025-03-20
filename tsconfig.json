@@ -1,18 +1,18 @@
 {
   "compilerOptions": {
     "outDir": "./dist",
-    "module": "commonjs",
-    "target": "es2022",
-    "lib": ["es2022"],
+    "module": "nodenext",
+    "target": "ES2024",
+    "lib": ["ES2024"],
     "alwaysStrict": true,
     "strict": true,
     "preserveConstEnums": true,
-    "moduleResolution": "node",
+    "moduleResolution": "NodeNext",
     "resolveJsonModule": true,
     "allowJs": true,
     "sourceMap": true,
     "esModuleInterop": true,
-    "types": ["@cloudflare/workers-types", "@types/jest", "@sentry/integrations"]
+    "types": ["@cloudflare/workers-types", "@types/jest", "@sentry/integrations", "./src/types/"]
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist", "test"]

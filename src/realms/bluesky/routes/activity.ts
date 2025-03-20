@@ -3,6 +3,7 @@ import { Constants } from '../../../constants';
 import { DataProvider } from '../../../embed/status';
 import { Strings } from '../../../strings';
 import { handleActivity } from '../../../embed/activity';
+import { InputFlags } from '../../../types/types';
 
 /* Handler for activity request */
 export const activityRequest = async (c: Context) => {

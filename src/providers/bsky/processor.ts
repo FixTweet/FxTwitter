@@ -3,6 +3,7 @@ import { Constants } from '../../constants';
 import { DataProvider } from '../../enum';
 import { handleMosaic } from '../../helpers/mosaic';
 import { linkFixerBsky } from '../../helpers/linkFixer';
+import { APIStatus, APIMedia } from '../../types/types';
 
 export const buildAPIBskyPost = async (
   c: Context,

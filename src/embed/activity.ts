@@ -1,5 +1,4 @@
 /* eslint-disable no-case-declarations */
-import { Context } from 'hono/dist/types/context';
 import { Strings } from '../strings';
 import { DataProvider, returnError } from './status';
 import { constructTwitterThread } from '../providers/twitter/conversation';
@@ -12,7 +11,8 @@ import { escapeRegex } from '../helpers/utils';
 import { decodeSnowcode } from '../helpers/snowcode';
 import translationResources from '../../i18n/resources';
 import { Experiment, experimentCheck } from '../experiments';
-import { APIPoll, SocialThread } from '../types/types';
+import { APIPhoto, APIPoll, APIStatus, APITwitterStatus, APIVideo, SocialThread } from '../types/types';
+import { Context } from 'hono/jsx/dom';
 
 const generatePoll = (poll: APIPoll): string => {
   let str = '<blockquote>';
@@ -204,6 +204,7 @@ const formatStatus = (text: string, status: APIStatus) => {
 };
 
 export const handleActivity = async (
+  // @ts-expect-error Can't resolve Context properly????
   c: Context,
   snowcode: string,
   provider: DataProvider
@@ -316,6 +317,7 @@ export const handleActivity = async (
 
   if (!textOnly) {
     if (media && media.length > 0) {
+      // @ts-expect-error doesn't know what to do with this
       response['media_attachments'] = media.map(media => {
         switch (media.type) {
           case 'photo':
@@ -381,6 +383,7 @@ export const handleActivity = async (
     } else if (thread.status.media?.external) {
       const external = thread.status.media.external;
       response['media_attachments'] = [
+        // @ts-expect-error doesn't know what to do with this
         {
           id: '114163769487684704',
           type: 'video',

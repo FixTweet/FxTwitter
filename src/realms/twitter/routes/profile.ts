@@ -4,6 +4,7 @@ import { handleProfile } from '../../../user';
 import { getBaseRedirectUrl } from '../router';
 import { Experiment, experimentCheck } from '../../../experiments';
 import { getBranding } from '../../../helpers/branding';
+import { InputFlags } from '../../../types/types';
 
 /* Handler for User Profiles */
 export const profileRequest = async (c: Context) => {

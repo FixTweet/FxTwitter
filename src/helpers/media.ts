@@ -1,4 +1,5 @@
 import { Context } from 'hono';
+import { APIPhoto, APIVideo } from '../types/types';
 
 /* Help populate API response for media */
 export const processMedia = (c: Context, media: TweetMedia): APIPhoto | APIVideo | null => {

@@ -8,7 +8,6 @@ import { profileRequest } from './routes/profile';
 import { statusRequest } from './routes/status';
 import { oembed } from '../api/routes/oembed';
 import { trimTrailingSlash } from 'hono/trailing-slash';
-import { DataProvider } from '../../enum';
 import { ContentfulStatusCode } from 'hono/utils/http-status';
 import { activityRequest } from './routes/activity';
 import { getBranding } from '../../helpers/branding';

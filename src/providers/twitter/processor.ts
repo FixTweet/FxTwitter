@@ -8,6 +8,7 @@ import { convertToApiUser } from './profile';
 import { translateStatus } from '../../helpers/translate';
 import { Context } from 'hono';
 import { DataProvider } from '../../enum';
+import { APIUser, APITwitterStatus, FetchResults, APIVideo, APIPhoto } from '../../types/types';
 
 export const buildAPITwitterStatus = async (
   c: Context,
@@ -319,7 +320,7 @@ export const buildAPITwitterStatus = async (
     if (card.external_media) {
       apiStatus.embed_card = 'player';
       apiStatus.media.external = card.external_media;
-      if (apiStatus.media.external.url.match('https://www.youtube.com/embed/')) {
+      if (apiStatus.media.external?.url.match('https://www.youtube.com/embed/')) {
         /* Add YouTube thumbnail URL */
         apiStatus.media.external.thumbnail_url = `https://img.youtube.com/vi/${apiStatus.media.external.url.replace(
           'https://www.youtube.com/embed/',
