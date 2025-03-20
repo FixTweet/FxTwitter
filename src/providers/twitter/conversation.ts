@@ -329,34 +329,55 @@ export const constructTwitterThread = async (
   }
 
   console.log('env', c.env);
-  /* We can use TweetDetail on elongator accounts to increase per-account rate limit.
-     We also use TweetDetail to process threads (WIP)
-     
-     Also - dirty hack. Right now, TweetDetail requests aren't working with language and I haven't figured out why.
-     I'll figure out why eventually, but for now just don't use TweetDetail for this. */
-  if (
+  
+  // Try TweetDetail first under these conditions
+  const tryTweetDetailFirst = 
     typeof c.env?.TwitterProxy !== 'undefined' &&
     !language &&
-    (experimentCheck(Experiment.TWEET_DETAIL_API) || processThread || url.hostname.includes('api'))
-  ) {
-    console.log('Using TweetDetail for request...');
-    response = (await fetchTweetDetail(c, id)) as TweetDetailResult;
+    (processThread || url.hostname.includes('api'));
+    
+  // First attempt with preferred API
+  if (tryTweetDetailFirst) {
+    console.log('Using TweetDetail for primary request...');
+    response = await fetchTweetDetail(c, id) as TweetDetailResult;
 
-    console.log('response', response);
-
+    // If TweetDetail failed, try TweetResultsByRestId as fallback
     if (!response?.data) {
+      console.log('TweetDetail failed, falling back to TweetResultsByRestId...');
+      response = await fetchByRestId(id, c) as TweetResultsByRestIdResult;
+      
+      // If both APIs failed, return 404
+      if (!response?.data?.tweetResult?.result) {
+        writeDataPoint(c, language, null, '404');
+        return { status: null, thread: null, author: null, code: 404 };
+      }
+    }
+  } else {
+    // Start with TweetResultsByRestId
+    console.log('Using TweetResultsByRestId for primary request...');
+    response = await fetchByRestId(id, c) as TweetResultsByRestIdResult;
+    
+    // If TweetResultsByRestId failed and we have TwitterProxy available, try TweetDetail as fallback
+    if (!response?.data?.tweetResult?.result && typeof c.env?.TwitterProxy !== 'undefined') {
+      console.log('TweetResultsByRestId failed, falling back to TweetDetail...');
+      response = await fetchTweetDetail(c, id) as TweetDetailResult;
+      
+      // If both APIs failed, return 404
+      if (!response?.data) {
+        writeDataPoint(c, language, null, '404');
+        return { status: null, thread: null, author: null, code: 404 };
+      }
+    } else if (!response?.data?.tweetResult?.result) {
+      // No fallback available or both failed
       writeDataPoint(c, language, null, '404');
       return { status: null, thread: null, author: null, code: 404 };
     }
   }
 
-  /* If we didn't get a response from TweetDetail we should ignore threads and try TweetResultsByRestId */
-  if (!response) {
-    console.log('Using TweetResultsByRestId for request...');
-    response = (await fetchByRestId(id, c)) as TweetResultsByRestIdResult;
-
-    const result = response?.data?.tweetResult?.result as GraphQLTwitterStatus;
-
+  // Handle TweetResultsByRestId response format
+  if ('data' in response && response.data && 'tweetResult' in response.data) {
+    const result = response.data.tweetResult?.result as GraphQLTwitterStatus;
+    
     if (typeof result === 'undefined') {
       writeDataPoint(c, language, null, '404');
       return { status: null, thread: null, author: null, code: 404 };
@@ -374,12 +395,45 @@ export const constructTwitterThread = async (
 
     status = buildStatus as APITwitterStatus;
 
-    writeDataPoint(c, language, status.possibly_sensitive, '200');
-    return { status: status, thread: null, author: status.author, code: 200 };
+    // If not processing thread, return single tweet
+    if (!processThread) {
+      writeDataPoint(c, language, status.possibly_sensitive, '200');
+      return { status: status, thread: null, author: status.author, code: 200 };
+    }
+    
+    // If we need thread but have TweetResultsByRestId response, try TweetDetail
+    if (processThread && typeof c.env?.TwitterProxy !== 'undefined') {
+      console.log('Need thread data, trying TweetDetail...');
+      const threadResponse = await fetchTweetDetail(c, id) as TweetDetailResult;
+      if (threadResponse?.data) {
+        response = threadResponse;
+      } else {
+        // Return single tweet if TweetDetail fails
+        writeDataPoint(c, language, status.possibly_sensitive, '200');
+        return { status: status, thread: null, author: status.author, code: 200 };
+      }
+    } else if (processThread) {
+      // Can't process thread without TweetDetail
+      writeDataPoint(c, language, status.possibly_sensitive, '200');
+      return { status: status, thread: null, author: status.author, code: 200 };
+    }
+  }
+
+  // Process TweetDetail response for thread data
+  // Type guard to ensure we're working with TweetDetailResult
+  const isTweetDetailResponse = (resp: TweetDetailResult | TweetResultsByRestIdResult): resp is TweetDetailResult => {
+    return 'data' in resp && 
+           resp.data !== null && 
+           'threaded_conversation_with_injections_v2' in (resp.data || {});
+  };
+
+  if (!isTweetDetailResponse(response)) {
+    writeDataPoint(c, language, null, '404');
+    return { status: null, thread: null, author: null, code: 404 };
   }
 
   const bucket = processResponse(
-    response?.data?.threaded_conversation_with_injections_v2?.instructions ?? []
+    response.data.threaded_conversation_with_injections_v2?.instructions ?? []
   );
   const originalStatus = findStatusInBucket(id, bucket);
 
