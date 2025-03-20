@@ -16,13 +16,13 @@
   "author": "dangered wolf",
   "license": "MIT",
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20250313.0",
+    "@cloudflare/workers-types": "^4.20250319.0",
     "@microsoft/eslint-formatter-sarif": "^3.1.0",
     "@sentry/esbuild-plugin": "^3.2.2",
     "@sentry/integrations": "^7.114.0",
     "@types/jest": "^29.5.14",
-    "@typescript-eslint/eslint-plugin": "^8.26.1",
-    "@typescript-eslint/parser": "^8.26.1",
+    "@typescript-eslint/eslint-plugin": "^8.27.0",
+    "@typescript-eslint/parser": "^8.27.0",
     "dotenv": "^16.4.7",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^10.1.1",
@@ -35,12 +35,12 @@
     "ts-jest": "^29.2.6",
     "ts-loader": "^9.5.2",
     "typescript": "^5.8.2",
-    "wrangler": "^4.0.0"
+    "wrangler": "^4.2.0"
   },
   "dependencies": {
     "@hono/sentry": "^1.2.0",
     "i18next": "^24.2.3",
     "i18next-icu": "^2.3.0",
-    "hono": "^4.7.4"
+    "hono": "^4.7.5"
   }
 }
