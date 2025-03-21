@@ -99,12 +99,8 @@ export const buildAPITwitterStatus = async (
     delete apiStatus.reposts;
     // @ts-expect-error Use tweets and not posts for legacy API
     delete apiStatus.author.statuses;
-    delete apiStatus.author.global_screen_name;
   } else {
     apiStatus.reposts = status.legacy.retweet_count;
-    // if ((threadAuthor && threadAuthor.id !== apiUser.id)) {
-    apiStatus.author.global_screen_name = apiUser.global_screen_name;
-    // }
   }
   apiStatus.likes = status.legacy.favorite_count;
   apiStatus.embed_card = 'tweet';
