@@ -312,7 +312,7 @@ export const handleActivity = async (
   console.log('regular media', thread.status.media?.all);
   console.log('quote media', thread.status.quote?.media?.all);
 
-  let media =
+  const media =
     (thread.status.media?.all?.length ?? 0) > 0
       ? thread.status.media?.all
       : (thread.status.quote?.media?.all ?? []);
@@ -321,6 +321,7 @@ export const handleActivity = async (
 
   if (forceMosaic && thread.status.media?.mosaic) {
     response['media_attachments'] = [
+      // @ts-expect-error doesn't know what to do with this
       {
         id: '114163769487684704',
         type: 'image',
@@ -375,9 +376,8 @@ export const handleActivity = async (
               sizeMultiplier = 2;
             }
             if (
-              // status.provider !== DataProvider.Bsky &&
               experimentCheck(
-                Experiment.DISCORD_VIDEO_REDIRECT_WORKAROUND,
+                Experiment.VIDEO_REDIRECT_WORKAROUND,
                 !!Constants.API_HOST_LIST
               ) &&
               (userAgent?.includes('Discord') || userAgent?.includes('Telegram'))

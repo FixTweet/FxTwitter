@@ -639,7 +639,7 @@ export const handleStatus = async (
     const data: { i: string; l?: string; h?: string; t?: number; m?: number } = {
       i: statusId
     };
-
+    /* Convert necessary flags into snowcode data */
     if (language !== status.lang) {
       data.l = language;
     }
@@ -654,6 +654,7 @@ export const handleStatus = async (
     }
     const snowflake = encodeSnowcode(data);
     console.log('snowflake', snowflake);
+    /* Convince Discord that you are actually a Mastodon link lol */
     headers.push(
       `<link href='{base}/users/{author}/statuses/{status}' rel='alternate' type='application/activity+json'>`.format(
         {

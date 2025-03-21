@@ -4,7 +4,7 @@ export enum Experiment {
   TWEET_DETAIL_API = 'TWEET_DETAIL_API',
   TRANSCODE_GIFS = 'TRANSCODE_GIFS',
   IV_FORCE_THREAD_UNROLL = 'IV_FORCE_THREAD_UNROLL',
-  DISCORD_VIDEO_REDIRECT_WORKAROUND = 'DISCORD_VIDEO_REDIRECT_WORKAROUND',
+  VIDEO_REDIRECT_WORKAROUND = 'VIDEO_REDIRECT_WORKAROUND',
   ACTIVITY_EMBED = 'ACTIVITY_EMBED',
   USE_TRAFFIC_CONTROL = 'USE_TRAFFIC_CONTROL'
 }
@@ -41,9 +41,9 @@ const Experiments: { [key in Experiment]: ExperimentConfig } = {
     description: 'Force thread unroll for Telegram Instant View',
     percentage: 1
   },
-  [Experiment.DISCORD_VIDEO_REDIRECT_WORKAROUND]: {
+  [Experiment.VIDEO_REDIRECT_WORKAROUND]: {
     name: 'Video redirect workaround',
-    description: 'Workaround for video playback issues on Discord',
+    description: 'Workaround for video playback issues on Telegram/Discord',
     percentage: 1
   },
   [Experiment.ACTIVITY_EMBED]: {
