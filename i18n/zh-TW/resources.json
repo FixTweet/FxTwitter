@@ -1,5 +1,5 @@
 {
-  "translatedFrom": "從{language}翻譯",
+  "translatedFrom": "翻譯自{language}",
   "quotedFrom": "引用 {name} (@{screen_name})",
   "replyingTo": "回覆 @{screen_name}",
   "threadPartHeader": "@{screen_name} 的討論串節錄",
@@ -57,5 +57,6 @@
   "language_uk": "烏克蘭文",
   "language_vi": "越南文",
   "language_zh-CN": "中文",
-  "language_zh-TW": "中文"
+  "language_zh-TW": "中文",
+  "threadIndicator": "🧵 討論串 • {brandingName}"
 }

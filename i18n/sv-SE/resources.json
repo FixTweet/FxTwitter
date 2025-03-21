@@ -1,1 +1,12 @@
-{}
+{
+  "translatedFrom": "Översatt från {language}",
+  "photoCount": "Foto {number} / {total}",
+  "videoCount": "Video {number} / {total}",
+  "ivOriginalText": "Originaltext",
+  "ivProfilePictureAlt": "Profilbild av {author}",
+  "ivInternetArchiveText": "{brandingName} arkiv",
+  "surveyYes": "Ja 😁",
+  "surveyNo": "Nej 💀",
+  "gifIndicator": "GIF - {brandingName}",
+  "language_af": "Afrikaans"
+}
