@@ -655,10 +655,18 @@ export const handleStatus = async (
     const snowflake = encodeSnowcode(data);
     console.log('snowflake', snowflake);
     /* Convince Discord that you are actually a Mastodon link lol */
+    let base = status.provider === DataProvider.Bsky ? Constants.STANDARD_BSKY_DOMAIN_LIST[0] : Constants.STANDARD_DOMAIN_LIST[0];
+
+    try {
+      base = new URL(c.req.url).hostname;
+    } catch (e) {
+      console.log('couldnt parse hostname for some reason', e);
+    }
+
     headers.push(
       `<link href='{base}/users/{author}/statuses/{status}' rel='alternate' type='application/activity+json'>`.format(
         {
-          base: `https://${status.provider === DataProvider.Bsky ? Constants.STANDARD_BSKY_DOMAIN_LIST[0] : Constants.STANDARD_DOMAIN_LIST[0]}`,
+          base: `https://${base}`,
           author: encodeURIComponent(status.author.screen_name || ''),
           status: snowflake
         }
