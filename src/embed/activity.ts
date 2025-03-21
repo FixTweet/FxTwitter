@@ -77,13 +77,13 @@ const linkifyMentions = (text: string, status: APIStatus) => {
     status.provider === DataProvider.Bsky
       ? `${Constants.BSKY_ROOT}/profile`
       : `${Constants.TWITTER_ROOT}`;
-  const matches = text.match(/@([\w.]+)(?=\W|$)/g);
+  const matches = text.match(/(?<!https?:\/\/[\w.:/]+)@([\w.]+)(?=\W|$)/g);
 
   console.log('matches', matches);
   // deduplicate mentions
   [...new Set(matches ?? [])]?.forEach(mention => {
     text = text.replace(
-      new RegExp(`${mention}(?=\\W|$)`, 'g'),
+      new RegExp(`(?<!https?:\\/\\/[\\w.:/]+)${mention}(?=\\W|$)`, 'g'),
       `<a href="${baseUrl}/${mention.slice(1)}">${mention}</a>`
     );
   });
@@ -96,12 +96,12 @@ const linkifyHashtags = (text: string, status: APIStatus) => {
     status.provider === DataProvider.Bsky
       ? `${Constants.BSKY_ROOT}/hashtag`
       : `${Constants.TWITTER_ROOT}/hashtag`;
-  const matches = text.match(/#([\w.]+)(?=\W|$)/g);
+  const matches = text.match(/(?<!https?:\/\/[\w.:/]+)#([\w.]+)(?=\W|$)/g);
   console.log('matches', matches);
   // deduplicate hashtags
   [...new Set(matches ?? [])]?.forEach(hashtag => {
     text = text.replace(
-      new RegExp(`${hashtag}(?=\\W|$)`, 'g'),
+      new RegExp(`(?<!https?:\\/\\/[\\w.:/]+)${hashtag}(?=\\W|$)`, 'g'),
       `<a href="${baseUrl}/${hashtag.slice(1)}">${hashtag}</a>`
     );
   });
