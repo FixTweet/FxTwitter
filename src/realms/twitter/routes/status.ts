@@ -64,8 +64,8 @@ export const statusRequest = async (c: Context) => {
     console.log('Gallery embed request');
     flags.gallery = true;
   } else if (Constants.NATIVE_MULTI_IMAGE_DOMAINS.includes(url.hostname)) {
-    console.log('Force native multi-image');
-    flags.nativeMultiImage = true;
+    console.log('Force mosaic');
+    flags.forceMosaic = true;
   } else if (prefix === 'dl' || prefix === 'dir') {
     console.log('Direct media request by path prefix');
     flags.direct = true;

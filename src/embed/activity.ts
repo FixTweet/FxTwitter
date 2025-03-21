@@ -213,6 +213,7 @@ export const handleActivity = async (
   let language: string | null = null;
   let authorHandle: string | null = null;
   let textOnly = false;
+  let forceMosaic = false;
   const decoded = decodeSnowcode(snowcode);
   const statusId = decoded.i;
   if (decoded.l) {
@@ -223,6 +224,9 @@ export const handleActivity = async (
   }
   if (decoded.t) {
     textOnly = true;
+  }
+  if (decoded.m) {
+    forceMosaic = true;
   }
 
   let thread: SocialThread;
@@ -308,14 +312,33 @@ export const handleActivity = async (
   console.log('regular media', thread.status.media?.all);
   console.log('quote media', thread.status.quote?.media?.all);
 
-  const media =
+  let media =
     (thread.status.media?.all?.length ?? 0) > 0
       ? thread.status.media?.all
       : (thread.status.quote?.media?.all ?? []);
 
   console.log('media', media);
 
-  if (!textOnly) {
+  if (forceMosaic && thread.status.media?.mosaic) {
+    response['media_attachments'] = [
+      {
+        id: '114163769487684704',
+        type: 'image',
+        url: thread.status.media?.mosaic?.formats?.jpeg,
+        preview_url: thread.status.media?.mosaic?.formats?.jpeg,
+        remote_url: null,
+        preview_remote_url: null,
+        text_url: null,
+        description: null,
+        meta: {
+          original: {
+            width: thread.status.media?.mosaic?.width,
+            height: thread.status.media?.mosaic?.height
+          }
+        }
+      }
+    ];
+  } else if (!textOnly) {
     if (media && media.length > 0) {
       // @ts-expect-error doesn't know what to do with this
       response['media_attachments'] = media.map(media => {

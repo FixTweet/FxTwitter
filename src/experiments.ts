@@ -2,7 +2,6 @@ export enum Experiment {
   ELONGATOR_BY_DEFAULT = 'ELONGATOR_BY_DEFAULT',
   ELONGATOR_PROFILE_API = 'ELONGATOR_PROFILE_API',
   TWEET_DETAIL_API = 'TWEET_DETAIL_API',
-  DISCORD_NATIVE_MULTI_IMAGE = 'DISCORD_NATIVE_MULTI_IMAGE',
   TRANSCODE_GIFS = 'TRANSCODE_GIFS',
   IV_FORCE_THREAD_UNROLL = 'IV_FORCE_THREAD_UNROLL',
   DISCORD_VIDEO_REDIRECT_WORKAROUND = 'DISCORD_VIDEO_REDIRECT_WORKAROUND',
@@ -30,11 +29,6 @@ const Experiments: { [key in Experiment]: ExperimentConfig } = {
   [Experiment.TWEET_DETAIL_API]: {
     name: 'Tweet detail API',
     description: 'Use Tweet Detail API (where available with elongator)',
-    percentage: 1
-  },
-  [Experiment.DISCORD_NATIVE_MULTI_IMAGE]: {
-    name: 'Discord native multi-image',
-    description: 'Use Discord native multi-image',
     percentage: 1
   },
   [Experiment.TRANSCODE_GIFS]: {

@@ -389,7 +389,7 @@ export const handleStatus = async (
           /* This status has a video to render. */
           break;
       }
-    } else if (media?.videos && !flags.nativeMultiImage) {
+    } else if (media?.videos && !flags.forceMosaic) {
       const instructions = renderVideo(
         { context: c, status: status, userAgent: userAgent, text: newText },
         media.videos[0]
@@ -403,8 +403,8 @@ export const handleStatus = async (
       }
     } else if (media?.mosaic) {
       if (
-        experimentCheck(Experiment.DISCORD_NATIVE_MULTI_IMAGE, isDiscord) &&
-        flags.nativeMultiImage
+        isDiscord &&
+        !flags.forceMosaic
       ) {
         const photos = status.media?.photos || [];
 
@@ -452,7 +452,7 @@ export const handleStatus = async (
       );
       headers.push(...instructions.addHeaders);
     }
-    if (status.media?.external && !status.media.videos?.length && !flags.nativeMultiImage) {
+    if (status.media?.external && !status.media.videos?.length && !flags.forceMosaic) {
       const { external } = status.media;
       authorText = newText || '';
       headers.push(
@@ -636,7 +636,7 @@ export const handleStatus = async (
   }
 
   if (useActivity) {
-    const data: { i: string; l?: string; h?: string; t?: number } = {
+    const data: { i: string; l?: string; h?: string; t?: number; m?: number } = {
       i: statusId
     };
 
@@ -648,6 +648,9 @@ export const handleStatus = async (
     }
     if (flags.textOnly) {
       data.t = 1;
+    }
+    if (flags.forceMosaic) {
+      data.m = 1;
     }
     const snowflake = encodeSnowcode(data);
     console.log('snowflake', snowflake);

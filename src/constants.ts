@@ -16,7 +16,7 @@ export const Constants = {
   HOST_URL: HOST_URL,
   RELEASE_NAME: RELEASE_NAME,
   GIF_TRANSCODE_DOMAIN_LIST: GIF_TRANSCODE_DOMAIN_LIST.split(','),
-  API_DOCS_URL: `https://github.com/FixTweet/FxTwitter/wiki/API-Home`,
+  API_DOCS_URL: `https://github.com/FxEmbed/FxEmbed/wiki/API-Home`,
   TWITTER_ROOT: 'https://x.com',
   TWITTER_GLOBAL_NAME_ROOT: 'x.com',
   TWITTER_API_ROOT: 'https://api.x.com',
