@@ -259,8 +259,8 @@ export const handleActivity = async (
   // Map FxEmbed API to Mastodon API v1
   const response = {
     id: statusId,
-    url: `${root}/${thread.status.author.screen_name}/status/${statusId}`,
-    uri: `${root}/${thread.status.author.screen_name}/status/${statusId}`,
+    url: thread.status.url,
+    uri: thread.status.url,
     created_at: new Date(thread.status.created_at).toISOString(),
     edited_at: null,
     reblog: null,
@@ -281,8 +281,8 @@ export const handleActivity = async (
       display_name: thread.status.author.name,
       username: thread.status.author.screen_name,
       acct: thread.status.author.screen_name,
-      url: thread.status.author.url,
-      uri: thread.status.author.url,
+      url: thread.status.url,
+      uri: thread.status.url,
       created_at: new Date(thread.status.author.joined).toISOString(),
       locked: false,
       bot: false,
