@@ -212,6 +212,7 @@ export const handleActivity = async (
 ): Promise<Response> => {
   let language: string | null = null;
   let authorHandle: string | null = null;
+  let mediaNumber: number | null = null;
   let textOnly = false;
   let forceMosaic = false;
   const decoded = decodeSnowcode(snowcode);
@@ -227,6 +228,9 @@ export const handleActivity = async (
   }
   if (decoded.m) {
     forceMosaic = true;
+  }
+  if (decoded.n) {
+    mediaNumber = decoded.n;
   }
 
   let thread: SocialThread;
@@ -254,7 +258,6 @@ export const handleActivity = async (
     return returnError(c, Strings.ERROR_API_FAIL);
   }
 
-  const root = `${provider === DataProvider.Twitter ? Constants.TWITTER_ROOT : Constants.BSKY_ROOT}`;
   const userAgent = c.req.header('User-Agent');
   // Map FxEmbed API to Mastodon API v1
   const response = {
@@ -312,12 +315,13 @@ export const handleActivity = async (
   console.log('regular media', thread.status.media?.all);
   console.log('quote media', thread.status.quote?.media?.all);
 
-  const media =
+  const rawMediaList =
     (thread.status.media?.all?.length ?? 0) > 0
       ? thread.status.media?.all
       : (thread.status.quote?.media?.all ?? []);
+  let mediaList = rawMediaList;
 
-  console.log('media', media);
+  console.log('mediaList', mediaList);
 
   if (forceMosaic && thread.status.media?.mosaic) {
     response['media_attachments'] = [
@@ -340,9 +344,19 @@ export const handleActivity = async (
       }
     ];
   } else if (!textOnly) {
-    if (media && media.length > 0) {
+    if (mediaNumber) {
+      console.log('we have a media number', mediaNumber);
+      const newMedia = rawMediaList?.[mediaNumber - 1];
+      if (newMedia) {
+        mediaList = [newMedia];
+      } else {
+        console.log('wtf there is no media #', mediaNumber);
+      }
+      console.log('updated mediaList', mediaList);
+    }
+    if (mediaList && mediaList.length > 0) {
       // @ts-expect-error doesn't know what to do with this
-      response['media_attachments'] = media.map(media => {
+      response['media_attachments'] = mediaList.map(media => {
         switch (media.type) {
           case 'photo':
             const image = media as APIPhoto;

@@ -636,7 +636,7 @@ export const handleStatus = async (
   }
 
   if (useActivity) {
-    const data: { i: string; l?: string; h?: string; t?: number; m?: number } = {
+    const data: { i: string; l?: string; h?: string; t?: number; m?: number; n?: number } = {
       i: statusId
     };
     /* Convert necessary flags into snowcode data */
@@ -651,6 +651,9 @@ export const handleStatus = async (
     }
     if (flags.forceMosaic) {
       data.m = 1;
+    }
+    if (mediaNumber) {
+      data.n = mediaNumber;
     }
     const snowflake = encodeSnowcode(data);
     console.log('snowflake', snowflake);
