@@ -1,4 +1,4 @@
-# FxEmbed <img src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/logos/fxembed.svg" height="32">
+# FxEmbed <img src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/assets/logos/fxembed.svg" height="24">
 
 ## Home of FxTwitter, FixupX, and FxBluesky
 
@@ -38,7 +38,7 @@
 
 Videos and GIFs just work, so whether you are sharing memes or cat videos, go crazy!
 
-<img width="477px" src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/videos.png">
+<img width="477px" src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/assets/readme/videos.png">
 
 On Discord, we can also automatically embed videos linked from some other platforms, like YouTube, so they can play without having to open a browser.
 
@@ -46,13 +46,13 @@ On Discord, we can also automatically embed videos linked from some other platfo
 
 If you want to share the results of a poll, you can do so by just linking the post using FxTwitter or FixupX. This works even if the poll is still ongoing!
 
-<img width="440px" src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/poll.png">
+<img width="440px" src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/assets/readme/poll.png">
 
 ## Embed Quotes & Media
 
 Quotes and their media can provide important context to a post, so they're automatically displayed. We'll even surface their media if there isn't already media embedded in the quote.
 
-<img width="478px" src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/quote.png">
+<img width="478px" src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/assets/readme/quote.png">
 
 ## Translate Posts (X/Twitter)
 
@@ -62,13 +62,13 @@ Just append a post with its 2-letter ISO language code. So for English, add `/en
 
 Bluesky support is planned in the future, but this currently depends on X/Twitter's Google Translate endpoint.
 
-<img src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/translate.png">
+<img src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/assets/readme/translate.png">
 
 ## Direct media links
 
 Want to link directly to a post's media _without_ the embed? You can easily do that!
 
-<img width="490px" src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/directmedia.png">
+<img width="490px" src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/assets/readme/directmedia.png">
 
 There are a few supported ways to do this:
 
@@ -96,31 +96,31 @@ https://m.fixupx.com/example/status/123456789123456789
 https://m.fxbsky.app/profile/example.com/post/3lkord123abc
 
 
-<img width="790px" src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/mosaic.png">
+<img width="790px" src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/assets/readme/mosaic.png">
 
 ## Gallery view
 
 Use `g.fxtwitter.com` or `g.fixupx.com` to generate minimal embeds with just the post's media and author information without other distractions. This can be particularly useful for read-only channels dedicated to sharing media.
 
-<img src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/gallery.png">
+<img src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/assets/readme/gallery.png">
 
 ## Text-only view
 
 Basically the opposite of gallery view, use `t.fxtwitter.com` / `t.fixupx.com` to exclude photos/videos and only display text.
 
-<img src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/textonly.png">
+<img src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/assets/readme/textonly.png">
 
 ## Telegram Instant View
 
 View entire threads without leaving Telegram or opening a browser! You can unroll threads by just linking any part of the original thread. It will also keep track of any posts being replied to, up until the start of a conversation.
 
-<img width="515px" src="https://github.com/FxEmbed/FxEmbed/blob/main/.github/readme/iv.png">
+<img width="515px" src="https://github.com/FxEmbed/FxEmbed/blob/main/assets/readme/iv.png">
 
 ## Replace link shorteners with original link (X/Twitter)
 
 Default X/Twitter embeds include t.co link shorteners, which make it difficult to know where the link is heading. We automatically replace t.co links with their original links to make things clearer.
 
-<img width="395px" src="https://github.com/FxEmbed/FxEmbed/blob/main/.github/readme/tco.png">
+<img width="395px" src="https://github.com/FxEmbed/FxEmbed/blob/main/assets/readme/tco.png">
 
 ## Redirect to Nitter or other custom instances (X/Twitter)
 
