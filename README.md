@@ -87,6 +87,17 @@ Posts with multiple images are supported, so you can do something like this and 
 
 Otherwise, it will default to the first image.
 
+## Combine multiple images into one
+
+By default, FxEmbed will display multiple images natively on Discord, allowing you to preview individual full-quality images. You can also opt to have the images combined into a single one to make it display better on some platforms (i.e. iOS). Image combining will always be used on unsupported platforms.
+
+https://m.fxtwitter.com/example/status/123456789123456789
+https://m.fixupx.com/example/status/123456789123456789
+https://m.fxbsky.app/profile/example.com/post/3lkord123abc
+
+
+<img width="790px" src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/.github/readme/mosaic.png">
+
 ## Gallery view
 
 Use `g.fxtwitter.com` or `g.fixupx.com` to generate minimal embeds with just the post's media and author information without other distractions. This can be particularly useful for read-only channels dedicated to sharing media.

@@ -37,8 +37,7 @@ export const statusRequest = async (c: Context) => {
   const isBotUA = userAgent.match(Constants.BOT_UA_REGEX) !== null || flags?.archive;
 
   /* Check if domain is a direct media domain (i.e. d.fxtwitter.com),
-     the status is prefixed with /dl/ or /dir/ (for TwitFix interop), or the
-     status ends in .mp4, .jpg, .jpeg, or .png
+     or the status ends in .mp4, .jpg, .jpeg, or .png
       
      Note that .png is not documented because images always redirect to a jpg,
      but it will help someone who does it mistakenly on something like Discord
