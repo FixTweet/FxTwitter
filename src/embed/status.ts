@@ -607,7 +607,7 @@ export const handleStatus = async (
 
     if (useActivity) {
       const icons = getBranding(c).activityIcons;
-      const iconSizes = ["64", "48", "32", "24", "16"];
+      const iconSizes = ["64", "48", "32", "24", "16", "svg"];
       
       for (const size of iconSizes) {
         let icon = icons?.[size];
@@ -615,9 +615,10 @@ export const handleStatus = async (
         if (size === "32" && !icon) {
           icon = icons?.["default"];
         }
+        const iconType = size === "svg" ? "image/svg+xml" : "image/png";
         if (icon) {
           headers.push(
-            `<link href='${icon}' rel='icon' sizes='${size}x${size}' type='image/png'>`
+            `<link href='${icon}' rel='icon' sizes='${size}x${size}' type='${iconType}'>`
           );
         }
       }

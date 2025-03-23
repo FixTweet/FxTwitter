@@ -103,8 +103,6 @@ This may be caused by API downtime or a new bug. Try again in a little while." p
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta content="{brandingName}" property="og:title"/>
-      <meta content="https://cdn.discordapp.com/icons/958942151817977906/7a220767640cbedbf780767585eaa10d.png?size=96" property="og:image"/>
-      <meta content="https://cdn.discordapp.com/icons/958942151817977906/7a220767640cbedbf780767585eaa10d.png?size=96" property="twitter:image"/>
       <meta content="#6363ff" name="theme-color"/>
       <meta content="Worker release: ${RELEASE_NAME}
       
