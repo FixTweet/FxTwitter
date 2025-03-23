@@ -605,44 +605,21 @@ export const handleStatus = async (
       provider = providerEngagementText;
     }
 
-    // Now you can use the 'provider' variable
-
     if (useActivity) {
       const icons = getBranding(c).activityIcons;
-      if (icons?.["64"]) {
-        headers.push(
-          `<link href='{icon}' rel='icon' sizes='64x64' type='image/png'>`.format({
-            icon: icons?.["64"]
-          })
-        );
-      }
-      if (icons?.["48"]) {
-        headers.push(
-          `<link href='{icon}' rel='icon' sizes='48x48' type='image/png'>`.format({
-            icon: icons?.["48"]
-          })
-        );
-      }
-      if (icons?.["32"] ?? icons?.["default"]) {
-        headers.push(
-          `<link href='{icon}' rel='icon' sizes='32x32' type='image/png'>`.format({
-            icon: icons?.["32"] ?? icons?.["default"]
-          })
-        );
-      }
-      if (icons?.["24"]) {
-        headers.push(
-          `<link href='{icon}' rel='icon' sizes='24x24' type='image/png'>`.format({
-            icon: icons?.["24"]
-          })
-        );
-      }
-      if (icons?.["16"]) {
-        headers.push(
-          `<link href='{icon}' rel='icon' sizes='16x16' type='image/png'>`.format({
-            icon: icons?.["16"]
-          })
-        );
+      const iconSizes = ["64", "48", "32", "24", "16"];
+      
+      for (const size of iconSizes) {
+        let icon = icons?.[size];
+        // Use default icon if size 32 is not available
+        if (size === "32" && !icon) {
+          icon = icons?.["default"];
+        }
+        if (icon) {
+          headers.push(
+            `<link href='${icon}' rel='icon' sizes='${size}x${size}' type='image/png'>`
+          );
+        }
       }
     }
 
