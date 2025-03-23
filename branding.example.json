@@ -3,23 +3,46 @@
     {
       "name": "FxTwitter",
       "default": true,
-      "domains": ["fxtwitter.com", "twittpr.com"],
+      "domains": [
+        "fxtwitter.com",
+        "twittpr.com"
+      ],
       "provider": "twitter",
       "favicon": "https://abs.twimg.com/favicons/twitter.2.ico",
-      "redirect": "https://github.com/FxEmbed/FxEmbed"
+      "redirect": "https://github.com/FxEmbed/FxEmbed",
+      "color": "#6363ff",
+      "activityIcons": {
+        "default": "https://raw.githubusercontent.com/FxEmbed/FxEmbed/refs/heads/main/.github/logos/fxtwitter32.png",
+        "32": "https://raw.githubusercontent.com/FxEmbed/FxEmbed/refs/heads/main/.github/logos/fxtwitter32.png"
+      }
     },
     {
       "name": "FixupX",
-      "domains": ["fixupx.com"],
+      "domains": [
+        "fixupx.com",
+        "xfixup.com"
+      ],
       "provider": "twitter",
       "favicon": "https://abs.twimg.com/favicons/twitter.3.ico",
-      "redirect": "https://github.com/FxEmbed/FxEmbed"
+      "redirect": "https://github.com/FxEmbed/FxEmbed",
+      "color": "#6363ff",
+      "activityIcons": {
+        "default": "https://raw.githubusercontent.com/FxEmbed/FxEmbed/refs/heads/main/.github/logos/fixupx32.png",
+        "32": "https://raw.githubusercontent.com/FxEmbed/FxEmbed/refs/heads/main/.github/logos/fixupx32.png"
+      }
     },
     {
       "name": "FxBluesky",
-      "domains": ["fxbsky.app"],
+      "domains": [
+        "fxbsky.app"
+      ],
       "provider": "bluesky",
-      "redirect": "https://bsky.app/profile/fxbsky.app"
+      "redirect": "https://bsky.app/profile/fxbsky.app",
+      "color": "#6363ff",
+      "activityIcons": {
+        "default": "https://raw.githubusercontent.com/FxEmbed/FxEmbed/refs/heads/main/.github/logos/fxbluesky32.png",
+        "32": "https://raw.githubusercontent.com/FxEmbed/FxEmbed/refs/heads/main/.github/logos/fxbluesky32.png"
+      }
     }
   ]
 }

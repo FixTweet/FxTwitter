@@ -608,15 +608,42 @@ export const handleStatus = async (
     // Now you can use the 'provider' variable
 
     if (useActivity) {
-      const name =
-        status.provider === DataProvider.Bsky
-          ? 'fxbluesky'
-          : flags.isXDomain
-            ? 'fixupx'
-            : 'fxtwitter';
-      headers.push(
-        `<link href='https://raw.githubusercontent.com/FxEmbed/FxEmbed/refs/heads/main/.github/logos/${name}32.png' rel='icon' sizes='32x32' type='image/png'>`
-      );
+      const icons = getBranding(c).activityIcons;
+      if (icons?.["64"]) {
+        headers.push(
+          `<link href='{icon}' rel='icon' sizes='64x64' type='image/png'>`.format({
+            icon: icons?.["64"]
+          })
+        );
+      }
+      if (icons?.["48"]) {
+        headers.push(
+          `<link href='{icon}' rel='icon' sizes='48x48' type='image/png'>`.format({
+            icon: icons?.["48"]
+          })
+        );
+      }
+      if (icons?.["32"] ?? icons?.["default"]) {
+        headers.push(
+          `<link href='{icon}' rel='icon' sizes='32x32' type='image/png'>`.format({
+            icon: icons?.["32"] ?? icons?.["default"]
+          })
+        );
+      }
+      if (icons?.["24"]) {
+        headers.push(
+          `<link href='{icon}' rel='icon' sizes='24x24' type='image/png'>`.format({
+            icon: icons?.["24"]
+          })
+        );
+      }
+      if (icons?.["16"]) {
+        headers.push(
+          `<link href='{icon}' rel='icon' sizes='16x16' type='image/png'>`.format({
+            icon: icons?.["16"]
+          })
+        );
+      }
     }
 
     headers.push(

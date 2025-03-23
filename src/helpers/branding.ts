@@ -9,6 +9,9 @@ type Branding = {
   redirect: string;
   default?: boolean;
   color?: string;
+  activityIcons?: {
+    [key: string]: string;
+  };
 };
 
 export const getBranding = (c: Context | Request): Branding => {
