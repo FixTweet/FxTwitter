@@ -607,7 +607,7 @@ export const handleStatus = async (
 
     if (useActivity) {
       const icons = getBranding(c).activityIcons;
-      const iconSizes = ["64", "48", "32", "24", "16", "svg"];
+      const iconSizes = ["svg", "64", "48", "32", "24", "16"];
       
       for (const size of iconSizes) {
         let icon = icons?.[size];

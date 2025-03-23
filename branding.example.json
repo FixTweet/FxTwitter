@@ -12,8 +12,13 @@
       "redirect": "https://github.com/FxEmbed/FxEmbed",
       "color": "#6363ff",
       "activityIcons": {
-        "default": "https://raw.githubusercontent.com/FxEmbed/FxEmbed/refs/heads/main/.github/logos/fxtwitter32.png",
-        "32": "https://raw.githubusercontent.com/FxEmbed/FxEmbed/refs/heads/main/.github/logos/fxtwitter32.png"
+        "default": "https://assets.fxembed.com/logos/fxtwitter32.png",
+        "svg": "https://assets.fxembed.com/logos/fxtwitter.svg",
+        "16": "https://assets.fxembed.com/logos/fxtwitter16.png",
+        "24": "https://assets.fxembed.com/logos/fxtwitter24.png",
+        "32": "https://assets.fxembed.com/logos/fxtwitter32.png",
+        "48": "https://assets.fxembed.com/logos/fxtwitter48.png",
+        "64": "https://assets.fxembed.com/logos/fxtwitter64.png"
       }
     },
     {
@@ -27,8 +32,13 @@
       "redirect": "https://github.com/FxEmbed/FxEmbed",
       "color": "#6363ff",
       "activityIcons": {
-        "default": "https://raw.githubusercontent.com/FxEmbed/FxEmbed/refs/heads/main/.github/logos/fixupx32.png",
-        "32": "https://raw.githubusercontent.com/FxEmbed/FxEmbed/refs/heads/main/.github/logos/fixupx32.png"
+        "default": "https://assets.fxembed.com/logos/fixupx32.png",
+        "svg": "https://assets.fxembed.com/logos/fixupx.svg",
+        "16": "https://assets.fxembed.com/logos/fixupx16.png",
+        "24": "https://assets.fxembed.com/logos/fixupx24.png",
+        "32": "https://assets.fxembed.com/logos/fixupx32.png",
+        "48": "https://assets.fxembed.com/logos/fixupx48.png",
+        "64": "https://assets.fxembed.com/logos/fixupx64.png"
       }
     },
     {
@@ -40,8 +50,13 @@
       "redirect": "https://bsky.app/profile/fxbsky.app",
       "color": "#6363ff",
       "activityIcons": {
-        "default": "https://raw.githubusercontent.com/FxEmbed/FxEmbed/refs/heads/main/.github/logos/fxbluesky32.png",
-        "32": "https://raw.githubusercontent.com/FxEmbed/FxEmbed/refs/heads/main/.github/logos/fxbluesky32.png"
+        "default": "https://assets.fxembed.com/logos/fxbluesky32.png",
+        "svg": "https://assets.fxembed.com/logos/fxbluesky.svg",
+        "16": "https://assets.fxembed.com/logos/fxbluesky16.png",
+        "24": "https://assets.fxembed.com/logos/fxbluesky24.png",
+        "32": "https://assets.fxembed.com/logos/fxbluesky32.png",
+        "48": "https://assets.fxembed.com/logos/fxbluesky48.png",
+        "64": "https://assets.fxembed.com/logos/fxbluesky64.png"
       }
     }
   ]
