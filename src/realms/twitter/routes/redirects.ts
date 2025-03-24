@@ -15,7 +15,7 @@ export const genericTwitterRedirect = async (c: Context) => {
     c.header('cache-control', cacheControl);
   }
 
-  if (baseUrl.startsWith('twitter://')) {
+  if (baseUrl.startsWith('twitter:/')) {
     // can't resolve this url to valid deeplink
     return c.redirect(`${Constants.TWITTER_ROOT}/${url.pathname}`, 302);
   }
@@ -99,7 +99,8 @@ export const setRedirectRequest = async (c: Context) => {
     Strings.MESSAGE_HTML.format({
       message: `Successfully set base redirect, you will now be redirected to ${sanitizeText(
         url
-      )} rather than ${Constants.TWITTER_ROOT}`
+      )} rather than ${Constants.TWITTER_ROOT}`,
+      brandingName: getBranding(c).name,
     })
   );
 };
