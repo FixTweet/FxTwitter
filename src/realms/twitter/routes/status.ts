@@ -147,17 +147,18 @@ export const statusRequest = async (c: Context) => {
           const appBody = await app.text();
           if (appBody.includes('<!doctype html>')) {
             return c.html(appBody, 200);
-          } else if (baseUrl.startsWith('twitter://')) {
+          } else if (baseUrl.startsWith('twitter:/')) {
             console.log('twitter:// redirect');
-            return c.redirect(`${baseUrl}/status?id=${id}`, 302);
+            return c.redirect(`twitter://status?id=${id}`, 302);
           } else {
             console.log('normal redirect');
             return c.redirect(`${baseUrl}/${handle || 'i'}/status/${id}`, 302);
           }
         } else {
-          if (baseUrl.startsWith('twitter://')) {
+          console.log(`baseUrl: ${baseUrl}`);
+          if (baseUrl.startsWith('twitter:/')) {
             console.log('twitter:// redirect');
-            return c.redirect(`${baseUrl}/status?id=${id}`, 302);
+            return c.redirect(`twitter://status?id=${id}`, 302);
           } else {
             console.log('normal redirect');
             return c.redirect(`${baseUrl}/${handle || 'i'}/status/${id}`, 302);
@@ -186,18 +187,19 @@ export const statusRequest = async (c: Context) => {
         return c.html(appBody, 200);
       } else {
         console.log('huh weird');
-        if (baseUrl.startsWith('twitter://')) {
+        if (baseUrl.startsWith('twitter:/')) {
           console.log('twitter:// redirect');
-          return c.redirect(`${baseUrl}/status?id=${id}`, 302);
+          return c.redirect(`twitter://status?id=${id}`, 302);
         } else {
           console.log('normal redirect');
           return c.redirect(`${baseUrl}/${handle || 'i'}/status/${id}`, 302);
         }
       }
     } else {
-      if (baseUrl.startsWith('twitter://')) {
+      console.log(`baseUrl: ${baseUrl}`);
+      if (baseUrl.startsWith('twitter:/')) {
         console.log('twitter:// redirect');
-        return c.redirect(`${baseUrl}/status?id=${id}`, 302);
+        return c.redirect(`twitter://status?id=${id}`, 302);
       } else {
         console.log('normal redirect');
         return c.redirect(`${baseUrl}/${handle || 'i'}/status/${id?.match(/\d{2,20}/)?.[0]}`, 302);

@@ -56,8 +56,8 @@ export const profileRequest = async (c: Context) => {
     const profileResponse = await handleProfile(c, username, flags);
 
     let newUrl = `${baseUrl}/${handle}`;
-    if (baseUrl.startsWith('twitter://')) {
-      newUrl = `${baseUrl}/user?screen_name=${handle}`;
+    if (baseUrl.startsWith('twitter:/')) {
+      newUrl = `twitter://user?screen_name=${handle}`;
     }
     /* Check for custom redirect */
 
