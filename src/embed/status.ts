@@ -389,7 +389,7 @@ export const handleStatus = async (
           /* This status has a video to render. */
           break;
       }
-    } else if (media?.videos && !flags.forceMosaic) {
+    } else if (media?.videos && !flags.nativeMultiImage) {
       const instructions = renderVideo(
         { context: c, status: status, userAgent: userAgent, text: newText },
         media.videos[0]
@@ -404,7 +404,7 @@ export const handleStatus = async (
     } else if (media?.mosaic) {
       if (
         isDiscord &&
-        !flags.forceMosaic
+        flags.nativeMultiImage
       ) {
         const photos = status.media?.photos || [];
 
@@ -452,7 +452,7 @@ export const handleStatus = async (
       );
       headers.push(...instructions.addHeaders);
     }
-    if (status.media?.external && !status.media.videos?.length && !flags.forceMosaic) {
+    if (status.media?.external && !status.media.videos?.length && !flags.nativeMultiImage) {
       const { external } = status.media;
       authorText = newText || '';
       headers.push(
@@ -654,7 +654,7 @@ export const handleStatus = async (
     if (flags.textOnly) {
       data.t = 1;
     }
-    if (flags.forceMosaic) {
+    if (flags.nativeMultiImage) {
       data.m = 1;
     }
     if (mediaNumber) {

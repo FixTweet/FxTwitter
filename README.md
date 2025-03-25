@@ -89,7 +89,7 @@ Otherwise, it will default to the first image.
 
 ## Combine multiple images into one
 
-By default, FxEmbed will display multiple images natively on Discord, allowing you to preview individual full-quality images. You can also opt to have the images combined into a single one to make it display better on some platforms (i.e. iOS). Image combining will always be used on unsupported platforms.
+By default, FxEmbed will combine multiple images into one, allowing you to see all images on all platforms. You can also opt in to have images displayed using Discord's native multi-image so you can view individual, full-quality images (but, it doesn't work on iOS :( )
 
 https://m.fxtwitter.com/example/status/123456789123456789
 https://m.fixupx.com/example/status/123456789123456789

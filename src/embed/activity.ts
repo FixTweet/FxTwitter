@@ -214,7 +214,7 @@ export const handleActivity = async (
   let authorHandle: string | null = null;
   let mediaNumber: number | null = null;
   let textOnly = false;
-  let forceMosaic = false;
+  let nativeMultiImage = false;
   const decoded = decodeSnowcode(snowcode);
   const statusId = decoded.i;
   if (decoded.l) {
@@ -227,7 +227,7 @@ export const handleActivity = async (
     textOnly = true;
   }
   if (decoded.m) {
-    forceMosaic = true;
+    nativeMultiImage = true;
   }
   if (decoded.n) {
     mediaNumber = decoded.n;
@@ -323,7 +323,7 @@ export const handleActivity = async (
 
   console.log('mediaList', mediaList);
 
-  if (forceMosaic && thread.status.media?.mosaic) {
+  if (!nativeMultiImage && thread.status.media?.mosaic) {
     response['media_attachments'] = [
       // @ts-expect-error doesn't know what to do with this
       {

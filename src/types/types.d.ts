@@ -15,7 +15,7 @@ declare type InputFlags = {
   instantViewUnrollThreads?: boolean;
   archive?: boolean;
   gallery?: boolean;
-  forceMosaic?: boolean;
+  nativeMultiImage?: boolean;
   name?: string;
 };
 
