@@ -8,7 +8,7 @@ import { InputFlags } from '../../../types/types';
 
 /* Handler for status request */
 export const statusRequest = async (c: Context) => {
-  const { prefix, handle, id, mediaNumber, language } = c.req.param();
+  const { handle, id, mediaNumber, language } = c.req.param();
   const url = new URL(c.req.url);
   const flags: InputFlags = {};
 
@@ -65,9 +65,9 @@ export const statusRequest = async (c: Context) => {
   } else if (Constants.NATIVE_MULTI_IMAGE_DOMAINS.includes(url.hostname)) {
     console.log('Force native multi image');
     flags.nativeMultiImage = true;
-  } else if (prefix === 'dl' || prefix === 'dir') {
-    console.log('Direct media request by path prefix');
-    flags.direct = true;
+  } else if (Constants.OLD_EMBED_DOMAINS.includes(url.hostname)) {
+    console.log('Disable activity embed');
+    flags.noActivity = true;
   }
 
   /* Support redirecting to specific quality of image, like:

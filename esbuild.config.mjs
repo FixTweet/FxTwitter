@@ -32,7 +32,6 @@ const releaseName = `${workerName}-${gitBranch}-${gitCommit}-${new Date()
   .substring(0, 19)}`;
 
 let envVariables = [
-  'BRANDING_NAME',
   'STANDARD_DOMAIN_LIST',
   'STANDARD_BSKY_DOMAIN_LIST',
   'DIRECT_MEDIA_DOMAINS',
@@ -46,7 +45,8 @@ let envVariables = [
   'MOSAIC_BSKY_DOMAIN_LIST',
   'API_HOST_LIST',
   'SENTRY_DSN',
-  'GIF_TRANSCODE_DOMAIN_LIST'
+  'GIF_TRANSCODE_DOMAIN_LIST',
+  'OLD_EMBED_DOMAINS'
 ];
 
 // Create defines for all environment variables

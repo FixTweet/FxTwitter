@@ -8,7 +8,7 @@ import { InputFlags } from '../../../types/types';
 
 export const bskyStatusRequest = async (c: Context) => {
   console.log('bluesky status request!!!');
-  const { prefix, handle, id } = c.req.param();
+  const { handle, id } = c.req.param();
   const actualId = id.match(/\w+/g)?.[0] ?? '';
 
   const userAgent = c.req.header('User-Agent') || '';
@@ -50,9 +50,9 @@ export const bskyStatusRequest = async (c: Context) => {
   } else if (Constants.NATIVE_MULTI_IMAGE_DOMAINS.includes(url.hostname)) {
     console.log('Force native multi image');
     flags.nativeMultiImage = true;
-  } else if (prefix === 'dl' || prefix === 'dir') {
-    console.log('Direct media request by path prefix');
-    flags.direct = true;
+  } else if (Constants.OLD_EMBED_DOMAINS.includes(url.hostname)) {
+    console.log('Disable activity embed');
+    flags.noActivity = true;
   }
 
   if (isBotUA || flags.direct || flags.api) {

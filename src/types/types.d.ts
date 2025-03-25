@@ -17,6 +17,7 @@ declare type InputFlags = {
   gallery?: boolean;
   nativeMultiImage?: boolean;
   name?: string;
+  noActivity?: boolean;
 };
 
 declare interface StatusResponse {

@@ -157,7 +157,8 @@ export const handleStatus = async (
     ) &&
     !flags.direct &&
     !flags.gallery &&
-    !flags.api
+    !flags.api &&
+    !flags.noActivity
   ) {
     useActivity = true;
   }
@@ -332,7 +333,8 @@ export const handleStatus = async (
   console.log('overrideMedia', JSON.stringify(overrideMedia));
   console.log('media', JSON.stringify(status.media));
 
-  if (!flags?.textOnly) {
+  // Skip for activity to make embed generate faster for mosaic and such
+  if (!useActivity && !flags?.textOnly) {
     const media =
       status.media?.all && status.media?.all.length > 0 ? status.media : status.quote?.media || {};
     if (overrideMedia) {

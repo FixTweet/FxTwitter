@@ -4,13 +4,12 @@
     "^.+\\.(t|j)sx?$": "ts-jest"
   },
   "globals": {
-    "BRANDING_NAME": "FxTwitter / FixupX",
-    "BRANDING_NAME_BSKY": "FxBluesky",
     "TEXT_ONLY_DOMAINS": "t.fxtwitter.com,t.twittpr.com,t.fixupx.com",
     "INSTANT_VIEW_DOMAINS": "i.fxtwitter.com,i.twittpr.com,i.fixupx.com",
     "INSTANT_VIEW_THREADS_DOMAINS": "u.fxtwitter.com,u.twittpr.com,u.fixupx.com",
     "GALLERY_DOMAINS": "g.fxtwitter.com,g.twittpr.com,g.fixupx.com",
     "NATIVE_MULTI_IMAGE_DOMAINS": "m.fxtwitter.com,m.twittpr.com,m.fixupx.com",
+    "OLD_EMBED_DOMAINS": "o.fxtwitter.com,o.twittpr.com,o.fixupx.com",
     "STANDARD_DOMAIN_LIST": "fxtwitter.com,fixupx.com,twittpr.com",
     "STANDARD_BSKY_DOMAIN_LIST": "fxbsky.app",
     "DIRECT_MEDIA_DOMAINS": "d.fxtwitter.com,dl.fxtwitter.com,d.fixupx.com,dl.fixupx.com",
