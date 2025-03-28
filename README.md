@@ -91,9 +91,9 @@ Otherwise, it will default to the first image.
 
 By default, FxEmbed will combine multiple images into one, allowing you to see all images on all platforms. You can also opt in to have images displayed using Discord's native multi-image so you can view individual, full-quality images (but, it doesn't work on iOS :( )
 
-https://m.fxtwitter.com/example/status/123456789123456789
-https://m.fixupx.com/example/status/123456789123456789
-https://m.fxbsky.app/profile/example.com/post/3lkord123abc
+- `https://m.fxtwitter.com/example/status/123456789123456789`
+- `https://m.fixupx.com/example/status/123456789123456789`
+- `https://m.fxbsky.app/profile/example.com/post/3lkord123abc`
 
 
 <img width="790px" src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/assets/readme/mosaic.png">
