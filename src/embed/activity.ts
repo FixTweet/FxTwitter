@@ -323,27 +323,7 @@ export const handleActivity = async (
 
   console.log('mediaList', mediaList);
 
-  if (!nativeMultiImage && thread.status.media?.mosaic) {
-    response['media_attachments'] = [
-      // @ts-expect-error doesn't know what to do with this
-      {
-        id: '114163769487684704',
-        type: 'image',
-        url: thread.status.media?.mosaic?.formats?.jpeg,
-        preview_url: thread.status.media?.mosaic?.formats?.jpeg,
-        remote_url: null,
-        preview_remote_url: null,
-        text_url: null,
-        description: null,
-        meta: {
-          original: {
-            width: thread.status.media?.mosaic?.width,
-            height: thread.status.media?.mosaic?.height
-          }
-        }
-      }
-    ];
-  } else if (!textOnly) {
+  if (!textOnly) {
     if (mediaNumber) {
       console.log('we have a media number', mediaNumber);
       const newMedia = rawMediaList?.[mediaNumber - 1];
@@ -354,7 +334,27 @@ export const handleActivity = async (
       }
       console.log('updated mediaList', mediaList);
     }
-    if (mediaList && mediaList.length > 0) {
+    if (!nativeMultiImage && (mediaNumber && mediaList?.length !== 1) && thread.status.media?.mosaic) {
+      response['media_attachments'] = [
+        // @ts-expect-error doesn't know what to do with this
+        {
+          id: '114163769487684704',
+          type: 'image',
+          url: thread.status.media?.mosaic?.formats?.jpeg,
+          preview_url: thread.status.media?.mosaic?.formats?.jpeg,
+          remote_url: null,
+          preview_remote_url: null,
+          text_url: null,
+          description: null,
+          meta: {
+            original: {
+              width: thread.status.media?.mosaic?.width,
+              height: thread.status.media?.mosaic?.height
+            }
+          }
+        }
+      ];
+    } else if (mediaList && mediaList.length > 0) {
       // @ts-expect-error doesn't know what to do with this
       response['media_attachments'] = mediaList.map(media => {
         switch (media.type) {
