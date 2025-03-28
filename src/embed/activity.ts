@@ -369,6 +369,9 @@ export const handleActivity = async (
     } else if (mediaList && mediaList.length > 0) {
       // @ts-expect-error doesn't know what to do with this
       response['media_attachments'] = mediaList.map(media => {
+        if (media.type === 'gif' && (media as APIVideo).format === 'image/gif') {
+          media.type = 'photo';
+        }
         switch (media.type) {
           case 'photo':
             const image = media as APIPhoto;

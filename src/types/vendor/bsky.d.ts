@@ -20,7 +20,13 @@ declare type BlueskyExternalEmbed = {
   uri: string;
   title: string;
   description: string;
-  thumb: string;
+  thumb: {
+    ref: {
+      $link: string;
+    };
+    mimeType: string;
+    size: number;
+  };
 };
 
 declare type BlueskyVideo = {
@@ -53,6 +59,7 @@ declare type BlueskyEmbed = {
   images?: BlueskyImage[];
   video?: BlueskyVideo;
   media?: BlueskyMedia;
+  external?: BlueskyExternalEmbed;
   record?: {
     value: BlueskyPost;
     record: BlueskyPost;

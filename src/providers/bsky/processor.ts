@@ -79,31 +79,33 @@ export const buildAPIBskyPost = async (
     ];
   }
 
-  if (media?.external) {
-    // if (media?.external.uri.startsWith('https://media.tenor.com')) {
-    //   apiStatus.media.videos = [
-    //     {
-    //       type: 'gif',
-    //       url: media?.external?.uri,
-    //       duration: 0,
-    //       variants: [],
-    //       format: 'image/gif',
-    //       thumbnail_url: media?.thumbnail,
-    //       width: 0,
-    //       height: 0
-    //     }
-    //   ]
-    // } else {
-    apiStatus.media.photos = [
-      {
-        type: 'photo',
-        url: media?.external?.uri,
-        altText: media?.external?.description,
-        width: 0,
-        height: 0
-      }
-    ];
-    // }
+  if (media?.external || status.record?.embed?.external) {
+    const external = media?.external ?? status.record?.embed?.external;
+    if (external?.uri.startsWith('https://media.tenor.com')) {
+      console.log('tenor gif', external?.uri);
+      apiStatus.media.photos = [
+        {
+          type: 'gif',
+          url: external?.uri,
+          duration: 0,
+          variants: [],
+          format: 'image/gif',
+          thumbnail_url: external?.thumb?.ref?.$link ?? '',
+          width: 0,
+          height: 0
+        }
+      ]
+    } else {
+      apiStatus.media.photos = [
+        {
+          type: 'photo',
+          url: external?.uri ?? '',
+          altText: external?.description ?? '',
+          width: 0,
+          height: 0
+        }
+      ];
+    }
 
     apiStatus.embed_card = 'summary_large_image';
     console.log('external image', apiStatus.media.photos);
@@ -187,6 +189,8 @@ export const buildAPIBskyPost = async (
   apiStatus.provider = DataProvider.Bsky;
 
   console.log('quote', apiStatus.quote);
+
+  console.log('apiStatus', apiStatus);
 
   return apiStatus;
 };
