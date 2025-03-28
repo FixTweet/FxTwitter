@@ -11,7 +11,14 @@ import { escapeRegex } from '../helpers/utils';
 import { decodeSnowcode } from '../helpers/snowcode';
 import translationResources from '../../i18n/resources';
 import { Experiment, experimentCheck } from '../experiments';
-import { APIPhoto, APIPoll, APIStatus, APITwitterStatus, APIVideo, SocialThread } from '../types/types';
+import {
+  APIPhoto,
+  APIPoll,
+  APIStatus,
+  APITwitterStatus,
+  APIVideo,
+  SocialThread
+} from '../types/types';
 import { Context } from 'hono/jsx/dom';
 
 const generatePoll = (poll: APIPoll): string => {
@@ -334,7 +341,12 @@ export const handleActivity = async (
       }
       console.log('updated mediaList', mediaList);
     }
-    if (!nativeMultiImage && (mediaNumber && mediaList?.length !== 1) && thread.status.media?.mosaic) {
+    if (
+      !nativeMultiImage &&
+      mediaNumber &&
+      mediaList?.length !== 1 &&
+      thread.status.media?.mosaic
+    ) {
       response['media_attachments'] = [
         // @ts-expect-error doesn't know what to do with this
         {
@@ -390,10 +402,7 @@ export const handleActivity = async (
               sizeMultiplier = 2;
             }
             if (
-              experimentCheck(
-                Experiment.VIDEO_REDIRECT_WORKAROUND,
-                !!Constants.API_HOST_LIST
-              ) &&
+              experimentCheck(Experiment.VIDEO_REDIRECT_WORKAROUND, !!Constants.API_HOST_LIST) &&
               (userAgent?.includes('Discord') || userAgent?.includes('Telegram'))
             ) {
               video.url = `https://${Constants.API_HOST_LIST[0]}/2/go?url=${encodeURIComponent(video.url)}`;

@@ -95,7 +95,6 @@ By default, FxEmbed will combine multiple images into one, allowing you to see a
 - `https://m.fixupx.com/example/status/123456789123456789`
 - `https://m.fxbsky.app/profile/example.com/post/3lkord123abc`
 
-
 <img width="790px" src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/assets/readme/mosaic.png">
 
 ## Gallery view

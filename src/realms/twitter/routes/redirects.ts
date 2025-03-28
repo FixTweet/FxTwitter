@@ -100,7 +100,7 @@ export const setRedirectRequest = async (c: Context) => {
       message: `Successfully set base redirect, you will now be redirected to ${sanitizeText(
         url
       )} rather than ${Constants.TWITTER_ROOT}`,
-      brandingName: getBranding(c).name,
+      brandingName: getBranding(c).name
     })
   );
 };

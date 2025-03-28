@@ -404,10 +404,7 @@ export const handleStatus = async (
         siteName = instructions.siteName;
       }
     } else if (media?.mosaic) {
-      if (
-        isDiscord &&
-        flags.nativeMultiImage
-      ) {
+      if (isDiscord && flags.nativeMultiImage) {
         const photos = status.media?.photos || [];
 
         photos.forEach(photo => {
@@ -609,15 +606,15 @@ export const handleStatus = async (
 
     if (useActivity) {
       const icons = getBranding(c).activityIcons;
-      const iconSizes = ["svg", "64", "48", "32", "24", "16"];
-      
+      const iconSizes = ['svg', '64', '48', '32', '24', '16'];
+
       for (const size of iconSizes) {
         let icon = icons?.[size];
         // Use default icon if size 32 is not available
-        if (size === "32" && !icon) {
-          icon = icons?.["default"];
+        if (size === '32' && !icon) {
+          icon = icons?.['default'];
         }
-        const iconType = size === "svg" ? "image/svg+xml" : "image/png";
+        const iconType = size === 'svg' ? 'image/svg+xml' : 'image/png';
         if (icon) {
           headers.push(
             `<link href='${icon}' rel='icon' sizes='${size}x${size}' type='${iconType}'>`
@@ -665,7 +662,10 @@ export const handleStatus = async (
     const snowflake = encodeSnowcode(data);
     console.log('snowflake', snowflake);
     /* Convince Discord that you are actually a Mastodon link lol */
-    let base = status.provider === DataProvider.Bsky ? Constants.STANDARD_BSKY_DOMAIN_LIST[0] : Constants.STANDARD_DOMAIN_LIST[0];
+    let base =
+      status.provider === DataProvider.Bsky
+        ? Constants.STANDARD_BSKY_DOMAIN_LIST[0]
+        : Constants.STANDARD_DOMAIN_LIST[0];
 
     try {
       base = new URL(c.req.url).hostname;
