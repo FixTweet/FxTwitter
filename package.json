@@ -11,16 +11,16 @@
     "reload": "wrangler deploy --no-bundle && wrangler tail",
     "prettier": "prettier --write .",
     "lint:eslint": "eslint --max-warnings=0 src",
-    "test": "jest --config jestconfig.json --verbose"
+    "test": "vitest"
   },
   "author": "dangered wolf",
   "license": "MIT",
   "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.8.7",
     "@cloudflare/workers-types": "^4.20250327.0",
     "@microsoft/eslint-formatter-sarif": "^3.1.0",
     "@sentry/esbuild-plugin": "^3.2.3",
     "@sentry/integrations": "^7.114.0",
-    "@types/jest": "^29.5.14",
     "@typescript-eslint/eslint-plugin": "^8.28.0",
     "@typescript-eslint/parser": "^8.28.0",
     "dotenv": "^16.4.7",
@@ -29,18 +29,16 @@
     "eslint-config-typescript": "^3.0.0",
     "eslint-plugin-optimize-regex": "^1.2.1",
     "eslint-plugin-sonarjs": "^0.25.1",
-    "jest": "^29.7.0",
-    "jest-environment-miniflare": "^2.14.4",
     "prettier": "^3.5.3",
-    "ts-jest": "^29.3.0",
     "ts-loader": "^9.5.2",
     "typescript": "^5.8.2",
+    "vitest": "^3.0.9",
     "wrangler": "^4.5.1"
   },
   "dependencies": {
     "@hono/sentry": "^1.2.0",
+    "hono": "^4.7.5",
     "i18next": "^24.2.3",
-    "i18next-icu": "^2.3.0",
-    "hono": "^4.7.5"
+    "i18next-icu": "^2.3.0"
   }
 }
