@@ -23,7 +23,7 @@ export default defineConfig({
   },
   test: {
     pool: '@cloudflare/vitest-pool-workers',
-    include: ['test/**/*.test.ts'],
+    include: ['test/worker.test.ts'],
     globals: true,
     poolOptions: {
       workers: {
@@ -42,7 +42,7 @@ export default defineConfig({
               modules: true,
               compatibilityDate: "2025-03-21",
               compatibilityFlags: ["nodejs_compat"],
-              scriptPath: "./test/helpers/elongator-wrapper.ts"
+              scriptPath: "./test/helpers/elongator-wrapper.js"
             }
           ],
           // Mock bindings used in the app

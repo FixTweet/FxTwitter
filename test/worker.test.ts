@@ -1,5 +1,6 @@
 import { APITwitterStatus, APIUser, TweetAPIResponse, UserAPIResponse } from '../src/types/types';
 import { app } from '../src/worker';
+import { expect, test } from 'vitest';
 
 const botHeaders = { 'User-Agent': 'Discordbot/2.0' };
 const humanHeaders = {
@@ -9,25 +10,6 @@ const humanHeaders = {
 const githubUrl = 'https://github.com/FxEmbed/FxEmbed';
 const twitterBaseUrl = 'https://x.com';
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore - Performance not included in miniflare environment
-if (!globalThis.performance) {
-  // @ts-expect-error - Performance not included in jest environment
-  globalThis.performance = {};
-}
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore - Performance not included in miniflare environment
-if (!globalThis.performance.now) {
-  // eslint-disable-next-line no-var
-  var start = Date.now();
-
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore - Performance not included in miniflare environment
-  globalThis.performance.now = function () {
-    return Date.now() - start;
-  };
-}
 
 test('Home page redirect', async () => {
   const result = await app.request(
