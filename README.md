@@ -235,7 +235,7 @@ Feel free to [open an issue](https://github.com/FxEmbed/FxEmbed/issues)
 
 ## Additional Credits
 
-[Mosaic](https://github.com/FixTweet/mosaic) Multi-image combiner by [Antonio32A](https://github.com/Antonio32A) and improved by [Syfaro](https://github.com/Syfaro)
+[Mosaic](https://github.com/FixTweet/mosaic) Multi-image combiner by [Antonio32A](https://github.com/Antonio32A) and improved by [Syfaro](https://github.com/Syfaro) and [Deer Spangle](https://github.com/Deer-Spangle)
 
 [Everyone else who has contributed to the main project!](https://github.com/FxEmbed/FxEmbed/graphs/contributors)
 
