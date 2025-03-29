@@ -1,0 +1,304 @@
+{
+  "data": {
+    "threaded_conversation_with_injections_v2": {
+      "instructions": [{
+          "type": "TimelineAddEntries",
+          "entries": [{
+              "entryId": "tweet-1899954694652309701",
+              "sortIndex": "7323417342202466106",
+              "content": {
+                "entryType": "TimelineTimelineItem",
+                "__typename": "TimelineTimelineItem",
+                "itemContent": {
+                  "itemType": "TimelineTweet",
+                  "__typename": "TimelineTweet",
+                  "tweet_results": {
+                    "result": {
+                      "__typename": "Tweet",
+                      "rest_id": "1899954694652309701",
+                      "has_birdwatch_notes": false,
+                      "core": {
+                        "user_results": {
+                          "result": {
+                            "__typename": "User",
+                            "id": "VXNlcjoxMzQwNzk2NTY=",
+                            "rest_id": "134079656",
+                            "affiliates_highlighted_label": {},
+                            "has_graduated_access": true,
+                            "parody_commentary_fan_label": "None",
+                            "is_blue_verified": false,
+                            "profile_image_shape": "Circle",
+                            "legacy": {
+                              "following": false,
+                              "can_dm": true,
+                              "can_media_tag": false,
+                              "created_at": "Sat Apr 17 11:45:16 +0000 2010",
+                              "default_profile": false,
+                              "default_profile_image": false,
+                              "description": "Geek | #Welsh Content Creator \uD83C\uDFAE | Streaming space, simulation, and all things Sci-Fi \uD83D\uDE80 | Powered by coffee ☕ | Inquiries: inquiries@vyseroy.wales",
+                              "entities": {
+                                "description": {
+                                  "urls": []
+                                },
+                                "url": {
+                                  "urls": [{
+                                    "display_url": "link.vyseroy.wales",
+                                    "expanded_url": "http://link.vyseroy.wales/",
+                                    "url": "https://t.co/CQVMuRZoA9",
+                                    "indices": [
+                                      0,
+                                      23
+                                    ]
+                                  }]
+                                }
+                              },
+                              "fast_followers_count": 0,
+                              "favourites_count": 20967,
+                              "followers_count": 626,
+                              "friends_count": 770,
+                              "has_custom_timelines": true,
+                              "is_translator": false,
+                              "listed_count": 11,
+                              "location": "South Wales, UK",
+                              "media_count": 1879,
+                              "name": "Vyseroy \uD83D\uDE80",
+                              "normal_followers_count": 626,
+                              "pinned_tweet_ids_str": [
+                                "1830161308747989498"
+                              ],
+                              "possibly_sensitive": false,
+                              "profile_banner_url": "https://pbs.twimg.com/profile_banners/134079656/1681080761",
+                              "profile_image_url_https": "https://pbs.twimg.com/profile_images/1761375988833832960/BEcUkWTM_normal.jpg",
+                              "profile_interstitial_type": "",
+                              "screen_name": "Vyseroy",
+                              "statuses_count": 8417,
+                              "translator_type": "none",
+                              "url": "https://t.co/CQVMuRZoA9",
+                              "verified": false,
+                              "want_retweets": false,
+                              "withheld_in_countries": []
+                            },
+                            "professional": {
+                              "rest_id": "1603420379313233921",
+                              "professional_type": "Creator",
+                              "category": [{
+                                "id": 1042,
+                                "name": "Content Creator",
+                                "icon_name": "IconBriefcaseStroke"
+                              }]
+                            },
+                            "tipjar_settings": {}
+                          }
+                        }
+                      },
+                      "card": {
+                        "rest_id": "card://1899954693746405377",
+                        "legacy": {
+                          "binding_values": [{
+                              "key": "choice1_label",
+                              "value": {
+                                "string_value": "MISC Freelancer",
+                                "type": "STRING"
+                              }
+                            },
+                            {
+                              "key": "choice2_label",
+                              "value": {
+                                "string_value": "Anvil Carrack",
+                                "type": "STRING"
+                              }
+                            },
+                            {
+                              "key": "end_datetime_utc",
+                              "value": {
+                                "string_value": "2025-03-16T22:44:33Z",
+                                "type": "STRING"
+                              }
+                            },
+                            {
+                              "key": "counts_are_final",
+                              "value": {
+                                "boolean_value": true,
+                                "type": "BOOLEAN"
+                              }
+                            },
+                            {
+                              "key": "choice2_count",
+                              "value": {
+                                "string_value": "6",
+                                "type": "STRING"
+                              }
+                            },
+                            {
+                              "key": "choice1_count",
+                              "value": {
+                                "string_value": "2",
+                                "type": "STRING"
+                              }
+                            },
+                            {
+                              "key": "choice4_label",
+                              "value": {
+                                "string_value": "Origin 600i",
+                                "type": "STRING"
+                              }
+                            },
+                            {
+                              "key": "last_updated_datetime_utc",
+                              "value": {
+                                "string_value": "2025-03-16T22:44:34Z",
+                                "type": "STRING"
+                              }
+                            },
+                            {
+                              "key": "duration_minutes",
+                              "value": {
+                                "string_value": "5760",
+                                "type": "STRING"
+                              }
+                            },
+                            {
+                              "key": "choice3_count",
+                              "value": {
+                                "string_value": "5",
+                                "type": "STRING"
+                              }
+                            },
+                            {
+                              "key": "choice4_count",
+                              "value": {
+                                "string_value": "9",
+                                "type": "STRING"
+                              }
+                            },
+                            {
+                              "key": "choice3_label",
+                              "value": {
+                                "string_value": "Drake Cutlass (Any?)",
+                                "type": "STRING"
+                              }
+                            },
+                            {
+                              "key": "api",
+                              "value": {
+                                "string_value": "capi://passthrough/1",
+                                "type": "STRING"
+                              }
+                            },
+                            {
+                              "key": "card_url",
+                              "value": {
+                                "scribe_key": "card_url",
+                                "string_value": "https://twitter.com",
+                                "type": "STRING"
+                              }
+                            }
+                          ],
+                          "card_platform": {
+                            "platform": {
+                              "audience": {
+                                "name": "production"
+                              },
+                              "device": {
+                                "name": "Swift",
+                                "version": "12"
+                              }
+                            }
+                          },
+                          "name": "poll4choice_text_only",
+                          "url": "card://1899954693746405377",
+                          "user_refs_results": []
+                        }
+                      },
+                      "unmention_data": {},
+                      "edit_control": {
+                        "edit_tweet_ids": [
+                          "1899954694652309701"
+                        ],
+                        "editable_until_msecs": "1741823073000",
+                        "is_edit_eligible": false,
+                        "edits_remaining": "5"
+                      },
+                      "is_translatable": false,
+                      "views": {
+                        "count": "162",
+                        "state": "EnabledWithCount"
+                      },
+                      "source": "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Web App</a>",
+                      "grok_analysis_button": true,
+                      "legacy": {
+                        "bookmark_count": 0,
+                        "bookmarked": false,
+                        "created_at": "Wed Mar 12 22:44:33 +0000 2025",
+                        "conversation_id_str": "1899954694652309701",
+                        "display_text_range": [
+                          0,
+                          139
+                        ],
+                        "entities": {
+                          "hashtags": [{
+                              "indices": [
+                                97,
+                                109
+                              ],
+                              "text": "starcitizen"
+                            },
+                            {
+                              "indices": [
+                                110,
+                                115
+                              ],
+                              "text": "poll"
+                            },
+                            {
+                              "indices": [
+                                116,
+                                127
+                              ],
+                              "text": "videogames"
+                            },
+                            {
+                              "indices": [
+                                128,
+                                139
+                              ],
+                              "text": "spacegames"
+                            }
+                          ],
+                          "symbols": [],
+                          "timestamps": [],
+                          "urls": [],
+                          "user_mentions": []
+                        },
+                        "favorite_count": 2,
+                        "favorited": false,
+                        "full_text": "You can only pick ONE ship for the rest of your time in Star Citizen. What are you choosing?\" \uD83D\uDE80\uD83D\uDCAD\n#starcitizen #poll #videogames #spacegames",
+                        "is_quote_status": false,
+                        "lang": "en",
+                        "quote_count": 0,
+                        "reply_count": 2,
+                        "retweet_count": 0,
+                        "retweeted": false,
+                        "user_id_str": "134079656",
+                        "id_str": "1899954694652309701"
+                      },
+                      "quick_promote_eligibility": {
+                        "eligibility": "IneligibleTweet"
+                      }
+                    }
+                  },
+                  "tweetDisplayType": "Tweet",
+                  "hasModeratedReplies": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "TimelineTerminateTimeline",
+          "direction": "Top"
+        }
+      ]
+    }
+  }
+}

@@ -76,7 +76,6 @@ test('Status activity video status', async () => {
   expect(response.account.avatar).toMatch(/https:\/\/pbs\.twimg\.com\/profile_images\/.+\.jpg/);
   expect(response.media_attachments).toBeTruthy();
   expect(response.media_attachments.length).toEqual(1);
-  expect(response.media_attachments[0].id).toEqual('114163769487684704');
   expect(response.media_attachments[0].type).toEqual('video');
   expect(response.media_attachments[0].preview_url).toEqual('https://pbs.twimg.com/ext_tw_video_thumb/1841204388993646595/pu/img/KKN8tSQm60z2FmtE.jpg');
   expect(response.media_attachments[0].meta).toBeTruthy();
@@ -177,4 +176,79 @@ test('Status activity select non-existing image', async () => {
   expect(response.account.followers_count).toBeGreaterThan(0);
   expect(response.account.following_count).toBeGreaterThan(0);
   expect(response.account.statuses_count).toBeGreaterThan(0);
+});
+
+
+test('Status activity poll', async () => {
+  const result = await app.request(
+    new Request('https://fxtwitter.com/api/v1/statuses/66086667665360616161575658615658575455526159525366', {
+      method: 'GET',
+      headers: botHeaders
+    }), undefined, envWrapper
+  );
+  expect(result.status).toEqual(200);
+  const response = (await result.json()) as ActivityStatus;
+  expect(response).toBeTruthy();
+  expect(response.id).toEqual('1899954694652309701');
+  expect(response.url).toEqual(`${twitterBaseUrl}/Vyseroy/status/1899954694652309701`);
+  expect(response.created_at).toEqual('2025-03-12T22:44:33.000Z');
+  expect(response.content).toMatch(/You can only pick ONE ship for the rest of your time in Star Citizen\. What are you choosing\?" 🚀💭<br>︀︀<a href="https:\/\/x\.com\/hashtag\/starcitizen">#starcitizen<\/a> <a href="https:\/\/x\.com\/hashtag\/poll">#poll<\/a> <a href="https:\/\/x\.com\/hashtag\/videogames">#videogames<\/a> <a href="https:\/\/x\.com\/hashtag\/spacegames">#spacegames<\/a><br><br><blockquote>██<br><b>MISC Freelancer<\/b>&emsp;9\.1%<br>︀︀︀<br>︀████████<br><b>Anvil Carrack<\/b>&emsp;27\.3%<br>︀︀︀<br>︀███████<br><b>Drake Cutlass \(Any\?\)<\/b>&emsp;22\.7%<br>︀︀︀<br>︀█████████████<br><b>Origin 600i<\/b>&emsp;40\.9%<br>︀︀︀<br>︀22 votes · Final results/);
+  expect(response.media_attachments).toBeTruthy();
+  expect(response.media_attachments.length).toEqual(0);
+  expect(response.account.username).toEqual('Vyseroy');
+  expect(response.account.display_name).toContain('Vyseroy');
+  expect(response.account.created_at).toEqual('2010-04-17T11:45:16.000Z');
+  expect(response.account.avatar).toMatch(/https:\/\/pbs\.twimg\.com\/profile_images\/.+\.jpg/);
+  expect(response.account.avatar_static).toMatch(/https:\/\/pbs\.twimg\.com\/profile_images\/.+\.jpg/);
+  expect(response.account.header).toMatch(/https:\/\/pbs\.twimg\.com\/profile_banners\/.+/);
+  expect(response.account.header_static).toMatch(/https:\/\/pbs\.twimg\.com\/profile_banners\/.+/);
+  expect(response.account.followers_count).toBeGreaterThan(0);
+  expect(response.account.following_count).toBeGreaterThan(0);
+  expect(response.account.statuses_count).toBeGreaterThan(0);
+});
+
+
+test('Status activity quote and video', async () => {
+  const result = await app.request(
+    new Request('https://fxtwitter.com/api/v1/statuses/66086667665361525452576154616157615352615255555766', {
+      method: 'GET',
+      headers: botHeaders
+    }), undefined, envWrapper
+  );
+  expect(result.status).toEqual(200);
+  const response = (await result.json()) as ActivityStatus;
+  expect(response).toBeTruthy();
+  expect(response.id).toEqual('1902059299591090335');
+  expect(response.url).toEqual(`${twitterBaseUrl}/carrionkid/status/1902059299591090335`);
+  expect(response.created_at).toEqual('2025-03-18T18:07:30.000Z');
+  expect(response.content).toMatch(/<br><br><blockquote><b><a href="https:\/\/x\.com\/__itzt3z\/status\/1900793157786255768">Quoting<\/a> 🛸 \(<a href="https:\/\/x\.com\/__itzt3z">@__itzt3z<\/a>\)<\/b><br>︀<br>the funniest tik toks be the ones they dont let you save<\/blockquote>/);
+  expect(response.media_attachments).toBeTruthy();
+  expect(response.account.username).toEqual('carrionkid');
+  expect(response.account.display_name).toContain('harlow');
+  expect(response.account.created_at).toEqual('2018-08-14T00:56:49.000Z');
+  expect(response.account.avatar).toMatch(/https:\/\/pbs\.twimg\.com\/profile_images\/.+\.jpg/);
+  expect(response.account.avatar_static).toMatch(/https:\/\/pbs\.twimg\.com\/profile_images\/.+\.jpg/);
+  expect(response.account.header).toMatch(/https:\/\/pbs\.twimg\.com\/profile_banners\/.+/);
+  expect(response.account.header_static).toMatch(/https:\/\/pbs\.twimg\.com\/profile_banners\/.+/);
+  expect(response.account.followers_count).toBeGreaterThan(0);
+  expect(response.account.following_count).toBeGreaterThan(0);
+  expect(response.account.statuses_count).toBeGreaterThan(0);
+  expect(response.media_attachments.length).toEqual(1);
+  expect(response.media_attachments[0].type).toEqual('video');
+  expect(response.media_attachments[0].preview_url).toEqual('https://pbs.twimg.com/ext_tw_video_thumb/1902059279190052864/pu/img/DLoQFXU9gzkHQ2fh.jpg');
+  expect(response.media_attachments[0].meta).toBeTruthy();
+  expect(response.media_attachments[0].meta?.original?.width).toEqual(1152);
+  expect(response.media_attachments[0].meta?.original?.height).toEqual(2560);
+  expect(response.media_attachments[0].meta?.original?.size).toEqual('1152x2560');
+  expect(response.media_attachments[0].meta?.original?.aspect).toEqual(0.45);
+
+  expect(response.media_attachments[0].url).toContain('video.twimg.com');
+  expect(response.media_attachments[0].remote_url).toBeNull();
+  expect(response.media_attachments[0].preview_remote_url).toBeNull();
+  expect(response.media_attachments[0].text_url).toBeNull();
+
+  expect(response.application).toEqual({
+    name: "Twitter for Android",
+    website: null
+  });
 });

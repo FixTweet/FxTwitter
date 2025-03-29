@@ -1,0 +1,421 @@
+{
+  "data": {
+    "tweetResult": {
+      "result": {
+        "__typename": "Tweet",
+        "rest_id": "1902059299591090335",
+        "core": {
+          "user_results": {
+            "result": {
+              "__typename": "User",
+              "id": "VXNlcjoxMDI5MTY5OTM4NTg4NjgwMTkz",
+              "rest_id": "1029169938588680193",
+              "affiliates_highlighted_label": {},
+              "parody_commentary_fan_label": "None",
+              "is_blue_verified": false,
+              "profile_image_shape": "Circle",
+              "legacy": {
+                "created_at": "Tue Aug 14 00:56:49 +0000 2018",
+                "default_profile": false,
+                "default_profile_image": false,
+                "description": "Harlow Avarice ☉ 25 ☉ he/they ☉\npart time writer, full time mall goth ☉ based out of NorCal ☉ for professional inquiries: harlow.avarice@gmail.com",
+                "entities": {
+                  "description": {
+                    "urls": []
+                  },
+                  "url": {
+                    "urls": [{
+                      "display_url": "linktr.ee/carrionkid",
+                      "expanded_url": "http://linktr.ee/carrionkid",
+                      "url": "https://t.co/wXsYsv6LIu",
+                      "indices": [
+                        0,
+                        23
+                      ]
+                    }]
+                  }
+                },
+                "fast_followers_count": 0,
+                "favourites_count": 8996,
+                "followers_count": 219,
+                "friends_count": 366,
+                "has_custom_timelines": true,
+                "is_translator": false,
+                "listed_count": 2,
+                "location": "the wildways",
+                "media_count": 1007,
+                "name": "harlow",
+                "normal_followers_count": 219,
+                "pinned_tweet_ids_str": [
+                  "1418728366740447232"
+                ],
+                "possibly_sensitive": false,
+                "profile_banner_url": "https://pbs.twimg.com/profile_banners/1029169938588680193/1626329933",
+                "profile_image_url_https": "https://pbs.twimg.com/profile_images/1246997941409189888/rZzhMxv7_normal.jpg",
+                "profile_interstitial_type": "",
+                "screen_name": "carrionkid",
+                "statuses_count": 4527,
+                "translator_type": "none",
+                "url": "https://t.co/wXsYsv6LIu",
+                "verified": false,
+                "withheld_in_countries": []
+              },
+              "tipjar_settings": {
+                "is_enabled": false,
+                "bandcamp_handle": "",
+                "bitcoin_handle": "",
+                "cash_app_handle": "",
+                "ethereum_handle": "",
+                "gofundme_handle": "",
+                "patreon_handle": "",
+                "pay_pal_handle": "",
+                "venmo_handle": ""
+              }
+            }
+          }
+        },
+        "unmention_data": {},
+        "edit_control": {
+          "edit_tweet_ids": [
+            "1902059299591090335"
+          ],
+          "editable_until_msecs": "1742324850000",
+          "is_edit_eligible": true,
+          "edits_remaining": "5"
+        },
+        "is_translatable": false,
+        "views": {
+          "count": "1223553",
+          "state": "EnabledWithCount"
+        },
+        "source": "<a href=\"http://twitter.com/download/android\" rel=\"nofollow\">Twitter for Android</a>",
+        "grok_analysis_button": false,
+        "quoted_status_result": {
+          "result": {
+            "__typename": "Tweet",
+            "rest_id": "1900793157786255768",
+            "core": {
+              "user_results": {
+                "result": {
+                  "__typename": "User",
+                  "id": "VXNlcjoxNzAxNTYyNzE3MTg0NjA2MjA4",
+                  "rest_id": "1701562717184606208",
+                  "affiliates_highlighted_label": {},
+                  "parody_commentary_fan_label": "None",
+                  "is_blue_verified": false,
+                  "profile_image_shape": "Circle",
+                  "legacy": {
+                    "created_at": "Tue Sep 12 11:45:51 +0000 2023",
+                    "default_profile": true,
+                    "default_profile_image": false,
+                    "description": "its me again \uD83D\uDC7D",
+                    "entities": {
+                      "description": {
+                        "urls": []
+                      },
+                      "url": {
+                        "urls": [{
+                          "display_url": "instagram.com/___lasha.e",
+                          "expanded_url": "http://www.instagram.com/___lasha.e",
+                          "url": "https://t.co/L7f8PnuU04",
+                          "indices": [
+                            0,
+                            23
+                          ]
+                        }]
+                      }
+                    },
+                    "fast_followers_count": 0,
+                    "favourites_count": 7464,
+                    "followers_count": 8911,
+                    "friends_count": 613,
+                    "has_custom_timelines": false,
+                    "is_translator": false,
+                    "listed_count": 9,
+                    "location": "",
+                    "media_count": 712,
+                    "name": "\uD83D\uDEF8",
+                    "normal_followers_count": 8911,
+                    "pinned_tweet_ids_str": [
+                      "1891300742595580281"
+                    ],
+                    "possibly_sensitive": false,
+                    "profile_banner_url": "https://pbs.twimg.com/profile_banners/1701562717184606208/1734216333",
+                    "profile_image_url_https": "https://pbs.twimg.com/profile_images/1905168149164564480/YDGWKxUV_normal.jpg",
+                    "profile_interstitial_type": "",
+                    "screen_name": "__itzt3z",
+                    "statuses_count": 10536,
+                    "translator_type": "none",
+                    "url": "https://t.co/L7f8PnuU04",
+                    "verified": false,
+                    "withheld_in_countries": []
+                  },
+                  "tipjar_settings": {
+                    "is_enabled": false,
+                    "bandcamp_handle": "",
+                    "bitcoin_handle": "",
+                    "cash_app_handle": "",
+                    "ethereum_handle": "",
+                    "gofundme_handle": "",
+                    "patreon_handle": "",
+                    "pay_pal_handle": "",
+                    "venmo_handle": ""
+                  }
+                }
+              }
+            },
+            "unmention_data": {},
+            "edit_control": {
+              "edit_tweet_ids": [
+                "1900793157786255768"
+              ],
+              "editable_until_msecs": "1742022978000",
+              "is_edit_eligible": true,
+              "edits_remaining": "5"
+            },
+            "is_translatable": false,
+            "views": {
+              "count": "487995240",
+              "state": "EnabledWithCount"
+            },
+            "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+            "grok_analysis_button": true,
+            "legacy": {
+              "bookmark_count": 17661,
+              "bookmarked": false,
+              "created_at": "Sat Mar 15 06:16:18 +0000 2025",
+              "conversation_control": {
+                "policy": "Community",
+                "conversation_owner_results": {
+                  "result": {
+                    "__typename": "User",
+                    "legacy": {
+                      "screen_name": "__itzt3z"
+                    }
+                  }
+                }
+              },
+              "conversation_id_str": "1900793157786255768",
+              "display_text_range": [
+                0,
+                56
+              ],
+              "entities": {
+                "hashtags": [],
+                "symbols": [],
+                "timestamps": [],
+                "urls": [],
+                "user_mentions": []
+              },
+              "favorite_count": 23675,
+              "favorited": false,
+              "full_text": "the funniest tik toks be the ones they dont let you save",
+              "is_quote_status": false,
+              "lang": "en",
+              "quote_count": 4549,
+              "reply_count": 2,
+              "retweet_count": 3419,
+              "retweeted": false,
+              "user_id_str": "1701562717184606208",
+              "id_str": "1900793157786255768"
+            }
+          }
+        },
+        "legacy": {
+          "bookmark_count": 11022,
+          "bookmarked": false,
+          "created_at": "Tue Mar 18 18:07:30 +0000 2025",
+          "conversation_id_str": "1902059299591090335",
+          "display_text_range": [
+            0,
+            0
+          ],
+          "entities": {
+            "hashtags": [],
+            "media": [{
+              "display_url": "pic.x.com/a3WBT4HExM",
+              "expanded_url": "https://x.com/carrionkid/status/1902059299591090335/video/1",
+              "id_str": "1902059279190052864",
+              "indices": [
+                0,
+                23
+              ],
+              "media_key": "7_1902059279190052864",
+              "media_url_https": "https://pbs.twimg.com/ext_tw_video_thumb/1902059279190052864/pu/img/DLoQFXU9gzkHQ2fh.jpg",
+              "type": "video",
+              "url": "https://t.co/a3WBT4HExM",
+              "additional_media_info": {
+                "monetizable": false
+              },
+              "ext_media_availability": {
+                "status": "Available"
+              },
+              "sizes": {
+                "large": {
+                  "h": 1280,
+                  "w": 576,
+                  "resize": "fit"
+                },
+                "medium": {
+                  "h": 1200,
+                  "w": 540,
+                  "resize": "fit"
+                },
+                "small": {
+                  "h": 680,
+                  "w": 306,
+                  "resize": "fit"
+                },
+                "thumb": {
+                  "h": 150,
+                  "w": 150,
+                  "resize": "crop"
+                }
+              },
+              "original_info": {
+                "height": 1280,
+                "width": 576,
+                "focus_rects": []
+              },
+              "video_info": {
+                "aspect_ratio": [
+                  9,
+                  20
+                ],
+                "duration_millis": 16394,
+                "variants": [{
+                    "content_type": "application/x-mpegURL",
+                    "url": "https://video.twimg.com/ext_tw_video/1902059279190052864/pu/pl/897qARA__rNk63y5.m3u8?tag=12&v=54d"
+                  },
+                  {
+                    "bitrate": 632000,
+                    "content_type": "video/mp4",
+                    "url": "https://video.twimg.com/ext_tw_video/1902059279190052864/pu/vid/avc1/320x710/g78J75WLanKsTSiJ.mp4?tag=12"
+                  },
+                  {
+                    "bitrate": 950000,
+                    "content_type": "video/mp4",
+                    "url": "https://video.twimg.com/ext_tw_video/1902059279190052864/pu/vid/avc1/480x1066/U_pJyFAzyajaxcz8.mp4?tag=12"
+                  },
+                  {
+                    "bitrate": 2176000,
+                    "content_type": "video/mp4",
+                    "url": "https://video.twimg.com/ext_tw_video/1902059279190052864/pu/vid/avc1/576x1280/yhSQqEJfEU8wapy2.mp4?tag=12"
+                  }
+                ]
+              },
+              "media_results": {
+                "result": {
+                  "media_key": "7_1902059279190052864"
+                }
+              }
+            }],
+            "symbols": [],
+            "timestamps": [],
+            "urls": [],
+            "user_mentions": []
+          },
+          "extended_entities": {
+            "media": [{
+              "display_url": "pic.x.com/a3WBT4HExM",
+              "expanded_url": "https://x.com/carrionkid/status/1902059299591090335/video/1",
+              "id_str": "1902059279190052864",
+              "indices": [
+                0,
+                23
+              ],
+              "media_key": "7_1902059279190052864",
+              "media_url_https": "https://pbs.twimg.com/ext_tw_video_thumb/1902059279190052864/pu/img/DLoQFXU9gzkHQ2fh.jpg",
+              "type": "video",
+              "url": "https://t.co/a3WBT4HExM",
+              "additional_media_info": {
+                "monetizable": false
+              },
+              "ext_media_availability": {
+                "status": "Available"
+              },
+              "sizes": {
+                "large": {
+                  "h": 1280,
+                  "w": 576,
+                  "resize": "fit"
+                },
+                "medium": {
+                  "h": 1200,
+                  "w": 540,
+                  "resize": "fit"
+                },
+                "small": {
+                  "h": 680,
+                  "w": 306,
+                  "resize": "fit"
+                },
+                "thumb": {
+                  "h": 150,
+                  "w": 150,
+                  "resize": "crop"
+                }
+              },
+              "original_info": {
+                "height": 1280,
+                "width": 576,
+                "focus_rects": []
+              },
+              "video_info": {
+                "aspect_ratio": [
+                  9,
+                  20
+                ],
+                "duration_millis": 16394,
+                "variants": [{
+                    "content_type": "application/x-mpegURL",
+                    "url": "https://video.twimg.com/ext_tw_video/1902059279190052864/pu/pl/897qARA__rNk63y5.m3u8?tag=12&v=54d"
+                  },
+                  {
+                    "bitrate": 632000,
+                    "content_type": "video/mp4",
+                    "url": "https://video.twimg.com/ext_tw_video/1902059279190052864/pu/vid/avc1/320x710/g78J75WLanKsTSiJ.mp4?tag=12"
+                  },
+                  {
+                    "bitrate": 950000,
+                    "content_type": "video/mp4",
+                    "url": "https://video.twimg.com/ext_tw_video/1902059279190052864/pu/vid/avc1/480x1066/U_pJyFAzyajaxcz8.mp4?tag=12"
+                  },
+                  {
+                    "bitrate": 2176000,
+                    "content_type": "video/mp4",
+                    "url": "https://video.twimg.com/ext_tw_video/1902059279190052864/pu/vid/avc1/576x1280/yhSQqEJfEU8wapy2.mp4?tag=12"
+                  }
+                ]
+              },
+              "media_results": {
+                "result": {
+                  "media_key": "7_1902059279190052864"
+                }
+              }
+            }]
+          },
+          "favorite_count": 68091,
+          "favorited": false,
+          "full_text": "https://t.co/a3WBT4HExM",
+          "is_quote_status": true,
+          "lang": "zxx",
+          "possibly_sensitive": false,
+          "possibly_sensitive_editable": true,
+          "quote_count": 172,
+          "quoted_status_id_str": "1900793157786255768",
+          "quoted_status_permalink": {
+            "url": "https://t.co/U4h9DpqTqn",
+            "expanded": "https://twitter.com/__itzt3z/status/1900793157786255768",
+            "display": "x.com/__itzt3z/statu…"
+          },
+          "reply_count": 85,
+          "retweet_count": 6738,
+          "retweeted": false,
+          "user_id_str": "1029169938588680193",
+          "id_str": "1902059299591090335"
+        }
+      }
+    }
+  }
+}
