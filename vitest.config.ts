@@ -17,7 +17,6 @@ export default defineConfig({
     MOSAIC_DOMAIN_LIST: JSON.stringify("mosaic.fxtwitter.com"),
     MOSAIC_BSKY_DOMAIN_LIST: JSON.stringify("mosaic.fxbsky.app"),
     API_HOST_LIST: JSON.stringify("api.fxtwitter.com"),
-    HOST_URL: JSON.stringify("https://fxtwitter.com"),
     GIF_TRANSCODE_DOMAIN_LIST: JSON.stringify("gif.fxtwitter.com"),
     SENTRY_DSN: null
   },

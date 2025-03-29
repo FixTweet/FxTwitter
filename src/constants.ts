@@ -13,7 +13,6 @@ export const Constants = {
   MOSAIC_BSKY_DOMAIN_LIST: MOSAIC_BSKY_DOMAIN_LIST.split(','),
   API_HOST_LIST: API_HOST_LIST.split(','),
   API_HOST_ROOT: `https://${API_HOST_LIST.split(',')[0]}`,
-  HOST_URL: HOST_URL,
   RELEASE_NAME: RELEASE_NAME,
   GIF_TRANSCODE_DOMAIN_LIST: GIF_TRANSCODE_DOMAIN_LIST.split(','),
   API_DOCS_URL: `https://github.com/FxEmbed/FxEmbed/wiki/API-Home`,
