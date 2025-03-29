@@ -7,6 +7,9 @@ import fs from 'fs';
 
 config();
 
+// check if no-sentry-upload command line argument is set
+const noSentryUpload = process.argv.includes('--no-sentry-upload');
+
 const gitCommit = execSync('git rev-parse --short HEAD').toString().trim();
 const gitUrl = execSync('git remote get-url origin').toString().trim();
 const gitBranch = execSync('git rev-parse --abbrev-ref HEAD')
@@ -59,7 +62,7 @@ defines['RELEASE_NAME'] = `"${releaseName}"`;
 
 const plugins = [];
 
-if (process.env.SENTRY_DSN) {
+if (process.env.SENTRY_DSN && !noSentryUpload) {
   plugins.push(
     sentryEsbuildPlugin({
       org: process.env.SENTRY_ORG,
