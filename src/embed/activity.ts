@@ -343,7 +343,6 @@ export const handleActivity = async (
     }
     if (
       !nativeMultiImage &&
-      mediaNumber &&
       mediaList?.length !== 1 &&
       thread.status.media?.mosaic
     ) {
