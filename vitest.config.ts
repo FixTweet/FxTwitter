@@ -23,7 +23,7 @@ export default defineConfig({
   },
   test: {
     pool: '@cloudflare/vitest-pool-workers',
-    include: ['test/worker.test.ts'],
+    include: ['test/*.ts'],
     globals: true,
     poolOptions: {
       workers: {
