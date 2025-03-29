@@ -12,7 +12,7 @@
     "allowJs": true,
     "sourceMap": true,
     "esModuleInterop": true,
-    "types": ["@cloudflare/workers-types", "@types/jest", "@sentry/integrations", "./src/types/"]
+    "types": ["@cloudflare/workers-types", "@cloudflare/vitest-pool-workers", "@sentry/integrations", "./src/types/"]
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist", "test"]

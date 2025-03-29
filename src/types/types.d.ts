@@ -243,3 +243,84 @@ declare interface OEmbed {
   type: 'link' | 'rich';
   version: '1.0';
 }
+
+
+
+// Mastodon API V1 Interfaces
+export interface ActivityStatus {
+  id: string;
+  url: string;
+  uri: string;
+  created_at: string;
+  edited_at: string | null;
+  reblog: null;
+  in_reply_to_id: string | undefined | null;
+  in_reply_to_account_id: string | undefined | null;
+  language: string | undefined | null;
+  content: string;
+  spoiler_text: string;
+  visibility: 'public';
+  application: {
+    name: string | null;
+    website: string | null;
+  };
+  media_attachments: ActivityMediaAttachment[];
+  account: ActivityAccount;
+  mentions: [];
+  tags: [];
+  emojis: [];
+  card: null;
+  poll: null;
+}
+
+export interface ActivityAccount {
+  id: string;
+  display_name: string;
+  username: string;
+  acct: string;
+  url: string;
+  uri: string;
+  created_at: string;
+  locked: boolean;
+  bot: boolean;
+  discoverable: boolean;
+  indexable: boolean;
+  group: boolean;
+  avatar: string | undefined;
+  avatar_static: string | undefined;
+  header: string | undefined;
+  header_static: string | undefined;
+  followers_count: number | undefined;
+  following_count: number | undefined;
+  statuses_count: number | undefined;
+  hide_collections: boolean;
+  noindex: boolean;
+  emojis: [];
+  roles: [];
+  fields: [];
+}
+
+export interface ActivityMediaAttachment {
+  id: string;
+  type: 'image' | 'video' | 'gifv' | 'audio' | string;
+  url: string;
+  preview_url: string | null;
+  remote_url: string | null;
+  preview_remote_url: string | null;
+  text_url: string | null;
+  description: string | null;
+  meta: {
+    original?: {
+      width: number;
+      height: number;
+      size?: string;
+      aspect?: number;
+    };
+    small?: {
+      width: number;
+      height: number;
+      size?: string;
+      aspect?: number;
+    };
+  };
+}
