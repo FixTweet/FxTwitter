@@ -1,6 +1,7 @@
 import { APITwitterStatus, APIUser, TweetAPIResponse, UserAPIResponse } from '../src/types/types';
 import { app } from '../src/worker';
 import { expect, test } from 'vitest';
+import envWrapper from './helpers/env-wrapper';
 
 const botHeaders = { 'User-Agent': 'Discordbot/2.0' };
 const humanHeaders = {
@@ -16,13 +17,13 @@ test('Home page redirect', async () => {
     new Request('https://fxtwitter.com', {
       method: 'GET',
       headers: botHeaders
-    })
+    }), undefined, envWrapper
   );
   const resultHuman = await app.request(
     new Request('https://fxtwitter.com', {
       method: 'GET',
       headers: humanHeaders
-    })
+    }), undefined, envWrapper
   );
   expect(result.status).toEqual(302);
   expect(result.headers.get('location')).toEqual(githubUrl);
@@ -35,7 +36,7 @@ test('Status redirect human', async () => {
     new Request('https://fxtwitter.com/jack/status/20', {
       method: 'GET',
       headers: humanHeaders
-    })
+    }), undefined, envWrapper
   );
   expect(result.status).toEqual(302);
   expect(result.headers.get('location')).toEqual('https://x.com/jack/status/20');
@@ -46,7 +47,7 @@ test('Status redirect human trailing slash', async () => {
     new Request('https://fxtwitter.com/jack/status/20/', {
       method: 'GET',
       headers: humanHeaders
-    })
+    }), undefined, envWrapper
   );
   expect(result.status).toEqual(302);
   expect(result.headers.get('location')).toEqual('https://x.com/jack/status/20');
@@ -60,7 +61,7 @@ test('Status redirect human custom base redirect', async () => {
         ...humanHeaders,
         Cookie: 'cf_clearance=a; base_redirect=https://nitter.net'
       }
-    })
+    }), undefined, envWrapper
   );
   expect(result.status).toEqual(302);
   expect(result.headers.get('location')).toEqual('https://nitter.net/jack/status/20');
@@ -74,7 +75,7 @@ test('Twitter moment redirect', async () => {
         method: 'GET',
         headers: botHeaders
       }
-    )
+    ), undefined, envWrapper
   );
   expect(result.status).toEqual(302);
   expect(result.headers.get('location')).toEqual(`${twitterBaseUrl}/i/events/1572638642127966214`);
@@ -85,7 +86,7 @@ test('Status response robot', async () => {
     new Request('https://fxtwitter.com/jack/status/20', {
       method: 'GET',
       headers: botHeaders
-    })
+    }), undefined, envWrapper
   );
   expect(result.status).toEqual(200);
 });
@@ -95,7 +96,7 @@ test('Status response robot (trailing slash/query string and extra characters)',
     new Request('https://fxtwitter.com/jack/status/20||/?asdf=ghjk&klop;', {
       method: 'GET',
       headers: botHeaders
-    })
+    }), undefined, envWrapper
   );
   expect(result.status).toEqual(200);
 });
@@ -105,7 +106,7 @@ test('API fetch basic Status', async () => {
     new Request('https://api.fxtwitter.com/status/20', {
       method: 'GET',
       headers: botHeaders
-    })
+    }), undefined, envWrapper
   );
   expect(result.status).toEqual(200);
   const response = (await result.json()) as TweetAPIResponse;
@@ -282,7 +283,7 @@ test('API fetch user', async () => {
     new Request('https://api.fxtwitter.com/x', {
       method: 'GET',
       headers: botHeaders
-    })
+    }), undefined, envWrapper
   );
   expect(result.status).toEqual(200);
   const response = (await result.json()) as UserAPIResponse;
@@ -312,7 +313,7 @@ test('API fetch user that does not exist', async () => {
     new Request('https://api.fxtwitter.com/usesaahah123', {
       method: 'GET',
       headers: botHeaders
-    })
+    }), undefined, envWrapper
   );
   expect(result.status).toEqual(404);
   const response = (await result.json()) as UserAPIResponse;

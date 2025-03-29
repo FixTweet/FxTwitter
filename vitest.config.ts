@@ -30,32 +30,7 @@ export default defineConfig({
         miniflare: {
           // Basic configuration needed for tests
           compatibilityDate: "2025-03-21",
-          compatibilityFlags: ["nodejs_compat"],
-          serviceBindings: {
-            TwitterProxy: {
-              name: "elongator-test-wrapper"
-            }
-          },
-          workers: [
-            {
-              name: "elongator-test-wrapper",
-              modules: true,
-              compatibilityDate: "2025-03-21",
-              compatibilityFlags: ["nodejs_compat"],
-              scriptPath: "./test/helpers/elongator-wrapper.js"
-            }
-          ],
-          // Mock bindings used in the app
-          bindings: {
-            // No services for testing to avoid errors
-            AnalyticsEngine: {
-              type: "analytics_engine",
-              dataset: "test-dataset"
-            },
-            TwitterProxy: {
-              name: "elongator-test-wrapper"
-            }
-          }
+          compatibilityFlags: [],
         }
       }
     },
