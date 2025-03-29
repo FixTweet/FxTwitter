@@ -36,7 +36,7 @@ test('API fetch user', async () => {
 
 test('API fetch user that does not exist', async () => {
   const result = await app.request(
-    new Request('https://api.fxtwitter.com/notfound', {
+    new Request('https://api.fxtwitter.com/notfound3842342', {
       method: 'GET',
       headers: botHeaders
     }), undefined, envWrapper
