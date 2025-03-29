@@ -1,0 +1,105 @@
+{
+  "data": {
+    "user": {
+      "result": {
+        "__typename": "User",
+        "id": "VXNlcjo3ODMyMTQ=",
+        "rest_id": "783214",
+        "affiliates_highlighted_label": {},
+        "has_graduated_access": true,
+        "parody_commentary_fan_label": "None",
+        "is_blue_verified": true,
+        "profile_image_shape": "Square",
+        "legacy": {
+          "following": false,
+          "can_dm": false,
+          "can_media_tag": false,
+          "created_at": "Tue Feb 20 14:35:54 +0000 2007",
+          "default_profile": false,
+          "default_profile_image": false,
+          "description": "what's happening?!",
+          "entities": {
+            "description": {
+              "urls": []
+            },
+            "url": {
+              "urls": [{
+                "display_url": "x.com",
+                "expanded_url": "https://x.com",
+                "url": "https://t.co/Xp0xJlcROt",
+                "indices": [
+                  0,
+                  23
+                ]
+              }]
+            }
+          },
+          "fast_followers_count": 0,
+          "favourites_count": 5843,
+          "followers_count": 68941492,
+          "friends_count": 1,
+          "has_custom_timelines": true,
+          "is_translator": false,
+          "listed_count": 87168,
+          "location": "everywhere",
+          "media_count": 2455,
+          "name": "X",
+          "normal_followers_count": 68941492,
+          "pinned_tweet_ids_str": [],
+          "possibly_sensitive": false,
+          "profile_banner_url": "https://pbs.twimg.com/profile_banners/783214/1690175171",
+          "profile_image_url_https": "https://pbs.twimg.com/profile_images/1683899100922511378/5lY42eHs_normal.jpg",
+          "profile_interstitial_type": "",
+          "screen_name": "X",
+          "statuses_count": 15550,
+          "translator_type": "regular",
+          "url": "https://t.co/Xp0xJlcROt",
+          "verified": false,
+          "verified_type": "Business",
+          "want_retweets": false,
+          "withheld_in_countries": []
+        },
+        "professional": {
+          "rest_id": "1858538123375874167",
+          "professional_type": "Business",
+          "category": [{
+            "id": 714,
+            "name": "Technology Company",
+            "icon_name": "IconBriefcaseStroke"
+          }]
+        },
+        "tipjar_settings": {},
+        "legacy_extended_profile": {},
+        "is_profile_translatable": false,
+        "has_hidden_subscriptions_on_profile": false,
+        "verification_info": {
+          "is_identity_verified": false,
+          "reason": {
+            "description": {
+              "text": "This account is verified because it's an official organization on X. Learn more",
+              "entities": [{
+                "from_index": 69,
+                "to_index": 79,
+                "ref": {
+                  "url": "https://help.twitter.com/en/rules-and-policies/profile-labels",
+                  "url_type": "ExternalUrl"
+                }
+              }]
+            },
+            "verified_since_msec": "1362700632470"
+          }
+        },
+        "highlights_info": {
+          "can_highlight_tweets": true,
+          "highlighted_tweets": "6"
+        },
+        "user_seed_tweet_count": 45,
+        "premium_gifting_eligible": false,
+        "business_account": {
+          "affiliates_count": 100
+        },
+        "creator_subscriptions_count": 0
+      }
+    }
+  }
+}

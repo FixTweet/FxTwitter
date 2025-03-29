@@ -67,6 +67,52 @@ test('Status redirect human custom base redirect', async () => {
   expect(result.headers.get('location')).toEqual('https://nitter.net/jack/status/20');
 });
 
+test('API fetch user', async () => {
+  const result = await app.request(
+    new Request('https://api.fxtwitter.com/x', {
+      method: 'GET',
+      headers: botHeaders
+    }), undefined, envWrapper
+  );
+  expect(result.status).toEqual(200);
+  const response = (await result.json()) as UserAPIResponse;
+  expect(response).toBeTruthy();
+  expect(response.code).toEqual(200);
+  expect(response.message).toEqual('OK');
+
+  const user = response.user as APIUser;
+  expect(user).toBeTruthy();
+  expect(user.url).toEqual(`${twitterBaseUrl}/X`);
+  expect(user.id).toEqual('783214');
+  expect(user.screen_name).toEqual('X');
+  expect(user.followers).toEqual(expect.any(Number));
+  expect(user.following).toEqual(expect.any(Number));
+  // The official twitter account will never be following as many people as it has followers
+  expect(user.following).not.toEqual(user.followers);
+  expect(user.likes).toEqual(expect.any(Number));
+  // expect(user.verified).toEqual('business');
+  expect(user.joined).toEqual('Tue Feb 20 14:35:54 +0000 2007');
+  // expect(user.birthday.day).toEqual(21);
+  // expect(user.birthday.month).toEqual(3);
+  // expect(user.birthday.year).toBeUndefined();
+});
+
+test('API fetch user that does not exist', async () => {
+  const result = await app.request(
+    new Request('https://api.fxtwitter.com/notfound', {
+      method: 'GET',
+      headers: botHeaders
+    }), undefined, envWrapper
+  );
+  expect(result.status).toEqual(404);
+  const response = (await result.json()) as UserAPIResponse;
+  expect(response).toBeTruthy();
+  expect(response.code).toEqual(404);
+  expect(response.message).toEqual('User not found');
+  expect(response.user).toBeUndefined();
+});
+
+
 test('Twitter moment redirect', async () => {
   const result = await app.request(
     new Request(
@@ -135,6 +181,18 @@ test('API fetch basic Status', async () => {
   expect(status.created_timestamp).toEqual(1142974214);
   expect(status.lang).toEqual('en');
   expect(status.replying_to).toBeNull();
+});
+
+test('Status activity basic status', async () => {
+  const result = await app.request(
+    new Request('https://fxtwitter.com/api/v1/statuses/6608666766545266', {
+      method: 'GET',
+      headers: botHeaders
+    }), undefined, envWrapper
+  );
+  expect(result.status).toEqual(200);
+  const response = (await result.json());
+  expect(response).toBeTruthy();
 });
 
 // test('API fetch video Status', async () => {
@@ -277,48 +335,3 @@ test('API fetch basic Status', async () => {
 //   expect(choices[3].count).toEqual(31706);
 //   expect(choices[3].percentage).toEqual(58);
 // });
-
-test('API fetch user', async () => {
-  const result = await app.request(
-    new Request('https://api.fxtwitter.com/x', {
-      method: 'GET',
-      headers: botHeaders
-    }), undefined, envWrapper
-  );
-  expect(result.status).toEqual(200);
-  const response = (await result.json()) as UserAPIResponse;
-  expect(response).toBeTruthy();
-  expect(response.code).toEqual(200);
-  expect(response.message).toEqual('OK');
-
-  const user = response.user as APIUser;
-  expect(user).toBeTruthy();
-  expect(user.url).toEqual(`${twitterBaseUrl}/X`);
-  expect(user.id).toEqual('783214');
-  expect(user.screen_name).toEqual('X');
-  expect(user.followers).toEqual(expect.any(Number));
-  expect(user.following).toEqual(expect.any(Number));
-  // The official twitter account will never be following as many people as it has followers
-  expect(user.following).not.toEqual(user.followers);
-  expect(user.likes).toEqual(expect.any(Number));
-  // expect(user.verified).toEqual('business');
-  expect(user.joined).toEqual('Tue Feb 20 14:35:54 +0000 2007');
-  // expect(user.birthday.day).toEqual(21);
-  // expect(user.birthday.month).toEqual(3);
-  // expect(user.birthday.year).toBeUndefined();
-});
-
-test('API fetch user that does not exist', async () => {
-  const result = await app.request(
-    new Request('https://api.fxtwitter.com/usesaahah123', {
-      method: 'GET',
-      headers: botHeaders
-    }), undefined, envWrapper
-  );
-  expect(result.status).toEqual(404);
-  const response = (await result.json()) as UserAPIResponse;
-  expect(response).toBeTruthy();
-  expect(response.code).toEqual(404);
-  expect(response.message).toEqual('User not found');
-  expect(response.user).toBeUndefined();
-});
