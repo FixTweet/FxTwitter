@@ -304,7 +304,7 @@ export interface ActivityMediaAttachment {
   id: string;
   type: 'image' | 'video' | 'gifv' | 'audio' | string;
   url: string;
-  preview_url: string;
+  preview_url: string | null;
   remote_url: string | null;
   preview_remote_url: string | null;
   text_url: string | null;
