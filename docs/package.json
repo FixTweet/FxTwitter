@@ -14,7 +14,7 @@
     "sanitize-openapi": "node scripts/extract-openapi.mjs --sanitize"
   },
   "dependencies": {
-    "@astrojs/starlight": "^0.42.5",
+    "@astrojs/starlight": "^0.42.6",
     "astro": "^7.3.8",
     "starlight-openapi": "^0.27.0"
   }
